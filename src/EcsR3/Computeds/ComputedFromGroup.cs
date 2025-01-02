@@ -13,6 +13,7 @@ namespace EcsR3.Computeds
         public readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<T> _onDataChanged;
+        private readonly object _lock = new object();
         
         public IObservableGroup InternalObservableGroup { get; }
 
@@ -34,20 +35,20 @@ namespace EcsR3.Computeds
 
         public void MonitorChanges()
         {
-            InternalObservableGroup.OnEntityAdded.Subscribe(RequestUpdate).AddTo(Subscriptions);
-            InternalObservableGroup.OnEntityRemoving.Subscribe(RequestUpdate).AddTo(Subscriptions);
-            RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
+            InternalObservableGroup.OnEntityAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalObservableGroup.OnEntityRemoving.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
         }
-
-        public void RequestUpdate(object _ = null)
-        { RefreshData(); }
 
         public void RefreshData()
         {
-            var newData = Transform(InternalObservableGroup);
-            if (newData.Equals(CachedData)) { return; }
-            
-            CachedData = newData;
+            lock (_lock)
+            {
+                var newData = Transform(InternalObservableGroup);
+                if (newData.Equals(CachedData)) { return; }
+                CachedData = newData;
+            }
+
             _onDataChanged.OnNext(CachedData);
         }
         

@@ -12,6 +12,7 @@ namespace EcsR3.Collections.Database
     {
         private readonly CollectionLookup _collections;
         private readonly IDictionary<int, IDisposable> _collectionSubscriptions;
+        private readonly object _lock = new object();
 
         public IReadOnlyList<IEntityCollection> Collections => _collections;
         public IEntityCollection this[int id] => _collections[id];
@@ -53,18 +54,24 @@ namespace EcsR3.Collections.Database
 
         public void SubscribeToCollection(IEntityCollection collection)
         {
-            var collectionDisposable = new CompositeDisposable();   
-            collection.EntityAdded.Subscribe(x => _onEntityAdded.OnNext(x)).AddTo(collectionDisposable);
-            collection.EntityRemoved.Subscribe(x => _onEntityRemoved.OnNext(x)).AddTo(collectionDisposable);
-            collection.EntityComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(x)).AddTo(collectionDisposable);
-            collection.EntityComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(x)).AddTo(collectionDisposable);
-            collection.EntityComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(x)).AddTo(collectionDisposable);
+            lock (_lock)
+            {
+                var collectionDisposable = new CompositeDisposable();   
+                collection.EntityAdded.Subscribe(x => _onEntityAdded.OnNext(x)).AddTo(collectionDisposable);
+                collection.EntityRemoved.Subscribe(x => _onEntityRemoved.OnNext(x)).AddTo(collectionDisposable);
+                collection.EntityComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(x)).AddTo(collectionDisposable);
+                collection.EntityComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(x)).AddTo(collectionDisposable);
+                collection.EntityComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(x)).AddTo(collectionDisposable);
 
-            _collectionSubscriptions.Add(collection.Id, collectionDisposable);
+                _collectionSubscriptions.Add(collection.Id, collectionDisposable);
+            }
         }
 
         public void UnsubscribeFromCollection(int id)
-        { _collectionSubscriptions.RemoveAndDispose(id); }
+        {
+            lock (_lock)
+            { _collectionSubscriptions.RemoveAndDispose(id); }
+        }
         
         public IEntityCollection CreateCollection(int id)
         {
@@ -75,8 +82,11 @@ namespace EcsR3.Collections.Database
         
         public void AddCollection(IEntityCollection collection)
         {
-            _collections.Add(collection);
-            SubscribeToCollection(collection);
+            lock (_lock)
+            {
+                _collections.Add(collection);
+                SubscribeToCollection(collection);
+            }
 
             _onCollectionAdded.OnNext(collection);
         }
@@ -86,25 +96,32 @@ namespace EcsR3.Collections.Database
 
         public void RemoveCollection(int id, bool disposeEntities = true)
         {
-            if(!_collections.Contains(id)) { return; }
+            IEntityCollection removedCollection;
+            lock (_lock)
+            {
+                if(!_collections.Contains(id)) { return; }
 
-            var collection = _collections[id];
-            _collections.Remove(id);
+                removedCollection = _collections[id];
+                _collections.Remove(id);
             
-            UnsubscribeFromCollection(id);
+                UnsubscribeFromCollection(id);
+            }
 
-            _onCollectionRemoved.OnNext(collection);
+            _onCollectionRemoved.OnNext(removedCollection);
         }
 
         public void Dispose()
         {
-            _onEntityAdded.Dispose();
-            _onEntityRemoved.Dispose();
-            _onEntityComponentsAdded.Dispose();
-            _onEntityComponentsRemoving.Dispose();
-            _onEntityComponentsRemoved.Dispose();
+            lock (_lock)
+            {
+                _onEntityAdded.Dispose();
+                _onEntityRemoved.Dispose();
+                _onEntityComponentsAdded.Dispose();
+                _onEntityComponentsRemoving.Dispose();
+                _onEntityComponentsRemoved.Dispose();
             
-            _collectionSubscriptions.RemoveAndDisposeAll();
+                _collectionSubscriptions.RemoveAndDisposeAll();
+            }
         }
     }
 }

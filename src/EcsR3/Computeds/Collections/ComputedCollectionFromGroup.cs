@@ -22,13 +22,30 @@ namespace EcsR3.Computeds.Collections
 
         public IObservableGroup InternalObservableGroup { get; }
         public IEnumerable<T> Value => GetData();
-        public T this[int index] => FilteredCache[index];
-        public int Count => FilteredCache.Count;
-        
+        public T this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                { return FilteredCache[index]; }
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                { return FilteredCache.Count; }
+            }
+        }
+
         private readonly Subject<IEnumerable<T>> _onDataChanged;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementAdded;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementChanged;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementRemoved;
+        
+        private readonly object _lock = new object();
 
         protected ComputedCollectionFromGroup(IObservableGroup internalObservableGroup)
         {
@@ -51,66 +68,83 @@ namespace EcsR3.Computeds.Collections
         
         public void MonitorChanges()
         {
-            InternalObservableGroup.OnEntityAdded.Subscribe(RequestUpdate).AddTo(Subscriptions);
-            InternalObservableGroup.OnEntityRemoving.Subscribe(RequestUpdate).AddTo(Subscriptions);
-            RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
+            InternalObservableGroup.OnEntityAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalObservableGroup.OnEntityRemoving.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
         }
-
-        public void RequestUpdate(object _ = null)
-        {
-            RefreshData();
-        }
-
+        
         private void ProcessEntity(IEntity entity)
         {
             var isApplicable = ShouldTransform(entity);
 
             if (!isApplicable)
             {
-                if (!FilteredCache.ContainsKey(entity.Id)) 
-                { return; }
+                lock (_lock)
+                {
+                    if (!FilteredCache.ContainsKey(entity.Id)) 
+                    { return; }
+                }
 
                 RemoveEntity(entity.Id);
                 return;
             }
 
-            var transformedData = Transform(entity);
-            if (FilteredCache.ContainsKey(entity.Id))
+            lock (_lock)
             {
-                ChangeEntity(entity.Id, transformedData);
-                return;
+                var transformedData = Transform(entity);
+                if (FilteredCache.ContainsKey(entity.Id))
+                {
+                    ChangeEntity(entity.Id, transformedData);
+                    return;
+                }
+    
+                AddEntity(entity.Id, transformedData);
             }
-
-            AddEntity(entity.Id, transformedData);
         }
 
         private void AddEntity(int entityId, T transformedData)
         {
-            FilteredCache.Add(entityId, transformedData);
+            lock (_lock)
+            { FilteredCache.Add(entityId, transformedData); }
+            
             _onElementAdded.OnNext(new CollectionElementChangedEvent<T>(entityId, default(T), transformedData));
         }
 
         private void RemoveEntity(int entityId)
         {
-            var currentValue = FilteredCache[entityId];
-            FilteredCache.Remove(entityId);
+            T currentValue;
+            lock (_lock)
+            {
+               currentValue = FilteredCache[entityId];
+               FilteredCache.Remove(entityId); 
+            }
+            
             _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>(entityId, currentValue, default(T)));
         }
 
         private void ChangeEntity(int entityId, T transformedData)
         {
-            var currentData = FilteredCache[entityId];
-            FilteredCache[entityId] = transformedData;
+            T currentData;
+            lock (_lock)
+            {
+                currentData = FilteredCache[entityId];
+                FilteredCache[entityId] = transformedData;
+            }
+            
             _onElementChanged.OnNext(new CollectionElementChangedEvent<T>(entityId, currentData, transformedData));
         }
                        
         public void RefreshData()
         {
-            var unprocessedIds = FilteredCache.Keys.ToList();
-            foreach (var entity in InternalObservableGroup)
+            List<int> unprocessedIds;
+            lock (_lock)
             {
-                unprocessedIds.Remove(entity.Id);
-                ProcessEntity(entity);
+                unprocessedIds = FilteredCache.Keys.ToList();
+                foreach (var entity in InternalObservableGroup)
+                {
+                    unprocessedIds.Remove(entity.Id);
+                    ProcessEntity(entity);
+                }
             }
 
             foreach(var id in unprocessedIds)
@@ -153,7 +187,10 @@ namespace EcsR3.Computeds.Collections
         { return data; }
 
         public IEnumerable<T> GetData()
-        { return PostProcess(FilteredCache.Values); }
+        {
+            lock (_lock)
+            { return PostProcess(FilteredCache.Values); }
+        }
 
         public IEnumerator<T> GetEnumerator()
         { return GetData().GetEnumerator(); }
@@ -163,11 +200,14 @@ namespace EcsR3.Computeds.Collections
 
         public void Dispose()
         {
-            Subscriptions.DisposeAll();
-            _onDataChanged?.Dispose();
-            _onElementAdded?.Dispose();
-            _onElementChanged?.Dispose();
-            _onElementRemoved?.Dispose();
+            lock (_lock)
+            {
+                Subscriptions.DisposeAll();
+                _onDataChanged?.Dispose();
+                _onElementAdded?.Dispose();
+                _onElementChanged?.Dispose();
+                _onElementRemoved?.Dispose();
+            }
         }
     }
 }

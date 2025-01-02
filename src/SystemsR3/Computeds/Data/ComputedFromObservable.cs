@@ -36,8 +36,12 @@ namespace SystemsR3.Computeds.Data
 
         public void RefreshData(TInput data)
         {
-            lock(_lock)
-            { CachedData = Transform(data); }
+            lock (_lock)
+            {
+                var newData = Transform(data);
+                if (newData.Equals(CachedData)) { return; }
+                CachedData = newData;
+            }
          
             _onDataChanged.OnNext(CachedData);
         }

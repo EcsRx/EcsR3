@@ -16,8 +16,6 @@ namespace SystemsR3.Computeds.Collections
         public TOutput this[int index] => ComputedData[index];
         public int Count => ComputedData.Count;
         
-        private readonly object _lock = new object();
-        
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
 
         public ComputedCollectionFromData(TInput dataSource)
@@ -40,10 +38,7 @@ namespace SystemsR3.Computeds.Collections
         { RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions); }
 
         public void RefreshData()
-        {
-            lock (_lock)
-            { Transform(DataSource); }
-        }
+        { Transform(DataSource); }
 
         /// <summary>
         /// The method to indicate when the listings should be updated

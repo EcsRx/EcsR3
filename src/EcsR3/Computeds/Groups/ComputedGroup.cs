@@ -24,6 +24,8 @@ namespace EcsR3.Computeds.Groups
         private readonly Subject<IEntity> _onEntityRemoved;
         private readonly Subject<IEntity> _onEntityRemoving;
         
+        private readonly object _lock = new object();
+        
         public IObservableGroup InternalObservableGroup { get; }
 
         protected ComputedGroup(IObservableGroup internalObservableGroup)
@@ -51,46 +53,64 @@ namespace EcsR3.Computeds.Groups
         {
             if (!IsEntityApplicable(entity))
             { return; }
+
+            lock (_lock)
+            { CachedEntities.Add(entity); }
             
-            CachedEntities.Add(entity);
             _onEntityAdded.OnNext(entity);
         }
         
         public void OnEntityRemovingFromGroup(IEntity entity)
         {
-            if(!CachedEntities.Contains(entity.Id))
-            { return; }
-            
+            lock (_lock)
+            {
+                if (!CachedEntities.Contains(entity.Id))
+                { return; }
+            }
+
             _onEntityRemoving.OnNext(entity);
-            CachedEntities.Remove(entity.Id);
+            
+            lock (_lock)
+            { CachedEntities.Remove(entity.Id); }
+
             _onEntityRemoved.OnNext(entity);
         }
 
         public void RefreshEntities()
         {
-            var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
-            var entitiesToRemove = CachedEntities.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
-            var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.Contains(x.Id)).ToArray();
+            // TODO: Dislike having subs firing within locks, but no nice way to do this currently, maybe refactor later
+            lock (_lock)
+            {
+                var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
+                var entitiesToRemove = CachedEntities.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
+                var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.Contains(x.Id)).ToArray();
             
-            for (var i = entitiesToAdd.Length - 1; i >= 0; i--)
-            {
-                CachedEntities.Add(entitiesToAdd[i]);
-                _onEntityAdded.OnNext(entitiesToAdd[i]);
-            }
+                for (var i = entitiesToAdd.Length - 1; i >= 0; i--)
+                {
+                    CachedEntities.Add(entitiesToAdd[i]);
+                    _onEntityAdded.OnNext(entitiesToAdd[i]);
+                }
 
-            for (var i = entitiesToRemove.Length - 1; i >= 0; i--)
-            {
-                _onEntityRemoving.OnNext(entitiesToRemove[i]);
-                CachedEntities.Remove(entitiesToRemove[i].Id);
-                _onEntityRemoved.OnNext(entitiesToRemove[i]);
+                for (var i = entitiesToRemove.Length - 1; i >= 0; i--)
+                {
+                    _onEntityRemoving.OnNext(entitiesToRemove[i]);
+                    CachedEntities.Remove(entitiesToRemove[i].Id);
+                    _onEntityRemoved.OnNext(entitiesToRemove[i]);
+                }
             }
         }
-        
+
         public bool ContainsEntity(int id)
-        { return CachedEntities.Contains(id); }
+        {
+            lock (_lock)
+            { return CachedEntities.Contains(id); }
+        }
 
         public IEntity GetEntity(int id)
-        { return CachedEntities[id]; }
+        {
+            lock (_lock)
+            { return CachedEntities[id]; }
+        }
 
         /// <summary>
         /// The method to indicate when the listings should be updated
@@ -121,14 +141,31 @@ namespace EcsR3.Computeds.Groups
         
         public virtual void Dispose()
         {
-            Subscriptions.DisposeAll();
-            _onEntityAdded.Dispose();
-            _onEntityRemoved.Dispose();
-            _onEntityRemoving.Dispose();
+            lock (_lock)
+            {
+                Subscriptions.DisposeAll();
+                _onEntityAdded.Dispose();
+                _onEntityRemoved.Dispose();
+                _onEntityRemoving.Dispose();
+            }
         }
 
-        public int Count => CachedEntities.Count;
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                { return CachedEntities.Count; }
+            }
+        }
 
-        public IEntity this[int index] => CachedEntities.GetByIndex(index);
+        public IEntity this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                { return CachedEntities.GetByIndex(index); }
+            }
+        }
     }
 }
