@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LazyData.Numerics" Version="3.0.17" />
+    <PackageReference Include="Ninject" Version="3.3.6" />
+    <PackageReference Include="Persistity.Endpoints.Http" Version="2.0.47" />
+    <PackageReference Include="Persistity.Serializers.LazyData.Binary" Version="2.0.47" />
+    <PackageReference Include="Persistity.Serializers.LazyData.Json" Version="2.0.47" />
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj">
+      <Project>{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2}</Project>
+      <Name>EcsRx.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EcsR3.Plugins.Batching\EcsR3.Plugins.Batching.csproj" />
+    <ProjectReference Include="..\EcsR3.Plugins.Persistence\EcsR3.Plugins.Persistence.csproj" />
+    <ProjectReference Include="..\EcsR3.Plugins.Views\EcsR3.Plugins.Views.csproj" />
+    <ProjectReference Include="..\EcsR3\EcsR3.csproj" />
+    <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj" />
+    <ProjectReference Include="..\SystemsR3.Infrastructure.Ninject\SystemsR3.Infrastructure.Ninject.csproj" />
+  </ItemGroup>
+</Project>

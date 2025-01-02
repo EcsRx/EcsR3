@@ -1,0 +1,33 @@
+version: 8.0.{build}
+branches:
+  only:
+  - main
+  - build-test
+image: Visual Studio 2022
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- cmd: nuget restore src/EcsR3.sln
+build:
+  project: src/EcsR3.sln
+  publish_nuget: true
+  verbosity: minimal
+artifacts:
+  - path: '**\*.nupkg'
+deploy:
+  provider: NuGet
+  on:
+    APPVEYOR_REPO_TAG: true
+  server:
+  api_key:
+    secure: xItHI+jcoXOw7VZoVj1gGOiH2zajMnpq0wQgXlp0SEl5PlAQ7epxowtpbqID7a4V
+  skip_symbols: true
+  symbol_server:
+  artifact: /.*\.nupkg/

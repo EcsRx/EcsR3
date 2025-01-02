@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using EcsR3.Entities;
+using EcsR3.Groups.Observable.Tracking.Events;
+using EcsR3.Groups.Observable.Tracking.Types;
+using EcsR3.Extensions;
+using R3;
+using SystemsR3.Extensions;
+
+namespace EcsR3.Groups.Observable.Tracking.Trackers
+{
+    public class BatchObservableGroupTracker : ObservableGroupTracker, IBatchObservableGroupTracker
+    {
+        private readonly Dictionary<int, IDisposable> _entitySubscriptions;
+        public Dictionary<int, GroupMatchingType> EntityIdMatchTypes { get; }
+
+        public BatchObservableGroupTracker(LookupGroup lookupGroup) : base(lookupGroup)
+        {
+            _entitySubscriptions = new Dictionary<int, IDisposable>();
+            EntityIdMatchTypes = new Dictionary<int, GroupMatchingType>();
+        }
+        
+        public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
+        
+        public override void UpdateState(int entityId, GroupMatchingType newMatchingType)
+        { EntityIdMatchTypes[entityId] = newMatchingType; }
+
+        public override GroupMatchingType GetState(int entityId)
+        { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
+        
+        public bool StartTrackingEntity(IEntity entity)
+        {
+            if (EntityIdMatchTypes.ContainsKey(entity.Id))
+            { return EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes; }
+            
+            var matchingType = LookupGroup.CalculateMatchingType(entity);
+            EntityIdMatchTypes.Add(entity.Id, matchingType);
+            
+            var entitySubs = new CompositeDisposable();
+            entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(entitySubs);
+            entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity)).AddTo(entitySubs);
+            entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity)).AddTo(entitySubs);
+            _entitySubscriptions.Add(entity.Id, entitySubs);
+            
+            return matchingType == GroupMatchingType.MatchesNoExcludes;
+        }
+
+        public void StopTrackingEntity(IEntity entity)
+        {
+            if (!EntityIdMatchTypes.ContainsKey(entity.Id)) { return; }
+
+            var matchType = EntityIdMatchTypes[entity.Id];
+            _entitySubscriptions[entity.Id].Dispose();
+            _entitySubscriptions.Remove(entity.Id);
+            EntityIdMatchTypes.Remove(entity.Id);
+
+            if (matchType == GroupMatchingType.MatchesNoExcludes)
+            {
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
+            }
+        }
+        
+        public override void Dispose()
+        {
+            OnGroupMatchingChanged?.Dispose();
+            _entitySubscriptions.DisposeAll();
+        }
+    }
+}
