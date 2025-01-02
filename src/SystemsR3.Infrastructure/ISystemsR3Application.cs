@@ -9,7 +9,7 @@ namespace SystemsR3.Infrastructure
     /// <summary>
     /// Acts as an entry point and bootstrapper for the framework
     /// </summary>
-    public interface ISystemsRxApplication
+    public interface ISystemsR3Application
     {
         /// <summary>
         /// The dependency injection registry
@@ -36,7 +36,7 @@ namespace SystemsR3.Infrastructure
         /// <summary>
         /// Any plugins which have been registered within the application
         /// </summary>
-        IEnumerable<ISystemsRxPlugin> Plugins { get; }
+        IEnumerable<ISystemsR3Plugin> Plugins { get; }
         
         /// <summary>
         /// This starts the application initialization process

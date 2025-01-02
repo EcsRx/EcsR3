@@ -75,11 +75,7 @@ public class StartGameManualSystem : IManualSystem
 
 The architecture is layered so you can use the core parts without needing the additional layers if you want to keep things bare bones.
 
-### MicroRx
-
-This is a bare bones rx implementation, it literally just contains some basic `Subject` and other related rx classes, this is so that we do not have a dependencies on rx.net or unirx in the core.
-
-### SystemsRx
+### SystemsR3
 
 This takes the barebones rx implementation and creates a basic `ISystem` convention with an `ISystemExecutor` and `IConventionalSystemHandler` implementations to provide basic systems interfaces (As shown in quick start above).
 

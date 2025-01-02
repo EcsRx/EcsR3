@@ -10,7 +10,7 @@ using EcsR3.Plugins.Persistence.Extensions;
 namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase
 {
     // We extend from EcsRxPersistedApplication which has built in helpers for persisting entity DB
-    public class LoadingEntityDatabaseApplication : EcsRxPersistedApplication
+    public class LoadingEntityDatabaseApplication : EcsR3PersistedApplication
     {
         public override IDependencyRegistry DependencyRegistry { get; }  = new NinjectDependencyRegistry();
 

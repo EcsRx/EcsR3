@@ -6,7 +6,7 @@ using SystemsR3.Systems;
 
 namespace EcsR3.Plugins.Transforms
 {
-    public class TransformsPlugin : ISystemsRxPlugin
+    public class TransformsPlugin : ISystemsR3Plugin
     {
         public string Name => "EcsR3 Transforms";
         public Version Version { get; } = new Version("1.0.0");

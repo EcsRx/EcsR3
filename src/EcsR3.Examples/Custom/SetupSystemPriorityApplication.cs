@@ -5,7 +5,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom
 {
-    public class SetupSystemPriorityApplication : EcsRxConsoleApplication
+    public class SetupSystemPriorityApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
 

@@ -5,7 +5,7 @@ using SystemsR3.Systems;
 
 namespace SystemsR3.Infrastructure.Plugins
 {
-    public interface ISystemsRxPlugin
+    public interface ISystemsR3Plugin
     {
         string Name { get; }
         Version Version { get; }

@@ -14,7 +14,7 @@ namespace EcsR3.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <remarks>The ordering here will be Setup, Anything else</remarks>
-        public static IEnumerable<ISystem> GetAllBoundReactiveSystems(this IEcsRxApplication application)
+        public static IEnumerable<ISystem> GetAllBoundReactiveSystems(this IEcsR3Application application)
         {
             var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
 
@@ -28,7 +28,7 @@ namespace EcsR3.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <remarks>The ordering here will be Setup, Anything else</remarks>
-        public static void StartAllBoundReactiveSystems(this IEcsRxApplication application)
+        public static void StartAllBoundReactiveSystems(this IEcsR3Application application)
         {
             var orderedSystems = GetAllBoundReactiveSystems(application);
             orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);

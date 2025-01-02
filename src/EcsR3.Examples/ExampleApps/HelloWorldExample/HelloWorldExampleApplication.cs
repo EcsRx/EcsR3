@@ -5,7 +5,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.HelloWorldExample
 {
-    public class HelloWorldExampleApplication : EcsRxConsoleApplication
+    public class HelloWorldExampleApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
 

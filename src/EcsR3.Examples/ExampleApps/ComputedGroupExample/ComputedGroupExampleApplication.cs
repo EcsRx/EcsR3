@@ -6,7 +6,7 @@ using EcsR3.Examples.ExampleApps.ComputedGroupExample.Modules;
 
 namespace EcsR3.Examples.ExampleApps.ComputedGroupExample
 {
-    public class ComputedGroupExampleApplication : EcsRxConsoleApplication
+    public class ComputedGroupExampleApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
 

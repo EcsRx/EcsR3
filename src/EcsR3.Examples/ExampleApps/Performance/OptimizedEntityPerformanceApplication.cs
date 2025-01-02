@@ -17,7 +17,7 @@ using EcsR3.Infrastructure.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class OptimizedEntityPerformanceApplication : EcsRxConsoleApplication
+    public class OptimizedEntityPerformanceApplication : EcsR3ConsoleApplication
     {
         private IComponent[] _availableComponents;
         private int[] _availableComponentTypeIds;

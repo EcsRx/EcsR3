@@ -10,7 +10,7 @@ using EcsR3.Systems;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class MakingLotsOfEntitiesApplication : EcsRxConsoleApplication
+    public class MakingLotsOfEntitiesApplication : EcsR3ConsoleApplication
     {
         private static readonly int EntityCount = 100000;
 

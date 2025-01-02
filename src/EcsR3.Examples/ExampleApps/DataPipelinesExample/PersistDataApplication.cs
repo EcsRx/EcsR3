@@ -8,7 +8,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.DataPipelinesExample
 {
-    public class PersistDataApplication : EcsRxConsoleApplication
+    public class PersistDataApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
 

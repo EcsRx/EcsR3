@@ -6,7 +6,7 @@ using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure
 {
-    public abstract class EcsRxApplication : SystemsRxApplication, IEcsRxApplication
+    public abstract class EcsR3Application : SystemsR3Application, IEcsR3Application
     {
         public IEntityDatabase EntityDatabase { get; private set; }
         public IObservableGroupManager ObservableGroupManager { get; private set; }

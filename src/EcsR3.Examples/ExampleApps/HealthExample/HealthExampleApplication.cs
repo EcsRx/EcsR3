@@ -8,7 +8,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.HealthExample
 {
-    public class HealthExampleApplication : EcsRxConsoleApplication
+    public class HealthExampleApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
         private IEntity _enemy;

@@ -8,7 +8,7 @@ using EcsR3.Plugins.Views;
 
 namespace EcsR3.Examples.Application
 {
-    public abstract class EcsRxConsoleApplication : EcsRxApplication
+    public abstract class EcsR3ConsoleApplication : EcsR3Application
     {
         public override IDependencyRegistry DependencyRegistry { get; } = new NinjectDependencyRegistry();
 

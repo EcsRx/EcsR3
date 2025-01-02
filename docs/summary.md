@@ -11,8 +11,7 @@
     * [Dependency Management](infrastructure/dependency-injection-abstraction.md)
 * Plugins
     * [Overview](plugins/readme.md)
-    * [Computeds Plugin](plugins/computed-plugin.md)
 * Other
-    * [MicroRx](others/microrx.md)
+    * [Computeds](plugins/computeds.md)
     * [Breaking Changes](breaking-changes.md)
     * [Third Party Content](others/third-party-content.md)

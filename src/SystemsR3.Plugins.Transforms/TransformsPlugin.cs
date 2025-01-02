@@ -6,7 +6,7 @@ using SystemsR3.Systems;
 
 namespace SystemsR3.Plugins.Transforms
 {
-    public class TransformsPlugin : ISystemsRxPlugin
+    public class TransformsPlugin : ISystemsR3Plugin
     {
         public string Name => "SystemsRx Transforms";
         public Version Version { get; } = new Version("1.0.0");

@@ -9,7 +9,7 @@ using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Plugins.Batching
 {
-    public class BatchPlugin : ISystemsRxPlugin
+    public class BatchPlugin : ISystemsR3Plugin
     {
         public string Name => "Batching";
         public Version Version { get; } = new Version("1.0.0");

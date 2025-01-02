@@ -28,7 +28,7 @@ namespace SystemsR3.Tests.SystemsRx
             };
 
             var mockContainer = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<ISystemsRxApplication>();
+            var mockApplication = Substitute.For<ISystemsR3Application>();
             mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
             mockApplication.DependencyResolver.Returns(mockContainer);
 

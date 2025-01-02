@@ -9,7 +9,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class GroupPerformanceApplication : EcsRxConsoleApplication
+    public class GroupPerformanceApplication : EcsR3ConsoleApplication
     {
         private IComponent[] _availableComponents;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();

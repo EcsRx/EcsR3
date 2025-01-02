@@ -18,7 +18,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// </remarks>
         /// <param name="application">The application to act on</param>
         /// <param name="assemblies">The assemblies to scan for systems</param>
-        public static void BindAllSystemsInAssemblies(this ISystemsRxApplication application, params Assembly[] assemblies)
+        public static void BindAllSystemsInAssemblies(this ISystemsR3Application application, params Assembly[] assemblies)
         {           
             var systemType = typeof(ISystem);           
             
@@ -55,7 +55,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// </remarks>
         /// <param name="application">The application to act on</param>
         /// <param name="namespaces">The namespaces to be scanned for implementations</param>
-        public static void BindAllSystemsInNamespaces(this ISystemsRxApplication application, params string[] namespaces)
+        public static void BindAllSystemsInNamespaces(this ISystemsR3Application application, params string[] namespaces)
         {
             var applicationAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var systemType = typeof(ISystem);           
@@ -101,7 +101,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// BindAnySystemsInNamespace
         /// </remarks>
         /// <param name="application">The application to act on</param>
-        public static void BindAllSystemsWithinApplicationScope(this ISystemsRxApplication application)
+        public static void BindAllSystemsWithinApplicationScope(this ISystemsR3Application application)
         {
             var applicationNamespace = application.GetType().Namespace;
             var namespaces = new[]
@@ -120,7 +120,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// <param name="application">The application to act on</param>
         /// <typeparam name="T">The implementation of ISystem to bind/register</typeparam>
         /// <remarks>This is really for runtime usage, in mose cases you will want to bind in starting and register in started</remarks>
-        public static void BindAndStartSystem<T>(this ISystemsRxApplication application) where T : ISystem
+        public static void BindAndStartSystem<T>(this ISystemsR3Application application) where T : ISystem
         {
             application.DependencyRegistry.Bind<ISystem, T>(x => x.WithName(typeof(T).Name));
             StartSystem<T>(application);
@@ -132,7 +132,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <typeparam name="T">The implementation of ISystem to register</typeparam>
-        public static void StartSystem<T>(this ISystemsRxApplication application) where T : ISystem
+        public static void StartSystem<T>(this ISystemsR3Application application) where T : ISystem
         {
             var groupSystem = application.DependencyResolver.Resolve<ISystem>(typeof(T).Name) 
                               ?? application.DependencyResolver.Resolve<T>();
@@ -145,7 +145,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <remarks>This ordering will be purely by priority</remarks>
-        public static IEnumerable<ISystem> GetAllBoundSystems(this ISystemsRxApplication application)
+        public static IEnumerable<ISystem> GetAllBoundSystems(this ISystemsR3Application application)
         {
             var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
             return allSystems.OrderByPriority();
@@ -156,7 +156,7 @@ namespace SystemsR3.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <remarks>Will be purely</remarks>
-        public static void StartAllBoundSystems(this ISystemsRxApplication application)
+        public static void StartAllBoundSystems(this ISystemsR3Application application)
         {
             var allSystems = GetAllBoundSystems(application);
             allSystems.ForEachRun(application.SystemExecutor.AddSystem);

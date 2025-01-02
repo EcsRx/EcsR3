@@ -41,7 +41,7 @@ namespace EcsR3.Tests.EcsRx
             };
 
             var mockResolver = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<IEcsRxApplication>();
+            var mockApplication = Substitute.For<IEcsR3Application>();
             mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
             mockApplication.DependencyResolver.Returns(mockResolver);
 
@@ -83,7 +83,7 @@ namespace EcsR3.Tests.EcsRx
             };
 
             var mockResolver = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<IEcsRxApplication>();
+            var mockApplication = Substitute.For<IEcsR3Application>();
             mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
             mockApplication.DependencyResolver.Returns(mockResolver);
 
@@ -131,7 +131,7 @@ namespace EcsR3.Tests.EcsRx
             };
 
             var mockResolver = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<IEcsRxApplication>();
+            var mockApplication = Substitute.For<IEcsR3Application>();
             mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
             mockApplication.DependencyResolver.Returns(mockResolver);
 

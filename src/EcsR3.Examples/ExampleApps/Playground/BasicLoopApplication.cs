@@ -11,7 +11,7 @@ using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Examples.ExampleApps.Playground
 {
-    public abstract class BasicLoopApplication : EcsRxConsoleApplication
+    public abstract class BasicLoopApplication : EcsR3ConsoleApplication
     {
         protected static readonly int EntityCount = 200000;
         protected static readonly int SimulatedUpdates = 100;

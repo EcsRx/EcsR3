@@ -9,7 +9,7 @@ using EcsR3.Plugins.GroupBinding.Systems.Handlers;
 
 namespace EcsR3.Plugins.GroupBinding
 {
-    public class GroupBindingsPlugin : ISystemsRxPlugin
+    public class GroupBindingsPlugin : ISystemsR3Plugin
     {
         public string Name => "Group Bindings";
         public Version Version { get; } = new Version("1.0.0");

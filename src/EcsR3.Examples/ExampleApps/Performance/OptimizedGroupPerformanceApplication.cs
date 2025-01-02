@@ -14,7 +14,7 @@ using SystemsR3.Infrastructure.Modules;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class OptimizedGroupPerformanceApplication : EcsRxConsoleApplication
+    public class OptimizedGroupPerformanceApplication : EcsR3ConsoleApplication
     {
         private const int ProcessCount = 10000;
         

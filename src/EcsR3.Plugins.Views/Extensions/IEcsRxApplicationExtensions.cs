@@ -16,7 +16,7 @@ namespace EcsR3.Plugins.Views.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <remarks>This ordering will be Setup, ViewResolvers, Anything Else</remarks>
-        public static IEnumerable<ISystem> GetAllBoundViewSystems(this IEcsRxApplication application)
+        public static IEnumerable<ISystem> GetAllBoundViewSystems(this IEcsR3Application application)
         {
             var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
 
@@ -31,7 +31,7 @@ namespace EcsR3.Plugins.Views.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// /// <remarks>This ordering will be Setup, ViewResolvers, Anything Else</remarks>
-        public static void StartAllBoundViewSystems(this IEcsRxApplication application)
+        public static void StartAllBoundViewSystems(this IEcsR3Application application)
         {
             var orderedSystems = GetAllBoundViewSystems(application);
             orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);

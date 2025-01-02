@@ -3,12 +3,12 @@
     <PropertyGroup>
         <Version>0.0.0</Version>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Title>SystemsRx.Plugins.Transforms</Title>
+        <Title>SystemsR3.Plugins.Transforms</Title>
         <Authors>Grofit (LP)</Authors>
-        <PackageLicenseUrl>https://github.com/ecsrx/systemsrx/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageProjectUrl>https://github.com/ecsrx/systemsrx</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ecsrx/ecsr3/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/ecsr3</PackageProjectUrl>
         <Description>SytemsRx plugin to provide the notion of transforms to the framework</Description>
-        <PackageTags>rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+        <PackageTags>r3 reactive patterns ioc game-development xna monogame unity</PackageTags>
         <LangVersion>8</LangVersion>
     </PropertyGroup>
 

@@ -11,20 +11,20 @@ using SystemsR3.Systems;
 
 namespace SystemsR3.Infrastructure
 {
-    public abstract class SystemsRxApplication : ISystemsRxApplication
+    public abstract class SystemsR3Application : ISystemsR3Application
     {
         public ISystemExecutor SystemExecutor { get; private set; }
         public IEventSystem EventSystem { get; private set; }
-        public IEnumerable<ISystemsRxPlugin> Plugins => _plugins;
+        public IEnumerable<ISystemsR3Plugin> Plugins => _plugins;
 
-        private readonly List<ISystemsRxPlugin> _plugins;
+        private readonly List<ISystemsR3Plugin> _plugins;
 
         public abstract IDependencyRegistry DependencyRegistry { get; }
         public IDependencyResolver DependencyResolver { get; protected set; }
 
-        protected SystemsRxApplication()
+        protected SystemsR3Application()
         {
-            _plugins = new List<ISystemsRxPlugin>();
+            _plugins = new List<ISystemsR3Plugin>();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SystemsR3.Infrastructure
         /// Register a given plugin within the application
         /// </summary>
         /// <param name="plugin">The plugin to register</param>
-        protected void RegisterPlugin(ISystemsRxPlugin plugin)
+        protected void RegisterPlugin(ISystemsR3Plugin plugin)
         { _plugins.Add(plugin); }
     }
 }

@@ -3,12 +3,12 @@
     <PropertyGroup>
         <Version>0.0.0</Version>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Title>SystemsRx.Infrastructure</Title>
+        <Title>SystemsR3.Infrastructure</Title>
         <Authors>Grofit (LP)</Authors>
-        <PackageLicenseUrl>https://github.com/ecsrx/systemsrx/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageProjectUrl>https://github.com/ecsrx/systemsrx</PackageProjectUrl>
-        <Description>A set of convention based classes to speed up the setup of projects using SystemsRx</Description>
-        <PackageTags>rx reactive patterns ioc game-development view-separation xna monogame unity</PackageTags>
+        <PackageLicenseUrl>https://github.com/ecsr3/ecsr3/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsr3/ecsr3</PackageProjectUrl>
+        <Description>A set of convention based classes to speed up the setup of projects using SystemsR3</Description>
+        <PackageTags>r3 reactive patterns ioc game-development view-separation xna monogame unity</PackageTags>
         <LangVersion>8</LangVersion>
     </PropertyGroup>
 

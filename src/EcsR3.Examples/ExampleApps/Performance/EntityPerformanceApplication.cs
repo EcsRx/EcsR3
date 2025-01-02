@@ -15,7 +15,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class EntityPerformanceApplication : EcsRxConsoleApplication
+    public class EntityPerformanceApplication : EcsR3ConsoleApplication
     {
         private IComponent[] _availableComponents;
         private Type[] _availableComponentTypes;

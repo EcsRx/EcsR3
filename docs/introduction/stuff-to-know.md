@@ -12,7 +12,7 @@ This is related to IoC and is basically a industry standard way of resolving dep
 
 ## [Reactive Extensions (RX)](https://grofit.gitbook.io/development-for-winners/development/general/data-patterns/reactive-extensions)
 
-This library tries to make use of the common ECS paradigm while making reactivity one of its big bonuses. If you are unsure about what rx is or how it can benefit your project then have a read into it, simply speaking its a push approach to data changing rather than a polling approach.
+This library tries to make use of the common ECS paradigm while making reactivity one of its big bonuses. If you are unsure about what rx/r3 is or how it can benefit your project then have a read into it, simply speaking it's a push approach to data changing rather than a polling approach.
 
 ## [Intro to Unit Testing](https://grofit.gitbook.io/development-for-winners/development/general/testing/intro-to-testing)
 

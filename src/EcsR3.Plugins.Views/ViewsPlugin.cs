@@ -6,7 +6,7 @@ using SystemsR3.Systems;
 
 namespace EcsR3.Plugins.Views
 {
-    public class ViewsPlugin : ISystemsRxPlugin
+    public class ViewsPlugin : ISystemsR3Plugin
     {
         public string Name => "Views Plugin";
         public Version Version { get; } = new Version("1.0.0");

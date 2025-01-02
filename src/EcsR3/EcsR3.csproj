@@ -2,12 +2,12 @@
   <PropertyGroup>
     <Version>0.0.0</Version>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Title>EcsRx</Title>
+    <Title>EcsR3</Title>
     <Authors>Grofit (LP)</Authors>
-    <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ecsrx/ecsr3/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ecsrx/ecsr3</PackageProjectUrl>
     <Description>A reactive take on the ECS pattern for .net game developers</Description>
-    <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+    <PackageTags>ecs r3 reactive patterns ioc game-development xna monogame unity</PackageTags>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>

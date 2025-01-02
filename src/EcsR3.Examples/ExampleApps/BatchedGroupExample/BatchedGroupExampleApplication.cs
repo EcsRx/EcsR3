@@ -6,7 +6,7 @@ using EcsR3.Examples.ExampleApps.BatchedGroupExample.Modules;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
 {
-    public class BatchedGroupExampleApplication : EcsRxConsoleApplication
+    public class BatchedGroupExampleApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
         private int _entityCount = 2;

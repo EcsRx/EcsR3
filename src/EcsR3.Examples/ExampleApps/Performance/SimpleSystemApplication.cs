@@ -9,7 +9,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class SimpleSystemApplication : EcsRxConsoleApplication
+    public class SimpleSystemApplication : EcsR3ConsoleApplication
     {
         private static readonly int EntityCount = 1000;
         private IEntityCollection _collection;

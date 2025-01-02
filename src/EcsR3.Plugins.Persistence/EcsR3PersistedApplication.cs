@@ -8,7 +8,7 @@ using EcsR3.Plugins.Persistence.Pipelines;
 
 namespace EcsR3.Plugins.Persistence
 {
-    public abstract class EcsRxPersistedApplication : EcsRxApplication
+    public abstract class EcsR3PersistedApplication : EcsR3Application
     {
         public ISaveEntityDatabasePipeline SaveEntityDatabasePipeline;
         public ILoadEntityDatabasePipeline LoadEntityDatabasePipeline;
