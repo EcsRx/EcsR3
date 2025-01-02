@@ -2,7 +2,7 @@
 
 Welcome etc!
 
-> If you are viewing this in github you can view the book version of it [HERE](https://ecsrx.gitbook.io/systemsrx/v/main/)
+> If you are viewing this in github you can view the book version of it [HERE](https://ecsrx.gitbook.io/ecsr3/v/main/)
 
 This is an attempt to document most of the important stuff around how to use the library, it is recommended that you follow the order of the TOC, however if you are not using the gitbook version then just look at the summary.md file and follow that order.
 

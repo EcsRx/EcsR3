@@ -8,7 +8,7 @@ So lets say you wanted to create an RPG plugin where it contained components, ev
 
 To be able to do that we need to have the notion of DI in the framework without having an ACTUAL DI container available. As there would be no point having a hard dependency on Zenject for your plugin if you wanted to consume it in the Monogame world etc.
 
-> You may be thinking "why have your own abstraction when Microsoft has now got its own DI abstractions?" and thats a really good point, there are 2 reasons. First being that not all DI frameworks (especially more game dev specific ones) adhere to the MS one so we cant rely upon them conforming to that interface. 
+> You may be thinking `"why have your own abstraction when Microsoft has now got its own DI abstractions?"` and thats a really good point, there are 2 reasons. First being that not all DI frameworks (especially more game dev specific ones) adhere to the MS one so we cant rely upon them conforming to that interface. 
 > 
 > Second there is some implicit behaviour in the MS DI framework that is not entirely consistent, such as how keyed/named and non named services are segregated, different DI frameworks do this differently, so we wrap some underlying logic to give the same behaviour across all implementations.
 

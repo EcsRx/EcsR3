@@ -1,12 +1,16 @@
-# Setup
+# What Is Systems R3?
 
-You can use SystemsRx with an infrastructure layer or just by itself, but it is recommended to use the infrastructure if possible.
+Systems R3 is a layer on top of R3 that provides ways to trigger logic (`systems`) based on observable triggers, be it an interval, an event, some other bespoke observable stream.
 
-> SystemsRx is more of a bare bones library which other libraries such as EcsRx builds on top of so while you can use this by itself you may want to look at the libraries that build on top of this layer.
+## Setup
+
+You can use SystemsR3 with an infrastructure layer or just by itself, but it is recommended to use the infrastructure if possible.
+
+> `SystemsR3` is more of a foundational library which other libraries such as `EcsR3` builds on top of so while you can use this by itself you may want to look at the libraries that build on top of this layer.
  
 ## Pre built infrastructure or not?
 
-Out the box SystemsRx comes with a load of infrastructure classes which simplify setup, if you are happy to use that as a basis for setup then your job becomes a bit simpler.
+Out the box SystemsR3 comes with a load of infrastructure classes which simplify setup, if you are happy to use that as a basis for setup then your job becomes a bit simpler.
 
 There is also a whole section in these docs around the infrastructure and how to use the application and other classes within there in common scenarios.
 
@@ -14,8 +18,8 @@ There is also a whole section in these docs around the infrastructure and how to
 
 A wise choice so to start with its advised that you take:
 
-- `SystemsRx`
-- `SystemsRx.Infrastructure`
+- `SystemsR3`
+- `SystemsR3.Infrastructure`
 
 This will provide the basic classes for you to extend, however one fundamental piece of the puzzle is the DI abstraction layer. It doesn't really care which DI framework as it provides an interface for you to implement and then consume that in your own `EcsRxApplication` implementation.
 
@@ -37,7 +41,7 @@ Ok captain, if you just want to get things going with minimum effort then I woul
 This is like the most bare bones setup I would advise:
 
 ```csharp
-public abstract class SystemsRxApplication
+public abstract class SystemsR3Application
 {
 	public ISystemExecutor SystemExecutor { get; }
 	public IEventSystem EventSystem { get; }
@@ -74,7 +78,7 @@ public abstract class SystemsRxApplication
 Then all you need to do is go:
 
 ```csharp
-public class HelloWorldExampleApplication : EcsRxApplication
+public class HelloWorldExampleApplication : EcsR3Application
 {
 	public override void StartApplication()
 	{

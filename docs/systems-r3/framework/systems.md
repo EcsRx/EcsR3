@@ -6,7 +6,7 @@ The way systems are designed there is an orchestration layer which wraps all sys
 
 You just express how you want to trigger your systems and let the `SystemExecutor` handle the heavy lifting and trigger the relevant method in the system when its time. This can easily be seen when you look at all the available system interfaces which all process individual entities not groups of them.
 
-> This only documents the SystemsRx available systems but EcsRx builds on top of this and provides many other system types and an ECS paradigm.
+> This only documents the SystemsR3 available systems but EcsR3 builds on top of this and provides many other system types and an ECS paradigm.
 
 ## System Types
 
@@ -26,6 +26,10 @@ will be triggered when the system is removed.
 ### `IBasicSystem`
 
 This is a basic system that is triggered every update (based on scheduler update frequency) and lets you do anything you want per update.
+
+### `IReactiveSystem`
+
+This allows you to react to any observable and be passed the data for execution.
 
 ### `IReactToEventSystem`
 

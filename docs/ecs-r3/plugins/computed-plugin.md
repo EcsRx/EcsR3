@@ -1,4 +1,4 @@
-# `SystemsRx.Computeds`
+# Computeds Plugin
 
 Computed values are basically read only values which are updated on changes, much like `IObservable` instances which notify you on data changing, computed objects also let you see what the value of the object is as well.
 
@@ -14,7 +14,9 @@ Simplest computed and provides a current value and allows subscription to when t
 
 A reactive collection which provides an up to date collection of values and allows you to subscribe to when it changes, this could be useful for tracking all beneficial buffs on a player where the source data is just ALL buffs/debuffs on the entity.
 
-> EcsRx adds on top of this and provides `IComputedGroup` and other related functionality
+### `IComputedGroup` (For computed observable groups of IEntity)
+
+This acts as a way to constrain an `IObservableGroup` further than just the components included, this can be useful for things where you want to maintain a subset of a group for processing. Its worth noting that `IComputedGroup` also implements `IObservableGroup` too so can be used in other `IComputedGroup` objects or passed into systems as if it were a normal observable group.
 
 ## How do I use them
 
@@ -22,10 +24,45 @@ So there are a few different ways to use them and most of that is based upon you
 
 All of these classes are provided as `abstract` classes so you should inherit from them if you wish to build off them.
 
+### `ComputedGroup`
+
+```csharp
+var myGroup = new MyComputedGroup(someObservableGroup); // inherits from ComputedGroup
+foreach(IEntity entity in myGroup) 
+{
+    // ...
+}
+```
+
+This implements `IComputedGroup` and takes in an `IObservableGroup` instance in its constructor which it constrains off. This is useful for just constraining a group of entities further than just the components on the entity but the values within those components.
+
+### `ComputedCollectionFromGroup`
+
+```csharp
+var scoresForEntities = new ComputedScores(someObservableGroupWithScores); // inherits from ComputedCollectionFromGroup<int>
+foreach(int someScore in scoresForEntities)
+{
+    //...
+}
+```
+
+This provides a way to create a computed collecton based off an observable group (or as mentioned before a computed group). The benefit of this is that it allows you to select what data should be returned, so where a computed group returns `IEntity` instances for you to use, this returns whatever data you want and will manage when data is added/removed etc.
+
+### `ComputedFromGroup`
+
+```csharp
+var partyRating = new ComputedPartyRating(observableGroupOfPartyMemebers); // inherits from ComputedFromGroup<float>
+
+GroupHud.PartyRating.Text = partyRating.Value.ToString();
+```
+
+This can be useful for taking a group and computing a singular value based upon all the data available, like for example you may want to average values on all entities or even just create a payload object containing multiple bits of data from the group. 
+
 ### `ComputedFromData`
 
 ```csharp
 var firstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
+
 RacerHud.CurrentWinner.Text = firstPlaceRacer.Value.Name;
 ```
 
@@ -49,6 +86,12 @@ We now have a few requirements:
 - We need to show a value as to how hard the current area is
 
 Now I appreciate this is all a bit whimsical but stay with me, now we can easily constrain on groups based on the components, so we can find all entities which are in a group and can attack etc, but thats where our current observations stop.
+
+### Getting all OUR group members (`IComputedGroup` scenario)
+
+So at this point we want a way to get all entities within our group, so instead of making our `PartyHUDSystem` (or whatever you call it) have to keep drilling down into EVERY entity which has a `HasGroup` component, we can create an `IComputedGroup` which basically computes all the entities which have a `HasGroup` component AND the id of the group matches your group id.
+
+This way you now have a group which will just stay up to date and always reflect (based upon implementation used) all entities which are in your group. You can create this ahead of time and inject it into many other systems, so much like `IObservableGroup` objects are shared and cached to improve performance/simplicity, this also brings those same benefits and can be built off further.
 
 ### Showing all party members with low HP (`IComputedCollection` scenario)
 
