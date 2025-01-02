@@ -15,7 +15,7 @@ This is where it gets interesting, so we have multiple flavours of systems depen
 ### `IManualSystem`
 
 This is a niche system for when you want to carry out some logic outside the scope of entities, or want to have 
-more fine grained control over how you deal with the entities matched.
+more fine-grained control over how you deal with the entities matched.
 
 Rather than the `SystemExecutor` doing most of the work for you and managing the subscriptions it leaves it up to you
 to manage everything how you want once the system has been started.

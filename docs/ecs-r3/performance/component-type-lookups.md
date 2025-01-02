@@ -2,11 +2,11 @@
 
 Out the box most of your component interactions will be done via generics like `entity.GetComponent<SomeComponent>();` and this is fine for most cases.
 
-Behind the scenes when EcsRx starts it builds an index/id list based off the available components and will under the hood use these indexes to interact with the component data, so when you provide it a generic at the entity layer, its actually being looked up and converted into an index to be used in the underlying data stores.
+Behind the scenes when EcsR3 starts it builds an index/id list based off the available components and will under the hood use these indexes to interact with the component data, so when you provide it a generic at the entity layer, its actually being looked up and converted into an index to be used in the underlying data stores.
 
 So if you are happy to provide a type index/id with your call it will bypass the lookup step for the generic, meaning less overhead in entity/component interactions, for example the call above would now be `entity.GetComponent<SomeComponent>(ComponentLookupTypes.SomeComponentId)` (or if you dont care about the strong type) `entity.GetComponent(ComponentLookupTypes.SomeComponentId)`.
 
-So this change means **YOU** have to tell EcsRx ahead of time what indexes/ids to use for your components and provide that data to the rest of your codebase, its easiest to do this by making a class with static int properties like so:
+So this change means **YOU** have to tell EcsR3 ahead of time what indexes/ids to use for your components and provide that data to the rest of your codebase, its easiest to do this by making a class with static int properties like so:
 
 ```csharp
 public static class ComponentLookupTypes

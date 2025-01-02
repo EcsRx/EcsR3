@@ -10,28 +10,9 @@ This means your systems don't need to worry about the logistics of getting entit
 
 This is where it gets interesting, so we have multiple flavours of systems depending on how you want to consume the entities, by default there is `IManualSystem` but there is a project containing all most common systems (`EcsRx.Systems`). You can also mix them up so you could have a single system implement `ISetupSystem`, `ITeardown` and `IReactToEntitySystem` which would run a setup method for each entity when it joins the group then react to the entity changes and process them on changes, then finally run some logic when the entity is being removed from the group.
 
-All **ECS** *(Not SystemsRx)* systems have the notion of a `Group` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
+All **ECS** *(Not SystemsR3)* systems have the notion of a `Group` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
 
-### `IManualSystem` *(SystemsRx)*
-
-This is a niche system for when you want to carry out some logic outside the scope of entities, or want to have 
-more fine grained control over how you deal with the entities matched.
-
-Rather than the `SystemExecutor` doing most of the work for you and managing the subscriptions it leaves it up to you
-to manage everything how you want once the system has been started.
-
-The `StartSystem` method will be triggered when the system has been added to the executor, and the `StopSystem` 
-will be triggered when the system is removed.
-
-### `IBasicSystem` *(SystemsRx)*
-
-This is a basic system that is triggered every update (based on scheduler update frequency) and lets you do anything you want per update.
-
-### `IReactToEventSystem` *(SystemsRx)*
-
-This allows you to react to any event of that type which is published over the `IEventSystem`.
-
-### `IBasicEntitySystem` *(EcsRx)*
+### `IBasicEntitySystem`
 
 This system allows you to process each entity within the group on every update cycle (much like `IBasicSystem` but with entities).
 

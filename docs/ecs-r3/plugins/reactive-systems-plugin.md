@@ -1,6 +1,6 @@
 # Reactive Systems Plugin
 
-This plugin contains some pre-made systems that cover common use cases where you want to use rx streams to govern your system processing.
+This plugin contains some pre-made systems that cover common use cases where you want to use r3 streams to govern your system processing.
 
 ## ISetupSystem
 
@@ -22,9 +22,9 @@ public IObservable<IEntity> ReactToEntity(IEntity entity)
 }
 ```
 
-Once you have setup your reactions the `Process` method is triggered every time the subscription from the reaction phase is triggered, so this way your system reacts to data rather than polling for changes each frame, this makes system logic for succinct and direct, it also can make quite complex scenarios quite simple as you can use the power of **Rx** to daisy chain together your observables to trigger whatever you want.
+Once you have setup your reactions the `Process` method is triggered every time the subscription from the reaction phase is triggered, so this way your system reacts to data rather than polling for changes each frame, this makes system logic for succinct and direct, it also can make quite complex scenarios quite simple as you can use the power of **R3** to daisy chain together your observables to trigger whatever you want.
 
-It is also worth looking at the groups documentation as there are some features in groups which allow you to automatically constrain entities based upon predicates so that can push some constraining logic up to the *group* rather than your specific system, however sometimes it makes sense to be in the system, so its your call.
+It is also worth looking at the groups documentation as there are some features in groups which allow you to automatically constrain entities based upon predicates so that can push some constraining logic up to the *group* rather than your specific system, however sometimes it makes sense to be in the system, so it's your call.
 
 ## IReactToGroupSystem
 

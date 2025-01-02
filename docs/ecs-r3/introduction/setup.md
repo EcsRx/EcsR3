@@ -1,4 +1,8 @@
-# Setup
+# What Is EcsR3?
+
+EcsR3 is a framework built on top of `R3` which provides an ECS paradigm for managing entities and executing logic on them based on systems and groups. It also makes use of the underlying `SystemsR3` library for common infrastructure that is not ECS specific but is used here.
+
+## Setup
 
 If you are using Monogame or Unity you can just go and get the platform specific helpers which will out the box provide you most of the infrastructure and setup required to get going, so go look there.
 
@@ -8,7 +12,7 @@ If you are not using Unity or Monogame and want to pioneer into a new territory 
 
 ## Pre build infrastructure or not?
 
-Out the box EcsRx comes with a load of infrastructure classes which simplify setup, if you are happy to use that as a basis for setup then your job becomes a bit simpler.
+Out the box EcsR3 comes with a load of infrastructure classes which simplify setup, if you are happy to use that as a basis for setup then your job becomes a bit simpler.
 
 There is also a whole section in these docs around the infrastructure and how to use the application and other classes within there in common scenarios.
 
@@ -16,20 +20,20 @@ There is also a whole section in these docs around the infrastructure and how to
 
 A wise choice so to start with its advised that you take:
 
-- `EcsRx`
-- `EcsRx.Infrastructure`
-- `EcsRx.Plugins.ReactiveSystems`
-- `EcsRx.Plugins.Views`
+- `EcsR3`
+- `EcsR3.Infrastructure`
+- `EcsR3.Plugins.ReactiveSystems`
+- `EcsR3.Plugins.Views`
 
-This will provide the basic classes for you to extend, however one fundamental problem is that the infrastructure expects you to be using a DI framework. It doesn't really care which DI framework as it provides an interface for you to implement and then consume that in your own `EcsRxApplication` implementation.
+This will provide the basic classes for you to extend, however one fundamental problem is that the infrastructure expects you to be using a DI framework. It doesn't really care which DI framework as it provides an interface for you to implement and then consume that in your own `EcsR3Application` implementation.
 
 So here are the main bits you need:
 
-- Implement `IDependencyContainer` for your DI framework of choice. [Here is a Ninject one from examples](https://github.com/EcsRx/ecsrx/blob/master/src/EcsRx.Examples/Dependencies/NinjectDependencyContainer.cs)
+- Implement `IDependencyContainer` for your DI framework of choice. [Here is a Ninject one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Dependencies/NinjectDependencyContainer.cs)
 
-- Implement your own `EcsRxApplication` class, giving it an `IDependencyContainer` implementation to use. [Here is one from examples](https://github.com/EcsRx/ecsrx/blob/master/src/EcsRx.Examples/Application/EcsRxConsoleApplication.cs)
+- Implement your own `EcsR3Application` class, giving it an `IDependencyContainer` implementation to use. [Here is one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Application/EcsR3ConsoleApplication.cs)
 
-- Extend your custom `EcsRxApplication` implementation for each logical app you need to make, as shown in the EcsRx console examples
+- Extend your custom `EcsR3Application` implementation for each logical app you need to make, as shown in the EcsR3 console examples
 
 There are pre-made DI implementations for **Ninject** and **Zenject** so if you can use one of those on your platform GREAT! if not then just pick a DI framework of choice and implement your own handler for it (using the ninject one as an example to base it off).
 
@@ -44,14 +48,14 @@ Ok captain, if you just want to get things going with minimum effort then I woul
 This is like the most bare bones setup I would advise:
 
 ```csharp
-public abstract class EcsRxApplication
+public abstract class EcsR3Application
 {
 	public ISystemExecutor SystemExecutor { get; }
 	public IEventSystem EventSystem { get; }
 	public IObservableGroupManager ObservableGroupManager { get; }
 	public IEntityDatabase EntityDatabase { get; }
 
-	protected EcsRxApplication()
+	protected EcsR3Application()
 	{
 		// For sending events around
 		EventSystem = new EventSystem(new MessageBroker());
@@ -93,7 +97,7 @@ public abstract class EcsRxApplication
 Then all you need to do is go:
 
 ```csharp
-public class HelloWorldExampleApplication : EcsRxApplication
+public class HelloWorldExampleApplication : EcsR3Application
 {
 	public override void StartApplication()
 	{

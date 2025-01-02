@@ -2,7 +2,7 @@
 
 Most games have the notion of a view, in **Unity** this may be your Scene (GameObjects), in **Monogame** it may be your sprites or 3d objects, in **Godot** it would be your nodes, it could even be text written out to a console app.
 
-Ultimately these view bits rely upon the data within your components but will live outside of the core ECS system, i.e in unity your GameObject exists within the Scene and the EcsRx has no knowledge of this view layer.
+Ultimately these view bits rely upon the data within your components but will live outside of the core ECS system, i.e in unity your GameObject exists within the Scene and the EcsR3 has no knowledge of this view layer.
 
 A large part of game logic will take place around these view related objects, so to this end the notion of views have been added to try and provide some streamlined and consistent way of interacting with the view layer from within the ECS layer. 
 

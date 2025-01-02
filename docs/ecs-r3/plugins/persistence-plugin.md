@@ -9,15 +9,15 @@ As part of this it also adds support for building your own pipelines to send dat
 
 ## A bit of background
 
-Historically this functionality all used to be within EcsRx when it was purely a Unity project, as this was an attempt to try and serialize entity/component data from the scene. However Unity is a complex beast and due to various other reasons the serialization stuff got sidelined.
+Historically this functionality all used to be within EcsR3 when it was purely a Unity project, as this was an attempt to try and serialize entity/component data from the scene. However Unity is a complex beast and due to various other reasons the serialization stuff got sidelined.
 
-Anyway fast-forward a bit and now EcsRx is cross platform and Unity is just one of the supported frameworks, so now seemed a good time to re-introduce the serialization aspect of it all.
+Anyway fast-forward a bit and now EcsR3 is cross platform and Unity is just one of the supported frameworks, so now seemed a good time to re-introduce the serialization aspect of it all.
 
-Given the actual functionality developed was pretty self contained it made sense to split them out into their own libraries that could be used outside of EcsRx, which is why they are their own separate repos, but just wanted to let you know that these libraries were specifically developed originally as part of EcsRx to assist with data push/pulling to various places.
+Given the actual functionality developed was pretty self contained it made sense to split them out into their own libraries that could be used outside of EcsR3, which is why they are their own separate repos, but just wanted to let you know that these libraries were specifically developed originally as part of EcsR3 to assist with data push/pulling to various places.
 
-## `EcsRxPersistedApplication`
+## `EcsR3PersistedApplication`
 
-As part of this there is a helper application class, which extends the default `EcsRxApplication` and by default will look for an existing entity database file and load it when the app starts.
+As part of this there is a helper application class, which extends the default `EcsR3Application` and by default will look for an existing entity database file and load it when the app starts.
 
 If you do not want it to load automatically and want to handle the load yourself you can override `LoadOnStart` or `SaveOnStop` if you dont want to override the entity database. Also as part of this there is some helper methods for saving and loading the entity database.
 
@@ -64,7 +64,7 @@ var mySaveGameData = loadPipeline.Execute();
 
 As you can see you can setup complex pipelines which can process data/transform it and send it to files, http endpoints, databases or even store it in memory or raise an event etc.
 
-The above example uses some of the helper functionality which act as extensions on the DI container, but you can also inject `EcsRxPipelineBuilder` manually and use that directly to make a pipeline without injecting it in.
+The above example uses some of the helper functionality which act as extensions on the DI container, but you can also inject `EcsR3PipelineBuilder` manually and use that directly to make a pipeline without injecting it in.
 
 ## Some things to know
 
