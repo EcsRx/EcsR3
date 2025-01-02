@@ -77,9 +77,9 @@ The architecture is layered so you can use the core parts without needing the ad
 
 ### SystemsR3
 
-This takes the barebones rx implementation and creates a basic `ISystem` convention with an `ISystemExecutor` and `IConventionalSystemHandler` implementations to provide basic systems interfaces (As shown in quick start above).
+This creates a basic `ISystem` convention with an `ISystemExecutor` and `IConventionalSystemHandler` implementations to provide basic systems interfaces (As shown in quick start above).
 
-While this can be used alone for basic systems you can build your own conventions on top of here, such as `EcsRx` which adds an ECS paradigm on top of SystemsRx.
+While this can be used alone for basic systems you can build your own conventions on top of here, such as `EcsR3` which adds an ECS paradigm on top of SystemsRx.
 
 ### Infrastructure
 
