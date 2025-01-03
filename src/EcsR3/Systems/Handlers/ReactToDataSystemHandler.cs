@@ -22,6 +22,7 @@ namespace EcsR3.Systems.Handlers
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> EntitySubscriptions;
 
         private readonly MethodInfo _processEntityMethod;
+        private readonly object _lock = new object();
         
         public ReactToDataSystemHandler(IObservableGroupManager observableGroupManager)
         {
@@ -66,9 +67,13 @@ namespace EcsR3.Systems.Handlers
             var processEntityFunctions = CreateEntityProcessorFunctions(system).ToArray();
 
             var entityChangeSubscriptions = new CompositeDisposable();
-            SystemSubscriptions.Add(system, entityChangeSubscriptions);
             var entitySubscriptions = new Dictionary<int, IDisposable>();
-            EntitySubscriptions.Add(system, entitySubscriptions);
+
+            lock (_lock)
+            {
+                SystemSubscriptions.Add(system, entityChangeSubscriptions);
+                EntitySubscriptions.Add(system, entitySubscriptions);
+            }
 
             var groupSystem = system as IGroupSystem;
             var affinities = groupSystem.GetGroupAffinities();
@@ -98,37 +103,48 @@ namespace EcsR3.Systems.Handlers
         
         public void SetupEntity(IEnumerable<Func<IEntity, IDisposable>> systemProcessors, IEntity entity, Dictionary<int, IDisposable> subs)
         {
-            subs.Add(entity.Id, null);
+            lock(_lock)
+            { subs.Add(entity.Id, null); }
                 
             foreach (var processFunction in systemProcessors)
             {
                 var subscription = processFunction(entity);
-                if (subs.ContainsKey(entity.Id))
-                { subs[entity.Id] = subscription; }
-                else
-                { subscription.Dispose(); }
+
+                lock (_lock)
+                {
+                    if (subs.ContainsKey(entity.Id))
+                    { subs[entity.Id] = subscription; }
+                    else
+                    { subscription.Dispose(); }
+                }
             }
         }
 
         public void DestroySystem(ISystem system)
         {
-            SystemSubscriptions.RemoveAndDispose(system);
+            lock (_lock)
+            {
+                SystemSubscriptions.RemoveAndDispose(system);
             
-            var entitySubscriptions = EntitySubscriptions[system];
-            entitySubscriptions.Values.DisposeAll();
-            entitySubscriptions.Clear();
-            EntitySubscriptions.Remove(system);
+                var entitySubscriptions = EntitySubscriptions[system];
+                entitySubscriptions.Values.DisposeAll();
+                entitySubscriptions.Clear();
+                EntitySubscriptions.Remove(system);
+            }
         }
         
         public void Dispose()
         {
-            SystemSubscriptions.DisposeAll();
-            foreach (var entitySubscriptions in EntitySubscriptions.Values)
+            lock (_lock)
             {
-                entitySubscriptions.Values.DisposeAll();
-                entitySubscriptions.Clear();
+                SystemSubscriptions.DisposeAll();
+                foreach (var entitySubscriptions in EntitySubscriptions.Values)
+                {
+                    entitySubscriptions.Values.DisposeAll();
+                    entitySubscriptions.Clear();
+                }
+                EntitySubscriptions.Clear();
             }
-            EntitySubscriptions.Clear();
         }
     }
 }

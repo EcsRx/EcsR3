@@ -23,6 +23,8 @@ namespace EcsR3.Systems.Handlers
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
+        private readonly object _lock = new object();
+        
         public BasicEntitySystemHandler(IObservableGroupManager observableGroupManager, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
         {
             _observableGroupManager = observableGroupManager;
@@ -57,7 +59,8 @@ namespace EcsR3.Systems.Handlers
                         .Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel));
             }
 
-            _systemSubscriptions.Add(system, subscription);
+            lock (_lock)
+            { _systemSubscriptions.Add(system, subscription); }
         }
 
         private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IBasicEntitySystem castSystem, bool runParallel = false)
@@ -73,14 +76,20 @@ namespace EcsR3.Systems.Handlers
             for (var i = entities.Count - 1; i >= 0; i--)
             { castSystem.Process(entities[i], elapsedTime); }
         }
-        
+
         public void DestroySystem(ISystem system)
-        { _systemSubscriptions.RemoveAndDispose(system); }
+        {
+            lock (_lock)
+            { _systemSubscriptions.RemoveAndDispose(system); }
+        }
 
         public void Dispose()
         {
-            _systemSubscriptions.Values.DisposeAll();
-            _systemSubscriptions.Clear();
+            lock (_lock)
+            {
+                _systemSubscriptions.Values.DisposeAll();
+                _systemSubscriptions.Clear();
+            }
         }
     }
 }
