@@ -1,5 +1,6 @@
-# SystemsRx
-A general system execution framework with additional layers for `Application` scenarios with DI abstraction and plugin support.
+# EcsR3
+
+EcsR3 is a reactive take on the common ECS pattern with a well separated design using R3 and adhering to IoC and other sensible design patterns.
 
 [![Build Status][build-status-image]][build-status-url]
 [![Code Quality Status][codacy-image]][codacy-url]
@@ -8,11 +9,11 @@ A general system execution framework with additional layers for `Application` sc
 [![Join Discord Chat][discord-image]][discord-url]
 [![Documentation][gitbook-image]][gitbook-url]
 
-> This originally was a core part of [EcsRx](https://github.com/EcsRx/ecsrx) however now lives as it's own repo, but EcsRx is built on top of this.
+> This is basically EcsRx but natively using R3 rather than Rx
 
 ## Features
 
-- Simple system interfaces and implementations to use/extend
+- Simple ECS interfaces and implementations to use/extend
 - Fully reactive architecture
 - Favours composition over inheritance
 - Adheres to inversion of control
@@ -23,11 +24,57 @@ A general system execution framework with additional layers for `Application` sc
 
 ## Quick Start
 
-You have 3 system conventions out of the box, `IBasicSystem`, `IManualSystem` and `IReactToEventSystem`. They can be mixed and matched and when added to the `ISystemExecutor` they will be triggered as expected.
+It is advised to look at the [setup docs](./docs/ecs-r3/introduction/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
 
-> It is advised to look at the [setup docs](./docs/introduction/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
+However here are some quick code examples:
+### Simple components
 
-### `IBasicSystem`
+```csharp
+public class HealthComponent : IComponent
+{
+    public int CurrentHealth { get; set; }
+    public int MaxHealth { get; set; }
+}
+```
+
+You implement the `IComponent` interface which marks the class as a component, and you can optionally implement `IDisposable` if you want to dispose stuff like so:
+
+```csharp
+public class HealthComponent : IComponent, IDisposable
+{
+    public ReactiveProperty<int> CurrentHealth { get; set; }
+    public int MaxHealth { get; set; }
+    
+    public HealthComponent() 
+    { CurrentHealth = new ReactiveProperty<int>(); }
+    
+    public void Dispose() 
+    { CurrentHealth.Dispose; }
+}
+```
+
+Any component which is marked with `IDisposable` will be auto disposed of by entities.
+
+### System examples
+
+```csharp
+public class CheckForDeathSystem : IReactToEntitySystem
+{
+    public IGroup TargetGroup => new Group(typeof(HealthComponent)); // Get any entities with health component
+
+    public IObservable<IEntity> ReactToEntity(IEntity entity) // Explain when you want to execute
+    {
+        var healthComponent = entity.GetComponent<HealthComponent>();
+        return healthComponent.CurrentHealth.Where(x => x <= 0).Select(x => entity);
+    }
+    
+    public void Process(IEntity entity) // Logic run whenever the above reaction occurs
+    {
+        entity.RemoveComponent<HealthComponent>();
+        entity.AddComponent<IsDeadComponent>();
+    }
+}
+``` 
 
 ```csharp
 public class SayHelloSystem : IBasicSystem
@@ -40,7 +87,6 @@ public class SayHelloSystem : IBasicSystem
 }
 ```
 
-### `IReactToEventSystem`
 ```csharp
 public class ReactToPlayerDeadEventSystem : IReactToEventSystem<PlayerDeadEvent>
 {
@@ -51,8 +97,6 @@ public class ReactToPlayerDeadEventSystem : IReactToEventSystem<PlayerDeadEvent>
     }
 }
 ```
-
-### `IManualSystem`
 
 ```csharp
 public class StartGameManualSystem : IManualSystem
@@ -70,6 +114,7 @@ public class StartGameManualSystem : IManualSystem
     }
 }
 ```
+> There are many other kinds of systems built in and available via plugins, so check docs for more information on that.
 
 ## Architecture
 
@@ -81,11 +126,9 @@ This creates a basic `ISystem` convention with an `ISystemExecutor` and `IConven
 
 While this can be used alone for basic systems you can build your own conventions on top of here, such as `EcsR3` which adds an ECS paradigm on top of SystemsRx.
 
-### Infrastructure
+### EcsR3
 
-This allows you to make use of the infrastructure layer which provides a DI abstraction layer, Plugin support and some best practice classes.
-
-> The 2 main libraries here are **SystemsRx** and **SystemsRx.Infrastructure**, these only have a dependency on **MicroRx**
+This is layered on top of **SystemsR3** and adds the ECS paradigm to the framework as well as adding a couple of systems specifically for entity handling. This also contains an **EcsR3.Infrastructure** layer which builds off the **SystemsR3.Infrastructure** layer to provide additional ECS related infrastructure.
 
 ## Docs
 
@@ -102,12 +145,12 @@ This can all be found within the [docs here](./docs/others/third-party-content.m
 [build-status-image]: https://ci.appveyor.com/api/projects/status/6incybkqawq9qe7u?svg=true
 [build-status-url]: https://ci.appveyor.com/project/grofit/systemsrx/branch/main
 [nuget-image]: https://img.shields.io/nuget/v/systemsrx.svg
-[nuget-url]: https://www.nuget.org/packages/SystemsRx/
+[nuget-url]: https://www.nuget.org/packages/EcsR3/
 [discord-image]: https://img.shields.io/discord/488609938399297536.svg
 [discord-url]: https://discord.gg/bS2rnGz
-[license-image]: https://img.shields.io/github/license/ecsrx/ecsrx.svg
-[license-url]: https://github.com/EcsRx/systemsrx/blob/master/LICENSE
+[license-image]: https://img.shields.io/github/license/ecsrx/ecsr3.svg
+[license-url]: https://github.com/EcsRx/ecsr3/blob/master/LICENSE
 [codacy-image]: https://app.codacy.com/project/badge/Grade/eb08368251df43c98aa55a8cbb8d5577
 [codacy-url]: https://www.codacy.com/gh/EcsRx/SystemsRx/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/SystemsRx&amp;utm_campaign=Badge_Grade
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
-[gitbook-url]: https://ecsrx.gitbook.io/systemsrx/v/main/
+[gitbook-url]: https://ecsrx.gitbook.io/ecsr3/v/main/
