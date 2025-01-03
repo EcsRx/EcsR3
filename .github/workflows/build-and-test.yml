@@ -23,5 +23,6 @@ jobs:
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
+          name: Unit Tests
           path: "**/*.trx"
           reporter:  dotnet-trx
