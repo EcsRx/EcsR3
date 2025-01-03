@@ -62,7 +62,7 @@ public class CheckForDeathSystem : IReactToEntitySystem
 {
     public IGroup TargetGroup => new Group(typeof(HealthComponent)); // Get any entities with health component
 
-    public IObservable<IEntity> ReactToEntity(IEntity entity) // Explain when you want to execute
+    public Observable<IEntity> ReactToEntity(IEntity entity) // Explain when you want to execute
     {
         var healthComponent = entity.GetComponent<HealthComponent>();
         return healthComponent.CurrentHealth.Where(x => x <= 0).Select(x => entity);
