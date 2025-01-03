@@ -23,7 +23,7 @@ jobs:
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
-          name: Unit Tests
+          name: Unit Test Summary
           path: "**/*.trx"
           reporter:  dotnet-trx
       - name: Code Coverage Summary Report
@@ -39,5 +39,5 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
-      - name: Write to Job Summary
+      - name: Add Coverage Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
