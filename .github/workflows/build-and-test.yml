@@ -3,6 +3,7 @@ on: [push]
 
 env:
   BUILD_VERSION: 8.0.${{github.run_number}}
+  SOLUTION_FILE: "src/EcsR3.sln"
 
 jobs:
   build-and-test:
@@ -14,6 +15,8 @@ jobs:
         with:
           dotnet-version: 9.0.x
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet restore ${{SOLUTION_FILE}}
+      - name: Build
+        run: dotnet build --configuration Release -p:Version=${{BUILD_VERSION}} ${{SOLUTION_FILE}}
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test --configuration Release --no-build ${{SOLUTION_FILE}}
