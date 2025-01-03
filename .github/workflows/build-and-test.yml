@@ -19,4 +19,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release -p:Version=${{ env.BuildVersion }} ${{ env.SolutionFile }}
       - name: Test
-        run: dotnet test --configuration Release --no-build ${{ env.SolutionFile }}
+        run: dotnet test --configuration Release --no-build ${{ env.SolutionFile }} --logger trx
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          path: "**/*.trx"
+          reporter:  dotnet-trx
