@@ -19,10 +19,19 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release -p:Version=${{ env.BuildVersion }} ${{ env.SolutionFile }}
       - name: Test
-        run: dotnet test --configuration Release --no-build ${{ env.SolutionFile }} --logger trx
+        run: dotnet test --configuration Release --no-build ${{ env.SolutionFile }} --logger trx --collect:"XPlat Code Coverage"
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
           name: Unit Tests
           path: "**/*.trx"
           reporter:  dotnet-trx
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: '**/coverage.cobertura.xml'
+          badge: true
+          format: 'markdown'
+          output: 'both'
+      - name: Write to Job Summary
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
