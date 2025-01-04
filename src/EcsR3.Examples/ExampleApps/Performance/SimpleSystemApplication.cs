@@ -1,0 +1,54 @@
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using EcsR3.Collections.Entity;
+using EcsR3.Examples.Application;
+using EcsR3.Examples.ExampleApps.Performance.Components;
+using EcsR3.Examples.ExampleApps.Performance.Systems;
+using EcsR3.Extensions;
+
+namespace EcsR3.Examples.ExampleApps.Performance
+{
+    public class SimpleSystemApplication : EcsR3ConsoleApplication
+    {
+        private static readonly int EntityCount = 1000;
+        private IEntityCollection _collection;
+        private ExampleReactToGroupSystem _groupSystem;
+
+        protected override void ApplicationStarted()
+        {
+            _collection = EntityDatabase.GetCollection();
+            _groupSystem = new ExampleReactToGroupSystem();
+            
+            for (var i = 0; i < EntityCount; i++)
+            {
+                var entity = _collection.CreateEntity();
+                entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
+            }
+
+            RunSingleThread();
+            RunMultiThreaded();
+        }
+
+        private void RunSingleThread()
+        {
+            var timer = Stopwatch.StartNew();
+            foreach(var entity in _collection)
+            { _groupSystem.Process(entity); }
+            timer.Stop();
+
+            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
+            Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
+        }
+        
+        private void RunMultiThreaded()
+        {
+            var timer = Stopwatch.StartNew();
+            Parallel.ForEach(_collection, _groupSystem.Process);
+            timer.Stop();
+
+            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
+            Console.WriteLine($"Executed {EntityCount} entities multi-threaded in {totalTime}ms");
+        }
+    }
+}

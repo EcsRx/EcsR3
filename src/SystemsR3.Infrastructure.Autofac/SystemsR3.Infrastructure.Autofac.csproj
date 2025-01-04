@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.0.0</Version>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Title>SystemsR3.Infrastructure.AutoFac</Title>
+        <Authors>Grofit (LP)</Authors>
+        <PackageLicenseUrl>https://github.com/ecsrx/ecsr3/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/ecsr3</PackageProjectUrl>
+        <Description>AutoFac dependency wrapper for use with infrastructure projects</Description>
+        <PackageTags>ecs r3 reactive patterns ioc game-development xna monogame unity</PackageTags>
+        <LangVersion>8</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SystemsR3.Infrastructure\SystemsR3.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="8.2.0" />
+    </ItemGroup>
+
+</Project>
