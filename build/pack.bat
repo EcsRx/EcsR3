@@ -14,5 +14,6 @@ dotnet pack ../src/EcsR3.Plugins.Views -c Release -o ../../_dist /p:version=%ver
 dotnet pack ../src/EcsR3.Plugins.GroupBinding -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Plugins.Batching -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Plugins.Transforms -c Release -o ../../_dist /p:version=%version%
+dotnet pack ../src/EcsR3.Plugins.Persistence -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Infrastructure -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Infrastructure.Ninject -c Release -o ../../_dist /p:version=%version%
