@@ -14,11 +14,11 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
-      - name: Build
+      - name: .Net Restore
         run: dotnet restore ${{ env.SolutionFile }}
-      - name: Build
-        run: dotnet build --configuration Release -p:Version=${{ env.BuildVersion }} ${{ env.SolutionFile }}
-      - name: Test
+      - name: .Net Build
+        run: dotnet build --configuration Release ${{ env.SolutionFile }}
+      - name: .Net Test
         run: dotnet test --configuration Release --no-build ${{ env.SolutionFile }} --logger trx --collect:"XPlat Code Coverage"
       - name: Test Report
         uses: dorny/test-reporter@v1
@@ -41,3 +41,18 @@ jobs:
           path: code-coverage-results.md
       - name: Add Coverage Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+        
+  package-and-release:
+    runs-on: windows-latest
+    if: startsWith(github.event.ref, 'refs/tags/')
+    needs: [build-and-test]
+    steps:
+      - uses: actions/checkout@v3
+      - name: .Net Restore
+        run: dotnet restore ${{ env.SolutionFile }}
+      - name: .Net Build
+        run: dotnet build --configuration Release /p:Version=${{ env.BuildVersion }} ${{ env.SolutionFile }}
+      - name: .Net Pack
+        run: dotnet pack --configuration Release /p:Version=${{ env.BuildVersion }} --no-build ${{ env.SolutionFile }}
+      - name: Publish To Nuget
+        run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
