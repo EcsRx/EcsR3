@@ -154,6 +154,3 @@ This can all be found within the [docs here](./docs/others/third-party-content.m
 [codacy-url]: https://www.codacy.com/gh/EcsRx/SystemsRx/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/SystemsRx&amp;utm_campaign=Badge_Grade
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
 [gitbook-url]: https://ecsrx.gitbook.io/ecsr3/v/main/
-
-
-[![Build And Test](https://github.com/EcsRx/EcsR3/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/EcsRx/EcsR3/actions/workflows/build-and-test.yml)
