@@ -5,15 +5,15 @@ using Xunit;
 
 namespace SystemsR3.Tests.Plugins.Computeds
 {
-    public class ComputedFromDataTests
+    public class ComputedFromObservableTests
     {
         [Fact]
         public void should_populate_on_creation()
         {
             var expectedData = 10;
-            var data = new DummyData{Data = expectedData};            
+            var data = new ReactiveProperty<int>(expectedData);          
             
-            var computedData = new TestComputedFromData(data);
+            var computedData = new TestComputedFromObservable(data);
             Assert.Equal(expectedData, computedData.CachedData);
         }
         
@@ -22,13 +22,11 @@ namespace SystemsR3.Tests.Plugins.Computeds
         {
             var expectedData = 20;
             var hasNotified = false;
-            var data = new DummyData{Data = 10};
+            var data = new ReactiveProperty<int>(10);
             
-            var computedData = new TestComputedFromData(data);
+            var computedData = new TestComputedFromObservable(data);
             computedData.Subscribe(x => hasNotified = true);
-
-            data.Data = expectedData;
-            computedData.ManuallyRefresh.OnNext(Unit.Default);
+            data.Value = expectedData;
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);      
@@ -40,13 +38,11 @@ namespace SystemsR3.Tests.Plugins.Computeds
         {
             var expectedData = 20;
             var hasNotified = false;
-            var data = new DummyData{Data = 10};
+            var data = new ReactiveProperty<int>(10);
             
-            var computedData = new TestComputedFromData(data);
+            var computedData = new TestComputedFromObservable(data);
             computedData.Subscribe(x => hasNotified = true);
-
-            data.Data = expectedData;
-            computedData.RefreshData();
+            computedData.RefreshData(expectedData);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);      
@@ -54,31 +50,15 @@ namespace SystemsR3.Tests.Plugins.Computeds
         }
         
         [Fact]
-        public void should_not_refresh_value_when_datasource_changed_but_not_refreshed()
-        {
-            var expectedData = 20;
-            var hasNotified = false;
-            var data = new DummyData{Data = expectedData};
-            
-            var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
-            data.Data = 10;
-
-            var actualData = computedData.Value;
-            Assert.Equal(expectedData, actualData);
-            Assert.False(hasNotified);
-        }
-        
-        [Fact]
         public void should_not_refresh_value_or_notify_when_datasource_not_changed_even_when_refreshed_implicitly()
         {
             var expectedData = 20;
             var hasNotified = false;
-            var data = new DummyData{Data = expectedData};
+            var data = new ReactiveProperty<int>(expectedData);
             
-            var computedData = new TestComputedFromData(data);
+            var computedData = new TestComputedFromObservable(data);
             computedData.Subscribe(x => hasNotified = true);
-            computedData.ManuallyRefresh.OnNext(Unit.Default);
+            data.OnNext(expectedData);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);
@@ -90,11 +70,11 @@ namespace SystemsR3.Tests.Plugins.Computeds
         {
             var expectedData = 20;
             var hasNotified = false;
-            var data = new DummyData{Data = expectedData};
+            var data = new ReactiveProperty<int>(expectedData);
             
-            var computedData = new TestComputedFromData(data);
+            var computedData = new TestComputedFromObservable(data);
             computedData.Subscribe(x => hasNotified = true);
-            computedData.RefreshData();
+            computedData.RefreshData(expectedData);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);

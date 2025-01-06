@@ -6,7 +6,7 @@ namespace SystemsR3.Computeds.Collections
     /// Represents a computed collection of elements
     /// </summary>
     /// <typeparam name="T">The data to contain</typeparam>
-    public interface IComputedCollection<out T> : IComputed<IEnumerable<T>>, IEnumerable<T>
+    public interface IComputedCollection<T> : IComputed<IEnumerable<T>>, IEnumerable<T>
     {
         /// <summary>
         /// Get an element by its index

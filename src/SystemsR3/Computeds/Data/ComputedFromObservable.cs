@@ -33,7 +33,6 @@ namespace SystemsR3.Computeds.Data
         public void MonitorChanges()
         { DataSource.Subscribe(RefreshData).AddTo(Subscriptions); }
 
-
         public void RefreshData(TInput data)
         {
             lock (_lock)
