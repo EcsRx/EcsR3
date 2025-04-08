@@ -31,7 +31,7 @@ namespace EcsR3.Benchmarks
         {
             DependencyRegistry = new NinjectDependencyRegistry();
             DependencyRegistry.LoadModule(new FrameworkModule());
-            DependencyRegistry.LoadModule(new EcsRxInfrastructureModule());
+            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
             DependencyResolver = DependencyRegistry.BuildResolver();
             
             EntityDatabase = DependencyResolver.Resolve<IEntityDatabase>();

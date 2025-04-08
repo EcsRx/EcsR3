@@ -14,7 +14,7 @@ using EcsR3.Systems.Handlers;
 
 namespace EcsR3.Infrastructure.Modules
 {
-    public class EcsRxInfrastructureModule : IDependencyModule
+    public class EcsR3InfrastructureModule : IDependencyModule
     {
         public void Setup(IDependencyRegistry registry)
         {

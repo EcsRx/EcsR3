@@ -21,7 +21,7 @@ namespace EcsR3.Infrastructure
         protected override void LoadModules()
         {
             base.LoadModules();
-            DependencyRegistry.LoadModule(new EcsRxInfrastructureModule());
+            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
         }
 
         /// <summary>
