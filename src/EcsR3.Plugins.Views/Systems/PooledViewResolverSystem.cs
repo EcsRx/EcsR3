@@ -9,7 +9,7 @@ using EcsR3.Systems;
 
 namespace EcsR3.Plugins.Views.Systems
 {
-    public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem, IGroupSystem
+    public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem
     {
         public IEventSystem EventSystem { get; }
 

@@ -182,6 +182,27 @@ namespace EcsR3.Tests.Sanity
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
         }
+        
+        [Fact]
+        public void should_call_setup_system_before_setup_and_teardown_for_entities_on_view_system()
+        {
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
+            var executor = CreateExecutor(observableGroupManager);
+
+            var expectedCallList = new[] { "start-system", "setup", "teardown", "stop-system" };
+            var actualCallList = new List<string>();
+            
+            var viewResolverSystem = new HybridSetupSystem(actualCallList.Add, new Group(typeof(TestComponentOne), typeof(ViewComponent)));
+            var collection = entityDatabase.GetCollection();
+            var entityOne = collection.CreateEntity();
+            entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
+            
+            executor.AddSystem(viewResolverSystem);
+            collection.RemoveEntity(entityOne.Id);
+            executor.RemoveSystem(viewResolverSystem);
+
+            Assert.Equal(expectedCallList, actualCallList);
+        }
 
         [Fact]
         public void should_listen_to_multiple_collections_for_updates()
