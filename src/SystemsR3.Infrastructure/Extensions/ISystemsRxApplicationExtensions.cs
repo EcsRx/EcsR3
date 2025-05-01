@@ -161,5 +161,56 @@ namespace SystemsR3.Infrastructure.Extensions
             var allSystems = GetAllBoundSystems(application);
             allSystems.ForEachRun(application.SystemExecutor.AddSystem);
         }
+        
+        /// <summary>
+        /// Gets all known system within a given application scope
+        /// </summary>
+        /// <param name="application">The application to scope to</param>
+        /// <returns>Returns any systems within known conventions folders (i.e /Systems or /ViewResolvers)</returns>
+        public static IEnumerable<ISystem> GetAllSystemsWithinApplicationScope(this ISystemsR3Application application)
+        {
+            var applicationNamespace = application.GetType().Namespace;
+            var namespaces = new[]
+            {
+                $"{applicationNamespace}.Systems",
+                $"{applicationNamespace}.ViewResolvers"
+            };
+            
+            return application.GetAllSystemsInNamespaces(namespaces);
+        }
+        
+        /// <summary>
+        /// Gets all systems within a given namespace
+        /// </summary>
+        /// <param name="application">The application to use</param>
+        /// <param name="namespaces">The namespaces to check within</param>
+        /// <returns>An enumerable of all the systems found within that namespace</returns>
+        public static IEnumerable<ISystem> GetAllSystemsInNamespaces(this ISystemsR3Application application, params string[] namespaces)
+        {
+            var applicationAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var systemType = typeof(ISystem);           
+            
+            var applicableSystems = applicationAssemblies.SelectMany(x => x.GetTypes())
+                .Where(x =>
+                {                   
+                    if(x.IsInterface || x.IsAbstract)
+                    { return false; }
+                    
+                    if(string.IsNullOrEmpty(x.Namespace))
+                    { return false; }   
+                    
+                    if(!systemType.IsAssignableFrom(x))
+                    { return false; }
+
+                    return namespaces.Any(namespaceToVerify => x.Namespace.Contains(namespaceToVerify));
+                })
+                .ToList();
+
+            if(!applicableSystems.Any())
+            { yield break; }
+
+            foreach (var applicableSystemType in applicableSystems)
+            { yield return application.DependencyResolver.Resolve<ISystem>(applicableSystemType.Name); }
+        }
     }
 }

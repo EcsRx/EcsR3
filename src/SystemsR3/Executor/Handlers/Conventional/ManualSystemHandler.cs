@@ -4,7 +4,7 @@ using SystemsR3.Systems.Conventional;
 
 namespace SystemsR3.Executor.Handlers.Conventional
 {
-    [Priority(5)]
+    [Priority(100)]
     public class ManualSystemHandler : IConventionalSystemHandler
     {
         public bool CanHandleSystem(ISystem system)
