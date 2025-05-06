@@ -34,8 +34,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1, T2>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IBatchAccessor<T1, T2>) accessor; }
 
             var batchBuilder = BatchBuilderFactory.Create<T1, T2>();
             var batchAccessor = new BatchAccessor<T1, T2>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -51,8 +51,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1, T2>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IReferenceBatchAccessor<T1, T2>) accessor; }
 
             var batchBuilder = ReferenceBatchBuilderFactory.Create<T1, T2>();
             var batchAccessor = new ReferenceBatchAccessor<T1, T2>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -69,8 +69,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1, T2, T3>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IBatchAccessor<T1, T2, T3>) accessor; }
 
             var batchBuilder = BatchBuilderFactory.Create<T1, T2, T3>();
             var batchAccessor = new BatchAccessor<T1, T2, T3>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -87,8 +87,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1, T2, T3>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IReferenceBatchAccessor<T1, T2, T3>) accessor; }
 
             var batchBuilder = ReferenceBatchBuilderFactory.Create<T1, T2, T3>();
             var batchAccessor = new ReferenceBatchAccessor<T1, T2, T3>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -106,8 +106,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1, T2, T3, T4>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IBatchAccessor<T1, T2, T3, T4>) accessor; }
 
             var batchBuilder = BatchBuilderFactory.Create<T1, T2, T3, T4>();
             var batchAccessor = new BatchAccessor<T1, T2, T3, T4>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -125,8 +125,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1, T2, T3, T4>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IReferenceBatchAccessor<T1, T2, T3, T4>) accessor; }
 
             var batchBuilder = ReferenceBatchBuilderFactory.Create<T1, T2, T3, T4>();
             var batchAccessor = new ReferenceBatchAccessor<T1, T2, T3, T4>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -145,8 +145,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1, T2, T3, T4, T5>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IBatchAccessor<T1, T2, T3, T4, T5>) accessor; }
 
             var batchBuilder = BatchBuilderFactory.Create<T1, T2, T3, T4, T5>();
             var batchAccessor = new BatchAccessor<T1, T2, T3, T4, T5>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -165,8 +165,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1, T2, T3, T4, T5>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IReferenceBatchAccessor<T1, T2, T3, T4, T5>) accessor; }
 
             var batchBuilder = ReferenceBatchBuilderFactory.Create<T1, T2, T3, T4, T5>();
             var batchAccessor = new ReferenceBatchAccessor<T1, T2, T3, T4, T5>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -186,8 +186,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1, T2,T3,T4,T5,T6>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IBatchAccessor<T1, T2,T3,T4,T5,T6>) accessor; }
 
             var batchBuilder = BatchBuilderFactory.Create<T1, T2, T3, T4, T5, T6>();
             var batchAccessor = new BatchAccessor<T1, T2, T3, T4, T5, T6>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
@@ -207,8 +207,8 @@ namespace EcsR3.Plugins.Batching.Accessors
             var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
             var token = new AccessorToken(componentTypes, observableGroup);
             
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1, T2, T3, T4, T5, T6>) BatchAccessors[token]; }
+            if (BatchAccessors.TryGetValue(token, out var accessor))
+            { return (IReferenceBatchAccessor<T1, T2, T3, T4, T5, T6>) accessor; }
 
             var batchBuilder = ReferenceBatchBuilderFactory.Create<T1, T2, T3, T4, T5, T6>();
             var batchAccessor = new ReferenceBatchAccessor<T1, T2, T3, T4, T5, T6>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
