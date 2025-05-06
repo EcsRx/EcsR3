@@ -109,5 +109,37 @@ namespace SystemsR3.Tests.SystemsRx.Pools
             Assert.DoesNotContain(index, indexPool.AvailableIndexes);
             Assert.All(indexPool.AvailableIndexes, x => expectedIdEntries.Contains(x));
         }
+        
+        [Fact]
+        public void should_release_index_when_allocated()
+        {
+            var indexPool = new IndexPool(10, 10);
+            var index = indexPool.AllocateInstance();
+            indexPool.ReleaseInstance(index);
+            
+            Assert.Contains(index, indexPool.AvailableIndexes);
+        }
+        
+        [Fact]
+        public void should_ignore_index_if_not_within_threshold_when_releasing()
+        {
+            var indexPool = new IndexPool(10, 10);
+            var index = 100;
+            indexPool.ReleaseInstance(index);
+            
+            Assert.DoesNotContain(index, indexPool.AvailableIndexes);
+        }
+        
+        [Fact]
+        public void should_ignore_duplicated_release_calls_for_same_index()
+        {
+            var indexPool = new IndexPool(10, 10);
+            var index = indexPool.AllocateInstance();
+            indexPool.ReleaseInstance(index);
+            indexPool.ReleaseInstance(index);
+            indexPool.ReleaseInstance(index);
+            
+            Assert.Contains(index, indexPool.AvailableIndexes);
+        }
     }
 }
