@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using EcsR3.Collections.Entity;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable.Tracking.Events;
 using EcsR3.Groups.Observable.Tracking.Trackers;
-using EcsR3.Groups.Observable.Tracking.Types;
 using EcsR3.Lookups;
 using SystemsR3.Extensions;
 using R3;
@@ -44,8 +42,8 @@ namespace EcsR3.Groups.Observable
             Subscriptions = new List<IDisposable>();
             CachedEntities = new EntityLookup();
 
-            GroupTracker.GroupMatchingChanged
-                .Subscribe(OnEntityGroupChanged)
+            GroupTracker.OnEntityJoinedGroup
+                .Subscribe(OnEntityJoinedGroup)
                 .AddTo(Subscriptions);
 
             foreach (var entityId in GroupTracker.GetMatchedEntityIds())
@@ -54,27 +52,25 @@ namespace EcsR3.Groups.Observable
                 CachedEntities.Add(entity);
             }
         }
-        
-        public void OnEntityGroupChanged(EntityGroupStateChanged args)
+
+        public void OnEntityJoinedGroup(int entityId)
         {
-            var entity = Collection.GetEntity(args.EntityId);
-            if (args.GroupActionType == GroupActionType.JoinedGroup)
-            {
-                lock (_lock)
-                { CachedEntities.Add(entity); }
-                _onEntityAdded.OnNext(entity);
-                return;
-            }
-
-            if (args.GroupActionType == GroupActionType.LeavingGroup)
-            { _onEntityRemoving.OnNext(entity); }
-
-            if (args.GroupActionType == GroupActionType.LeftGroup)
-            {
-                lock (_lock)
-                { CachedEntities.Remove(args.EntityId); }
-                _onEntityRemoved.OnNext(entity);
-            }
+            var entity = Collection.GetEntity(entityId);
+            lock (_lock) { CachedEntities.Add(entity); }
+            _onEntityAdded.OnNext(entity);
+        }
+        
+        public void OnEntityLeavingGroup(int entityId)
+        {
+            var entity = Collection.GetEntity(entityId);
+            _onEntityRemoving.OnNext(entity);
+        }
+        
+        public void OnEntityLeftGroup(int entityId)
+        {
+            var entity = Collection.GetEntity(entityId);
+            lock (_lock) { CachedEntities.Remove(entityId); }
+            _onEntityRemoved.OnNext(entity);
         }
 
         public bool ContainsEntity(int id)

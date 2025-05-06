@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities.Routing;
-using EcsR3.Groups.Observable.Tracking.Events;
-using EcsR3.Groups.Observable.Tracking.Types;
 using R3;
 
 namespace EcsR3.Groups.Observable.Tracking.Trackers
@@ -10,12 +8,17 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
     public class EntityRouterObservableGroupTracker : IObservableGroupTracker
     {
         public LookupGroup Group { get; }
+        
+        public Observable<int> OnEntityJoinedGroup => _onEntityJoinedGroup;
+        public Observable<int> OnEntityLeavingGroup => _onEntityLeavingGroup;
+        public Observable<int> OnEntityLeftGroup => _onEntityLeftGroup;
+        
+        public Subject<int> _onEntityJoinedGroup { get; } = new Subject<int>();
+        public Subject<int> _onEntityLeavingGroup { get; } = new Subject<int>();
+        public Subject<int> _onEntityLeftGroup { get; } = new Subject<int>();
+
 
         public Dictionary<int, GroupMatchingState> EntityIdMatchState { get; } = new Dictionary<int, GroupMatchingState>();
-        
-        public Subject<EntityGroupStateChanged> OnGroupMatchingChanged { get; }
-        public Observable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
-        
         public IEntityChangeRouter EntityChangeRouter { get; }
 
         private readonly object _lock = new object();
@@ -25,7 +28,6 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
         {
             Group = group;
             EntityChangeRouter = entityChangeRouter;
-            OnGroupMatchingChanged = new Subject<EntityGroupStateChanged>();
 
             foreach (var requiredComponent in group.RequiredComponents)
             {
@@ -64,7 +66,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             EntityIdMatchState.Add(entityId, state);
             
             if (state.IsMatch())
-            { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityId, GroupActionType.JoinedGroup)); }
+            { _onEntityJoinedGroup.OnNext(entityId); }
         }
 
         public GroupMatchingState GetStateSafely(int entityId)
@@ -81,7 +83,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
         {
             var currentState = EntityIdMatchState[entityChange.EntityId];
             if(currentState.IsMatch())
-            { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.LeavingGroup)); }
+            { _onEntityLeavingGroup.OnNext(entityChange.EntityId); }
         }
 
         public void OnRequiredComponentRemoved(EntityChange entityChange)
@@ -90,7 +92,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             if (!currentState.IsMatch()) { return; }
             
             currentState.NeedsComponentsAdding++;
-            OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.LeftGroup));
+            _onEntityLeftGroup.OnNext(entityChange.EntityId);
         }
 
         public void OnExcludedComponentAdded(EntityChange entityChange)
@@ -98,8 +100,8 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             var currentState = GetStateSafely(entityChange.EntityId);
             if (currentState.IsMatch())
             {
-                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.LeavingGroup));
-                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.LeftGroup));
+                _onEntityLeavingGroup.OnNext(entityChange.EntityId);
+                _onEntityLeftGroup.OnNext(entityChange.EntityId);
             }
             currentState.NeedsComponentsRemoving++;
         }
@@ -110,7 +112,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             currentState.NeedsComponentsRemoving--;
             
             if (currentState.IsMatch())
-            { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.JoinedGroup)); }
+            { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
         }
 
         public void OnRequiredComponentAdded(EntityChange entityChange)
@@ -119,11 +121,15 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             currentState.NeedsComponentsAdding--;
             
             if (currentState.IsMatch())
-            { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entityChange.EntityId, GroupActionType.JoinedGroup)); }
+            { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
         }
-        
+
         public void Dispose()
-        { OnGroupMatchingChanged.Dispose(); }
+        {
+            _onEntityJoinedGroup.Dispose();
+            _onEntityLeavingGroup.Dispose();
+            _onEntityLeftGroup.Dispose();
+        }
 
         public IEnumerable<int> GetMatchedEntityIds()
         {

@@ -8,7 +8,10 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
     public interface IObservableGroupTracker : IDisposable
     {
         LookupGroup Group { get; }
-        Observable<EntityGroupStateChanged> GroupMatchingChanged { get; }
+        Observable<int> OnEntityJoinedGroup { get; }
+        Observable<int> OnEntityLeavingGroup { get; }
+        Observable<int> OnEntityLeftGroup { get; }
+        
         IEnumerable<int> GetMatchedEntityIds();
     }
 }
