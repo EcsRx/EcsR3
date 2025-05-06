@@ -19,7 +19,8 @@ namespace EcsR3.Benchmarks
                 //BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveWithNoiseBenchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
             };
             
