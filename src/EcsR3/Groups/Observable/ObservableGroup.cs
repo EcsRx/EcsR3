@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EcsR3.Collections.Entity;
 using EcsR3.Entities;
 using EcsR3.Groups.Observable.Tracking.Trackers;
@@ -15,11 +15,12 @@ namespace EcsR3.Groups.Observable
         public LookupGroup Group { get; }
         
         public readonly EntityLookup CachedEntities;
-        public readonly List<IDisposable> Subscriptions;
+        public readonly CompositeDisposable Subscriptions;
 
         public Observable<IEntity> OnEntityAdded => _onEntityAdded;
         public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
+        
         public IObservableGroupTracker GroupTracker { get; }
         public IEntityCollection Collection { get; }
 
@@ -39,7 +40,7 @@ namespace EcsR3.Groups.Observable
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
-            Subscriptions = new List<IDisposable>();
+            Subscriptions = new CompositeDisposable();
             CachedEntities = new EntityLookup();
 
             GroupTracker.OnEntityJoinedGroup
@@ -54,11 +55,9 @@ namespace EcsR3.Groups.Observable
                 .Subscribe(OnEntityLeftGroup)
                 .AddTo(Subscriptions);
 
-            foreach (var entityId in GroupTracker.GetMatchedEntityIds())
-            {
-                var entity = collection.GetEntity(entityId);
-                CachedEntities.Add(entity);
-            }
+            GroupTracker.GetMatchedEntityIds()
+                .Select(collection.GetEntity)
+                .ForEachRun(CachedEntities.Add);
         }
 
         public void OnEntityJoinedGroup(int entityId)
@@ -98,7 +97,6 @@ namespace EcsR3.Groups.Observable
             lock (_lock)
             {
                 Subscriptions.DisposeAll();
-                GroupTracker.Dispose();
                 _onEntityAdded.Dispose();
                 _onEntityRemoved.Dispose();
                 _onEntityRemoving.Dispose();
