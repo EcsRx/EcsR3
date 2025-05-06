@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
-using Components_IComponent = EcsR3.Components.IComponent;
 
 namespace EcsR3.Entities
 {
@@ -24,7 +24,7 @@ namespace EcsR3.Entities
         public int[] InternalComponentAllocations { get; }
         public IReadOnlyList<int> ComponentAllocations => InternalComponentAllocations;
 
-        public IEnumerable<Components_IComponent> Components
+        public IEnumerable<IComponent> Components
         {
             get
             {
@@ -61,25 +61,19 @@ namespace EcsR3.Entities
             }
         }
         
-        public void AddComponents(IReadOnlyList<Components_IComponent> components)
+        public void AddComponents(IReadOnlyList<IComponent> components)
         {
-            int[] componentTypeIds;
-            lock (_lock)
+            foreach (var component in components)
             {
-                componentTypeIds = new int[components.Count];
-                for (var i = 0; i < components.Count; i++)
-                {
-                    var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
-                    var allocationId = ComponentDatabase.Allocate(componentTypeId);
-                    InternalComponentAllocations[componentTypeId] = allocationId;
-                    ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
-                    componentTypeIds[i] = componentTypeId;
-                    EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
-                }
+                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(component.GetType());
+                var allocationId = ComponentDatabase.Allocate(componentTypeId);
+                InternalComponentAllocations[componentTypeId] = allocationId;
+                ComponentDatabase.Set(componentTypeId, allocationId, component);
+                EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
             }
         }
 
-        public ref T AddComponent<T>(int componentTypeId) where T : Components_IComponent, new()
+        public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
         {
             var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
@@ -94,7 +88,7 @@ namespace EcsR3.Entities
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
-        public void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, Components_IComponent
+        public void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent
         {
             lock (_lock)
             {
@@ -113,12 +107,9 @@ namespace EcsR3.Entities
         {
             lock (_lock)
             {
-                var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
-                if(sanitisedComponentsIds.Length == 0) { return; }
-            
-                for (var i = 0; i < sanitisedComponentsIds.Length; i++)
+                var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent);
+                foreach (var componentId in sanitisedComponentsIds)
                 {
-                    var componentId = sanitisedComponentsIds[i];
                     var allocationIndex = InternalComponentAllocations[componentId];
                     EntityChangeRouter.PublishEntityRemovingComponent(Id, componentId);
                     ComponentDatabase.Remove(componentId, allocationIndex);
@@ -143,13 +134,13 @@ namespace EcsR3.Entities
             { return InternalComponentAllocations[componentTypeId] != NotAllocated; }
         }
 
-        public Components_IComponent GetComponent(Type componentType)
+        public IComponent GetComponent(Type componentType)
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             return GetComponent(componentTypeId);
         }
 
-        public Components_IComponent GetComponent(int componentTypeId)
+        public IComponent GetComponent(int componentTypeId)
         {
             lock (_lock)
             {
@@ -158,7 +149,7 @@ namespace EcsR3.Entities
             }
         }
 
-        public ref T GetComponent<T>(int componentTypeId) where T : Components_IComponent
+        public ref T GetComponent<T>(int componentTypeId) where T : IComponent
         {
             lock (_lock)
             {

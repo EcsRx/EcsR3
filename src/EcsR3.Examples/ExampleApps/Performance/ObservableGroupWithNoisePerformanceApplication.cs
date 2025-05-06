@@ -11,12 +11,14 @@ namespace EcsR3.Examples.ExampleApps.Performance;
 public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplication
 {
     private static readonly int EntityCount = 100000;
+    private static readonly int Iterations = 3;
         
     protected override void ApplicationStarted()
     {
         var groupFactory = new RandomGroupFactory();
             
         var componentNamespace = typeof(Component1).Namespace;
+        
         var availableComponentTypes = groupFactory.GetComponentTypes
             .Where(x => x.Namespace == componentNamespace)
             .ToArray();
@@ -32,11 +34,14 @@ public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplic
             .Select(x => Activator.CreateInstance(x) as IComponent)
             .ToArray();
 
-        for (var i = 0; i < EntityCount; i++)
+        for (var iteration = 0; iteration < Iterations; iteration++)
         {
-            var entity = EntityCollection.CreateEntity();
-            entity.AddComponents(availableComponents);
-            entity.RemoveAllComponents();
+            for (var i = 0; i < EntityCount; i++)
+            {
+                var entity = EntityCollection.CreateEntity();
+                entity.AddComponents(availableComponents);
+                entity.RemoveAllComponents();
+            }
         }
     }
 }

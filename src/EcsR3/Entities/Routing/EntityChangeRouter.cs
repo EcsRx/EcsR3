@@ -28,9 +28,9 @@ namespace EcsR3.Entities.Routing
         {
             foreach (var componentType in ComponentTypeLookup.AllComponentTypeIds)
             {
-                _onEntityAddedComponent.Add(componentType, new Subject<EntityChange>());;
-                _onEntityRemovingComponent.Add(componentType, new Subject<EntityChange>());;
-                _onEntityComponentRemoved.Add(componentType, new Subject<EntityChange>());;
+                _onEntityAddedComponent.Add(componentType, new Subject<EntityChange>());
+                _onEntityRemovingComponent.Add(componentType, new Subject<EntityChange>());
+                _onEntityComponentRemoved.Add(componentType, new Subject<EntityChange>());
             }
         }
 
