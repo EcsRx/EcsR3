@@ -35,13 +35,16 @@ namespace SystemsR3.Pools
         public void ReleaseInstance(int index)
         {
             if(index < 0)
-            { throw new ArgumentException("id has to be >= 0"); }
+            { throw new ArgumentException("index has to be >= 0"); }
 
             lock (_lock)
             {
+                if (AvailableIndexes.Contains(index))
+                { return; }
+
                 if (index > _lastMax)
-                { Expand(index); }
-            
+                { return; }
+                
                 AvailableIndexes.Push(index);
             }
         }

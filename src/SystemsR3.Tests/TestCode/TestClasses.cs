@@ -1,3 +1,5 @@
+using SystemsR3.Pools;
+
 namespace SystemsR3.Tests.Ninject.TestCode
 {
     public class SomeTestClass
@@ -28,5 +30,22 @@ namespace SystemsR3.Tests.Ninject.TestCode
     public class TestClass2 : ITestInterface2
     {
         
+    }
+
+    public class TestPooledObject
+    {
+        public bool IsDestroyed { get; set; }
+    }
+    
+    public class TestObjectPool : ObjectPool<TestPooledObject>
+    {
+        public TestObjectPool(int expansionSize) : base(expansionSize)
+        { }
+
+        public override TestPooledObject Create()
+        { return new TestPooledObject(); }
+
+        public override void Destroy(TestPooledObject instance)
+        { instance.IsDestroyed = true; }
     }
 }
