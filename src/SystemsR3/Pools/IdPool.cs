@@ -36,7 +36,10 @@ namespace SystemsR3.Pools
         }
 
         public bool IsAvailable(int id)
-        { return id > _lastMax || AvailableIds.Contains(id); }
+        {
+            lock(_lock)
+            { return id > _lastMax || AvailableIds.Contains(id); }
+        }
 
         public void AllocateSpecificId(int id)
         {
@@ -65,9 +68,12 @@ namespace SystemsR3.Pools
 
         public void Expand(int? newId = null)
         {
-            var increaseBy = newId -_lastMax ?? _increaseSize;
-            AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
-            _lastMax += increaseBy + 1;
+            lock (_lock)
+            {
+                var increaseBy = newId -_lastMax ?? _increaseSize;
+                AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
+                _lastMax += increaseBy + 1;
+            }
         }
     }
 }
