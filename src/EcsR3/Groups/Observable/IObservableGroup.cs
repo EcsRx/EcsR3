@@ -20,13 +20,12 @@ namespace EcsR3.Groups.Observable
 
     {
         /// <summary>
-        /// The underlying token that is used to describe the group
+        /// The underlying group
         /// </summary>
         /// <remarks>
         /// The token contains both components required and the specific collection
-        /// it should be targetting if its been setup to only observe a given collection.
         /// </remarks>
-        ObservableGroupToken Token { get; }
+        LookupGroup Group { get; }
         
         /// <summary>
         /// Event stream for when an entity has been added to this group

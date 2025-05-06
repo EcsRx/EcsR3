@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
-using R3;
 using Components_IComponent = EcsR3.Components.IComponent;
-using IComponent = EcsR3.Components.IComponent;
 
 namespace EcsR3.Entities
 {
@@ -14,20 +13,13 @@ namespace EcsR3.Entities
     {
         public static readonly int NotAllocated = -1;
         
-        public Observable<int[]> ComponentsAdded => _onComponentsAdded;
-        public Observable<int[]> ComponentsRemoving => _onComponentsRemoving;
-        public Observable<int[]> ComponentsRemoved => _onComponentsRemoved;
-        
-        private readonly Subject<int[]> _onComponentsAdded;
-        private readonly Subject<int[]> _onComponentsRemoving;
-        private readonly Subject<int[]> _onComponentsRemoved;
-        
         private readonly object _lock = new object();
         
         public int Id { get; }
         
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IComponentDatabase ComponentDatabase { get; }
+        public IEntityChangeRouter EntityChangeRouter { get; }
         
         public int[] InternalComponentAllocations { get; }
         public IReadOnlyList<int> ComponentAllocations => InternalComponentAllocations;
@@ -47,18 +39,15 @@ namespace EcsR3.Entities
             }
         }
         
-        public Entity(int id, IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
+        public Entity(int id, IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IEntityChangeRouter entityChangeRouter)
         {
             Id = id;
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
-            
+            EntityChangeRouter = entityChangeRouter;
+
             var totalComponentCount = componentTypeLookup.AllComponentTypeIds.Length;
             InternalComponentAllocations = new int[totalComponentCount];
-            
-            _onComponentsAdded = new Subject<int[]>();
-            _onComponentsRemoving = new Subject<int[]>();
-            _onComponentsRemoved = new Subject<int[]>();
             
             EmptyAllAllocations();
         }
@@ -85,10 +74,9 @@ namespace EcsR3.Entities
                     InternalComponentAllocations[componentTypeId] = allocationId;
                     ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
                     componentTypeIds[i] = componentTypeId;
+                    EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
                 }
             }
-           
-            _onComponentsAdded.OnNext(componentTypeIds);
         }
 
         public ref T AddComponent<T>(int componentTypeId) where T : Components_IComponent, new()
@@ -102,7 +90,7 @@ namespace EcsR3.Entities
                 ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
             }
             
-            _onComponentsAdded.OnNext(new []{componentTypeId});
+            EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
@@ -129,18 +117,16 @@ namespace EcsR3.Entities
                 sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
                 if(sanitisedComponentsIds.Length == 0) { return; }
             
-                _onComponentsRemoving.OnNext(sanitisedComponentsIds);
-
                 for (var i = 0; i < sanitisedComponentsIds.Length; i++)
                 {
                     var componentId = sanitisedComponentsIds[i];
                     var allocationIndex = InternalComponentAllocations[componentId];
+                    EntityChangeRouter.PublishEntityRemovingComponent(Id, componentId);
                     ComponentDatabase.Remove(componentId, allocationIndex);
+                    EntityChangeRouter.PublishEntityRemovedComponent(Id, componentId);
                     InternalComponentAllocations[componentId] = NotAllocated;
                 }
             }
-            
-            _onComponentsRemoved.OnNext(sanitisedComponentsIds);
         }
 
         public void RemoveAllComponents()
@@ -184,16 +170,5 @@ namespace EcsR3.Entities
 
         public override int GetHashCode()
         { return Id; }
-
-        public void Dispose()
-        {
-            lock (_lock)
-            {
-                RemoveAllComponents();
-                _onComponentsAdded.Dispose();
-                _onComponentsRemoving.Dispose();
-                _onComponentsRemoved.Dispose();
-            }
-        }
     }
 }

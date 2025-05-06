@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
+using EcsR3.Groups;
 using EcsR3.Groups.Observable;
 
 namespace EcsR3.Lookups
 {
-    public class ObservableGroupLookup : KeyedCollection<ObservableGroupToken, IObservableGroup>
+    public class ObservableGroupLookup : KeyedCollection<LookupGroup, IObservableGroup>
     {
-        protected override ObservableGroupToken GetKeyForItem(IObservableGroup item) => item.Token;
+        protected override LookupGroup GetKeyForItem(IObservableGroup item) => item.Group;
 
         public IObservableGroup GetByIndex(int index) => Items[index];
     }

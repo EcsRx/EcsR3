@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using EcsR3.Collections.Entity;
 using EcsR3.Entities;
 using EcsR3.Groups.Observable.Tracking.Events;
 using EcsR3.Groups.Observable.Tracking.Trackers;
@@ -13,13 +14,16 @@ namespace EcsR3.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup
     {
+        public LookupGroup Group { get; }
+        
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
 
         public Observable<IEntity> OnEntityAdded => _onEntityAdded;
         public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
-        public ICollectionObservableGroupTracker GroupTracker { get; }
+        public IObservableGroupTracker GroupTracker { get; }
+        public IEntityCollection Collection { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -27,11 +31,10 @@ namespace EcsR3.Groups.Observable
         
         private readonly object _lock = new object();
         
-        public ObservableGroupToken Token { get; }
-        
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, ICollectionObservableGroupTracker tracker)
+        public ObservableGroup(LookupGroup group, IObservableGroupTracker tracker, IEntityCollection collection)
         {
-            Token = token;
+            Group = group;
+            Collection = collection;
             GroupTracker = tracker;
             
             _onEntityAdded = new Subject<IEntity>();
@@ -45,31 +48,32 @@ namespace EcsR3.Groups.Observable
                 .Subscribe(OnEntityGroupChanged)
                 .AddTo(Subscriptions);
 
-            foreach (var entity in initialEntities)
+            foreach (var entityId in GroupTracker.GetMatchedEntityIds())
             {
-                var currentlyMatches = GroupTracker.IsMatching(entity.Id);
-                if(currentlyMatches) { CachedEntities.Add(entity); }
+                var entity = collection.GetEntity(entityId);
+                CachedEntities.Add(entity);
             }
         }
         
         public void OnEntityGroupChanged(EntityGroupStateChanged args)
         {
+            var entity = Collection.GetEntity(args.EntityId);
             if (args.GroupActionType == GroupActionType.JoinedGroup)
             {
                 lock (_lock)
-                { CachedEntities.Add(args.Entity); }
-                _onEntityAdded.OnNext(args.Entity);
+                { CachedEntities.Add(entity); }
+                _onEntityAdded.OnNext(entity);
                 return;
             }
 
             if (args.GroupActionType == GroupActionType.LeavingGroup)
-            { _onEntityRemoving.OnNext(args.Entity); }
+            { _onEntityRemoving.OnNext(entity); }
 
             if (args.GroupActionType == GroupActionType.LeftGroup)
             {
                 lock (_lock)
-                { CachedEntities.Remove(args.Entity.Id); }
-                _onEntityRemoved.OnNext(args.Entity);
+                { CachedEntities.Remove(args.EntityId); }
+                _onEntityRemoved.OnNext(entity);
             }
         }
 

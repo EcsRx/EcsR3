@@ -37,7 +37,7 @@ namespace EcsR3.Collections
             {
                 for (var i = _observableGroups.Count - 1; i >= 0; i--)
                 {
-                    if (_observableGroups[i].Token.LookupGroup.Matches(componentTypeIds))
+                    if (_observableGroups[i].Group.Matches(componentTypeIds))
                     { yield return _observableGroups[i]; }
                 }
             }
@@ -46,17 +46,16 @@ namespace EcsR3.Collections
         public IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds)
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(group);
-            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionIds);
             
             lock (_lock)
             {
-                if (_observableGroups.Contains(observableGroupToken)) 
-                { return _observableGroups[observableGroupToken]; }
+                if (_observableGroups.Contains(lookupGroup)) 
+                { return _observableGroups[lookupGroup]; }
             }
 
             var configuration = new ObservableGroupConfiguration
             {
-                ObservableGroupToken = observableGroupToken
+                Group = lookupGroup
             };
 
             lock (_lock)

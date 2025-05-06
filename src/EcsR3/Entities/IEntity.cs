@@ -8,32 +8,8 @@ namespace EcsR3.Entities
     /// <summary>
     /// A container for components, its only job is to let you compose components
     /// </summary>
-    public interface IEntity : IDisposable
+    public interface IEntity
     {
-        /// <summary>
-        /// Triggered every time components are added to the entity
-        /// </summary>
-        /// <remarks>
-        /// If you are adding components individually it will be fired once per interaction, its better to batch them
-        /// </remarks>
-        Observable<int[]> ComponentsAdded { get; }
-        
-        /// <summary>
-        /// Triggered every time components are about to be removed from the entity
-        /// </summary>
-        /// <remarks>
-        /// If you are removing components individually it will be fired once per interaction, its better to batch them
-        /// </remarks>
-        Observable<int[]> ComponentsRemoving { get; }
-        
-        /// <summary>
-        /// Triggered every time components have been removed removed from the entity
-        /// </summary>
-        /// <remarks>
-        /// If you are removing components individually it will be fired once per interaction, its better to batch them
-        /// </remarks>
-        Observable<int[]> ComponentsRemoved { get; }
-        
         /// <summary>
         /// The Id of the entity
         /// </summary>

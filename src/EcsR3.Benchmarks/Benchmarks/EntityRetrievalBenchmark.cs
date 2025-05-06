@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
+using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
@@ -61,7 +63,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup);
+                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

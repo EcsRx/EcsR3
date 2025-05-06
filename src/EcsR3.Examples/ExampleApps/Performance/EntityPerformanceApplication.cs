@@ -8,6 +8,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
@@ -40,11 +41,12 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
             var componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             var componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
+            var entityChangeRouter = DependencyResolver.Resolve<IEntityChangeRouter>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, componentDatabase, componentTypeLookup);
+                var entity = new Entity(i, componentDatabase, componentTypeLookup, entityChangeRouter);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);                
             }

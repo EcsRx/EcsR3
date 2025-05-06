@@ -6,7 +6,7 @@ namespace EcsR3.Groups.Observable
 {
     public class ObservableGroupConfiguration
     {
-        public ObservableGroupToken ObservableGroupToken { get; set; }
+        public LookupGroup Group { get; set; }
         public IEnumerable<INotifyingCollection> NotifyingCollections { get; set; }
         public IEnumerable<IEntity> InitialEntities { get; set; }
     }

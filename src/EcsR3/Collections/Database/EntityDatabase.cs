@@ -21,9 +21,6 @@ namespace EcsR3.Collections.Database
         
         public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
         public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
-        public Observable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
-        public Observable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
-        public Observable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
         public Observable<IEntityCollection> CollectionAdded => _onCollectionAdded;
         public Observable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
 
@@ -31,9 +28,6 @@ namespace EcsR3.Collections.Database
         private readonly Subject<IEntityCollection> _onCollectionRemoved;
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
 
         public EntityDatabase(IEntityCollectionFactory entityCollectionFactory)
         {
@@ -45,9 +39,6 @@ namespace EcsR3.Collections.Database
             _onCollectionRemoved = new Subject<IEntityCollection>();
             _onEntityAdded = new Subject<CollectionEntityEvent>();
             _onEntityRemoved = new Subject<CollectionEntityEvent>();
-            _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
-            _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
-            _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
 
             CreateCollection(EntityCollectionLookups.DefaultCollectionId);
         }
@@ -59,9 +50,6 @@ namespace EcsR3.Collections.Database
                 var collectionDisposable = new CompositeDisposable();   
                 collection.EntityAdded.Subscribe(x => _onEntityAdded.OnNext(x)).AddTo(collectionDisposable);
                 collection.EntityRemoved.Subscribe(x => _onEntityRemoved.OnNext(x)).AddTo(collectionDisposable);
-                collection.EntityComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(x)).AddTo(collectionDisposable);
-                collection.EntityComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(x)).AddTo(collectionDisposable);
-                collection.EntityComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(x)).AddTo(collectionDisposable);
 
                 _collectionSubscriptions.Add(collection.Id, collectionDisposable);
             }
@@ -116,9 +104,6 @@ namespace EcsR3.Collections.Database
             {
                 _onEntityAdded.Dispose();
                 _onEntityRemoved.Dispose();
-                _onEntityComponentsAdded.Dispose();
-                _onEntityComponentsRemoving.Dispose();
-                _onEntityComponentsRemoved.Dispose();
             
                 _collectionSubscriptions.RemoveAndDisposeAll();
             }

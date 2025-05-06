@@ -182,6 +182,24 @@ namespace EcsR3.Extensions
         }
         
         /// <summary>
+        /// Checks how many of the components requested the entity has
+        /// </summary>
+        /// <param name="entity">The entity to action on</param>
+        /// <param name="componentTypeIds">Type ids of the components to check for</param>
+        /// <returns>The number of matching components found</returns>
+        public static int MatchingComponentCount(this IEntity entity, params int[] componentTypeIds)
+        {
+            var count = 0;
+            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
+            {
+                if (entity.HasComponent(componentTypeIds[index]))
+                { count++; }
+            }
+
+            return count;
+        }
+        
+        /// <summary>
         /// Adds all components to the entity
         /// </summary>
         /// <param name="entity"></param>

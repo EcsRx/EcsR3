@@ -41,9 +41,6 @@ public class EntityCollection : IEntityCollection, IDisposable
 
             _onEntityAdded = new Subject<CollectionEntityEvent>();
             _onEntityRemoved = new Subject<CollectionEntityEvent>();
-            _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
-            _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
-            _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
         }
 
         public void SubscribeToEntity(IEntity entity)
@@ -51,9 +48,6 @@ public class EntityCollection : IEntityCollection, IDisposable
             lock (_lock)
             {
                 var entityDisposable = new CompositeDisposable();
-                entity.ComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
-                entity.ComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
-                entity.ComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
                 EntitySubscriptions.Add(entity.Id, entityDisposable);
             }
         }
@@ -99,7 +93,7 @@ public class EntityCollection : IEntityCollection, IDisposable
 
                 if (disposeOnRemoval)
                 {
-                    entity.Dispose();
+                    entity.RemoveAllComponents();
                     EntityFactory.Destroy(entityId);
                 }
             

@@ -4,6 +4,7 @@ using EcsR3.Collections;
 using EcsR3.Collections.Database;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Entities.Routing;
 using EcsR3.Infrastructure.Modules;
 using SystemsR3.Executor;
 using SystemsR3.Infrastructure.Dependencies;
@@ -24,6 +25,7 @@ namespace EcsR3.Benchmarks
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public ISystemExecutor SystemExecutor { get; }
+        public IEntityChangeRouter EntityChangeRouter { get; }
         
         public IObservableGroupManager ObservableGroupManager { get; }
 
@@ -39,6 +41,7 @@ namespace EcsR3.Benchmarks
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
+            EntityChangeRouter = DependencyResolver.Resolve<EntityChangeRouter>();
         }
 
         [GlobalSetup]

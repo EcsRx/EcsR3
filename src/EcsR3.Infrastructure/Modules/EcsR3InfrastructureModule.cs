@@ -8,6 +8,7 @@ using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Groups.Observable;
 using EcsR3.Groups.Observable.Tracking;
 using EcsR3.Systems.Handlers;
@@ -28,6 +29,9 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();
+            registry.Bind<IEntityCollection>(new BindingConfiguration()
+                { ToMethod = x => x.Resolve<IEntityDatabase>().GetCollection() });
+            registry.Bind<IEntityChangeRouter, EntityChangeRouter>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
             
             // Register ECS specific system handlers
