@@ -41,9 +41,9 @@ namespace EcsR3.Entities.Routing
             _onEntityComponentRemoved.ForEachRun(x => x.Value.Dispose());
         }
 
-        public Observable<EntityChange> SubscribeOnEntityAddedComponent(int componentType) => _onEntityAddedComponent[componentType];
-        public Observable<EntityChange> SubscribeOnEntityRemovingComponent(int componentType) => _onEntityRemovingComponent[componentType];
-        public Observable<EntityChange> SubscribeOnEntityRemovedComponent(int componentType) => _onEntityComponentRemoved[componentType];
+        public Observable<EntityChange> OnEntityAddedComponent(int componentType) => _onEntityAddedComponent[componentType];
+        public Observable<EntityChange> OnEntityRemovingComponent(int componentType) => _onEntityRemovingComponent[componentType];
+        public Observable<EntityChange> OnEntityRemovedComponent(int componentType) => _onEntityComponentRemoved[componentType];
         
         public void PublishEntityAddedComponent(int entityId, int componentId) => _onEntityAddedComponent[componentId].OnNext(new EntityChange(entityId, componentId));
         public void PublishEntityRemovingComponent(int entityId, int componentId) => _onEntityRemovingComponent[componentId].OnNext(new EntityChange(entityId, componentId));

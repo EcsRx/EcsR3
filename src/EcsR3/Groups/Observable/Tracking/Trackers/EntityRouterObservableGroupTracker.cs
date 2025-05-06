@@ -31,17 +31,17 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             foreach (var requiredComponent in group.RequiredComponents)
             {
                 EntityChangeRouter
-                    .SubscribeOnEntityAddedComponent(requiredComponent)
+                    .OnEntityAddedComponent(requiredComponent)
                     .Subscribe(OnRequiredComponentAdded)
                     .AddTo(_componentSubscriptions);
                 
                 EntityChangeRouter
-                    .SubscribeOnEntityRemovingComponent(requiredComponent)
+                    .OnEntityRemovingComponent(requiredComponent)
                     .Subscribe(OnRequiredComponentRemoving)
                     .AddTo(_componentSubscriptions);
                 
                 EntityChangeRouter
-                    .SubscribeOnEntityRemovedComponent(requiredComponent)
+                    .OnEntityRemovedComponent(requiredComponent)
                     .Subscribe(OnRequiredComponentRemoved)
                     .AddTo(_componentSubscriptions);
             }
@@ -49,12 +49,12 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             foreach (var excludedComponents in group.ExcludedComponents)
             {
                 EntityChangeRouter
-                    .SubscribeOnEntityAddedComponent(excludedComponents)
+                    .OnEntityAddedComponent(excludedComponents)
                     .Subscribe(OnExcludedComponentAdded)
                     .AddTo(_componentSubscriptions);
                 
                 EntityChangeRouter
-                    .SubscribeOnEntityRemovedComponent(excludedComponents)
+                    .OnEntityRemovedComponent(excludedComponents)
                     .Subscribe(OnExcludedComponentRemoved)
                     .AddTo(_componentSubscriptions);
             }
@@ -88,6 +88,15 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
                 EntityIdMatchState.Add(entityId, entityState);
                 return entityState;
             }
+        }
+        
+        public void OnRequiredComponentAdded(EntityChange entityChange)
+        {
+            var currentState = GetStateSafely(entityChange.EntityId);
+            lock (_lock) { currentState.NeedsComponentsAdding--; }
+
+            if (currentState.IsMatch())
+            { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
         }
         
         public void OnRequiredComponentRemoving(EntityChange entityChange)
@@ -139,16 +148,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             if (currentState.IsMatch())
             { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
         }
-
-        public void OnRequiredComponentAdded(EntityChange entityChange)
-        {
-            var currentState = GetStateSafely(entityChange.EntityId);
-            lock (_lock) { currentState.NeedsComponentsAdding--; }
-
-            if (currentState.IsMatch())
-            { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
-        }
-
+        
         public void Dispose()
         {
             lock (_lock)
