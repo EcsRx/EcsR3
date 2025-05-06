@@ -14,12 +14,9 @@ namespace EcsR3.Tests.EcsRx.Database
         {
             var mockEntityFactory = Substitute.For<IEntityFactory>();
             var mockEntity = Substitute.For<IEntity>();
-            mockEntity.ComponentsAdded.Returns(new Subject<int[]>());
-            mockEntity.ComponentsRemoving.Returns(new Subject<int[]>());
-            mockEntity.ComponentsRemoved.Returns(new Subject<int[]>());
             mockEntityFactory.Create(null).Returns(mockEntity);
 
-            var entityCollection = new EntityCollection(1, mockEntityFactory);
+            var entityCollection = new EntityCollection(mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityAdded.Subscribe(x => wasCalled = true);
@@ -36,14 +33,11 @@ namespace EcsR3.Tests.EcsRx.Database
         {
             var mockEntityFactory = Substitute.For<IEntityFactory>();
             var mockEntity = Substitute.For<IEntity>();
-            mockEntity.ComponentsAdded.Returns(new Subject<int[]>());
-            mockEntity.ComponentsRemoving.Returns(new Subject<int[]>());
-            mockEntity.ComponentsRemoved.Returns(new Subject<int[]>());
             mockEntity.Id.Returns(1);
             
             mockEntityFactory.Create(null).Returns(mockEntity);
            
-            var entityCollection = new EntityCollection(1, mockEntityFactory);
+            var entityCollection = new EntityCollection(mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityRemoved.Subscribe(x => wasCalled = true);

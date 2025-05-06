@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Tests.Models;
 using NSubstitute;
-using R3;
 using Xunit;
 
 namespace EcsR3.Tests.EcsRx
@@ -19,23 +18,16 @@ namespace EcsR3.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new []{0,1});
-            componentTypeLookup.GetComponentTypeId(Arg.Any<Type>()).Returns(1);
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new []{0,1,2,3});
+            componentTypeLookup.GetComponentTypeId(Arg.Any<Type>()).Returns(2);
             
-            var entity = new Entity(1, componentDatabase, componentTypeLookup);
+            var entity = new Entity(1, componentDatabase, componentTypeLookup, entityChangeRouter);
             var dummyComponent = Substitute.For<IComponent>();
 
-            var wasCalled = false;
-            int[] eventData = null;
-            entity.ComponentsAdded.Subscribe(x =>
-            {
-                eventData = x;
-                wasCalled = true;
-            });
-
             entity.AddComponents(dummyComponent);
-            Assert.True(wasCalled);
-            Assert.Equal(new []{1},eventData);
+            
+            entityChangeRouter.Received(1).PublishEntityAddedComponent(1, 2);
         }
         
         /* NSubstitute doesnt support ref returns currently
@@ -61,20 +53,18 @@ namespace EcsR3.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[]{0});
             
-            var entity = new Entity(1, componentDatabase, componentTypeLookup);
+            var entity = new Entity(1, componentDatabase, componentTypeLookup, entityChangeRouter);
             var dummyComponent = Substitute.For<IComponent>();
 
-            var beforeWasCalled = false;
-            var afterWasCalled = false;
             entity.InternalComponentAllocations[0] = 1;
-            entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
-            entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
 
             entity.RemoveComponents(dummyComponent.GetType());
-            Assert.True(beforeWasCalled);
-            Assert.True(afterWasCalled);
+            
+            entityChangeRouter.Received(1).PublishEntityRemovingComponent(1, 0);
+            entityChangeRouter.Received(1).PublishEntityRemovedComponent(1, 0);
         }
         
         [Fact]
@@ -82,18 +72,14 @@ namespace EcsR3.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] { 0 });
             
-            var entity = new Entity(1, componentDatabase, componentTypeLookup);
+            var entity = new Entity(1, componentDatabase, componentTypeLookup, entityChangeRouter);
             
-            var beforeWasCalled = false;
-            var afterWasCalled = false;
-            entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
-            entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
-
             entity.RemoveComponents(typeof(TestComponentOne));
-            Assert.False(beforeWasCalled);
-            Assert.False(afterWasCalled);
+            entityChangeRouter.DidNotReceive().PublishEntityRemovingComponent(1, 0);
+            entityChangeRouter.DidNotReceive().PublishEntityRemovedComponent(1, 0);
         }
 
         [Fact]
@@ -106,7 +92,9 @@ namespace EcsR3.Tests.EcsRx
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             entity.InternalComponentAllocations[0] = 1;
             entity.InternalComponentAllocations[1] = 1;
             Assert.True(entity.HasAllComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
@@ -118,11 +106,12 @@ namespace EcsR3.Tests.EcsRx
             var fakeEntityId = 1;
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             entity.InternalComponentAllocations[0] = 1;
             Assert.False(entity.HasAllComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
         }
@@ -133,13 +122,14 @@ namespace EcsR3.Tests.EcsRx
             var fakeEntityId = 1;
             
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
             componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
             var componentDatabase = Substitute.For<IComponentDatabase>();
             
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             entity.InternalComponentAllocations[0] = 1;
             
             Assert.True(entity.HasAnyComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
@@ -151,47 +141,11 @@ namespace EcsR3.Tests.EcsRx
             var fakeEntityId = 1;
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
             componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             
             Assert.False(entity.HasAnyComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
-        }
-
-        [Fact]
-        public void should_remove_all_components_when_disposing()
-        {
-            var fakeEntityId = 1;
-
-            var componentDatabase = Substitute.For<IComponentDatabase>();
-            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
-            
-            var expectedRange = Enumerable.Range(0, 3);
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
-            entity.InternalComponentAllocations[0] = 1;
-            entity.InternalComponentAllocations[1] = 1;
-            entity.InternalComponentAllocations[2] = 1;
-            
-            var beforeWasCalled = false;
-            var afterWasCalled = false;
-            
-            entity.ComponentsRemoving.Subscribe(x =>
-            {
-                beforeWasCalled = true;
-                Assert.All(x, y => expectedRange.Contains(y));
-            });
-            entity.ComponentsRemoved.Subscribe(x =>
-            {
-                afterWasCalled = true;
-                Assert.All(x, y => expectedRange.Contains(y));
-            });
-            
-            entity.Dispose();
-
-            Assert.True(beforeWasCalled);
-            Assert.True(afterWasCalled);
-            Assert.Empty(entity.Components);
-            Assert.All(entity.ComponentAllocations, i => i.Equals(Entity.NotAllocated));
         }
 
         [Fact]
@@ -209,7 +163,9 @@ namespace EcsR3.Tests.EcsRx
             componentTypeLookup.GetComponentTypeId(fakeComponents[1].GetType()).Returns(1);
             componentTypeLookup.GetComponentTypeId(fakeComponents[2].GetType()).Returns(2);
             
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             entity.AddComponents(fakeComponents);
             
             Received.InOrder(() => {
@@ -230,6 +186,8 @@ namespace EcsR3.Tests.EcsRx
             var componentDatabase = Substitute.For<IComponentDatabase>();
             componentDatabase.Allocate(Arg.Any<int>()).Returns(0);
             componentDatabase.Get<IComponent>(Arg.Any<int>(), Arg.Any<int>()).Returns(info => components[info.ArgAt<int>(0)]);
+            
+            var entityChangeRouter = Substitute.For<IEntityChangeRouter>();
                 
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
@@ -237,7 +195,7 @@ namespace EcsR3.Tests.EcsRx
             componentTypeLookup.GetComponentTypeId(components[1].GetType()).Returns(1);
             componentTypeLookup.GetComponentTypeId(components[2].GetType()).Returns(2);
             
-            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup, entityChangeRouter);
             entity.AddComponents(components);
             Assert.Equal(components, entity.Components);
         }

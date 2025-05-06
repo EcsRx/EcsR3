@@ -6,11 +6,11 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using EcsR3.Tests.Models;
-using EcsR3.Tests.Systems;
 using EcsR3.Tests.Systems.PriorityScenarios;
 using NSubstitute;
 using Xunit;
@@ -90,17 +90,18 @@ namespace EcsR3.Tests.EcsRx
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
+            var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
             
-            var hasOneAndTwo = new Entity(1, componentDatabase, componentLookupType);
+            var hasOneAndTwo = new Entity(1, componentDatabase, componentLookupType, mockEntityChangeRouter);
             hasOneAndTwo.AddComponent<TestComponentOne>();
             hasOneAndTwo.AddComponent<TestComponentTwo>();
             
-            var hasAllComponents = new Entity(2, componentDatabase, componentLookupType);
+            var hasAllComponents = new Entity(2, componentDatabase, componentLookupType, mockEntityChangeRouter);
             hasAllComponents.AddComponent<TestComponentOne>();
             hasAllComponents.AddComponent<TestComponentTwo>();
             hasAllComponents.AddComponent<TestComponentThree>();
 
-            var hasOneAndThree = new Entity(3, componentDatabase, componentLookupType);
+            var hasOneAndThree = new Entity(3, componentDatabase, componentLookupType, mockEntityChangeRouter);
             hasOneAndThree.AddComponent<TestComponentOne>();
             hasOneAndThree.AddComponent<TestComponentThree>();
 

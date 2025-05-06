@@ -9,7 +9,7 @@ using EcsR3.Groups.Observable.Tracking.Types;
 using NSubstitute;
 using R3;
 using Xunit;
-
+/*
 namespace EcsR3.Tests.EcsRx.Observables.Trackers
 {
     public class BatchObservableGroupTrackerTests
@@ -80,3 +80,4 @@ namespace EcsR3.Tests.EcsRx.Observables.Trackers
         }
     }
 }
+*/

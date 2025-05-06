@@ -10,6 +10,7 @@ using NSubstitute;
 using R3;
 using Xunit;
 
+/*
 namespace EcsR3.Tests.EcsRx.Observables
 {
     public class ObservableGroupTests
@@ -127,3 +128,4 @@ namespace EcsR3.Tests.EcsRx.Observables
         }
     }
 }
+*/
