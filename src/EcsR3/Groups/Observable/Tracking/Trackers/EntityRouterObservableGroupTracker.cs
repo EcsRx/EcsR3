@@ -17,7 +17,6 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
         public Subject<int> _onEntityLeavingGroup { get; } = new Subject<int>();
         public Subject<int> _onEntityLeftGroup { get; } = new Subject<int>();
 
-
         public Dictionary<int, GroupMatchingState> EntityIdMatchState { get; } = new Dictionary<int, GroupMatchingState>();
         public IEntityChangeRouter EntityChangeRouter { get; }
 
@@ -47,15 +46,15 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
                     .AddTo(_componentSubscriptions);
             }
             
-            foreach (var requiredComponent in group.ExcludedComponents)
+            foreach (var excludedComponents in group.ExcludedComponents)
             {
                 EntityChangeRouter
-                    .SubscribeOnEntityAddedComponent(requiredComponent)
+                    .SubscribeOnEntityAddedComponent(excludedComponents)
                     .Subscribe(OnExcludedComponentAdded)
                     .AddTo(_componentSubscriptions);
                 
                 EntityChangeRouter
-                    .SubscribeOnEntityRemovedComponent(requiredComponent)
+                    .SubscribeOnEntityRemovedComponent(excludedComponents)
                     .Subscribe(OnExcludedComponentRemoved)
                     .AddTo(_componentSubscriptions);
             }
@@ -63,36 +62,56 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
 
         public void StartTracking(int entityId, GroupMatchingState state)
         {
-            EntityIdMatchState.Add(entityId, state);
+            lock (_lock)
+            { EntityIdMatchState.Add(entityId, state); }
             
             if (state.IsMatch())
             { _onEntityJoinedGroup.OnNext(entityId); }
         }
 
+        public void CheckForRemoval(int entityId, GroupMatchingState state)
+        {
+            if (state.NeedsComponentsAdding != Group.RequiredComponents.Length)
+            { return; }
+            
+            EntityIdMatchState.Remove(entityId);
+        }
+
         public GroupMatchingState GetStateSafely(int entityId)
         {
-            if (EntityIdMatchState.TryGetValue(entityId, out var value))
-            { return value; }
-
-            var entityState = new GroupMatchingState(Group);
-            EntityIdMatchState.Add(entityId, entityState);
-            return entityState;
+            lock (_lock)
+            {
+                if (EntityIdMatchState.TryGetValue(entityId, out var value))
+                { return value; }
+                
+                var entityState = new GroupMatchingState(Group);
+                EntityIdMatchState.Add(entityId, entityState);
+                return entityState;
+            }
         }
         
         public void OnRequiredComponentRemoving(EntityChange entityChange)
         {
-            var currentState = EntityIdMatchState[entityChange.EntityId];
+            GroupMatchingState currentState;
+            lock (_lock)
+            { currentState = EntityIdMatchState[entityChange.EntityId]; }
+            
             if(currentState.IsMatch())
             { _onEntityLeavingGroup.OnNext(entityChange.EntityId); }
         }
 
         public void OnRequiredComponentRemoved(EntityChange entityChange)
         {
-            var currentState = EntityIdMatchState[entityChange.EntityId];
-            if (!currentState.IsMatch()) { return; }
-            
-            currentState.NeedsComponentsAdding++;
-            _onEntityLeftGroup.OnNext(entityChange.EntityId);
+            GroupMatchingState currentState;
+            lock (_lock)
+            { currentState = EntityIdMatchState[entityChange.EntityId]; }
+
+            if (currentState.IsMatch())
+            { _onEntityLeftGroup.OnNext(entityChange.EntityId); }
+
+            lock (_lock)
+            { currentState.NeedsComponentsAdding++; }
+            CheckForRemoval(entityChange.EntityId, currentState);
         }
 
         public void OnExcludedComponentAdded(EntityChange entityChange)
@@ -103,13 +122,19 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
                 _onEntityLeavingGroup.OnNext(entityChange.EntityId);
                 _onEntityLeftGroup.OnNext(entityChange.EntityId);
             }
-            currentState.NeedsComponentsRemoving++;
+            
+            lock(_lock)
+            { currentState.NeedsComponentsRemoving++; }
         }
 
         public void OnExcludedComponentRemoved(EntityChange entityChange)
         {
-            var currentState = EntityIdMatchState[entityChange.EntityId];
-            currentState.NeedsComponentsRemoving--;
+            GroupMatchingState currentState;
+            lock (_lock)
+            {
+                currentState = EntityIdMatchState[entityChange.EntityId];
+                currentState.NeedsComponentsRemoving--;
+            }
             
             if (currentState.IsMatch())
             { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
@@ -118,17 +143,20 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
         public void OnRequiredComponentAdded(EntityChange entityChange)
         {
             var currentState = GetStateSafely(entityChange.EntityId);
-            currentState.NeedsComponentsAdding--;
-            
+            lock (_lock) { currentState.NeedsComponentsAdding--; }
+
             if (currentState.IsMatch())
             { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
         }
 
         public void Dispose()
         {
-            _onEntityJoinedGroup.Dispose();
-            _onEntityLeavingGroup.Dispose();
-            _onEntityLeftGroup.Dispose();
+            lock (_lock)
+            {
+                _onEntityJoinedGroup.Dispose();
+                _onEntityLeavingGroup.Dispose();
+                _onEntityLeftGroup.Dispose();
+            }
         }
 
         public IEnumerable<int> GetMatchedEntityIds()

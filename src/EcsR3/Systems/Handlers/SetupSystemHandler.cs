@@ -44,8 +44,7 @@ namespace EcsR3.Systems.Handlers
             }
 
             var castSystem = (ISetupSystem) system;
-            var affinities = castSystem.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

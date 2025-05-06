@@ -1,7 +1,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using EcsR3.Collections;
-using EcsR3.Collections.Database;
+using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
@@ -21,7 +21,7 @@ namespace EcsR3.Benchmarks
     {
         public IDependencyRegistry DependencyRegistry { get; }
         public IDependencyResolver DependencyResolver { get; }
-        public IEntityDatabase EntityDatabase { get; }
+        public IEntityCollection EntityCollection { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public ISystemExecutor SystemExecutor { get; }
@@ -36,7 +36,7 @@ namespace EcsR3.Benchmarks
             DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
             DependencyResolver = DependencyRegistry.BuildResolver();
             
-            EntityDatabase = DependencyResolver.Resolve<IEntityDatabase>();
+            EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
             ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();

@@ -35,8 +35,7 @@ namespace EcsR3.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var castSystem = (IReactToEntitySystem) system;
-            var affinities = castSystem.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);            
+            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
 

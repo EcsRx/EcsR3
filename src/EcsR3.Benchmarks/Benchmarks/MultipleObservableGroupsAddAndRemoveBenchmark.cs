@@ -25,16 +25,12 @@ namespace EcsR3.Benchmarks.Benchmarks
         [Params(1, 10, 25)]
         public int ObservableGroups;
 
-        private IEntityCollection _collection;
-
         public MultipleObservableGroupsAddAndRemoveBenchmark() : base()
         {
             var componentNamespace = typeof(Component1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
-            
-            _collection = EntityDatabase.GetCollection();
         }
 
         public override void Setup()
@@ -58,7 +54,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            _collection.RemoveAllEntities();
+            EntityCollection.RemoveAllEntities();
             var manager = (ObservableGroupManager as ObservableGroupManager);
             var allObservableGroups = manager._observableGroups.ToArray();
             allObservableGroups.DisposeAll();
@@ -70,7 +66,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = _collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveAllComponents();
             }

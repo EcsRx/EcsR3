@@ -36,8 +36,7 @@ namespace EcsR3.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var castSystem = (IReactToGroupSystem)system;
-            var affinities = castSystem.GetGroupAffinities();
-            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group, affinities);
+            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group);
             var groupPredicate = castSystem.Group as IHasPredicate;
             var isExtendedSystem = system is IReactToGroupExSystem;
             var reactObservable = castSystem.ReactToGroup(observableGroup);

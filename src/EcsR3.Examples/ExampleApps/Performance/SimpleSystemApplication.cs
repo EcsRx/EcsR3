@@ -12,17 +12,15 @@ namespace EcsR3.Examples.ExampleApps.Performance
     public class SimpleSystemApplication : EcsR3ConsoleApplication
     {
         private static readonly int EntityCount = 1000;
-        private IEntityCollection _collection;
         private ExampleReactToGroupSystem _groupSystem;
 
         protected override void ApplicationStarted()
         {
-            _collection = EntityDatabase.GetCollection();
             _groupSystem = new ExampleReactToGroupSystem();
             
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = _collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
             }
 
@@ -33,7 +31,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         private void RunSingleThread()
         {
             var timer = Stopwatch.StartNew();
-            foreach(var entity in _collection)
+            foreach(var entity in EntityCollection)
             { _groupSystem.Process(entity); }
             timer.Stop();
 
@@ -44,7 +42,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         private void RunMultiThreaded()
         {
             var timer = Stopwatch.StartNew();
-            Parallel.ForEach(_collection, _groupSystem.Process);
+            Parallel.ForEach(EntityCollection, _groupSystem.Process);
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);

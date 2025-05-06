@@ -60,15 +60,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            var defaultPool = EntityDatabase.GetCollection();
-            EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
+            EntityCollection.RemoveAllEntities();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = defaultPool.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponentTypeIds);
             }

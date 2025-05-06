@@ -76,8 +76,7 @@ namespace EcsR3.Systems.Handlers
             }
 
             var groupSystem = system as IGroupSystem;
-            var affinities = groupSystem.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(groupSystem.Group, affinities);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(groupSystem.Group);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EcsR3.Collections.Database;
+﻿using System.Collections.Generic;
+using EcsR3.Collections.Entity;
 using EcsR3.Components.Lookups;
 using EcsR3.Groups;
 using EcsR3.Groups.Observable;
@@ -16,16 +14,16 @@ namespace EcsR3.Collections
 
         public IReadOnlyList<IObservableGroup> ObservableGroups => _observableGroups;
 
-        public IEntityDatabase EntityDatabase { get; }
+        public IEntityCollection EntityCollection { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         
         private readonly object _lock = new object();
         
-        public ObservableGroupManager(IObservableGroupFactory observableGroupFactory, IEntityDatabase entityDatabase, IComponentTypeLookup componentTypeLookup)
+        public ObservableGroupManager(IObservableGroupFactory observableGroupFactory, IEntityCollection entityCollection, IComponentTypeLookup componentTypeLookup)
         {
             ObservableGroupFactory = observableGroupFactory;
-            EntityDatabase = entityDatabase;
+            EntityCollection = entityCollection;
             ComponentTypeLookup = componentTypeLookup;
 
             _observableGroups = new ObservableGroupLookup();
@@ -49,30 +47,10 @@ namespace EcsR3.Collections
             
             lock (_lock)
             {
-                if (_observableGroups.Contains(lookupGroup)) 
-                { return _observableGroups[lookupGroup]; }
-            }
-
-            var configuration = new ObservableGroupConfiguration
-            {
-                Group = lookupGroup
-            };
-
-            lock (_lock)
-            {
-                if (collectionIds != null && collectionIds.Length > 0)
-                {
-                    var targetedCollections = EntityDatabase.Collections.Where(x => collectionIds.Contains(x.Id));
-                    configuration.NotifyingCollections = targetedCollections;
-                    configuration.InitialEntities = targetedCollections.GetAllEntities();
-                }
-                else
-                {
-                    configuration.NotifyingCollections = new[] { EntityDatabase };
-                    configuration.InitialEntities = EntityDatabase.Collections.GetAllEntities();
-                }
+                if (_observableGroups.TryGetValue(lookupGroup, out var existingEObservableGroup))
+                { return existingEObservableGroup; }
                 
-                var observableGroup = ObservableGroupFactory.Create(configuration);
+                var observableGroup = ObservableGroupFactory.Create(lookupGroup);
                 _observableGroups.Add(observableGroup);
 
                 return observableGroup;
@@ -85,8 +63,6 @@ namespace EcsR3.Collections
             {
                 foreach (var observableGroup in _observableGroups)
                 { observableGroup?.Dispose(); }
-
-                EntityDatabase.Dispose();
             }
         }
     }

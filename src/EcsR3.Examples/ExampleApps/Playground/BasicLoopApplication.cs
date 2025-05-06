@@ -15,7 +15,6 @@ namespace EcsR3.Examples.ExampleApps.Playground
     {
         protected static readonly int EntityCount = 200000;
         protected static readonly int SimulatedUpdates = 100;
-        protected IEntityCollection _collection;
         protected IComponentTypeLookup _componentTypeLookup;
         protected IComponentDatabase _componentDatabase;
         protected IBatchBuilderFactory _batchBuilderFactory;
@@ -32,7 +31,6 @@ namespace EcsR3.Examples.ExampleApps.Playground
             _componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             _batchBuilderFactory = DependencyResolver.Resolve<IBatchBuilderFactory>();
             _referenceBatchBuilderFactory = DependencyResolver.Resolve<IReferenceBatchBuilderFactory>();
-            _collection = EntityDatabase.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent));
             ClassComponent2TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent2));
@@ -60,7 +58,7 @@ namespace EcsR3.Examples.ExampleApps.Playground
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = _collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 SetupEntity(entity);              
             }
         }

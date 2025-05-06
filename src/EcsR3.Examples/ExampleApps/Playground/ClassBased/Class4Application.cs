@@ -18,7 +18,7 @@ namespace EcsR3.Examples.ExampleApps.Playground.ClassBased
             base.SetupEntities();
             
             var batchBuilder = _referenceBatchBuilderFactory.Create<ClassComponent, ClassComponent2>();
-            _componentBatch = batchBuilder.Build(_collection);
+            _componentBatch = batchBuilder.Build(EntityCollection);
         }
 
         protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";

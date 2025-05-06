@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EcsR3.Collections.Entity;
 using EcsR3.Plugins.Persistence.Builders;
 using EcsR3.Plugins.Persistence.Data;
 using EcsR3.Plugins.Persistence.Transformers;
-using EcsR3.Collections.Database;
 using Persistity.Core.Serialization;
 using Persistity.Endpoints;
 using Persistity.Flow.Pipelines;
@@ -11,13 +11,13 @@ using Persistity.Flow.Steps.Types;
 
 namespace EcsR3.Plugins.Persistence.Pipelines
 {
-    public class DefaultLoadEntityDatabasePipeline : FlowPipeline, ILoadEntityDatabasePipeline
+    public class DefaultLoadEntityCollectionPipeline : FlowPipeline, ILoadEntityCollectionPipeline
     {
         public IDeserializer Deserializer { get; }
-        public IFromEntityDatabaseDataTransformer DataTransformer { get; }
+        public IFromEntityCollectionDataTransformer DataTransformer { get; }
         public IReceiveDataEndpoint Endpoint { get; }
 
-        public DefaultLoadEntityDatabasePipeline(EcsRxPipelineBuilder pipelineBuilder, IDeserializer deserializer, IFromEntityDatabaseDataTransformer dataTransformer, IReceiveDataEndpoint endpoint)
+        public DefaultLoadEntityCollectionPipeline(EcsRxPipelineBuilder pipelineBuilder, IDeserializer deserializer, IFromEntityCollectionDataTransformer dataTransformer, IReceiveDataEndpoint endpoint)
         {
             Deserializer = deserializer;
             DataTransformer = dataTransformer;
@@ -26,14 +26,14 @@ namespace EcsR3.Plugins.Persistence.Pipelines
             Steps = BuildSteps(pipelineBuilder);
         }
 
-        public async Task<IEntityDatabase> Execute()
-        { return (IEntityDatabase) await Execute(null).ConfigureAwait(false); }
+        public async Task<IEntityCollection> Execute()
+        { return (IEntityCollection) await Execute(null).ConfigureAwait(false); }
 
         protected IEnumerable<IPipelineStep> BuildSteps(EcsRxPipelineBuilder builder)
         {
             return builder
                 .StartFrom(Endpoint)
-                .DeserializeWith(Deserializer, typeof(EntityDatabaseData))
+                .DeserializeWith(Deserializer, typeof(EntityCollectionData))
                 .TransformWith(DataTransformer)
                 .BuildSteps();
         }

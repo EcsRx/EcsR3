@@ -1,13 +1,9 @@
 using System.Linq;
-using SystemsR3.Events;
-using SystemsR3.Executor;
 using SystemsR3.Executor.Handlers;
-using SystemsR3.Executor.Handlers.Conventional;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Pools;
 using EcsR3.Collections;
-using EcsR3.Collections.Database;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -25,8 +21,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
         {
             registry.Bind<IIdPool, IdPool>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
-            registry.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
-            registry.Bind<IEntityDatabase, EntityDatabase>();
+            registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             registry.Bind<IObservableGroupManager, ObservableGroupManager>();
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();

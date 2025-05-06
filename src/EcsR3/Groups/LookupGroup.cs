@@ -6,8 +6,8 @@ namespace EcsR3.Groups
 {
     public readonly struct LookupGroup
     {
-        public int[] RequiredComponents { get; }
-        public int[] ExcludedComponents { get; }
+        public readonly int[] RequiredComponents;
+        public readonly int[] ExcludedComponents;
 
         public LookupGroup(int[] requiredComponents, int[] excludedComponents)
         {

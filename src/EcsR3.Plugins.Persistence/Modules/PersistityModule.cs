@@ -23,22 +23,20 @@ namespace EcsR3.Plugins.Persistence.Modules
         {
             registry.Bind<IToEntityDataTransformer, ToEntityDataTransformer>();
             registry.Bind<IToEntityCollectionDataTransformer, ToEntityCollectionDataTransformer>();
-            registry.Bind<IToEntityDatabaseDataTransformer, ToEntityDatabaseDataTransformer>();
             registry.Bind<IFromEntityDataTransformer, FromEntityDataTransformer>();
             registry.Bind<IFromEntityCollectionDataTransformer, FromEntityCollectionDataTransformer>();
-            registry.Bind<IFromEntityDatabaseDataTransformer, FromEntityDatabaseDataTransformer>();
             registry.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
                 new EcsRxPipelineBuilder(x)).AsSingleton());
 
             // These are defaults, you can override these in your own app/plugin
-            registry.Bind<ISaveEntityDatabasePipeline>(builder =>
+            registry.Bind<ISaveEntityCollectionPipeline>(builder =>
                 builder.ToMethod(CreateDefaultSavePipeline).AsSingleton());
             
-            registry.Bind<ILoadEntityDatabasePipeline>(builder =>
+            registry.Bind<ILoadEntityCollectionPipeline>(builder =>
                 builder.ToMethod(CreateDefaultLoadPipeline).AsSingleton());
         }
 
-        public ISaveEntityDatabasePipeline CreateDefaultSavePipeline(IDependencyResolver resolver)
+        public ISaveEntityCollectionPipeline CreateDefaultSavePipeline(IDependencyResolver resolver)
         {
             var mappingRegistry = new MappingRegistry(resolver.Resolve<EverythingTypeMapper>());
             var primitiveTypeMappings = resolver.ResolveAll<IBinaryPrimitiveHandler>();
@@ -47,7 +45,7 @@ namespace EcsR3.Plugins.Persistence.Modules
             return CreateSavePipeline(resolver, persistitySerializer, DefaultEntityDatabaseFile);
         }
 
-        public ILoadEntityDatabasePipeline CreateDefaultLoadPipeline(IDependencyResolver resolver)
+        public ILoadEntityCollectionPipeline CreateDefaultLoadPipeline(IDependencyResolver resolver)
         {
             var mappingRegistry = new MappingRegistry(resolver.Resolve<EverythingTypeMapper>());
             var typeCreator = resolver.Resolve<ITypeCreator>();
@@ -64,12 +62,12 @@ namespace EcsR3.Plugins.Persistence.Modules
         /// <param name="serializer">The serializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyResolver resolver, 
+        public static ISaveEntityCollectionPipeline CreateSavePipeline(IDependencyResolver resolver, 
             ISerializer serializer, string filename)
         {
-            return new DefaultSaveEntityDatabasePipeline(
+            return new DefaultSaveEntityCollectionPipeline(
                 resolver.Resolve<EcsRxPipelineBuilder>(), serializer, 
-                resolver.Resolve<IToEntityDatabaseDataTransformer>(), 
+                resolver.Resolve<IToEntityCollectionDataTransformer>(), 
                 new FileEndpoint(filename));
         }
 
@@ -80,12 +78,12 @@ namespace EcsR3.Plugins.Persistence.Modules
         /// <param name="deserializer">The deserializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public static ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyResolver resolver,
+        public static ILoadEntityCollectionPipeline CreateLoadPipeline(IDependencyResolver resolver,
             IDeserializer deserializer, string filename)
         {
-            return new DefaultLoadEntityDatabasePipeline(
+            return new DefaultLoadEntityCollectionPipeline(
                 resolver.Resolve<EcsRxPipelineBuilder>(), deserializer,
-                resolver.Resolve<IFromEntityDatabaseDataTransformer>(), 
+                resolver.Resolve<IFromEntityCollectionDataTransformer>(), 
                 new FileEndpoint(filename));
         }
     }

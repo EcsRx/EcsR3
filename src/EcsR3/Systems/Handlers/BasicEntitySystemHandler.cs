@@ -40,8 +40,7 @@ namespace EcsR3.Systems.Handlers
         {
             var castSystem = (IBasicEntitySystem)system;
 
-            var affinities = castSystem.GetGroupAffinities();
-            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group, affinities);
+            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group);
             var hasEntityPredicate = castSystem.Group is IHasPredicate;
             var runParallel = system.ShouldMutliThread();
             IDisposable subscription;

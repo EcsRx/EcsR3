@@ -3,7 +3,6 @@ using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Pools;
 using EcsR3.Collections;
-using EcsR3.Collections.Database;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -22,15 +21,12 @@ namespace EcsR3.Infrastructure.Modules
             // Register ECS specific infrastructure
             registry.Bind<IIdPool, IdPool>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
-            registry.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
-            registry.Bind<IEntityDatabase, EntityDatabase>();
+            registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             registry.Bind<IObservableGroupManager, ObservableGroupManager>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();
-            registry.Bind<IEntityCollection>(new BindingConfiguration()
-                { ToMethod = x => x.Resolve<IEntityDatabase>().GetCollection() });
             registry.Bind<IEntityChangeRouter, EntityChangeRouter>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
             

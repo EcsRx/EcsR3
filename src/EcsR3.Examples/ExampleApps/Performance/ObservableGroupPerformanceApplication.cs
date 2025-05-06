@@ -21,8 +21,6 @@ namespace EcsR3.Examples.ExampleApps.Performance
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
             
-            var collection = EntityDatabase.GetCollection();
-            
             var observableGroupCount = availableComponentTypes.Length / 2;
             var componentsPerGroup = availableComponentTypes.Length / observableGroupCount;
             for (var i = 0; i < observableGroupCount; i++)
@@ -42,7 +40,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(availableComponents);
                 entity.RemoveAllComponents();
             }

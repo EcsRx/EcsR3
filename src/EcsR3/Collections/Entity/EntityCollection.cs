@@ -10,9 +10,8 @@ using SystemsR3.Extensions;
 
 namespace EcsR3.Collections.Entity
 {
-public class EntityCollection : IEntityCollection, IDisposable
+    public class EntityCollection : IEntityCollection, IDisposable
     {
-        public int Id { get; }
         public IEntityFactory EntityFactory { get; }
         
         public readonly EntityLookup EntityLookup;
@@ -20,23 +19,16 @@ public class EntityCollection : IEntityCollection, IDisposable
 
         public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
         public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
-        public Observable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
-        public Observable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
-        public Observable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
         
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
-        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
         
         private readonly object _lock = new object();
         
-        public EntityCollection(int id, IEntityFactory entityFactory)
+        public EntityCollection(IEntityFactory entityFactory)
         {
             EntityLookup = new EntityLookup();
             EntitySubscriptions = new Dictionary<int, IDisposable>();
-            Id = id;
             EntityFactory = entityFactory;
 
             _onEntityAdded = new Subject<CollectionEntityEvent>();
@@ -132,9 +124,6 @@ public class EntityCollection : IEntityCollection, IDisposable
             {
                 _onEntityAdded.Dispose();
                 _onEntityRemoved.Dispose();
-                _onEntityComponentsAdded.Dispose();
-                _onEntityComponentsRemoving.Dispose();
-                _onEntityComponentsRemoved.Dispose();
 
                 EntityLookup.Clear();
                 EntitySubscriptions.RemoveAndDisposeAll();

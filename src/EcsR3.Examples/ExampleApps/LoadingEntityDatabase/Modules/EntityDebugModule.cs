@@ -18,7 +18,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Modules
             // Make a new pipeline for showing json output
             registry.BuildPipeline(DebugPipeline, builder => builder
                 // Fork from the 2nd step (serializer) on the existing JSON Saving Pipeline
-                .ForkDataFrom<ISaveEntityDatabasePipeline>(2)
+                .ForkDataFrom<ISaveEntityCollectionPipeline>(2)
                 // Then spit out the json to the console in a nice way
                 .ThenInvoke(WriteEntityData));
         }

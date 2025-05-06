@@ -21,14 +21,11 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
-            var collection = EntityDatabase.GetCollection();
-            
-           
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
             }
             stopwatch.Stop();

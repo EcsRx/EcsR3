@@ -14,10 +14,10 @@ namespace EcsR3.Groups.Observable
             EntityCollection = entityCollection;
         }
 
-        public IObservableGroup Create(ObservableGroupConfiguration arg)
+        public IObservableGroup Create(LookupGroup group)
         {
-            var tracker = GroupTrackerFactory.TrackGroup(arg.Group, EntityCollection);
-            return new ObservableGroup(arg.Group, tracker, EntityCollection);
+            var tracker = GroupTrackerFactory.TrackGroup(group, EntityCollection);
+            return new ObservableGroup(group, tracker, EntityCollection);
         }
     }
 }
