@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EcsR3.Collections.Entity;
 using EcsR3.Entities;
+using EcsR3.Groups;
 using EcsR3.Groups.Observable;
 using EcsR3.Groups.Observable.Tracking.Events;
 using EcsR3.Groups.Observable.Tracking.Trackers;
@@ -10,7 +11,7 @@ using NSubstitute;
 using R3;
 using Xunit;
 
-/*
+
 namespace EcsR3.Tests.EcsRx.Observables
 {
     public class ObservableGroupTests
@@ -18,7 +19,7 @@ namespace EcsR3.Tests.EcsRx.Observables
         [Fact]
         public void should_include_matching_entity_snapshot_on_creation()
         {
-            var accessorToken = new ObservableGroupToken(new[]{1}, Array.Empty<int>(), 0);
+            var accessorToken = new LookupGroup(new[]{1}, Array.Empty<int>());
 
             var applicableEntity1 = Substitute.For<IEntity>();
             var applicableEntity2 = Substitute.For<IEntity>();
@@ -27,22 +28,18 @@ namespace EcsR3.Tests.EcsRx.Observables
             applicableEntity1.Id.Returns(1);
             applicableEntity2.Id.Returns(2);
             notApplicableEntity1.Id.Returns(3);
+   
+            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            mockGroupTracker.GetMatchedEntityIds().Returns(new [] { 1, 2 });
+            mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
+            mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
+            mockGroupTracker.OnEntityLeftGroup.Returns(new Subject<int>());
             
-            var dummyEntitySnapshot = new List<IEntity>
-            {
-                applicableEntity1,
-                applicableEntity2,
-                notApplicableEntity1
-            };
-
-            var groupMatchingChanged = new Subject<EntityGroupStateChanged>();
-            var groupTracker = Substitute.For<ICollectionObservableGroupTracker>();
-            groupTracker.GroupMatchingChanged.Returns(groupMatchingChanged);
-            groupTracker.IsMatching(Arg.Is<int>(x => x == applicableEntity1.Id)).Returns(true);
-            groupTracker.IsMatching(Arg.Is<int>(x => x == applicableEntity2.Id)).Returns(true);
-            groupTracker.IsMatching(Arg.Is<int>(x => x == notApplicableEntity1.Id)).Returns(false);
-
-            var observableGroup = new ObservableGroup(accessorToken, dummyEntitySnapshot, groupTracker);
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.GetEntity(1).Returns(applicableEntity1);
+            mockEntityCollection.GetEntity(2).Returns(applicableEntity2);
+    
+            var observableGroup = new ObservableGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             
             Assert.Equal(2, observableGroup.CachedEntities.Count);
             Assert.Contains(applicableEntity1, observableGroup.CachedEntities);
@@ -52,80 +49,102 @@ namespace EcsR3.Tests.EcsRx.Observables
         [Fact]
         public void should_add_entity_and_raise_event_when_applicable_entity_joined()
         {
-            var collectionId = 1;
-            var accessorToken = new ObservableGroupToken(new[] { 1,2 }, Array.Empty<int>(), collectionId);
-            var mockCollection = Substitute.For<IEntityCollection>();
-            mockCollection.Id.Returns(collectionId);
+            var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-   
-            var groupStateChangedSub = new Subject<EntityGroupStateChanged>();
-            var groupTracker = Substitute.For<ICollectionObservableGroupTracker>();
-            groupTracker.GroupMatchingChanged.Returns(groupStateChangedSub);
 
-            var wasCalled = 0;
-            var observableGroup = new ObservableGroup(accessorToken, Array.Empty<IEntity>(), groupTracker);
-            observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
-            groupStateChangedSub.OnNext(new EntityGroupStateChanged(applicableEntity, GroupActionType.JoinedGroup));
+            var onJoinedSubject = new Subject<int>();
+            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            mockGroupTracker.OnEntityJoinedGroup.Returns(onJoinedSubject);
+            mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
+            mockGroupTracker.OnEntityLeftGroup.Returns(new Subject<int>());
+            
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.GetEntity(1).Returns(applicableEntity);
 
-            Assert.Equal(1, wasCalled);
-            Assert.Equal(1, observableGroup.CachedEntities.Count);
-            Assert.Equal(applicableEntity, observableGroup.CachedEntities[applicableEntity.Id]);
+            var observableGroup = new ObservableGroup(accessorToken, mockGroupTracker, mockEntityCollection);
+
+            var invocations = new List<IEntity>();
+            observableGroup.OnEntityAdded.Subscribe(invocations.Add);
+            
+            onJoinedSubject.OnNext(applicableEntity.Id);
+
+            Assert.NotEmpty(invocations);
+            Assert.Single(observableGroup.CachedEntities, applicableEntity);
+            Assert.Single(invocations, applicableEntity);
         }
         
         [Fact]
         public void should_remove_entity_and_raise_event_when_applicable_entity_removed()
         {
-            var collectionId = 1;
-            var accessorToken = new ObservableGroupToken(new[] { 1,2 }, Array.Empty<int>(), collectionId);
-            var mockCollection = Substitute.For<IEntityCollection>();
-            mockCollection.Id.Returns(collectionId);
+            var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-   
-            var groupStateChangedSub = new Subject<EntityGroupStateChanged>();
-            var groupTracker = Substitute.For<ICollectionObservableGroupTracker>();
-            groupTracker.GroupMatchingChanged.Returns(groupStateChangedSub);
-            groupTracker.IsMatching(Arg.Is<int>(x => x == applicableEntity.Id)).Returns(true);
+
+            var onLeavingSubject = new Subject<int>();
+            var onLeftSubject = new Subject<int>();
+            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
+            mockGroupTracker.OnEntityLeavingGroup.Returns(onLeavingSubject);
+            mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
             
-            var wasCalled = 0;
-            var observableGroup = new ObservableGroup(accessorToken, new [] { applicableEntity }, groupTracker);
-            observableGroup.OnEntityRemoved.Subscribe(x => wasCalled++);
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.GetEntity(1).Returns(applicableEntity);
 
-            groupStateChangedSub.OnNext(new EntityGroupStateChanged(applicableEntity, GroupActionType.LeftGroup));
+            var observableGroup = new ObservableGroup(accessorToken, mockGroupTracker, mockEntityCollection);
+            observableGroup.CachedEntities.Add(applicableEntity);
+            
+            var removingInvocations = new List<IEntity>();
+            observableGroup.OnEntityRemoving.Subscribe(removingInvocations.Add);
+            
+            var removedInvocations = new List<IEntity>();
+            observableGroup.OnEntityRemoved.Subscribe(removedInvocations.Add);
+            
+            onLeavingSubject.OnNext(applicableEntity.Id);
+            onLeftSubject.OnNext(applicableEntity.Id);
 
-            Assert.Equal(1, wasCalled);
-            Assert.Equal(0, observableGroup.CachedEntities.Count);
+            Assert.NotEmpty(removingInvocations);
+            Assert.Single(removingInvocations, applicableEntity);
+            Assert.NotEmpty(removedInvocations);
+            Assert.Single(removedInvocations, applicableEntity);
+            Assert.Empty(observableGroup.CachedEntities);
         }
         
         [Fact]
         public void should_not_remove_entity_and_raise_event_when_applicable_entity_removing()
         {
-            var collectionId = 1;
-            var accessorToken = new ObservableGroupToken(new[] { 1,2 }, Array.Empty<int>(), collectionId);
-            var mockCollection = Substitute.For<IEntityCollection>();
-            mockCollection.Id.Returns(collectionId);
+            var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-   
-            var groupStateChangedSub = new Subject<EntityGroupStateChanged>();
-            var groupTracker = Substitute.For<ICollectionObservableGroupTracker>();
-            groupTracker.GroupMatchingChanged.Returns(groupStateChangedSub);
-            groupTracker.IsMatching(Arg.Is<int>(x => x == applicableEntity.Id)).Returns(true);
+
+            var onLeavingSubject = new Subject<int>();
+            var onLeftSubject = new Subject<int>();
+            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
+            mockGroupTracker.OnEntityLeavingGroup.Returns(onLeavingSubject);
+            mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
             
-            var wasCalled = 0;
-            var observableGroup = new ObservableGroup(accessorToken, new [] { applicableEntity }, groupTracker);
-            observableGroup.OnEntityRemoving.Subscribe(x => wasCalled++);
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.GetEntity(1).Returns(applicableEntity);
 
-            groupStateChangedSub.OnNext(new EntityGroupStateChanged(applicableEntity, GroupActionType.LeavingGroup));
+            var observableGroup = new ObservableGroup(accessorToken, mockGroupTracker, mockEntityCollection);
+            observableGroup.CachedEntities.Add(applicableEntity);
+            
+            var removingInvocations = new List<IEntity>();
+            observableGroup.OnEntityRemoving.Subscribe(removingInvocations.Add);
+            
+            var removedInvocations = new List<IEntity>();
+            observableGroup.OnEntityRemoved.Subscribe(removedInvocations.Add);
+            
+            onLeavingSubject.OnNext(applicableEntity.Id);
 
-            Assert.Equal(1, wasCalled);
-            Assert.Equal(1, observableGroup.CachedEntities.Count);
-            Assert.Contains(applicableEntity, observableGroup.CachedEntities);
+            Assert.NotEmpty(removingInvocations);
+            Assert.Single(removingInvocations, applicableEntity);
+            Assert.Empty(removedInvocations);
+            Assert.Single(observableGroup.CachedEntities, applicableEntity);
         }
     }
 }
-*/

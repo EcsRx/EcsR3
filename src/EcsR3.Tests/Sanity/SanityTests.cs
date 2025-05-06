@@ -31,7 +31,7 @@ using SystemsR3.Events.Messages;
 using SystemsR3.Scheduling;
 using Xunit;
 using Xunit.Abstractions;
-/*
+
 namespace EcsR3.Tests.Sanity
 {
     public class SanityTests
@@ -116,17 +116,29 @@ namespace EcsR3.Tests.Sanity
             var (observableGroupManager, entityCollection, _, componentTypeLookup, entityChangeRouter) = CreateFramework();
             var entityOne = entityCollection.CreateEntity();
 
+            var testComponentOneTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne));
             var testComponentTwoTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo));
-            var timesCalled = 0;
-            entityChangeRouter.SubscribeOnEntityRemovedComponent(testComponentTwoTypeId).Subscribe(x => {
-                entityOne.RemoveComponent<TestComponentTwo>();
-                timesCalled++;
-            });
+            
+            var componentOneInvocations = new List<int>();
+            entityChangeRouter
+                .OnEntityRemovedComponent(testComponentOneTypeId)
+                .Subscribe(x => {
+                    entityOne.RemoveComponent<TestComponentTwo>();
+                    componentOneInvocations.Add(x.EntityId);
+                });
+            
+            var componentTwoInvocations = new List<int>();
+            entityChangeRouter
+                .OnEntityRemovedComponent(testComponentTwoTypeId)
+                .Subscribe(x => componentTwoInvocations.Add(x.EntityId));
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
             entityOne.RemoveComponent<TestComponentOne>();
 
-            Assert.Equal(2, timesCalled);
+            Assert.NotEmpty(componentOneInvocations);
+            Assert.Single(componentOneInvocations, entityOne.Id);
+            Assert.NotEmpty(componentTwoInvocations);
+            Assert.Single(componentTwoInvocations, entityOne.Id);
         }
 
         [Fact]
@@ -473,4 +485,3 @@ namespace EcsR3.Tests.Sanity
         }
     }
 }
-*/

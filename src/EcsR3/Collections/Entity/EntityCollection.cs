@@ -6,7 +6,6 @@ using EcsR3.Collections.Events;
 using EcsR3.Entities;
 using EcsR3.Lookups;
 using R3;
-using SystemsR3.Extensions;
 
 namespace EcsR3.Collections.Entity
 {
@@ -15,7 +14,6 @@ namespace EcsR3.Collections.Entity
         public IEntityFactory EntityFactory { get; }
         
         public readonly EntityLookup EntityLookup;
-        public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
         public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
         public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
@@ -28,26 +26,10 @@ namespace EcsR3.Collections.Entity
         public EntityCollection(IEntityFactory entityFactory)
         {
             EntityLookup = new EntityLookup();
-            EntitySubscriptions = new Dictionary<int, IDisposable>();
             EntityFactory = entityFactory;
 
             _onEntityAdded = new Subject<CollectionEntityEvent>();
             _onEntityRemoved = new Subject<CollectionEntityEvent>();
-        }
-
-        public void SubscribeToEntity(IEntity entity)
-        {
-            lock (_lock)
-            {
-                var entityDisposable = new CompositeDisposable();
-                EntitySubscriptions.Add(entity.Id, entityDisposable);
-            }
-        }
-
-        public void UnsubscribeFromEntity(int entityId)
-        {
-            lock (_lock)
-            { EntitySubscriptions.RemoveAndDispose(entityId); }
         }
         
         public IEntity CreateEntity(IBlueprint blueprint = null, int? id = null)
@@ -61,7 +43,6 @@ namespace EcsR3.Collections.Entity
                 entity = EntityFactory.Create(id);
 
                 EntityLookup.Add(entity);
-                SubscribeToEntity(entity);
             }
 
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
@@ -71,25 +52,20 @@ namespace EcsR3.Collections.Entity
         }
 
         public IEntity GetEntity(int id)
-        { return EntityLookup[id]; }
+        {
+            lock(_lock)
+            { return EntityLookup[id]; }
+        }
 
-        public void RemoveEntity(int id, bool disposeOnRemoval = true)
+        public void RemoveEntity(int id)
         {
             IEntity entity;
             lock (_lock)
             {
                 entity = GetEntity(id);
+                entity.RemoveAllComponents();
                 EntityLookup.Remove(id);
-
-                var entityId = entity.Id;
-
-                if (disposeOnRemoval)
-                {
-                    entity.RemoveAllComponents();
-                    EntityFactory.Destroy(entityId);
-                }
-            
-                UnsubscribeFromEntity(entityId);
+                EntityFactory.Destroy(id);
             }
             
             _onEntityRemoved.OnNext(new CollectionEntityEvent(entity));
@@ -98,10 +74,7 @@ namespace EcsR3.Collections.Entity
         public void AddEntity(IEntity entity)
         {
             lock (_lock)
-            {
-                EntityLookup.Add(entity);
-                SubscribeToEntity(entity);
-            }
+            { EntityLookup.Add(entity); }
             
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
         }
@@ -124,9 +97,7 @@ namespace EcsR3.Collections.Entity
             {
                 _onEntityAdded.Dispose();
                 _onEntityRemoved.Dispose();
-
                 EntityLookup.Clear();
-                EntitySubscriptions.RemoveAndDisposeAll();
             }
         }
 

@@ -58,7 +58,6 @@ namespace EcsR3.Collections.Entity
         /// It is worth noting if you try to remove an entity id that does not exist you will get an exception
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
-        /// <param name="disposeOnRemoval">If the entity should be disposed when removed (defaults to true)</param>
-        void RemoveEntity(int id, bool disposeOnRemoval = true);
+        void RemoveEntity(int id);
     }
 }

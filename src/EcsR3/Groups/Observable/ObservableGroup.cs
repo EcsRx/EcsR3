@@ -45,6 +45,14 @@ namespace EcsR3.Groups.Observable
             GroupTracker.OnEntityJoinedGroup
                 .Subscribe(OnEntityJoinedGroup)
                 .AddTo(Subscriptions);
+            
+            GroupTracker.OnEntityLeavingGroup
+                .Subscribe(OnEntityLeavingGroup)
+                .AddTo(Subscriptions);
+            
+            GroupTracker.OnEntityLeftGroup
+                .Subscribe(OnEntityLeftGroup)
+                .AddTo(Subscriptions);
 
             foreach (var entityId in GroupTracker.GetMatchedEntityIds())
             {

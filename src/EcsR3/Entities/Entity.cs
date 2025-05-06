@@ -111,10 +111,9 @@ namespace EcsR3.Entities
         
         public void RemoveComponents(IReadOnlyList<int> componentsTypeIds)
         {
-            int[] sanitisedComponentsIds;
             lock (_lock)
             {
-                sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
+                var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
                 if(sanitisedComponentsIds.Length == 0) { return; }
             
                 for (var i = 0; i < sanitisedComponentsIds.Length; i++)
