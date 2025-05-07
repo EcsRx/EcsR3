@@ -20,15 +20,15 @@ namespace EcsR3.Entities.Routing
                 var requiredComponentId = ComponentIds[i];
                 for (var j = 0; j < comparingComponentIds.Length; j++)
                 {
-                    if(requiredComponentId == comparingComponentIds[i])
+                    if(requiredComponentId == comparingComponentIds[j])
                     { 
                         result[lastIndex++] = requiredComponentId;
                         break;
                     }
                 }
             }
-
-            return result[..lastIndex].ToArray();
+            
+            return result.Slice(0, lastIndex).ToArray();
         }
 
         public bool Equals(ComponentContract other)

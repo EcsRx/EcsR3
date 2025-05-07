@@ -76,8 +76,8 @@ namespace EcsR3.Entities
                     componentTypeIds[i] = componentTypeId;
                 }
             }
+            
             EntityChangeRouter.PublishEntityAddedComponents(Id, componentTypeIds);
-
         }
 
         public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
@@ -116,8 +116,16 @@ namespace EcsR3.Entities
 
             lock (_lock)
             {
-                sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
-                if(sanitisedComponentsIds.Length == 0) { return; }
+                var lastIndex = 0;
+                Span<int> temporaryComponentIds = stackalloc int[componentsTypeIds.Count];
+                for (var i = 0; i < componentsTypeIds.Count; i++)
+                {
+                    var componentTypeId = componentsTypeIds[i];
+                    if(HasComponent(componentTypeId))
+                    { temporaryComponentIds[lastIndex++] = componentsTypeIds[i]; }
+                }
+                if(temporaryComponentIds.Length == 0) { return; }
+                sanitisedComponentsIds = temporaryComponentIds.Slice(0, lastIndex).ToArray();
             }
             
             EntityChangeRouter.PublishEntityRemovingComponents(Id, sanitisedComponentsIds);
