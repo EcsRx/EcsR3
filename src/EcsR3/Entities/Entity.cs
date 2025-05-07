@@ -63,14 +63,21 @@ namespace EcsR3.Entities
         
         public void AddComponents(IReadOnlyList<IComponent> components)
         {
-            foreach (var component in components)
+            int[] componentTypeIds;
+            lock (_lock)
             {
-                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(component.GetType());
-                var allocationId = ComponentDatabase.Allocate(componentTypeId);
-                InternalComponentAllocations[componentTypeId] = allocationId;
-                ComponentDatabase.Set(componentTypeId, allocationId, component);
-                EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
+                componentTypeIds = new int[components.Count];
+                for (var i = 0; i < components.Count; i++)
+                {
+                    var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
+                    var allocationId = ComponentDatabase.Allocate(componentTypeId);
+                    InternalComponentAllocations[componentTypeId] = allocationId;
+                    ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
+                    componentTypeIds[i] = componentTypeId;
+                }
             }
+            
+            EntityChangeRouter.PublishEntityAddedComponents(Id, componentTypeIds);
         }
 
         public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
@@ -84,7 +91,7 @@ namespace EcsR3.Entities
                 ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
             }
             
-            EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
+            EntityChangeRouter.PublishEntityAddedComponents(Id, new []{componentTypeId});
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
@@ -105,18 +112,36 @@ namespace EcsR3.Entities
         
         public void RemoveComponents(IReadOnlyList<int> componentsTypeIds)
         {
+            int[] sanitisedComponentsIds;
+
             lock (_lock)
             {
-                var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent);
-                foreach (var componentId in sanitisedComponentsIds)
+                var lastIndex = 0;
+                Span<int> temporaryComponentIds = stackalloc int[componentsTypeIds.Count];
+                for (var i = 0; i < componentsTypeIds.Count; i++)
                 {
+                    var componentTypeId = componentsTypeIds[i];
+                    if(HasComponent(componentTypeId))
+                    { temporaryComponentIds[lastIndex++] = componentsTypeIds[i]; }
+                }
+                if(temporaryComponentIds.Length == 0) { return; }
+                sanitisedComponentsIds = temporaryComponentIds.Slice(0, lastIndex).ToArray();
+            }
+            
+            EntityChangeRouter.PublishEntityRemovingComponents(Id, sanitisedComponentsIds);
+            
+            lock (_lock)
+            {
+                for (var i = 0; i < sanitisedComponentsIds.Length; i++)
+                {
+                    var componentId = sanitisedComponentsIds[i];
                     var allocationIndex = InternalComponentAllocations[componentId];
-                    EntityChangeRouter.PublishEntityRemovingComponent(Id, componentId);
                     ComponentDatabase.Remove(componentId, allocationIndex);
-                    EntityChangeRouter.PublishEntityRemovedComponent(Id, componentId);
                     InternalComponentAllocations[componentId] = NotAllocated;
                 }
             }
+            
+            EntityChangeRouter.PublishEntityRemovedComponents(Id, sanitisedComponentsIds);
         }
 
         public void RemoveAllComponents()

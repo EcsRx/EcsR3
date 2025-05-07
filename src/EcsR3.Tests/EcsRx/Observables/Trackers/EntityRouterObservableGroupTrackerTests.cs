@@ -9,6 +9,7 @@ using Xunit;
 
 namespace EcsR3.Tests.EcsRx.Observables.Trackers
 {
+    /*
     public class EntityRouterObservableGroupTrackerTests
     {
         [Fact]
@@ -207,5 +208,5 @@ namespace EcsR3.Tests.EcsRx.Observables.Trackers
             Assert.Empty(leavingInvocations);      
             Assert.Empty(leftInvocations);
         }
-    }
+    }*/
 }

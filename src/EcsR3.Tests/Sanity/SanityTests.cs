@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using SystemsR3.Events;
 using SystemsR3.Executor;
 using SystemsR3.Executor.Handlers;
@@ -121,7 +122,7 @@ namespace EcsR3.Tests.Sanity
             
             var componentOneInvocations = new List<int>();
             entityChangeRouter
-                .OnEntityRemovedComponent(testComponentOneTypeId)
+                .OnEntityRemovedComponents(new []{testComponentOneTypeId})
                 .Subscribe(x => {
                     entityOne.RemoveComponent<TestComponentTwo>();
                     componentOneInvocations.Add(x.EntityId);
@@ -129,12 +130,14 @@ namespace EcsR3.Tests.Sanity
             
             var componentTwoInvocations = new List<int>();
             entityChangeRouter
-                .OnEntityRemovedComponent(testComponentTwoTypeId)
+                .OnEntityRemovedComponents(new []{testComponentTwoTypeId})
                 .Subscribe(x => componentTwoInvocations.Add(x.EntityId));
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
             entityOne.RemoveComponent<TestComponentOne>();
 
+            Thread.Sleep(100);
+            
             Assert.NotEmpty(componentOneInvocations);
             Assert.Single(componentOneInvocations, entityOne.Id);
             Assert.NotEmpty(componentTwoInvocations);
@@ -290,7 +293,9 @@ namespace EcsR3.Tests.Sanity
                 var entity = entityCollection.CreateEntity();
                 entity.AddComponents(new ViewComponent(), new TestComponentOne());
             }
-
+            
+            Thread.Sleep(100);
+            
             Assert.Equal(expectedSize, entityCollection.Count);
             Assert.Equal(expectedSize, observableGroup.Count);
 
