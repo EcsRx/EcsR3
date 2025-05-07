@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="R3" Version="1.2.9" />
+      <PackageReference Include="R3" Version="1.3.0" />
     </ItemGroup>
 
 </Project>
