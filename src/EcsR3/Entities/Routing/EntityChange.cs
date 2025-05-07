@@ -11,4 +11,16 @@
             ComponentId = componentId;
         }
     }
+
+    public readonly struct EntityChanges
+    {
+        public readonly int EntityId;
+        public readonly int[] ComponentIds;
+
+        public EntityChanges(int entityId, int[] componentIds)
+        {
+            EntityId = entityId;
+            ComponentIds = componentIds;
+        }
+    }
 }

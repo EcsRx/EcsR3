@@ -1,4 +1,7 @@
-﻿using EcsR3.Components.Lookups;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EcsR3.Components.Lookups;
+using EcsR3.Groups;
 using R3;
 using SystemsR3.Extensions;
 
@@ -9,6 +12,8 @@ namespace EcsR3.Entities.Routing
         private readonly Subject<EntityChange>[] _onEntityAddedComponent;
         private readonly Subject<EntityChange>[] _onEntityRemovingComponent;
         private readonly Subject<EntityChange>[] _onEntityComponentRemoved;
+        
+        private readonly Dictionary<int[], Subject<EntityChanges>> _onComponentAddedForGroup = new Dictionary<int[], Subject<EntityChanges>>();
         
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
@@ -36,10 +41,37 @@ namespace EcsR3.Entities.Routing
         }
 
         public Observable<EntityChange> OnEntityAddedComponent(int componentType) => _onEntityAddedComponent[componentType];
+        
+        public Observable<EntityChange> OnEntityAddedComponent(params int[] componentTypes)
+        { return Observable.Merge(componentTypes.Select(x => _onEntityAddedComponent[x])); }
+
+        public Observable<EntityChanges> OnEntityAddedComponents(params int[] componentTypes)
+        {
+            if(_onComponentAddedForGroup.TryGetValue(componentTypes, out var existingObservable))
+            { return existingObservable; }
+
+            var newSub = new Subject<EntityChanges>();
+            _onComponentAddedForGroup.Add(componentTypes, newSub);
+            return newSub;
+        }
+        
         public Observable<EntityChange> OnEntityRemovingComponent(int componentType) => _onEntityRemovingComponent[componentType];
         public Observable<EntityChange> OnEntityRemovedComponent(int componentType) => _onEntityComponentRemoved[componentType];
         
         public void PublishEntityAddedComponent(int entityId, int componentId) => _onEntityAddedComponent[componentId].OnNext(new EntityChange(entityId, componentId));
+        public void PublishEntityAddedComponents(int entityId, int[] componentIds)
+        {
+            foreach (var outstandingSubs in _onComponentAddedForGroup)
+            {
+                var overlap = outstandingSubs.Key.Intersect(componentIds).ToArray();
+                if(overlap.Length == 0) { continue; }
+                outstandingSubs.Value.OnNext(new EntityChanges(entityId, overlap));
+            }
+            
+            //var matchingObservables = _onComponentAddedForGroup.Where(x => componentIds.All(y => x.Key.Contains(y)));
+            //matchingObservables.ForEachRun(x => x.Value.OnNext(new EntityChanges(entityId, componentIds)));
+        }
+
         public void PublishEntityRemovingComponent(int entityId, int componentId) => _onEntityRemovingComponent[componentId].OnNext(new EntityChange(entityId, componentId));
         public void PublishEntityRemovedComponent(int entityId, int componentId) => _onEntityComponentRemoved[componentId].OnNext(new EntityChange(entityId, componentId));
     }

@@ -63,14 +63,21 @@ namespace EcsR3.Entities
         
         public void AddComponents(IReadOnlyList<IComponent> components)
         {
-            foreach (var component in components)
+            int[] componentTypeIds;
+            lock (_lock)
             {
-                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(component.GetType());
-                var allocationId = ComponentDatabase.Allocate(componentTypeId);
-                InternalComponentAllocations[componentTypeId] = allocationId;
-                ComponentDatabase.Set(componentTypeId, allocationId, component);
-                EntityChangeRouter.PublishEntityAddedComponent(Id, componentTypeId);
+                componentTypeIds = new int[components.Count];
+                for (var i = 0; i < components.Count; i++)
+                {
+                    var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
+                    var allocationId = ComponentDatabase.Allocate(componentTypeId);
+                    InternalComponentAllocations[componentTypeId] = allocationId;
+                    ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
+                    componentTypeIds[i] = componentTypeId;
+                }
             }
+            EntityChangeRouter.PublishEntityAddedComponents(Id, componentTypeIds);
+
         }
 
         public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()

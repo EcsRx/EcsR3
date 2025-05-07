@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -27,7 +28,7 @@ namespace EcsR3.Tests.EcsRx
 
             entity.AddComponents(dummyComponent);
             
-            entityChangeRouter.Received(1).PublishEntityAddedComponent(1, 2);
+            entityChangeRouter.Received(1).PublishEntityAddedComponents(1, Arg.Is<int[]>(x => x.Contains(2)));
         }
         
         /* NSubstitute doesnt support ref returns currently

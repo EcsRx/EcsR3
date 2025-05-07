@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities.Routing;
 using R3;
@@ -27,13 +28,24 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
         {
             Group = group;
             EntityChangeRouter = entityChangeRouter;
+/*
+            EntityChangeRouter
+                .OnEntityAddedComponent(group.RequiredComponents)
+                .Chunk(TimeSpan.FromMilliseconds(0.001f))
+                .Subscribe(OnRequiredComponentAdded)
+                .AddTo(_componentSubscriptions);*/
 
+            EntityChangeRouter.OnEntityAddedComponents(group.RequiredComponents)
+                .Subscribe(OnRequiredComponentsAdded)
+                .AddTo(_componentSubscriptions);
+            
             foreach (var requiredComponent in group.RequiredComponents)
             {
+                /*
                 EntityChangeRouter
                     .OnEntityAddedComponent(requiredComponent)
                     .Subscribe(OnRequiredComponentAdded)
-                    .AddTo(_componentSubscriptions);
+                    .AddTo(_componentSubscriptions);*/
                 
                 EntityChangeRouter
                     .OnEntityRemovingComponent(requiredComponent)
@@ -97,6 +109,28 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
 
             if (currentState.IsMatch())
             { _onEntityJoinedGroup.OnNext(entityChange.EntityId); }
+        }
+        
+        public void OnRequiredComponentAdded(EntityChange[] entityChange)
+        {
+            foreach (var entityChanges in entityChange.GroupBy(x => x.EntityId, x => x.ComponentId))
+            {
+                var entityId = entityChanges.Key;
+                var currentState = GetStateSafely(entityId);
+                lock (_lock) { currentState.NeedsComponentsAdding -= entityChanges.Count(); }
+                
+                if (currentState.IsMatch())
+                { _onEntityJoinedGroup.OnNext(entityId); }
+            }
+        }
+        
+        public void OnRequiredComponentsAdded(EntityChanges entityChanges)
+        {
+            var currentState = GetStateSafely(entityChanges.EntityId);
+            lock (_lock) { currentState.NeedsComponentsAdding -= entityChanges.ComponentIds.Length; }
+            
+            if (currentState.IsMatch())
+            { _onEntityJoinedGroup.OnNext(entityChanges.EntityId); }
         }
         
         public void OnRequiredComponentRemoving(EntityChange entityChange)
