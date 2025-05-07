@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components.Lookups;
 using EcsR3.Groups;
@@ -7,13 +8,67 @@ using SystemsR3.Extensions;
 
 namespace EcsR3.Entities.Routing
 {
+    public readonly struct ComponentContract : IEquatable<ComponentContract>
+    {
+        public readonly int[] ComponentIds;
+
+        public ComponentContract(int[] componentIds)
+        {
+            ComponentIds = componentIds;
+        }
+
+        public int[] GetMatchingComponentIds(int[] comparingComponentIds)
+        {
+            var result = new List<int>();
+            for (var i = 0; i < ComponentIds.Length; i++)
+            {
+                var requiredComponentId = ComponentIds[i];
+                for (var j = 0; j < comparingComponentIds.Length; j++)
+                {
+                    if(requiredComponentId == comparingComponentIds[i])
+                    { 
+                        result.Add(requiredComponentId); 
+                        break;
+                    }
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        public bool Equals(ComponentContract other)
+        {
+            return Equals(ComponentIds, other.ComponentIds);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ComponentContract other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (ComponentIds != null ? ComponentIds.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(ComponentContract left, ComponentContract right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ComponentContract left, ComponentContract right)
+        {
+            return !left.Equals(right);
+        }
+    }
+    
     public class EntityChangeRouter : IEntityChangeRouter
     {
         private readonly Subject<EntityChange>[] _onEntityAddedComponent;
         private readonly Subject<EntityChange>[] _onEntityRemovingComponent;
         private readonly Subject<EntityChange>[] _onEntityComponentRemoved;
         
-        private readonly Dictionary<int[], Subject<EntityChanges>> _onComponentAddedForGroup = new Dictionary<int[], Subject<EntityChanges>>();
+        private readonly Dictionary<ComponentContract, Subject<EntityChanges>> _onComponentAddedForGroup = new Dictionary<ComponentContract, Subject<EntityChanges>>();
         
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
@@ -47,11 +102,12 @@ namespace EcsR3.Entities.Routing
 
         public Observable<EntityChanges> OnEntityAddedComponents(params int[] componentTypes)
         {
-            if(_onComponentAddedForGroup.TryGetValue(componentTypes, out var existingObservable))
+            var contract = new ComponentContract(componentTypes);
+            if(_onComponentAddedForGroup.TryGetValue(contract, out var existingObservable))
             { return existingObservable; }
 
             var newSub = new Subject<EntityChanges>();
-            _onComponentAddedForGroup.Add(componentTypes, newSub);
+            _onComponentAddedForGroup.Add(contract, newSub);
             return newSub;
         }
         
@@ -63,7 +119,7 @@ namespace EcsR3.Entities.Routing
         {
             foreach (var outstandingSubs in _onComponentAddedForGroup)
             {
-                var overlap = outstandingSubs.Key.Intersect(componentIds).ToArray();
+                var overlap = outstandingSubs.Key.GetMatchingComponentIds(componentIds);
                 if(overlap.Length == 0) { continue; }
                 outstandingSubs.Value.OnNext(new EntityChanges(entityId, overlap));
             }
