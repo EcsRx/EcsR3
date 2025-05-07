@@ -67,7 +67,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
             
-            var app = new ObservableGroupWithNoisePerformanceApplication();
+            var app = new OptimizedGroupPerformanceApplication();
             app.StartApplication();
             //app.StopApplication();
         }

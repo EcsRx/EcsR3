@@ -8,6 +8,7 @@ using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
 using EcsR3.Groups.Observable;
 using EcsR3.Groups.Observable.Tracking;
@@ -27,6 +28,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
+            registry.Bind<IEntityChangeRouter, EntityChangeRouter>();
             
             var componentNamespace = typeof(Component1).Namespace;
             var componentTypes = typeof(Component1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);
