@@ -28,7 +28,25 @@ namespace EcsR3.Entities.Routing
                 }
             }
             
-            return result.Slice(0, lastIndex).ToArray();
+            return result[..lastIndex].ToArray();
+        }
+        
+        public int GetMatchingComponentIdsNoAlloc(int[] comparingComponentIds, int[] resultBuffer)
+        {
+            var lastIndex = 0;
+            for (var i = 0; i < ComponentIds.Length; i++)
+            {
+                var requiredComponentId = ComponentIds[i];
+                for (var j = 0; j < comparingComponentIds.Length; j++)
+                {
+                    if(requiredComponentId == comparingComponentIds[j])
+                    { 
+                        resultBuffer[lastIndex++] = requiredComponentId;
+                        break;
+                    }
+                }
+            }
+            return lastIndex;
         }
 
         public bool Equals(ComponentContract other)

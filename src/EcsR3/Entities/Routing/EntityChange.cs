@@ -1,4 +1,6 @@
-﻿namespace EcsR3.Entities.Routing
+﻿using System;
+
+namespace EcsR3.Entities.Routing
 {
     public readonly struct EntityChange
     {
@@ -15,9 +17,9 @@
     public readonly struct EntityChanges
     {
         public readonly int EntityId;
-        public readonly int[] ComponentIds;
+        public readonly ReadOnlyMemory<int> ComponentIds;
 
-        public EntityChanges(int entityId, int[] componentIds)
+        public EntityChanges(int entityId, ReadOnlyMemory<int> componentIds)
         {
             EntityId = entityId;
             ComponentIds = componentIds;
