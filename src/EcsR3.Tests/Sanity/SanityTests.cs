@@ -122,7 +122,7 @@ namespace EcsR3.Tests.Sanity
             
             var componentOneInvocations = new List<int>();
             entityChangeRouter
-                .OnEntityRemovedComponent(testComponentOneTypeId)
+                .OnEntityRemovedComponents(new []{testComponentOneTypeId})
                 .Subscribe(x => {
                     entityOne.RemoveComponent<TestComponentTwo>();
                     componentOneInvocations.Add(x.EntityId);
@@ -130,7 +130,7 @@ namespace EcsR3.Tests.Sanity
             
             var componentTwoInvocations = new List<int>();
             entityChangeRouter
-                .OnEntityRemovedComponent(testComponentTwoTypeId)
+                .OnEntityRemovedComponents(new []{testComponentTwoTypeId})
                 .Subscribe(x => componentTwoInvocations.Add(x.EntityId));
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());

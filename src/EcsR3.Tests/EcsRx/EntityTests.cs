@@ -64,8 +64,8 @@ namespace EcsR3.Tests.EcsRx
 
             entity.RemoveComponents(dummyComponent.GetType());
             
-            entityChangeRouter.Received(1).PublishEntityRemovingComponent(1, 0);
-            entityChangeRouter.Received(1).PublishEntityRemovedComponent(1, 0);
+            entityChangeRouter.Received(1).PublishEntityRemovingComponents(1, Arg.Is<int[]>(x => x.Contains(0)));
+            entityChangeRouter.Received(1).PublishEntityRemovedComponents(1, Arg.Is<int[]>(x => x.Contains(0)));
         }
         
         [Fact]
@@ -79,8 +79,8 @@ namespace EcsR3.Tests.EcsRx
             var entity = new Entity(1, componentDatabase, componentTypeLookup, entityChangeRouter);
             
             entity.RemoveComponents(typeof(TestComponentOne));
-            entityChangeRouter.DidNotReceive().PublishEntityRemovingComponent(1, 0);
-            entityChangeRouter.DidNotReceive().PublishEntityRemovedComponent(1, 0);
+            entityChangeRouter.DidNotReceive().PublishEntityRemovingComponents(1, Arg.Is<int[]>(x => x.Contains(0)));
+            entityChangeRouter.DidNotReceive().PublishEntityRemovedComponents(1, Arg.Is<int[]>(x => x.Contains(0)));
         }
 
         [Fact]
