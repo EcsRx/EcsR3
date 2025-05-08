@@ -10,7 +10,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_allocate_up_front_ids()
         {
-            var indexPool = new IndexPool(3, 3);
+            var poolConfig = new PoolConfig(3, 3);
+            var indexPool = new IndexPool(poolConfig);
             Assert.Equal(3, indexPool.AvailableIndexes.Count);
             
             var expectedIdEntries = Enumerable.Range(0, 3).ToArray();
@@ -21,7 +22,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         public void should_expand_correctly_for_new_indexes()
         {
             var explicitNewIndex = 5;
-            var indexPool = new IndexPool(3, 3);
+            var poolConfig = new PoolConfig(3, 3);
+            var indexPool = new IndexPool(poolConfig);
             indexPool.Expand(explicitNewIndex);
 
             Assert.Equal(explicitNewIndex+1, indexPool.AvailableIndexes.Count);
@@ -36,7 +38,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var defaultExpansionAmount = 30;
             var originalSize = 10;
             var expectedSize = defaultExpansionAmount + originalSize;
-            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var indexPool = new IndexPool(poolConfig);
             indexPool.Expand();
 
             Assert.Equal(indexPool.AvailableIndexes.Count, expectedSize);
@@ -53,7 +56,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var originalSize = 10;
             var expectedSize = (defaultExpansionAmount * expectedExpansions) + originalSize;
             var expectedIndexEntries = Enumerable.Range(0, expectedSize).ToArray();
-            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var indexPool = new IndexPool(poolConfig);
 
             for (var i = 0; i < expectedExpansions; i++)
             { indexPool.Expand(); }
@@ -70,7 +74,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var originalSize = 10;
             var expectedIndexEntries = Enumerable.Range(0, expectedAllocations).ToArray();
             var actualIndexEntries = new List<int>();
-            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var indexPool = new IndexPool(poolConfig);
 
             for (var i = 0; i < expectedAllocations; i++)
             {
@@ -86,7 +91,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_allocate_and_remove_next_available_index()
         {
-            var indexPool = new IndexPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
             var index = indexPool.AllocateInstance();
             
             Assert.InRange(index, 0, 10);
@@ -99,7 +105,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var defaultExpansionAmount = 30;
             var originalSize = 10;
             var expectedSize = defaultExpansionAmount + originalSize;
-            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var indexPool = new IndexPool(poolConfig);
             indexPool.Clear();
             var index = indexPool.AllocateInstance();
 
@@ -113,7 +120,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_release_index_when_allocated()
         {
-            var indexPool = new IndexPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
             var index = indexPool.AllocateInstance();
             indexPool.ReleaseInstance(index);
             
@@ -123,7 +131,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_ignore_index_if_not_within_threshold_when_releasing()
         {
-            var indexPool = new IndexPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
             var index = 100;
             indexPool.ReleaseInstance(index);
             
@@ -133,7 +142,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_ignore_duplicated_release_calls_for_same_index()
         {
-            var indexPool = new IndexPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
             var index = indexPool.AllocateInstance();
             indexPool.ReleaseInstance(index);
             indexPool.ReleaseInstance(index);

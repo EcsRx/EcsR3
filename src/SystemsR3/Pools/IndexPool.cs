@@ -6,18 +6,17 @@ namespace SystemsR3.Pools
 {   
     public class IndexPool : IPool<int>
     {
-        public int IncrementSize => _increaseSize;
+        public PoolConfig PoolConfig { get; }
         
         private int _lastMax;
-        private readonly int _increaseSize;
         private readonly object _lock = new object();
         
         public readonly Stack<int> AvailableIndexes;
 
-        public IndexPool(int increaseSize = 100, int startingSize = 1000)
+        public IndexPool(PoolConfig poolConfig = null)
         {
-            _lastMax = startingSize;
-            _increaseSize = increaseSize;
+            PoolConfig = poolConfig ?? new PoolConfig(1000, 100);
+            _lastMax = PoolConfig.InitialSize;
             AvailableIndexes = new Stack<int>(Enumerable.Range(0, _lastMax).Reverse());
         }
         
@@ -51,7 +50,7 @@ namespace SystemsR3.Pools
 
         public void Expand(int? newIndex = null)
         {
-            var increaseBy = (newIndex+1) -_lastMax ?? _increaseSize;
+            var increaseBy = (newIndex+1) -_lastMax ?? PoolConfig.ExpansionSize;
             if (increaseBy <= 0){ return; }
             
             var newEntries = Enumerable.Range(_lastMax, increaseBy).Reverse();

@@ -64,8 +64,11 @@ namespace EcsR3.Examples
                     .UseConverter(x => x.Name)
                     .AddChoices(availableExamples);
             
-            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-            exampleToRun.Executor();
+            //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
+            //exampleToRun.Executor();
+            
+            //new OptimizedGroupPerformanceApplication().StartApplication();
+            new MakingLotsOfEntitiesApplication().StartApplication();
         }
     }
 }

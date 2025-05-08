@@ -6,18 +6,17 @@ namespace SystemsR3.Pools
 {
     public class IdPool : IIdPool
     {
-        public int IncrementSize => _increaseSize;
+        public PoolConfig PoolConfig { get; }
         
         private int _lastMax;
-        private readonly int _increaseSize;
         private readonly object _lock = new object();
         
         public readonly List<int> AvailableIds;
 
-        public IdPool(int increaseSize = 10000, int startingSize = 10000)
+        public IdPool(PoolConfig poolConfig = null)
         {
-            _lastMax = startingSize;
-            _increaseSize = increaseSize;
+            PoolConfig = poolConfig ?? new PoolConfig(10000, 10000);
+            _lastMax = PoolConfig.InitialSize;
             AvailableIds = Enumerable.Range(1, _lastMax).ToList();
         }
 
@@ -70,7 +69,7 @@ namespace SystemsR3.Pools
         {
             lock (_lock)
             {
-                var increaseBy = newId -_lastMax ?? _increaseSize;
+                var increaseBy = newId -_lastMax ?? PoolConfig.ExpansionSize;
                 AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
                 _lastMax += increaseBy + 1;
             }

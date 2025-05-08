@@ -19,7 +19,8 @@ namespace EcsR3.Infrastructure.Modules
         public void Setup(IDependencyRegistry registry)
         {
             // Register ECS specific infrastructure
-            registry.Bind<IIdPool, IdPool>();
+            registry.Bind<IIdPool>(x => x.ToInstance(new IdPool()));
+            registry.Bind<ComponentDatabaseConfig>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();

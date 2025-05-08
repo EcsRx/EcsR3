@@ -10,26 +10,23 @@ namespace EcsR3.Components
     {
         public bool IsStructType { get; }
         
+        public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
         public T[] Components { get; private set; }
         
         public int Count { get; private set; }
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
-        public int ExpansionSize { get; private set; }
         
         public Observable<bool> OnPoolExtending => _onPoolExtending;
         private readonly Subject<bool> _onPoolExtending;
         private readonly object _lock = new object();
 
-        public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)
-        { }
-        
-        public ComponentPool(int expansionSize, int initialSize)
+        public ComponentPool(PoolConfig poolConfig = null)
         {
-            Count = initialSize;
-            ExpansionSize = expansionSize;
-            IndexPool = new IndexPool(expansionSize, initialSize);
-            Components = new T[initialSize];
+            PoolConfig = poolConfig ?? new PoolConfig();
+            Count = PoolConfig.InitialSize;
+            IndexPool = new IndexPool(PoolConfig);
+            Components = new T[PoolConfig.InitialSize];
             _onPoolExtending = new Subject<bool>();
             IsStructType = typeof(T).IsValueType;
         }
@@ -65,16 +62,14 @@ namespace EcsR3.Components
             lock (_lock)
             { Components.SetValue(value, index); }
         }
-
-        public void Expand()
-        { Expand(ExpansionSize); }
         
-        public void Expand(int amountToAdd)
+        public void Expand(int? amountToAdd = null)
         {
+            var actualExpansionAmount = amountToAdd ?? PoolConfig.ExpansionSize;
             lock (_lock)
             {
-                var newCount = Components.Length + amountToAdd;
-                var newEntries = new T[newCount];            
+                var newCount = Components.Length + actualExpansionAmount;
+                var newEntries = new T[newCount];
                 Components.CopyTo(newEntries, 0);
                 IndexPool.Expand(newCount-1);
                 Components = newEntries;

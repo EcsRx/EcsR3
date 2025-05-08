@@ -2,25 +2,27 @@
 using System.Linq;
 using SystemsR3.Extensions;
 using EcsR3.Plugins.Views.ViewHandlers;
+using SystemsR3.Pools;
 
 namespace EcsR3.Plugins.Views.Pooling
 {
     public class ViewPool : IViewPool
     {
         public readonly IList<ViewObjectContainer> PooledObjects = new List<ViewObjectContainer>();
-        
-        public int IncrementSize { get; }
+
+        public PoolConfig PoolConfig { get; }
         public IViewHandler ViewHandler { get; }
 
-        public ViewPool(int incrementSize, IViewHandler viewHandler)
+        public ViewPool(IViewHandler viewHandler, PoolConfig poolConfig = null)
         {
-            IncrementSize = incrementSize;
+            PoolConfig = poolConfig ?? new PoolConfig();
             ViewHandler = viewHandler;
         }
         
-        public void PreAllocate(int allocationCount)
+        public void PreAllocate(int? allocationCount = null)
         {
-            for (var i = 0; i < allocationCount; i++)
+            var actualAllocation = allocationCount ?? PoolConfig.InitialSize;
+            for (var i = 0; i < actualAllocation; i++)
             {
                 var newInstance = ViewHandler.CreateView();
                 ViewHandler.SetActiveState(newInstance, false);
@@ -49,7 +51,7 @@ namespace EcsR3.Plugins.Views.Pooling
             var availableViewObject = PooledObjects.FirstOrDefault(x => !x.IsInUse);
             if (availableViewObject == null)
             {
-                PreAllocate(IncrementSize);
+                PreAllocate(PoolConfig.ExpansionSize);
                 availableViewObject = PooledObjects.First(x => !x.IsInUse);
             }
 

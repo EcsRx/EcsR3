@@ -1,6 +1,4 @@
-﻿using EcsR3.Collections;
-
-namespace EcsR3.Components.Database
+﻿namespace EcsR3.Components.Database
 {
     public interface IComponentDatabase
     {
@@ -11,7 +9,7 @@ namespace EcsR3.Components.Database
         void Remove(int componentTypeId, int allocationIndex);
         int Allocate(int componentTypeId);
 
-        void PreAllocateComponents(int componentTypeId, int allocationSize);
+        void PreAllocateComponents(int componentTypeId, int? allocationSize = null);
         IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent;
     }
 }

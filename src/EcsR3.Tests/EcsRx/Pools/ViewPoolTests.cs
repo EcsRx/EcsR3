@@ -2,6 +2,7 @@
 using EcsR3.Plugins.Views.Pooling;
 using EcsR3.Plugins.Views.ViewHandlers;
 using NSubstitute;
+using SystemsR3.Pools;
 using Xunit;
 
 namespace EcsR3.Tests.EcsRx.Pools
@@ -14,7 +15,8 @@ namespace EcsR3.Tests.EcsRx.Pools
             var mockViewHandler = Substitute.For<IViewHandler>();
             mockViewHandler.CreateView().Returns(null);
 
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
             pool.PreAllocate(20);
 
             mockViewHandler.Received(20).CreateView();
@@ -28,7 +30,8 @@ namespace EcsR3.Tests.EcsRx.Pools
         {
             var mockViewHandler = Substitute.For<IViewHandler>();
 
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
             for (var i = 0; i < 10; i++)
             {
                 var viewObject = new ViewObjectContainer(null);
@@ -51,7 +54,8 @@ namespace EcsR3.Tests.EcsRx.Pools
         {
             var mockViewHandler = Substitute.For<IViewHandler>();
 
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
             for (var i = 0; i < 10; i++)
             {
                 var viewObject = new ViewObjectContainer(null);
@@ -72,7 +76,8 @@ namespace EcsR3.Tests.EcsRx.Pools
         public void should_allocate_in_bulk_when_needing_more_instances()
         {
             var mockViewHandler = Substitute.For<IViewHandler>();
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
             pool.AllocateInstance();
 
             mockViewHandler.Received(5).CreateView();
@@ -85,7 +90,8 @@ namespace EcsR3.Tests.EcsRx.Pools
         public void should_not_allocate_in_bulk_when_views_not_in_use()
         {
             var mockViewHandler = Substitute.For<IViewHandler>();
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
 
             var viewObject = new ViewObjectContainer(null);
             pool.PooledObjects.Add(viewObject);
@@ -102,7 +108,8 @@ namespace EcsR3.Tests.EcsRx.Pools
         public void should_not_destroy_on_deallocation()
         {
             var mockViewHandler = Substitute.For<IViewHandler>();
-            var pool = new ViewPool(5, mockViewHandler);
+            var poolConfig = new PoolConfig(5, 5);
+            var pool = new ViewPool(mockViewHandler, poolConfig);
 
             var actualView = new object();
             var viewObject = new ViewObjectContainer(actualView) { IsInUse = true };

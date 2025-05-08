@@ -11,15 +11,8 @@ namespace EcsR3.Pools
     {
         public IEntityCollection EntityCollection { get; }
 
-        protected EntityPool(int expansionSize, IEntityCollection entityCollection) : base(expansionSize)
-        {
-            EntityCollection = entityCollection;
-        }
-
-        protected EntityPool(int expansionSize, int initialSize, IEntityCollection entityCollection) : base(expansionSize, initialSize)
-        {
-            EntityCollection = entityCollection;
-        }
+        protected EntityPool(IEntityCollection entityCollection, PoolConfig poolConfig = null) : base(poolConfig)
+        { EntityCollection = entityCollection; }
 
         public abstract void SetupEntity(IEntity entity);
 

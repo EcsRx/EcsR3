@@ -3,9 +3,9 @@
     public interface IPool<T>
     {
         /// <summary>
-        /// The size to expand the pool by if needed
+        /// The pool tuning config which describes how something should expand, initially size etc
         /// </summary>
-        int IncrementSize { get; }
+        PoolConfig PoolConfig { get; }
         
         /// <summary>
         /// Allocates an instance in the pool for use

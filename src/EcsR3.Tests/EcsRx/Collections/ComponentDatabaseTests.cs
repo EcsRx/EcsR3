@@ -25,7 +25,8 @@ namespace EcsR3.Tests.EcsRx.Collections
             var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
             mockComponentLookup.GetComponentTypeMappings().Returns(fakeComponentTypes);
             
-            var database = new ComponentDatabase(mockComponentLookup, expectedSize);           
+            var databaseConfig = new ComponentDatabaseConfig(expectedSize, expectedSize);
+            var database = new ComponentDatabase(mockComponentLookup, databaseConfig);           
             Assert.Equal(fakeComponentTypes.Count, database.ComponentData.Length);
             Assert.Equal(expectedSize, database.ComponentData[0].Count);
         }
@@ -38,6 +39,7 @@ namespace EcsR3.Tests.EcsRx.Collections
             {
                 {typeof(TestComponentOne), 0}
             });
+            
             var database = new ComponentDatabase(mockComponentLookup);
             var allocation = database.Allocate(0);
             

@@ -4,9 +4,9 @@ using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Systems;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components;
+using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
 using EcsR3.Examples.ExampleApps.Performance.Systems;
 using EcsR3.Extensions;
-using EcsR3.Systems;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
@@ -21,12 +21,13 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
+            Console.WriteLine($"Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             for (var i = 0; i < EntityCount; i++)
             {
                 var entity = EntityCollection.CreateEntity();
-                entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
+                entity.AddComponents(new Component1(), new Component2());
             }
             stopwatch.Stop();
             Console.WriteLine($"Finished In: {stopwatch.ElapsedMilliseconds}ms");

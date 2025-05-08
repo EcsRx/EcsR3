@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Linq;
 using EcsR3.Components.Lookups;
-using EcsR3.Collections;
+using SystemsR3.Pools;
 
 namespace EcsR3.Components.Database
 {
     public class ComponentDatabase : IComponentDatabase
     {
-        public int DefaultExpansionAmount { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
-
+        public ComponentDatabaseConfig ComponentDatabaseConfig { get; }
+        
         public IComponentPool[] ComponentData { get; private set; }
         
         private readonly object _lock = new object();
 
-        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int defaultExpansionSize = 100)
+        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, ComponentDatabaseConfig componentDatabaseConfig = null)
         {
             ComponentTypeLookup = componentTypeLookup;
-            DefaultExpansionAmount = defaultExpansionSize;
+            ComponentDatabaseConfig = componentDatabaseConfig ?? new ComponentDatabaseConfig();
             Initialize();
         }
 
-        public IComponentPool CreatePoolFor(Type type, int initialSize)
+        public IComponentPool CreatePoolFor(Type type, PoolConfig poolConfig = null)
         {
             var componentPoolType = typeof(ComponentPool<>);
             Type[] typeArgs = { type };
             var genericComponentPoolType = componentPoolType.MakeGenericType(typeArgs);
-            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, initialSize);
+            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, poolConfig);
         }
         
         public void Initialize()
@@ -36,9 +36,16 @@ namespace EcsR3.Components.Database
                 var componentTypes = ComponentTypeLookup.GetComponentTypeMappings().ToArray();
                 var componentCount = componentTypes.Length;
                 ComponentData = new IComponentPool[componentCount];
-    
+
                 for (var i = 0; i < componentCount; i++)
-                { ComponentData[i] = CreatePoolFor(componentTypes[i].Key, DefaultExpansionAmount); }     
+                {
+                    var poolTuningConfig = ComponentDatabaseConfig.PoolSpecificConfig
+                        .TryGetValue(componentTypes[i].Key, out var config) 
+                        ? config 
+                        : new PoolConfig(ComponentDatabaseConfig.InitialSize, ComponentDatabaseConfig.ExpansionSize, ComponentDatabaseConfig.MaxSize);
+                    
+                    ComponentData[i] = CreatePoolFor(componentTypes[i].Key, poolTuningConfig);
+                }     
             }
         }
 
@@ -88,12 +95,12 @@ namespace EcsR3.Components.Database
             }
         }
 
-        public void PreAllocateComponents(int componentTypeId, int allocationSize)
+        public void PreAllocateComponents(int componentTypeId, int? allocationSize = null)
         {
             lock (_lock)
             {
                 var pool = ComponentData[componentTypeId];
-                pool.Expand(allocationSize);
+                pool.Expand(allocationSize ?? ComponentDatabaseConfig.ExpansionSize);;
             }
         }
     }

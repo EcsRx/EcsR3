@@ -56,8 +56,10 @@ namespace EcsR3.Tests.Sanity
                 {typeof(TestStructComponentTwo), 5},
                 {typeof(ComponentWithReactiveProperty), 6}
             };
+
+            var componentDatabaseConfig = new ComponentDatabaseConfig(100, 100);
             var componentLookupType = new ComponentTypeLookup(componentLookups);
-            var componentDatabase = new ComponentDatabase(componentLookupType);
+            var componentDatabase = new ComponentDatabase(componentLookupType, componentDatabaseConfig);
             var entityChangeRouter = new EntityChangeRouter(componentLookupType);
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType, entityChangeRouter);
             var entityCollection = new EntityCollection(entityFactory);
@@ -293,8 +295,6 @@ namespace EcsR3.Tests.Sanity
                 var entity = entityCollection.CreateEntity();
                 entity.AddComponents(new ViewComponent(), new TestComponentOne());
             }
-            
-            Thread.Sleep(100);
             
             Assert.Equal(expectedSize, entityCollection.Count);
             Assert.Equal(expectedSize, observableGroup.Count);
