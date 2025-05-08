@@ -18,11 +18,11 @@ public class EntityChangeRouterTests
 
         var addOneTwoObservable = entityChangeRouter.OnEntityAddedComponents(1, 2);
         var addOneTwoInvocations = new List<(int EntityId, int[] ComponentIds)>();
-        addOneTwoObservable.Subscribe(x => addOneTwoInvocations.Add((x.EntityId, x.ComponentIds.ToArray())));;
+        addOneTwoObservable.Subscribe(x => addOneTwoInvocations.Add((x.EntityId, x.ComponentIds.ToArray())));
         
         var addThreeFourObservable = entityChangeRouter.OnEntityAddedComponents(3, 4);
         var addThreeFourInvocations = new List<(int EntityId, int[] ComponentIds)>();
-        addThreeFourObservable.Subscribe(x => addThreeFourInvocations.Add((x.EntityId, x.ComponentIds.ToArray())));;
+        addThreeFourObservable.Subscribe(x => addThreeFourInvocations.Add((x.EntityId, x.ComponentIds.ToArray())));
         
         entityChangeRouter.PublishEntityAddedComponents(1, new[] {1, 3, 4});
         entityChangeRouter.PublishEntityAddedComponents(1, new[] {2});

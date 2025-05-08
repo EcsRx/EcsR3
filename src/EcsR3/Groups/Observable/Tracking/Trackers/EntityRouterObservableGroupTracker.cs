@@ -138,7 +138,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
             lock (_lock)
             {
                 currentState = EntityIdMatchState[entityChanges.EntityId];
-                currentState.NeedsComponentsRemoving -= entityChanges.ComponentIds.Length;;
+                currentState.NeedsComponentsRemoving -= entityChanges.ComponentIds.Length;
             }
             
             if (currentState.IsMatch())
