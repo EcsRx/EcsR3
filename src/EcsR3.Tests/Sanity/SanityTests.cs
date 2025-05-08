@@ -62,7 +62,7 @@ namespace EcsR3.Tests.Sanity
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType, entityChangeRouter);
             var entityCollection = new EntityCollection(entityFactory);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter);
-            var observableGroupFactory = new DefaultObservableObservableGroupFactory(groupTrackerFactory, entityCollection);
+            var observableGroupFactory = new ObservableGroupFactory(groupTrackerFactory, entityCollection);
             var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityCollection, componentLookupType);
 
             return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter);

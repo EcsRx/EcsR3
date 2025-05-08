@@ -23,7 +23,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
             registry.Bind<IIdPool, IdPool>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
-            registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
+            registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();
             registry.Bind<IObservableGroupManager, ObservableGroupManager>();
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();

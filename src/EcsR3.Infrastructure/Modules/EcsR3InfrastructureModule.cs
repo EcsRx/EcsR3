@@ -22,7 +22,7 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<IIdPool, IdPool>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
-            registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
+            registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();
             registry.Bind<IObservableGroupManager, ObservableGroupManager>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           

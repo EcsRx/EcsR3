@@ -3,12 +3,12 @@ using EcsR3.Groups.Observable.Tracking;
 
 namespace EcsR3.Groups.Observable
 {
-    public class DefaultObservableObservableGroupFactory : IObservableGroupFactory
+    public class ObservableGroupFactory : IObservableGroupFactory
     {
         public IGroupTrackerFactory GroupTrackerFactory { get; }
         public IEntityCollection EntityCollection { get; }
         
-        public DefaultObservableObservableGroupFactory(IGroupTrackerFactory groupTrackerFactory, IEntityCollection entityCollection)
+        public ObservableGroupFactory(IGroupTrackerFactory groupTrackerFactory, IEntityCollection entityCollection)
         {
             GroupTrackerFactory = groupTrackerFactory;
             EntityCollection = entityCollection;
