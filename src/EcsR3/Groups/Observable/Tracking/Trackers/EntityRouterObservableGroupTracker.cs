@@ -51,7 +51,7 @@ namespace EcsR3.Groups.Observable.Tracking.Trackers
                 .AddTo(_componentSubscriptions);
             
             EntityChangeRouter
-                .OnEntityAddedComponents(group.ExcludedComponents)
+                .OnEntityRemovedComponents(group.ExcludedComponents)
                 .Subscribe(OnExcludedComponentsRemoved)
                 .AddTo(_componentSubscriptions);
         }
