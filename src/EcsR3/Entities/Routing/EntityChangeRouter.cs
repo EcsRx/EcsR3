@@ -59,10 +59,17 @@ namespace EcsR3.Entities.Routing
             foreach (var outstandingSubs in source)
             {
                 var lastUsedIndexInBuffer = outstandingSubs.Key.GetMatchingComponentIdsNoAlloc(componentIds, buffer);
-                if(lastUsedIndexInBuffer == 0) { continue; }
+                if(lastUsedIndexInBuffer == -1) { continue; }
 
+                /*
+                 This is an optimization as we know the EntityRouterObservableGroupTracker subscriber will instantly 
+                 use the data as its called synchronously so we can use Memory<T> and it can be re-used.
+                 
+                 There is a worry that anyone could subscribe elsewhere and want to use the data later but they would
+                 need to convert it to an array in that scenario, if they didnt they would just have garbage data.
+                 */
                 ReadOnlyMemory<int> bufferAsMemory = buffer;
-                outstandingSubs.Value.OnNext(new EntityChanges(entityId, bufferAsMemory[..lastUsedIndexInBuffer]));
+                outstandingSubs.Value.OnNext(new EntityChanges(entityId, bufferAsMemory[..(lastUsedIndexInBuffer+1)]));
             }
         }
     }

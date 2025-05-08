@@ -46,7 +46,7 @@ namespace EcsR3.Entities.Routing
                     }
                 }
             }
-            return lastIndex;
+            return lastIndex-1;
         }
 
         public bool Equals(ComponentContract other)
