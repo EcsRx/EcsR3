@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Groups;
 
 namespace EcsR3.Examples.ExampleApps.Performance.Helper
@@ -18,8 +18,8 @@ namespace EcsR3.Examples.ExampleApps.Performance.Helper
         
         private void PopulateComponentList()
         {
-            var componentNamespace = typeof(Component1).Namespace;
-            var componentTypes = typeof(Component1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);
+            var componentNamespace = typeof(ClassComponent1).Namespace;
+            var componentTypes = typeof(ClassComponent1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);
             _componentTypes = componentTypes.ToList();
         }
 

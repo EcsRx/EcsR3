@@ -146,5 +146,28 @@ namespace EcsR3.Tests.EcsRx.Pools
             
             Assert.True(componentToUse.isDisposed);
         }
+
+        [Fact]
+        public void should_clear_and_be_reusable_afterwards()
+        {
+            var poolConfig = new PoolConfig(10);
+            var componentPool = new ComponentPool<TestDisposableComponent>(poolConfig);
+            var firstIndex = componentPool.IndexPool.AllocateInstance();
+            var disposableComponent = new TestDisposableComponent();
+            componentPool.Set(firstIndex, disposableComponent);
+            componentPool.Clear();
+            
+            Assert.True(disposableComponent.isDisposed);
+            Assert.Equal(poolConfig.InitialSize, componentPool.Count);
+            Assert.Equal(poolConfig.InitialSize, componentPool.Components.Length);
+            
+            var secondIndex = componentPool.IndexPool.AllocateInstance();
+            var secondComponent = new TestDisposableComponent();
+            componentPool.Set(secondIndex, secondComponent);
+            
+            Assert.Equal(firstIndex, secondIndex);
+            Assert.Equal(10, componentPool.Count);
+            Assert.Contains(secondComponent, componentPool.Components);
+        }
     }
 }

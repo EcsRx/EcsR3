@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
 using EcsR3.Components.Database;
@@ -10,11 +9,10 @@ using EcsR3.Components.Lookups;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.Application;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
 using EcsR3.Extensions;
-using EcsR3.Infrastructure.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
@@ -36,7 +34,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {                       
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();

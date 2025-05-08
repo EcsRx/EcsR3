@@ -57,6 +57,20 @@ namespace EcsR3.Components
             }
         }
 
+        public void Clear()
+        {
+            IndexPool.Clear();
+            Count = PoolConfig.InitialSize;
+
+            for (var i = 0; i < Components.Length; i++)
+            {
+                if(Components[i] is IDisposable disposable)
+                { disposable.Dispose(); }
+            }
+            
+            Components = new T[PoolConfig.InitialSize];
+        }
+
         public void Set(int index, object value)
         {
             lock (_lock)

@@ -2,6 +2,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using EcsR3.Collections;
 using EcsR3.Collections.Entity;
+using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
@@ -26,14 +27,18 @@ namespace EcsR3.Benchmarks
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public ISystemExecutor SystemExecutor { get; }
         public IEntityChangeRouter EntityChangeRouter { get; }
-        
         public IObservableGroupManager ObservableGroupManager { get; }
+        
+        public virtual ComponentDatabaseConfig OverrideComponentDatabaseConfig() => new() { OnlyPreAllocatePoolsWithConfig = true };
 
         protected EcsR3Benchmark()
         {
             DependencyRegistry = new NinjectDependencyRegistry();
             DependencyRegistry.LoadModule(new FrameworkModule());
             DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
+            DependencyRegistry.Unbind<ComponentDatabaseConfig>();
+            DependencyRegistry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(OverrideComponentDatabaseConfig()));
+            
             DependencyResolver = DependencyRegistry.BuildResolver();
             
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
@@ -42,6 +47,11 @@ namespace EcsR3.Benchmarks
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
             EntityChangeRouter = DependencyResolver.Resolve<EntityChangeRouter>();
+        }
+
+        public IComponentPool<T> GetPoolFor<T>() where T : IComponent
+        {
+            return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T)));
         }
 
         [GlobalSetup]

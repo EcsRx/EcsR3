@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using EcsR3.Benchmarks.Benchmarks;
+using EcsR3.Benchmarks.Benchmarks.New;
 using SystemsR3.Extensions;
 
 namespace EcsR3.Benchmarks
@@ -16,8 +17,11 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),*/
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),/*
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),*/
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_PreAllocated_ClassComponents_Benchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(PreAllocated_EntityAdd_StructComponents_Benchmark)),
+                /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),

@@ -63,5 +63,10 @@ namespace EcsR3.Components
         /// </summary>
         /// <param name="index"></param>
         void Release(int index);
+
+        /// <summary>
+        /// Used to manually clear the pool of all contents
+        /// </summary>
+        void Clear();
     }
 }

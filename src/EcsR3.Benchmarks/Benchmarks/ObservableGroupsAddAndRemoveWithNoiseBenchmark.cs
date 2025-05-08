@@ -2,7 +2,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using EcsR3.Groups;
@@ -16,7 +16,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         private IComponent[] _noiseComponents;
         private Type[] _availableComponentTypes;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
-        
+
         [Params(1000)]
         public int EntityCount;
         
@@ -28,7 +28,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public ObservableGroupsAddAndRemoveWithNoiseBenchmark() : base()
         {
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
