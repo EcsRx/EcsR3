@@ -3,7 +3,7 @@ using System.Linq;
 using SystemsR3.Pools;
 using Xunit;
 
-namespace SystemsR3.Tests.SystemsRx.Pools
+namespace SystemsR3.Tests.SystemsR3.Pools
 {
     public class IndexPoolTests
     {

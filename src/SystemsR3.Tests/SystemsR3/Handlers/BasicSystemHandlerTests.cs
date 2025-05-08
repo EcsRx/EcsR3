@@ -1,12 +1,12 @@
 using System;
+using NSubstitute;
 using SystemsR3.Executor.Handlers.Conventional;
 using SystemsR3.Scheduling;
 using SystemsR3.Systems;
 using SystemsR3.Systems.Conventional;
-using NSubstitute;
 using Xunit;
 
-namespace SystemsR3.Tests.SystemsRx.Handlers
+namespace SystemsR3.Tests.SystemsR3.Handlers
 {
     public class BasicSystemHandlerTests
     {

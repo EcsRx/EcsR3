@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using EcsR3.Collections.Entity;
 using EcsR3.Components;
-using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using SystemsR3.Extensions;
 
 namespace EcsR3.Benchmarks.Benchmarks
 {

@@ -1,4 +1,4 @@
-﻿using SystemsR3.Tests.Ninject.TestCode;
+﻿using SystemsR3.Tests.TestCode;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Pools;

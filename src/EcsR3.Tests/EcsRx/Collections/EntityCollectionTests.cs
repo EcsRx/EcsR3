@@ -1,11 +1,10 @@
-﻿using System;
-using EcsR3.Collections.Entity;
+﻿using EcsR3.Collections.Entity;
 using EcsR3.Entities;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Database
+namespace EcsR3.Tests.EcsRx.Collections
 {
     public class EntityCollectionTests
     {

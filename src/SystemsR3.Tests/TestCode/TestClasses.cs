@@ -1,6 +1,6 @@
 using SystemsR3.Pools;
 
-namespace SystemsR3.Tests.Ninject.TestCode
+namespace SystemsR3.Tests.TestCode
 {
     public class SomeTestClass
     {

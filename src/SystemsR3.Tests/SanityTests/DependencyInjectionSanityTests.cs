@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SystemsR3.Executor.Handlers;
-using SystemsR3.Tests.Ninject.Modules;
-using SystemsR3.Tests.Ninject.TestCode;
 using SystemsR3.Infrastructure.Autofac;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.DryIoc;
@@ -11,6 +9,8 @@ using SystemsR3.Infrastructure.Modules;
 using SystemsR3.Infrastructure.MicrosoftDependencyInjection;
 using SystemsR3.Infrastructure.Ninject;
 using SystemsR3.Scheduling;
+using SystemsR3.Tests.Modules;
+using SystemsR3.Tests.TestCode;
 using Xunit;
 
 namespace SystemsR3.Tests.SanityTests

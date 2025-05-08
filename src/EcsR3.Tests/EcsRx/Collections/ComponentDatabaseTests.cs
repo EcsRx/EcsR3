@@ -7,7 +7,7 @@ using EcsR3.Tests.Models;
 using NSubstitute;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Database
+namespace EcsR3.Tests.EcsRx.Collections
 {
     public class ComponentDatabaseTests
     {
