@@ -59,16 +59,28 @@ namespace EcsR3.Collections.Entity
 
         public void RemoveEntity(int id)
         {
-            IEntity entity;
+            var entity = GetEntity(id);
+            RemoveEntity(entity);
+        }
+
+        protected void RemoveEntity(IEntity entity)
+        {
+            entity.RemoveAllComponents();
+            
+            lock (_lock)
+            { EntityLookup.Remove(entity.Id); }
+            
+            EntityFactory.Destroy(entity.Id);
+            _onEntityRemoved.OnNext(new CollectionEntityEvent(entity));
+        }
+
+        public void RemoveAllEntities()
+        {
             lock (_lock)
             {
-                entity = GetEntity(id);
-                entity.RemoveAllComponents();
-                EntityLookup.Remove(id);
-                EntityFactory.Destroy(id);
+                for (var i = EntityLookup.Count - 1; i >= 0; i--)
+                { RemoveEntity(EntityLookup.GetByIndex(i)); }
             }
-            
-            _onEntityRemoved.OnNext(new CollectionEntityEvent(entity));
         }
 
         public void AddEntity(IEntity entity)

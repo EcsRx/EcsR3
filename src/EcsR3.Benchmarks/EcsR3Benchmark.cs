@@ -22,21 +22,27 @@ namespace EcsR3.Benchmarks
     [MarkdownExporter]
     public abstract class EcsR3Benchmark
     {
-        public IDependencyRegistry DependencyRegistry { get; }
-        public IDependencyResolver DependencyResolver { get; }
-        public IEntityCollection EntityCollection { get; }
-        public IComponentDatabase ComponentDatabase { get; }
-        public IComponentTypeLookup ComponentTypeLookup { get; }
-        public ISystemExecutor SystemExecutor { get; }
-        public IEntityChangeRouter EntityChangeRouter { get; }
-        public IObservableGroupManager ObservableGroupManager { get; }
+        public IDependencyRegistry DependencyRegistry;
+        public IDependencyResolver DependencyResolver;
+        public IEntityCollection EntityCollection;
+        public IComponentDatabase ComponentDatabase;
+        public IComponentTypeLookup ComponentTypeLookup;
+        public ISystemExecutor SystemExecutor;
+        public IEntityChangeRouter EntityChangeRouter;
+        public IObservableGroupManager ObservableGroupManager;
         
         // This pulls in a lot of types which let the component type lookup know about them
         public RandomGroupFactory RandomGroupFactory { get; } = new RandomGroupFactory();
         
         public virtual ComponentDatabaseConfig OverrideComponentDatabaseConfig() => new() { OnlyPreAllocatePoolsWithConfig = true };
+        
+        public IComponentPool<T> GetPoolFor<T>() where T : IComponent
+        {
+            return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T)));
+        }
 
-        protected EcsR3Benchmark()
+        [GlobalSetup]
+        public virtual void Setup()
         {
             DependencyRegistry = new NinjectDependencyRegistry();
             DependencyRegistry.LoadModule(new FrameworkModule());
@@ -59,16 +65,10 @@ namespace EcsR3.Benchmarks
                 Console.WriteLine($"|- Component Type Id: {ComponentTypeLookup.GetComponentType(i).Name}");
             }
         }
-        
-        public IComponentPool<T> GetPoolFor<T>() where T : IComponent
-        {
-            return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T)));
-        }
-        
-        [GlobalSetup]
-        public abstract void Setup();
 
         [GlobalCleanup]
-        public abstract void Cleanup();
+        public virtual void Cleanup()
+        {
+        }
     }
 }

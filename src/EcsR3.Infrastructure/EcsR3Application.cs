@@ -2,6 +2,7 @@ using SystemsR3.Infrastructure;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
 using EcsR3.Collections.Entity;
+using EcsR3.Components.Database;
 using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure
@@ -9,6 +10,7 @@ namespace EcsR3.Infrastructure
     public abstract class EcsR3Application : SystemsR3Application, IEcsR3Application
     {
         public IEntityCollection EntityCollection { get; private set; }
+        public IComponentDatabase ComponentDatabase { get; private set; }
         public IObservableGroupManager ObservableGroupManager { get; private set; }
         
         /// <summary>
@@ -32,6 +34,7 @@ namespace EcsR3.Infrastructure
         {
             base.ResolveApplicationDependencies();
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
+            ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
         }
     }

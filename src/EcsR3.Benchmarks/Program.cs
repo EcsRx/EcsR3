@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
+using EcsR3.Benchmarks.Benchmarks.New;
 using EcsR3.Benchmarks.Exploratory;
 using SystemsR3.Extensions;
 
@@ -18,7 +19,6 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),*/
-                //BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(PreAllocated_EntityAdd_StructComponents_Benchmark)),
                 /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
@@ -27,8 +27,11 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveWithNoiseBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark))*/
                 
-                BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks))
+                //BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks))
+                
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);

@@ -59,5 +59,10 @@ namespace EcsR3.Collections.Entity
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
         void RemoveEntity(int id);
+        
+        /// <summary>
+        /// Removes all entities from the collection
+        /// </summary>
+        void RemoveAllEntities();
     }
 }

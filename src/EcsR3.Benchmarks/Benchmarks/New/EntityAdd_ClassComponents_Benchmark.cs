@@ -10,20 +10,24 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         [Params(100000)]
         public int EntityCount;
 
-        [Params(1, 2 ,3)]
+        [Params(1, 2 ,3, 10)]
         public int ComponentCount;
         
         [Params(true, false)]
         public bool PreAllocate;
 
-        public override void Setup()
+        [IterationSetup]
+        public void IterationSetup()
         {
-            if (!PreAllocate) { return; }
-            GetPoolFor<ClassComponent1>().Expand(EntityCount);
-            if(ComponentCount >= 2) { GetPoolFor<ClassComponent2>().Expand(EntityCount); }
-            if(ComponentCount == 3) { GetPoolFor<ClassComponent3>().Expand(EntityCount); }
+            if (PreAllocate)
+            {
+                GetPoolFor<ClassComponent1>().Expand(EntityCount);
+                if(ComponentCount >= 2) { GetPoolFor<ClassComponent2>().Expand(EntityCount); }
+                if(ComponentCount == 3) { GetPoolFor<ClassComponent3>().Expand(EntityCount); }
+            }
         }
 
+        [IterationCleanup]
         public override void Cleanup()
         {
             EntityCollection.RemoveAllEntities();

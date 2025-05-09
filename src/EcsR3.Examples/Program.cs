@@ -8,6 +8,7 @@ using EcsR3.Examples.ExampleApps.HelloWorldExample;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase;
 using EcsR3.Examples.ExampleApps.Performance;
 using EcsR3.Examples.ExampleApps.Playground.ClassBased;
+using EcsR3.Examples.ExampleApps.Playground.Specific;
 using EcsR3.Examples.ExampleApps.Playground.StructBased;
 using Spectre.Console;
 
@@ -68,7 +69,9 @@ namespace EcsR3.Examples
             //exampleToRun.Executor();
             
             //new OptimizedGroupPerformanceApplication().StartApplication();
-            new MakingLotsOfEntitiesApplication().StartApplication();
+            Console.WriteLine("Starting");
+            //new EntityAddClassComponentScenarioApplication().StartApplication();
+            new EntityAddClassComponenWithPreAllocationtScenarioApplication().StartApplication();
         }
     }
 }
