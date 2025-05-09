@@ -2,9 +2,9 @@
 
 namespace EcsR3.Examples.ExampleApps.Performance.Components.Struct
 {
-    public class StructComponent1: IComponent {}
-    public class StructComponent2: IComponent {}
-    public class StructComponent3: IComponent {}
-    public class StructComponent4: IComponent {}
-    public class StructComponent5: IComponent {}
+    public struct StructComponent1: IComponent {}
+    public struct StructComponent2: IComponent {}
+    public struct StructComponent3: IComponent {}
+    public struct StructComponent4: IComponent {}
+    public struct StructComponent5: IComponent {}
 }

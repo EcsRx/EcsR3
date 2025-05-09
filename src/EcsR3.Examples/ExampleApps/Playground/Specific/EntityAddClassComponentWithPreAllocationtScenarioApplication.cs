@@ -1,12 +1,19 @@
-﻿using EcsR3.Examples.Application;
+﻿using System;
+using System.Collections.Generic;
+using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Playground.Specific;
 
-public class EntityAddClassComponenWithPreAllocationtScenarioApplication : EcsR3BenchmarkConsoleApplication
+public class EntityAddClassComponentWithPreAllocationtScenarioApplication : EcsR3BenchmarkConsoleApplication
 {
     public int AllocationAmount = 100000;
+    
+    protected override IEnumerable<Type> SpecifyComponentsToIncludeInPool()
+    {
+        return new[] { typeof(ClassComponent1) };
+    }
     
     protected override void ApplicationStarted()
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using EcsR3.Examples.Custom;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
@@ -70,8 +71,13 @@ namespace EcsR3.Examples
             
             //new OptimizedGroupPerformanceApplication().StartApplication();
             Console.WriteLine("Starting");
+            var timer = Stopwatch.StartNew();
             //new EntityAddClassComponentScenarioApplication().StartApplication();
-            new EntityAddClassComponenWithPreAllocationtScenarioApplication().StartApplication();
+            new EntityAddClassComponentWithPreAllocationtScenarioApplication().StartApplication();
+            //new EntityAddStructComponentWithPreAllocationtScenarioApplication().StartApplication();
+            
+            timer.Stop();
+            Console.WriteLine($"Finished in {timer.Elapsed.TotalMilliseconds}ms");
         }
     }
 }
