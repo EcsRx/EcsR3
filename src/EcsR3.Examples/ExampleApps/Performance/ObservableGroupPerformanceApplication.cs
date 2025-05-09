@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using EcsR3.Components;
 using EcsR3.Examples.Application;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Groups;
 
@@ -16,7 +16,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         {
             var groupFactory = new RandomGroupFactory();
             
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             var availableComponentTypes = groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();

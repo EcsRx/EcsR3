@@ -2,6 +2,7 @@ using SystemsR3.Infrastructure;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
 using EcsR3.Collections.Entity;
+using EcsR3.Components.Database;
 using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure
@@ -9,6 +10,7 @@ namespace EcsR3.Infrastructure
     public abstract class EcsR3Application : SystemsR3Application, IEcsR3Application
     {
         public IEntityCollection EntityCollection { get; private set; }
+        public IComponentDatabase ComponentDatabase { get; private set; }
         public IObservableGroupManager ObservableGroupManager { get; private set; }
         
         /// <summary>
@@ -21,8 +23,16 @@ namespace EcsR3.Infrastructure
         protected override void LoadModules()
         {
             base.LoadModules();
-            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
+            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule()
+            { ComponentDatabaseConfig = OverrideComponentDatabaseConfig() });
         }
+        
+        /// <summary>
+        /// Allows you to override the default component pool database settings, which can hugely reduce allocations
+        /// and startup speed, it is entirely optional and defaults are used if nothing is overidden.
+        /// </summary>
+        /// <returns>A component database configuration to use</returns>
+        public virtual ComponentDatabaseConfig OverrideComponentDatabaseConfig() => new ComponentDatabaseConfig() {};
 
         /// <summary>
         /// Resolve any dependencies the application needs
@@ -32,6 +42,7 @@ namespace EcsR3.Infrastructure
         {
             base.ResolveApplicationDependencies();
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
+            ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
         }
     }

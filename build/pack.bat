@@ -1,4 +1,4 @@
-set version=8.0.0
+set version=8.0.27
 dotnet pack ../src/SystemsR3 -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsR3.Infrastructure -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsR3.Plugins.Transforms -c Release -o ../../_dist /p:version=%version%

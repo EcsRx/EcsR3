@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using EcsR3.Collections.Entity;
 using EcsR3.Components;
-using EcsR3.Entities;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using SystemsR3.Extensions;
 
 namespace EcsR3.Benchmarks.Benchmarks
 {
@@ -29,7 +24,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public ObservableGroupsAddAndRemoveBenchmark() : base()
         {
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();

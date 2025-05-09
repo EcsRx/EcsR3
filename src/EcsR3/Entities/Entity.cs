@@ -81,7 +81,7 @@ namespace EcsR3.Entities
 
         public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
         {
-            var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
+            var defaultComponent = default(T);
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
 
             lock (_lock)

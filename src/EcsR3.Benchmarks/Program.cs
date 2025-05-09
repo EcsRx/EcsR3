@@ -2,12 +2,20 @@
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using EcsR3.Benchmarks.Benchmarks;
+using EcsR3.Benchmarks.Benchmarks.New;
+using EcsR3.Benchmarks.Exploratory;
 using SystemsR3.Extensions;
 
 namespace EcsR3.Benchmarks
 {
     class Program
     {
+        /// <summary>
+        /// These benchmarks are mainly pointless and just noise at the moment due to not
+        /// really understanding the best way to structure them without state bleed between tests
+        /// GlobalSetup is not enough IterationSetup is too much, so unsure what to do with them in the long run.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             var benchmarks = new []
@@ -21,7 +29,11 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveWithNoiseBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark))
+                
+                //BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks))
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);

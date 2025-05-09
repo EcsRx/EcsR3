@@ -1,4 +1,6 @@
-﻿using SystemsR3.Tests.TestCode;
+﻿using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
+using SystemsR3.Tests.TestCode;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Pools;
@@ -9,7 +11,8 @@ public class ObjectPoolTests
     public void should_not_populate_pool_on_creation()
     {
         var expectedSize = 5;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, Assert.Null);
@@ -19,7 +22,8 @@ public class ObjectPoolTests
     public void should_populate_existing_size_when_pre_allocating_without_size()
     {
         var expectedSize = 5;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
         objectPool.PreAllocate();
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -33,7 +37,8 @@ public class ObjectPoolTests
     public void should_populate_requested_size_when_pre_allocating_with_size(int preAllocationSize, int expectedSize)
     {
         var startingSize = 5;
-        var objectPool = new TestObjectPool(startingSize);
+        var poolConfig = new PoolConfig(startingSize, startingSize);
+        var objectPool = new TestObjectPool(poolConfig);
         objectPool.PreAllocate(preAllocationSize);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -48,7 +53,8 @@ public class ObjectPoolTests
     public void should_not_exceed_max_size_on_pre_allocations(int preAllocationSize, int expectedSize, int maxSize)
     {
         var startingSize = 5;
-        var objectPool = new TestObjectPool(startingSize) { MaxSize = maxSize };
+        var poolConfig = new PoolConfig(startingSize, startingSize, maxSize);
+        var objectPool = new TestObjectPool(poolConfig);
         objectPool.PreAllocate(preAllocationSize);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -59,7 +65,8 @@ public class ObjectPoolTests
     public void should_populate_existing_size_when_allocating_if_needed()
     {
         var expectedSize = 5;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
         objectPool.Allocate();
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -73,7 +80,8 @@ public class ObjectPoolTests
     [InlineData(2, 12, 11)]
     public void should_expand_on_expansion_size_and_populate_when_allocating_over_existing_size(int expansionSize, int expectedSize, int numberToAllocate)
     {
-        var objectPool = new TestObjectPool(expansionSize);
+        var poolConfig = new PoolConfig(expansionSize, expansionSize);
+        var objectPool = new TestObjectPool(poolConfig);
         for (var i = 0; i < numberToAllocate; i++)
         { objectPool.Allocate(); }
 
@@ -85,7 +93,8 @@ public class ObjectPoolTests
     public void should_not_expand_if_deallocated_objects_exist_on_allocation()
     {
         var expectedSize = 2;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
 
         for (var i = 0; i < 10; i++)
         {
@@ -101,7 +110,8 @@ public class ObjectPoolTests
     public void should_ignore_release_of_already_released_object()
     {
         var expectedSize = 2;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
 
         var instance = objectPool.Allocate();
         objectPool.Release(instance);
@@ -117,7 +127,8 @@ public class ObjectPoolTests
     public void should_clear_all_data_and_destroy_all_instances_on_clearing()
     {
         var expectedSize = 2;
-        var objectPool = new TestObjectPool(expectedSize);
+        var poolConfig = new PoolConfig(expectedSize, expectedSize);
+        var objectPool = new TestObjectPool(poolConfig);
 
         var instance1 = objectPool.Allocate();
         var instance2 = objectPool.Allocate();
@@ -135,7 +146,8 @@ public class ObjectPoolTests
     {
         var expansionSize = 2;
         var expectedSize = expansionSize * 2;
-        var objectPool = new TestObjectPool(expansionSize);
+        var poolConfig = new PoolConfig(expansionSize, expansionSize);
+        var objectPool = new TestObjectPool(poolConfig);
 
         var instance1 = objectPool.Allocate();
         var instance2 = objectPool.Allocate();

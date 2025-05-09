@@ -1,43 +1,42 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
 {
     public abstract class ObjectPool<T> : IObjectPool<T>
         where T : class
     {
+        public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
-        public T[] Objects { get; private set; }
+        public T[] Objects;
         
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
-        public int ExpansionSize { get; private set; }
-        public int MaxSize { get; set; } = int.MaxValue;
-        
         public int PopulatedCount { get; private set; }
         
         private readonly object _lock = new object();
 
-        public ObjectPool(int expansionSize) : this(expansionSize, expansionSize)
-        { }
-        
-        public ObjectPool(int expansionSize, int initialSize)
+        public ObjectPool(PoolConfig poolConfig = null)
         {
-            ExpansionSize = expansionSize;
-            IndexPool = new IndexPool(expansionSize, initialSize);
-            Objects = new T[initialSize];
+            PoolConfig = poolConfig ?? new PoolConfig(100, 100);
+            IndexPool = new IndexPool(poolConfig);
+            Objects = new T[PoolConfig.InitialSize];
         }
 
         public void PreAllocate(int? allocationAmount = null)
         {
             FillIndexes();
+            int length;
+            lock (_lock) { length = Objects.Length; }
+            
             if(allocationAmount == null) { return; }
-            if(allocationAmount <= Objects.Length) { return; }
+            if(allocationAmount <= length) { return; }
             
-            var clampedAllocationAmount = allocationAmount > MaxSize 
-                ? MaxSize : allocationAmount.Value;
+            var clampedAllocationAmount = allocationAmount > PoolConfig.MaxSize
+                ? PoolConfig.MaxSize : allocationAmount.Value;
             
-            var actualAllocation = clampedAllocationAmount - Objects.Length;
+            var actualAllocation = clampedAllocationAmount - length;
             if(actualAllocation <= 0) { return; }
             
             Expand(actualAllocation);
@@ -101,24 +100,19 @@ namespace SystemsR3.Pools
                 PopulatedCount = Objects.Length;
             }
         }
-
-        public void Expand()
-        { Expand(ExpansionSize); }
         
-        public void Expand(int amountToAdd)
+        public void Expand(int? amountToAdd = null)
         {
             lock (_lock)
             {
-                if(Objects.Length >= MaxSize) { return; }
+                if(Objects.Length >= PoolConfig.MaxSize) { return; }
 
                 var originalCount = Objects.Length;
-                var newCount = Objects.Length + amountToAdd;
-                if(newCount > MaxSize) { newCount = MaxSize; }
+                var newCount = Objects.Length + (amountToAdd ?? PoolConfig.ExpansionSize);
+                if(newCount > PoolConfig.MaxSize) { newCount = PoolConfig.MaxSize; }
                 
-                var newEntries = new T[newCount];            
-                Objects.CopyTo(newEntries, 0);
+                Array.Resize(ref Objects, newCount);
                 IndexPool.Expand(newCount-1);
-                Objects = newEntries;
                 FillIndexes(originalCount);
             }
         }

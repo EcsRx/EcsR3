@@ -1,32 +1,43 @@
 ﻿using System;
 using System.Linq;
 using EcsR3.Components.Lookups;
-using EcsR3.Collections;
+using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Components.Database
 {
     public class ComponentDatabase : IComponentDatabase
     {
-        public int DefaultExpansionAmount { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
-
+        public ComponentDatabaseConfig ComponentDatabaseConfig { get; }
+        
         public IComponentPool[] ComponentData { get; private set; }
         
         private readonly object _lock = new object();
 
-        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int defaultExpansionSize = 100)
+        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, ComponentDatabaseConfig componentDatabaseConfig = null)
         {
             ComponentTypeLookup = componentTypeLookup;
-            DefaultExpansionAmount = defaultExpansionSize;
+            ComponentDatabaseConfig = componentDatabaseConfig ?? new ComponentDatabaseConfig();
             Initialize();
         }
 
-        public IComponentPool CreatePoolFor(Type type, int initialSize)
+        public IComponentPool CreatePoolFor(Type type, PoolConfig poolConfig = null)
         {
             var componentPoolType = typeof(ComponentPool<>);
             Type[] typeArgs = { type };
             var genericComponentPoolType = componentPoolType.MakeGenericType(typeArgs);
-            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, initialSize);
+            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, poolConfig);
+        }
+
+        public bool HasPoolConfigFor(Type type)
+        { return ComponentDatabaseConfig.PoolSpecificConfig.ContainsKey(type); }
+
+        public PoolConfig GetPoolConfigFor(Type type)
+        {
+            return ComponentDatabaseConfig.PoolSpecificConfig
+                .TryGetValue(type, out var config) ? config 
+                : new PoolConfig(ComponentDatabaseConfig.InitialSize, ComponentDatabaseConfig.ExpansionSize, ComponentDatabaseConfig.MaxSize);
         }
         
         public void Initialize()
@@ -36,12 +47,22 @@ namespace EcsR3.Components.Database
                 var componentTypes = ComponentTypeLookup.GetComponentTypeMappings().ToArray();
                 var componentCount = componentTypes.Length;
                 ComponentData = new IComponentPool[componentCount];
-    
+
                 for (var i = 0; i < componentCount; i++)
-                { ComponentData[i] = CreatePoolFor(componentTypes[i].Key, DefaultExpansionAmount); }     
+                {
+                    var componentType = componentTypes[i].Key;
+                    if (ComponentDatabaseConfig.OnlyPreAllocatePoolsWithConfig && !HasPoolConfigFor(componentType))
+                    {
+                        ComponentData[i] = CreatePoolFor(componentType, new PoolConfig(0, ComponentDatabaseConfig.ExpansionSize, ComponentDatabaseConfig.MaxSize));
+                        continue;
+                    }
+                    
+                    var poolConfig = GetPoolConfigFor(componentType);
+                    ComponentData[i] = CreatePoolFor(componentType, poolConfig);
+                }     
             }
         }
-
+        
         public IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent
         {
             lock (_lock)
@@ -60,7 +81,6 @@ namespace EcsR3.Components.Database
             var componentPool = GetPoolFor<T>(componentTypeId);
             lock (_lock)
             { return ref componentPool.Components[allocationIndex]; }
-            
         }
 
         public T[] GetComponents<T>(int componentTypeId) where T : IComponent
@@ -88,12 +108,13 @@ namespace EcsR3.Components.Database
             }
         }
 
-        public void PreAllocateComponents(int componentTypeId, int allocationSize)
+        public void PreAllocateComponents(int componentTypeId, int? allocationSize = null)
         {
             lock (_lock)
             {
+                var poolSpecificConfig = GetPoolConfigFor(ComponentTypeLookup.GetComponentType(componentTypeId));
                 var pool = ComponentData[componentTypeId];
-                pool.Expand(allocationSize);
+                pool.Expand(allocationSize ?? poolSpecificConfig.ExpansionSize);
             }
         }
     }

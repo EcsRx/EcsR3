@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
-using EcsR3.Components.Lookups;
 using EcsR3.Entities;
-using EcsR3.Entities.Routing;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using SystemsR3.Extensions;
@@ -20,16 +18,16 @@ namespace EcsR3.Benchmarks.Benchmarks
         private List<IEntity> _entities = new List<IEntity>();
         private IComponent[] _components;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
-
+        
         [Params(1000)]
         public int EntityCount;
 
-        [Params(1, 25, 50)]
+        [Params(1, 25 ,50)]
         public int ComponentCount;
 
         public EntityAddComponentsBenchmark()
         {
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();

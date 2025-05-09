@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components;
 using EcsR3.Tests.Models;
+using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 using Xunit;
 
 namespace EcsR3.Tests.EcsRx.Pools
@@ -12,17 +14,18 @@ namespace EcsR3.Tests.EcsRx.Pools
         public void should_allocate_up_front_components()
         {
             var initialSize = 100;
-            
-            var componentPool = new ComponentPool<TestComponentOne>(initialSize);
+
+            var poolConfig = new PoolConfig(initialSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             Assert.Equal(componentPool.Count, initialSize);
-            Assert.Equal(componentPool.Components.Length, initialSize);
+            Assert.Equal(componentPool.InternalComponents.Length, initialSize);
         }
         
         [Fact]
         public void should_correctly_identify_struct_types()
         {
-            var classBasedComponentPool = new ComponentPool<TestComponentOne>(0);
-            var structBasedComponentPool = new ComponentPool<TestStructComponentOne>(0);
+            var classBasedComponentPool = new ComponentPool<TestComponentOne>();
+            var structBasedComponentPool = new ComponentPool<TestStructComponentOne>();
             Assert.False(classBasedComponentPool.IsStructType);
             Assert.True(structBasedComponentPool.IsStructType);
         }
@@ -34,7 +37,8 @@ namespace EcsR3.Tests.EcsRx.Pools
             var expansionSize = 10;
             var initialSize = 10;
             
-            var componentPool = new ComponentPool<TestComponentOne>(initialSize);
+            var poolConfig = new PoolConfig(initialSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             var newSize = initialSize;
             for (var i = 0; i < expansionIterations; i++)
             {
@@ -42,7 +46,7 @@ namespace EcsR3.Tests.EcsRx.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool.InternalComponents.Length, newSize);
             }            
         }
         
@@ -53,7 +57,8 @@ namespace EcsR3.Tests.EcsRx.Pools
             var expansionSize = 10;
             var initialSize = 10;
             
-            var componentPool = new ComponentPool<TestComponentOne>(expansionSize, initialSize);
+            var poolConfig = new PoolConfig(initialSize, expansionSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             var newSize = initialSize;
             for (var i = 0; i < expansionIterations; i++)
             {
@@ -61,7 +66,7 @@ namespace EcsR3.Tests.EcsRx.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool.InternalComponents.Length, newSize);
             }            
         }
 
@@ -69,7 +74,9 @@ namespace EcsR3.Tests.EcsRx.Pools
         public void should_allocate_correctly()
         {
             var initialSize = 1;
-            var componentPool = new ComponentPool<TestComponentOne>(initialSize);
+            
+            var poolConfig = new PoolConfig(initialSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             var allocation = componentPool.Allocate();
             
             Assert.Equal(0, allocation);
@@ -85,7 +92,8 @@ namespace EcsR3.Tests.EcsRx.Pools
             var expectedAllocations = Enumerable.Range(0, expectedAllocationCount).ToList();
             var actualAllocations = new List<int>();
             
-            var componentPool = new ComponentPool<TestComponentOne>(expansionSize, initialSize);
+            var poolConfig = new PoolConfig(initialSize, expansionSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             for (var i = 0; i < expectedAllocationCount; i++)
             {
                 var allocation = componentPool.Allocate();
@@ -94,14 +102,15 @@ namespace EcsR3.Tests.EcsRx.Pools
             
             Assert.Equal(expectedAllocationCount, actualAllocations.Count);
             Assert.All(actualAllocations, x => expectedAllocations.Contains(x));
-            Assert.Equal(expectedAllocationCount, componentPool.Components.Length);
+            Assert.Equal(expectedAllocationCount, componentPool.InternalComponents.Length);
             Assert.Equal(expectedAllocationCount, componentPool.Count);
         }
         
         [Fact]
         public void should_request_index_pool_release_when_releasing_component()
         {
-            var componentPool = new ComponentPool<TestStructComponentOne>(10);
+            var poolConfig = new PoolConfig(10);
+            var componentPool = new ComponentPool<TestStructComponentOne>(poolConfig);
             var indexToUse = componentPool.IndexPool.AllocateInstance();
             var availableIndexesPrior = componentPool.IndexPool.AvailableIndexes.ToArray();
             componentPool.Release(indexToUse);
@@ -115,26 +124,51 @@ namespace EcsR3.Tests.EcsRx.Pools
         [Fact]
         public void should_nullify_class_based_components_on_release()
         {
-            var componentPool = new ComponentPool<TestComponentOne>(10);
+            var poolConfig = new PoolConfig(10);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             var indexToUse = componentPool.IndexPool.AllocateInstance();
-            componentPool.Components[indexToUse] = new TestComponentOne();
+            componentPool.InternalComponents[indexToUse] = new TestComponentOne();
             
             componentPool.Release(indexToUse);
             
-            Assert.True(componentPool.Components.All(x => x is null));
+            Assert.True(componentPool.InternalComponents.All(x => x is null));
         }  
         
         [Fact]
         public void should_dispose_disposable_component_on_release()
         {
-            var componentPool = new ComponentPool<TestDisposableComponent>(10);
+            var poolConfig = new PoolConfig(10);
+            var componentPool = new ComponentPool<TestDisposableComponent>(poolConfig);
             var indexToUse = componentPool.IndexPool.AllocateInstance();
             var componentToUse = new TestDisposableComponent();
-            componentPool.Components[indexToUse] = componentToUse;
+            componentPool.InternalComponents[indexToUse] = componentToUse;
             
             componentPool.Release(indexToUse);
             
             Assert.True(componentToUse.isDisposed);
+        }
+
+        [Fact]
+        public void should_clear_and_be_reusable_afterwards()
+        {
+            var poolConfig = new PoolConfig(10);
+            var componentPool = new ComponentPool<TestDisposableComponent>(poolConfig);
+            var firstIndex = componentPool.IndexPool.AllocateInstance();
+            var disposableComponent = new TestDisposableComponent();
+            componentPool.Set(firstIndex, disposableComponent);
+            componentPool.Clear();
+            
+            Assert.True(disposableComponent.isDisposed);
+            Assert.Equal(poolConfig.InitialSize, componentPool.Count);
+            Assert.Equal(poolConfig.InitialSize, componentPool.InternalComponents.Length);
+            
+            var secondIndex = componentPool.IndexPool.AllocateInstance();
+            var secondComponent = new TestDisposableComponent();
+            componentPool.Set(secondIndex, secondComponent);
+            
+            Assert.Equal(firstIndex, secondIndex);
+            Assert.Equal(10, componentPool.Count);
+            Assert.Contains(secondComponent, componentPool.InternalComponents);
         }
     }
 }

@@ -1,4 +1,5 @@
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Tests.TestCode
 {
@@ -39,7 +40,7 @@ namespace SystemsR3.Tests.TestCode
     
     public class TestObjectPool : ObjectPool<TestPooledObject>
     {
-        public TestObjectPool(int expansionSize) : base(expansionSize)
+        public TestObjectPool(PoolConfig config = null) : base(config)
         { }
 
         public override TestPooledObject Create()

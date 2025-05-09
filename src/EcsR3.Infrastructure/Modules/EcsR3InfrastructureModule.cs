@@ -16,10 +16,13 @@ namespace EcsR3.Infrastructure.Modules
 {
     public class EcsR3InfrastructureModule : IDependencyModule
     {
+        public ComponentDatabaseConfig ComponentDatabaseConfig { get; set; } = new ComponentDatabaseConfig();
+        
         public void Setup(IDependencyRegistry registry)
         {
             // Register ECS specific infrastructure
-            registry.Bind<IIdPool, IdPool>();
+            registry.Bind<IIdPool>(x => x.ToInstance(new IdPool()));
+            registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();

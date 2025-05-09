@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Benchmarks.Benchmarks
 {
@@ -14,7 +15,8 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Setup()
         {
-            IdPool = new IdPool(startingSize: PoolCount);
+            var poolConfig = new PoolConfig(PoolCount);
+            IdPool = new IdPool(poolConfig);
             IdList = new int[PoolCount];
         }
 

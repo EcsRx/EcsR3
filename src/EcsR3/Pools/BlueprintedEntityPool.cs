@@ -1,6 +1,8 @@
 ﻿using EcsR3.Blueprints;
 using EcsR3.Collections.Entity;
 using EcsR3.Entities;
+using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Pools
 {
@@ -14,10 +16,7 @@ namespace EcsR3.Pools
     {
         public T Blueprint { get; } = new T();
 
-        public BlueprintedEntityPool(int expansionSize, IEntityCollection entityCollection) : base(expansionSize, entityCollection)
-        {}
-
-        public BlueprintedEntityPool(int expansionSize, int initialSize, IEntityCollection entityCollection) : base(expansionSize, initialSize, entityCollection)
+        public BlueprintedEntityPool(IEntityCollection entityCollection, PoolConfig poolConfig = null) : base(entityCollection, poolConfig)
         {}
         
         public override void SetupEntity(IEntity entity)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
 using EcsR3.Components.Database;
@@ -10,7 +9,7 @@ using EcsR3.Components.Lookups;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.Application;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 
@@ -30,7 +29,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         
         protected override void ApplicationStarted()
         {                       
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
@@ -77,26 +76,26 @@ namespace EcsR3.Examples.ExampleApps.Performance
             if(entity.HasAllComponents(_availableComponentTypes))
             { ignore = true; }
             
-            var component1 = entity.GetComponent<Component1>();
-            var component2 = entity.GetComponent<Component2>();
-            var component3 = entity.GetComponent<Component3>();
-            var component4 = entity.GetComponent<Component4>();
-            var component5 = entity.GetComponent<Component5>();
-            var component6 = entity.GetComponent<Component6>();
-            var component7 = entity.GetComponent<Component7>();
-            var component8 = entity.GetComponent<Component8>();
-            var component9 = entity.GetComponent<Component9>();
-            var component10 = entity.GetComponent<Component10>();
-            var component11 = entity.GetComponent<Component11>();
-            var component12 = entity.GetComponent<Component12>();
-            var component13 = entity.GetComponent<Component13>();
-            var component14 = entity.GetComponent<Component14>();
-            var component15 = entity.GetComponent<Component15>();
-            var component16 = entity.GetComponent<Component16>();
-            var component17 = entity.GetComponent<Component17>();
-            var component18 = entity.GetComponent<Component18>();
-            var component19 = entity.GetComponent<Component19>();
-            var component20 = entity.GetComponent<Component20>();
+            var component1 = entity.GetComponent<ClassComponent1>();
+            var component2 = entity.GetComponent<ClassComponent2>();
+            var component3 = entity.GetComponent<ClassComponent3>();
+            var component4 = entity.GetComponent<ClassComponent4>();
+            var component5 = entity.GetComponent<ClassComponent5>();
+            var component6 = entity.GetComponent<ClassComponent6>();
+            var component7 = entity.GetComponent<ClassComponent7>();
+            var component8 = entity.GetComponent<ClassComponent8>();
+            var component9 = entity.GetComponent<ClassComponent9>();
+            var component10 = entity.GetComponent<ClassComponent10>();
+            var component11 = entity.GetComponent<ClassComponent11>();
+            var component12 = entity.GetComponent<ClassComponent12>();
+            var component13 = entity.GetComponent<ClassComponent13>();
+            var component14 = entity.GetComponent<ClassComponent14>();
+            var component15 = entity.GetComponent<ClassComponent15>();
+            var component16 = entity.GetComponent<ClassComponent16>();
+            var component17 = entity.GetComponent<ClassComponent17>();
+            var component18 = entity.GetComponent<ClassComponent18>();
+            var component19 = entity.GetComponent<ClassComponent19>();
+            var component20 = entity.GetComponent<ClassComponent20>();
 
             // Stop optimizing away the usages
             if(component1 == null) { }

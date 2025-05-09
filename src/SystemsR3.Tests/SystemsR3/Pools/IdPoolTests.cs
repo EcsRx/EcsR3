@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Pools
@@ -10,15 +11,17 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_allocate_up_front_ids()
         {
-            var idPool = new IdPool(10, 10);
-            Assert.Equal(idPool.AvailableIds.Count, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
+            Assert.Equal(10, idPool.AvailableIds.Count);
         }
         
         [Fact]
         public void should_expand_correctly_for_explicit_id()
         {
             var explicitNewId = 30;
-            var idPool = new IdPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
             idPool.Expand(explicitNewId);
 
             Assert.Equal(idPool.AvailableIds.Count, explicitNewId);
@@ -33,7 +36,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var defaultExpansionAmount = 30;
             var originalSize = 10;
             var expectedSize = defaultExpansionAmount + originalSize;
-            var idPool = new IdPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var idPool = new IdPool(poolConfig);
             idPool.Expand();
 
             Assert.Equal(idPool.AvailableIds.Count, expectedSize);
@@ -45,7 +49,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         [Fact]
         public void should_allocate_and_remove_next_available_id()
         {
-            var idPool = new IdPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
             var id = idPool.AllocateInstance();
             
             Assert.InRange(id, 1, 10);
@@ -58,7 +63,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var defaultExpansionAmount = 30;
             var originalSize = 10;
             var expectedSize = defaultExpansionAmount + originalSize;
-            var idPool = new IdPool(defaultExpansionAmount, originalSize);
+            var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
+            var idPool = new IdPool(poolConfig);
             idPool.AvailableIds.Clear();
             var id = idPool.AllocateInstance();
 
@@ -73,7 +79,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         public void should_expand_and_allocate_and_remove_specific_id_when_claiming_bigger_than_available()
         {
             var explicitNewId = 30;
-            var idPool = new IdPool(10, 10);
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
             idPool.AllocateSpecificId(explicitNewId);
 
             Assert.Equal(idPool.AvailableIds.Count, explicitNewId-1);
