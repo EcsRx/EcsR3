@@ -66,18 +66,8 @@ namespace EcsR3.Examples
                     .UseConverter(x => x.Name)
                     .AddChoices(availableExamples);
             
-            //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-            //exampleToRun.Executor();
-            
-            //new OptimizedGroupPerformanceApplication().StartApplication();
-            Console.WriteLine("Starting");
-            var timer = Stopwatch.StartNew();
-            //new EntityAddClassComponentScenarioApplication().StartApplication();
-            new EntityAddClassComponentWithPreAllocationtScenarioApplication().StartApplication();
-            //new EntityAddStructComponentWithPreAllocationtScenarioApplication().StartApplication();
-            
-            timer.Stop();
-            Console.WriteLine($"Finished in {timer.Elapsed.TotalMilliseconds}ms");
+            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
+            exampleToRun.Executor();
         }
     }
 }

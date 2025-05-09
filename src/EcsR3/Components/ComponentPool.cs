@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using R3;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Components
 {

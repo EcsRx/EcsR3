@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Pools

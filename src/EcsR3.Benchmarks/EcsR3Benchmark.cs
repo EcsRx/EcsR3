@@ -41,8 +41,7 @@ namespace EcsR3.Benchmarks
             return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T)));
         }
 
-        [GlobalSetup]
-        public virtual void Setup()
+        protected EcsR3Benchmark()
         {
             DependencyRegistry = new NinjectDependencyRegistry();
             DependencyRegistry.LoadModule(new FrameworkModule());
@@ -58,17 +57,14 @@ namespace EcsR3.Benchmarks
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
             EntityChangeRouter = DependencyResolver.Resolve<EntityChangeRouter>();
-            
-            Console.WriteLine($"Loaded {(ComponentDatabase as ComponentDatabase).ComponentData.Length} Component Pools");
-            for (var i = 0; i < ComponentTypeLookup.AllComponentTypeIds.Length; i++)
-            {
-                Console.WriteLine($"|- Component Type Id: {ComponentTypeLookup.GetComponentType(i).Name}");
-            }
         }
+
+        [GlobalSetup]
+        public virtual void Setup()
+        {}
 
         [GlobalCleanup]
         public virtual void Cleanup()
-        {
-        }
+        {}
     }
 }

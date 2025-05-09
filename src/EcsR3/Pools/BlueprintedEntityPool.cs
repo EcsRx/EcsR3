@@ -2,6 +2,7 @@
 using EcsR3.Collections.Entity;
 using EcsR3.Entities;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Pools
 {

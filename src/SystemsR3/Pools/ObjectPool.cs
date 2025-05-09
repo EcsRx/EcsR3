@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
 {

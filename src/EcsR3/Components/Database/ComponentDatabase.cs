@@ -2,6 +2,7 @@
 using System.Linq;
 using EcsR3.Components.Lookups;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Components.Database
 {
@@ -80,7 +81,6 @@ namespace EcsR3.Components.Database
             var componentPool = GetPoolFor<T>(componentTypeId);
             lock (_lock)
             { return ref componentPool.Components[allocationIndex]; }
-            
         }
 
         public T[] GetComponents<T>(int componentTypeId) where T : IComponent

@@ -1,4 +1,4 @@
-﻿namespace SystemsR3.Pools
+﻿namespace SystemsR3.Pools.Config
 {
     /// <summary>
     /// Default configuration for how a pool should size and expand

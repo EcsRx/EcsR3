@@ -23,8 +23,16 @@ namespace EcsR3.Infrastructure
         protected override void LoadModules()
         {
             base.LoadModules();
-            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule());
+            DependencyRegistry.LoadModule(new EcsR3InfrastructureModule()
+            { ComponentDatabaseConfig = OverrideComponentDatabaseConfig() });
         }
+        
+        /// <summary>
+        /// Allows you to override the default component pool database settings, which can hugely reduce allocations
+        /// and startup speed, it is entirely optional and defaults are used if nothing is overidden.
+        /// </summary>
+        /// <returns>A component database configuration to use</returns>
+        public virtual ComponentDatabaseConfig OverrideComponentDatabaseConfig() => new ComponentDatabaseConfig() {};
 
         /// <summary>
         /// Resolve any dependencies the application needs

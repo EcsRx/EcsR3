@@ -9,6 +9,7 @@ using EcsR3.Examples.ExampleApps.Performance.Components.Struct;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Benchmarks.Benchmarks;
 

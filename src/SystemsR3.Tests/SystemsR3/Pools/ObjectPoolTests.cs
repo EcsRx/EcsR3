@@ -1,4 +1,5 @@
 ﻿using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 using SystemsR3.Tests.TestCode;
 using Xunit;
 

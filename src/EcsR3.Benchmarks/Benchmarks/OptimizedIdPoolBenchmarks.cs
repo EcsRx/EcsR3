@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Benchmarks.Benchmarks
 {

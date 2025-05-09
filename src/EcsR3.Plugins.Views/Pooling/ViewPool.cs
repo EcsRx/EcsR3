@@ -3,6 +3,7 @@ using System.Linq;
 using SystemsR3.Extensions;
 using EcsR3.Plugins.Views.ViewHandlers;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Plugins.Views.Pooling
 {

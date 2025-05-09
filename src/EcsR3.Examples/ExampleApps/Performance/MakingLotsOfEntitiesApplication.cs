@@ -8,6 +8,7 @@ using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Systems;
 using EcsR3.Extensions;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {

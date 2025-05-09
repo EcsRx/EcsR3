@@ -3,6 +3,7 @@ using System.Linq;
 using EcsR3.Components;
 using EcsR3.Tests.Models;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 using Xunit;
 
 namespace EcsR3.Tests.EcsRx.Pools

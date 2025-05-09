@@ -1,4 +1,6 @@
-﻿namespace SystemsR3.Pools
+﻿using SystemsR3.Pools.Config;
+
+namespace SystemsR3.Pools
 {
     public interface IPool<T>
     {
