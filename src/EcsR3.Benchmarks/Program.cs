@@ -19,7 +19,7 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),*/
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_PreAllocated_ClassComponents_Benchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(PreAllocated_EntityAdd_StructComponents_Benchmark)),
                 /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),

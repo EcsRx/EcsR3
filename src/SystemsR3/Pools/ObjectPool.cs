@@ -9,7 +9,7 @@ namespace SystemsR3.Pools
     {
         public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
-        public T[] Objects { get; private set; }
+        public T[] Objects;
         
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
         public int PopulatedCount { get; private set; }
@@ -26,13 +26,16 @@ namespace SystemsR3.Pools
         public void PreAllocate(int? allocationAmount = null)
         {
             FillIndexes();
+            int length;
+            lock (_lock) { length = Objects.Length; }
+            
             if(allocationAmount == null) { return; }
-            if(allocationAmount <= Objects.Length) { return; }
+            if(allocationAmount <= length) { return; }
             
             var clampedAllocationAmount = allocationAmount > PoolConfig.MaxSize
                 ? PoolConfig.MaxSize : allocationAmount.Value;
             
-            var actualAllocation = clampedAllocationAmount - Objects.Length;
+            var actualAllocation = clampedAllocationAmount - length;
             if(actualAllocation <= 0) { return; }
             
             Expand(actualAllocation);
@@ -107,10 +110,8 @@ namespace SystemsR3.Pools
                 var newCount = Objects.Length + (amountToAdd ?? PoolConfig.ExpansionSize);
                 if(newCount > PoolConfig.MaxSize) { newCount = PoolConfig.MaxSize; }
                 
-                var newEntries = new T[newCount];            
-                Objects.CopyTo(newEntries, 0);
+                Array.Resize(ref Objects, newCount);
                 IndexPool.Expand(newCount-1);
-                Objects = newEntries;
                 FillIndexes(originalCount);
             }
         }

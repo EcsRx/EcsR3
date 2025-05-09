@@ -17,7 +17,7 @@ namespace EcsR3.Tests.EcsRx.Pools
             var poolConfig = new PoolConfig(initialSize);
             var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             Assert.Equal(componentPool.Count, initialSize);
-            Assert.Equal(componentPool.Components.Length, initialSize);
+            Assert.Equal(componentPool.InternalComponents.Length, initialSize);
         }
         
         [Fact]
@@ -45,7 +45,7 @@ namespace EcsR3.Tests.EcsRx.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool.InternalComponents.Length, newSize);
             }            
         }
         
@@ -65,7 +65,7 @@ namespace EcsR3.Tests.EcsRx.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool.InternalComponents.Length, newSize);
             }            
         }
 
@@ -101,7 +101,7 @@ namespace EcsR3.Tests.EcsRx.Pools
             
             Assert.Equal(expectedAllocationCount, actualAllocations.Count);
             Assert.All(actualAllocations, x => expectedAllocations.Contains(x));
-            Assert.Equal(expectedAllocationCount, componentPool.Components.Length);
+            Assert.Equal(expectedAllocationCount, componentPool.InternalComponents.Length);
             Assert.Equal(expectedAllocationCount, componentPool.Count);
         }
         
@@ -126,11 +126,11 @@ namespace EcsR3.Tests.EcsRx.Pools
             var poolConfig = new PoolConfig(10);
             var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
             var indexToUse = componentPool.IndexPool.AllocateInstance();
-            componentPool.Components[indexToUse] = new TestComponentOne();
+            componentPool.InternalComponents[indexToUse] = new TestComponentOne();
             
             componentPool.Release(indexToUse);
             
-            Assert.True(componentPool.Components.All(x => x is null));
+            Assert.True(componentPool.InternalComponents.All(x => x is null));
         }  
         
         [Fact]
@@ -140,7 +140,7 @@ namespace EcsR3.Tests.EcsRx.Pools
             var componentPool = new ComponentPool<TestDisposableComponent>(poolConfig);
             var indexToUse = componentPool.IndexPool.AllocateInstance();
             var componentToUse = new TestDisposableComponent();
-            componentPool.Components[indexToUse] = componentToUse;
+            componentPool.InternalComponents[indexToUse] = componentToUse;
             
             componentPool.Release(indexToUse);
             
@@ -159,7 +159,7 @@ namespace EcsR3.Tests.EcsRx.Pools
             
             Assert.True(disposableComponent.isDisposed);
             Assert.Equal(poolConfig.InitialSize, componentPool.Count);
-            Assert.Equal(poolConfig.InitialSize, componentPool.Components.Length);
+            Assert.Equal(poolConfig.InitialSize, componentPool.InternalComponents.Length);
             
             var secondIndex = componentPool.IndexPool.AllocateInstance();
             var secondComponent = new TestDisposableComponent();
@@ -167,7 +167,7 @@ namespace EcsR3.Tests.EcsRx.Pools
             
             Assert.Equal(firstIndex, secondIndex);
             Assert.Equal(10, componentPool.Count);
-            Assert.Contains(secondComponent, componentPool.Components);
+            Assert.Contains(secondComponent, componentPool.InternalComponents);
         }
     }
 }
