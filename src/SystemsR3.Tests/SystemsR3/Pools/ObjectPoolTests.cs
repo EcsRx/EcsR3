@@ -1,4 +1,5 @@
-﻿using SystemsR3.Pools;
+﻿using System.Collections.Generic;
+using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 using SystemsR3.Tests.TestCode;
 using Xunit;
@@ -163,5 +164,31 @@ public class ObjectPoolTests
         Assert.All(objectPool, x => Assert.False(x.IsDestroyed));
         Assert.True(instance1.IsDestroyed);
         Assert.True(instance2.IsDestroyed);
+    }
+
+    [Fact]
+    public void should_allow_multiple_expansions_and_allocations_then_release_successfully()
+    {
+        var amountToFirstAllocate = 30;
+        var amountToSecondAllocate = 40;
+        var poolConfig = new PoolConfig(5, 10);
+        var objectPool = new TestObjectPool(poolConfig);
+        var allocatedObjects = new List<TestPooledObject>();
+        
+        objectPool.Expand(15);
+        
+        for (var i = 0; i < amountToFirstAllocate; i++)
+        { allocatedObjects.Add(objectPool.Allocate()); }
+        
+        objectPool.Expand(15);
+
+        for (var i = 0; i < amountToSecondAllocate; i++)
+        { allocatedObjects.Add(objectPool.Allocate()); }
+        
+        for(var i=0;i<allocatedObjects.Count;i++)
+        { objectPool.Release(allocatedObjects[i]); }
+
+        Assert.Equal(70, allocatedObjects.Count);
+        Assert.Equal(75, objectPool.Objects.Length);
     }
 }

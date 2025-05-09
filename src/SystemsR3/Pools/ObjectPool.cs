@@ -82,10 +82,13 @@ namespace SystemsR3.Pools
         {
             IndexPool.Clear();
 
-            for (var i = 0; i < Objects.Length; i++)
-            { Destroy(Objects[i]); }
+            lock (_lock)
+            {
+                for (var i = 0; i < Objects.Length; i++)
+                { Destroy(Objects[i]); }
             
-            Objects = Array.Empty<T>();
+                Objects = Array.Empty<T>();
+            }
         }
 
         public void FillIndexes(int startIndex = 0)

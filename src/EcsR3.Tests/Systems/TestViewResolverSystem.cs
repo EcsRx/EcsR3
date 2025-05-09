@@ -10,7 +10,6 @@ namespace EcsR3.Tests.Systems
 {
     public class TestViewResolverSystem : ViewResolverSystem
     {
-        public override IViewHandler ViewHandler { get; }
         public override IGroup Group { get; }
 
         public Action<IEntity> OnSetup { get; set; }
@@ -20,11 +19,11 @@ namespace EcsR3.Tests.Systems
         {
             Group = group;
         }
-        
+
+        public override IViewHandler CreateViewHandler() { return null; }
+
         protected override void OnViewCreated(IEntity entity, ViewComponent viewComponent)
-        {
-            
-        }
+        { }
 
         public override void Setup(IEntity entity)
         {
