@@ -10,7 +10,7 @@ namespace EcsR3.Tests.Plugins.Views;
 public class ViewPoolTests
 {
     [Fact]
-    public void should_get_view_handler_to_create_instances()
+    public void should_get_view_handler_to_create_instance_and_set_to_false_on_creation()
     {
         var mockViewHandler = Substitute.For<IViewHandler>();
         mockViewHandler.CreateView().Returns(new object());
@@ -21,6 +21,7 @@ public class ViewPoolTests
         var instance = viewPool.Allocate();
         
         mockViewHandler.Received(2).CreateView();
+        mockViewHandler.Received(poolConfig.InitialSize).SetActiveState(Arg.Any<object>(), false);
         Assert.NotNull(instance);
     }
     
@@ -52,6 +53,6 @@ public class ViewPoolTests
         viewPool.Release(instance);
         
         mockViewHandler.Received(1).SetActiveState(Arg.Any<object>(), true);
-        mockViewHandler.Received(1).SetActiveState(Arg.Any<object>(), false);
+        mockViewHandler.Received(poolConfig.InitialSize+1).SetActiveState(Arg.Any<object>(), false);
     }
 }

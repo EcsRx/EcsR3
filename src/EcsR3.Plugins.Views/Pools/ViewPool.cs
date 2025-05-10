@@ -14,7 +14,11 @@ namespace EcsR3.Plugins.Views.Pools
         }
 
         public override object Create()
-        { return ViewHandler.CreateView(); }
+        {
+            var instance = ViewHandler.CreateView();
+            ViewHandler.SetActiveState(instance, false);
+            return instance;
+        }
 
         public override void Destroy(object instance)
         { ViewHandler.DestroyView(instance); }
