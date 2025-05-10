@@ -19,7 +19,7 @@ namespace EcsR3.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            foreach (var entity in _collection)
+            foreach (var entity in EntityCollection)
             {
                 ref var basicComponent = ref entity.GetComponent<StructComponent>(StructComponent1TypeId);
                 basicComponent.Position += Vector3.One;

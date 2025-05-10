@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using EcsR3.Examples.Custom;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
@@ -8,6 +9,7 @@ using EcsR3.Examples.ExampleApps.HelloWorldExample;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase;
 using EcsR3.Examples.ExampleApps.Performance;
 using EcsR3.Examples.ExampleApps.Playground.ClassBased;
+using EcsR3.Examples.ExampleApps.Playground.Specific;
 using EcsR3.Examples.ExampleApps.Playground.StructBased;
 using Spectre.Console;
 

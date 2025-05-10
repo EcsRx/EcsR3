@@ -11,8 +11,7 @@ namespace EcsR3.Examples.Custom
 
         protected override void ApplicationStarted()
         {
-            var defaultPool = EntityDatabase.GetCollection();
-            var entity = defaultPool.CreateEntity();
+            var entity = EntityCollection.CreateEntity();
             
             entity.AddComponents(new FirstComponent());
 

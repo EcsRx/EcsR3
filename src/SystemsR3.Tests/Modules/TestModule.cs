@@ -1,8 +1,8 @@
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
-using SystemsR3.Tests.Ninject.TestCode;
+using SystemsR3.Tests.TestCode;
 
-namespace SystemsR3.Tests.Ninject.Modules
+namespace SystemsR3.Tests.Modules
 {
     public class TestModule : IDependencyModule
     {

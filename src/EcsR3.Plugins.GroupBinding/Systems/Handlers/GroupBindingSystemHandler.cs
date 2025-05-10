@@ -10,8 +10,7 @@ using EcsR3.Groups.Observable;
 using EcsR3.Plugins.GroupBinding.Attributes;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Systems;
-using EcsR3.Extensions;
-using EcsR3.Plugins.GroupBinding.Groups;
+using EcsR3.Groups;
 
 namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
 {
@@ -36,26 +35,26 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         public bool CanHandleSystem(ISystem system)
         { return true; }
 
-        public GroupWithAffinity GetGroupAndAffinityFromAttributeIfAvailable(ISystem system, MemberInfo member)
+        public IGroup GetGroupFromAttributeIfAvailable(ISystem system, MemberInfo member)
         {
             var fromGroupAttribute = (FromGroupAttribute)member.GetCustomAttribute(FromGroupAttributeType, true);
             if (fromGroupAttribute != null)
             {
                 var possibleGroup = fromGroupAttribute.Group;
                 if (possibleGroup != null)
-                { return new GroupWithAffinity(possibleGroup, system.GetGroupAffinities(member)); }
+                { return possibleGroup; }
 
                 if (system is IGroupSystem groupSystem)
-                { return new GroupWithAffinity(groupSystem.Group, system.GetGroupAffinities(member) ?? groupSystem.GetGroupAffinities()); }
+                { return groupSystem.Group; }
 
                 throw new MissingGroupSystemInterfaceException(system, member);
             }
             
             var fromComponentsAttribute = (FromComponentsAttribute)member.GetCustomAttribute(FromComponentsAttributeType, true);
             if (fromComponentsAttribute != null)
-            { return new GroupWithAffinity(fromComponentsAttribute.Group, system.GetGroupAffinities(member)); }
+            { return fromComponentsAttribute.Group; }
 
-            return GroupWithAffinity.Default;
+            return Group.Empty;
         }
 
         public PropertyInfo[] GetApplicableProperties(Type systemType)
@@ -74,18 +73,18 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
 
         public void ProcessProperty(PropertyInfo property, ISystem system)
         {
-            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, property);
-            if (groupWithAffinity.Group == null) { return; }
+            var group = GetGroupFromAttributeIfAvailable(system, property);
+            if (group == null) { return; }
 
-            property.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
+            property.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
         }
 
         public void ProcessField(FieldInfo field, ISystem system)
         {
-            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, field);
-            if (groupWithAffinity.Group == null) { return; }
+            var group = GetGroupFromAttributeIfAvailable(system, field);
+            if (group == null) { return; }
 
-            field.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
+            field.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
         }
         
         public void SetupSystem(ISystem system)

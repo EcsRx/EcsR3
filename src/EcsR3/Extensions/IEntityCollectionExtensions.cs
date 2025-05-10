@@ -30,14 +30,7 @@ namespace EcsR3.Extensions
             for (var i = 0; i < entities.Length; i++)
             { entityCollection.RemoveEntity(entities[i].Id); }
         }
-
-        public static void RemoveAllEntities(this IEntityCollection entityCollection)
-        {
-            var entities = entityCollection.ToArray();
-            for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i].Id); }
-        }
-
+        
         public static void RemoveEntities(this IEntityCollection entityCollection, Func<IEntity, bool> predicate)
         {
             var entities = entityCollection.Where(predicate).ToArray();

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using EcsR3.Blueprints;
+using EcsR3.Collections.Events;
 using EcsR3.Entities;
+using R3;
 
 namespace EcsR3.Collections.Entity
 {
@@ -8,12 +10,17 @@ namespace EcsR3.Collections.Entity
     /// The entity collection is a container for entities, it can be seen as a Repository of sorts
     /// as it allows for CRUD based operations and querying (through extensions)
     /// </summary>
-    public interface IEntityCollection : IReadOnlyList<IEntity>, INotifyingCollection
+    public interface IEntityCollection : IReadOnlyList<IEntity>
     {
         /// <summary>
-        /// Name of the collection
+        /// When an entity has been added to the collection
         /// </summary>
-        int Id { get; }
+        Observable<CollectionEntityEvent> EntityAdded { get; }
+        
+        /// <summary>
+        /// when an entity has been removed from the collection
+        /// </summary>
+        Observable<CollectionEntityEvent> EntityRemoved { get; }
 
         /// <summary>
         /// This will create and return a new entity.
@@ -51,7 +58,11 @@ namespace EcsR3.Collections.Entity
         /// It is worth noting if you try to remove an entity id that does not exist you will get an exception
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
-        /// <param name="disposeOnRemoval">If the entity should be disposed when removed (defaults to true)</param>
-        void RemoveEntity(int id, bool disposeOnRemoval = true);
+        void RemoveEntity(int id);
+        
+        /// <summary>
+        /// Removes all entities from the collection
+        /// </summary>
+        void RemoveAllEntities();
     }
 }

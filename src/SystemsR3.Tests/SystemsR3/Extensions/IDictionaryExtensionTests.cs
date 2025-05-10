@@ -4,7 +4,7 @@ using NSubstitute;
 using SystemsR3.Extensions;
 using Xunit;
 
-namespace SystemsR3.Tests.SystemsRx.Extensions
+namespace SystemsR3.Tests.SystemsR3.Extensions
 {
     public class IDictionaryExtensionTests
     {

@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using EcsR3.Collections.Entity;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable.Tracking.Events;
 using EcsR3.Groups.Observable.Tracking.Trackers;
-using EcsR3.Groups.Observable.Tracking.Types;
 using EcsR3.Lookups;
 using SystemsR3.Extensions;
 using R3;
@@ -13,13 +12,17 @@ namespace EcsR3.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup
     {
+        public LookupGroup Group { get; }
+        
         public readonly EntityLookup CachedEntities;
-        public readonly List<IDisposable> Subscriptions;
+        public readonly CompositeDisposable Subscriptions;
 
         public Observable<IEntity> OnEntityAdded => _onEntityAdded;
         public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
-        public ICollectionObservableGroupTracker GroupTracker { get; }
+        
+        public IObservableGroupTracker GroupTracker { get; }
+        public IEntityCollection Collection { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -27,50 +30,54 @@ namespace EcsR3.Groups.Observable
         
         private readonly object _lock = new object();
         
-        public ObservableGroupToken Token { get; }
-        
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, ICollectionObservableGroupTracker tracker)
+        public ObservableGroup(LookupGroup group, IObservableGroupTracker tracker, IEntityCollection collection)
         {
-            Token = token;
+            Group = group;
+            Collection = collection;
             GroupTracker = tracker;
             
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
-            Subscriptions = new List<IDisposable>();
+            Subscriptions = new CompositeDisposable();
             CachedEntities = new EntityLookup();
 
-            GroupTracker.GroupMatchingChanged
-                .Subscribe(OnEntityGroupChanged)
+            GroupTracker.OnEntityJoinedGroup
+                .Subscribe(OnEntityJoinedGroup)
+                .AddTo(Subscriptions);
+            
+            GroupTracker.OnEntityLeavingGroup
+                .Subscribe(OnEntityLeavingGroup)
+                .AddTo(Subscriptions);
+            
+            GroupTracker.OnEntityLeftGroup
+                .Subscribe(OnEntityLeftGroup)
                 .AddTo(Subscriptions);
 
-            foreach (var entity in initialEntities)
-            {
-                var currentlyMatches = GroupTracker.IsMatching(entity.Id);
-                if(currentlyMatches) { CachedEntities.Add(entity); }
-            }
+            GroupTracker.GetMatchedEntityIds()
+                .Select(collection.GetEntity)
+                .ForEachRun(CachedEntities.Add);
+        }
+
+        public void OnEntityJoinedGroup(int entityId)
+        {
+            var entity = Collection.GetEntity(entityId);
+            lock (_lock) { CachedEntities.Add(entity); }
+            _onEntityAdded.OnNext(entity);
         }
         
-        public void OnEntityGroupChanged(EntityGroupStateChanged args)
+        public void OnEntityLeavingGroup(int entityId)
         {
-            if (args.GroupActionType == GroupActionType.JoinedGroup)
-            {
-                lock (_lock)
-                { CachedEntities.Add(args.Entity); }
-                _onEntityAdded.OnNext(args.Entity);
-                return;
-            }
-
-            if (args.GroupActionType == GroupActionType.LeavingGroup)
-            { _onEntityRemoving.OnNext(args.Entity); }
-
-            if (args.GroupActionType == GroupActionType.LeftGroup)
-            {
-                lock (_lock)
-                { CachedEntities.Remove(args.Entity.Id); }
-                _onEntityRemoved.OnNext(args.Entity);
-            }
+            var entity = Collection.GetEntity(entityId);
+            _onEntityRemoving.OnNext(entity);
+        }
+        
+        public void OnEntityLeftGroup(int entityId)
+        {
+            var entity = Collection.GetEntity(entityId);
+            lock (_lock) { CachedEntities.Remove(entityId); }
+            _onEntityRemoved.OnNext(entity);
         }
 
         public bool ContainsEntity(int id)
@@ -90,7 +97,6 @@ namespace EcsR3.Groups.Observable
             lock (_lock)
             {
                 Subscriptions.DisposeAll();
-                GroupTracker.Dispose();
                 _onEntityAdded.Dispose();
                 _onEntityRemoved.Dispose();
                 _onEntityRemoving.Dispose();

@@ -4,7 +4,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
 using EcsR3.Entities;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 
@@ -23,7 +23,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public EntityRetrievalBenchmark() : base()
         {
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
@@ -35,33 +35,33 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public void ProcessEntity(IEntity entity)
         {
-            entity.GetComponent<Component1>();
-            entity.GetComponent<Component2>();
-            entity.GetComponent<Component3>();
-            entity.GetComponent<Component4>();
-            entity.GetComponent<Component5>();
-            entity.GetComponent<Component6>();
-            entity.GetComponent<Component7>();
-            entity.GetComponent<Component8>();
-            entity.GetComponent<Component9>();
-            entity.GetComponent<Component10>();
-            entity.GetComponent<Component11>();
-            entity.GetComponent<Component12>();
-            entity.GetComponent<Component13>();
-            entity.GetComponent<Component14>();
-            entity.GetComponent<Component15>();
-            entity.GetComponent<Component16>();
-            entity.GetComponent<Component17>();
-            entity.GetComponent<Component18>();
-            entity.GetComponent<Component19>();
-            entity.GetComponent<Component20>();
+            entity.GetComponent<ClassComponent1>();
+            entity.GetComponent<ClassComponent2>();
+            entity.GetComponent<ClassComponent3>();
+            entity.GetComponent<ClassComponent4>();
+            entity.GetComponent<ClassComponent5>();
+            entity.GetComponent<ClassComponent6>();
+            entity.GetComponent<ClassComponent7>();
+            entity.GetComponent<ClassComponent8>();
+            entity.GetComponent<ClassComponent9>();
+            entity.GetComponent<ClassComponent10>();
+            entity.GetComponent<ClassComponent11>();
+            entity.GetComponent<ClassComponent12>();
+            entity.GetComponent<ClassComponent13>();
+            entity.GetComponent<ClassComponent14>();
+            entity.GetComponent<ClassComponent15>();
+            entity.GetComponent<ClassComponent16>();
+            entity.GetComponent<ClassComponent17>();
+            entity.GetComponent<ClassComponent18>();
+            entity.GetComponent<ClassComponent19>();
+            entity.GetComponent<ClassComponent20>();
         }
 
         public override void Setup()
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup);
+                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

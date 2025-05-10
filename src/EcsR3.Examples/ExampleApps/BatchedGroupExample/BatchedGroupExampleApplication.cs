@@ -21,10 +21,8 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
         {
             var blueprint = new MoveableBlueprint();
             
-            var defaultPool = EntityDatabase.GetCollection();
-
             for (var i = 0; i < _entityCount; i++)
-            { defaultPool.CreateEntity(blueprint); }
+            { EntityCollection.CreateEntity(blueprint); }
 
             HandleInput();
         }

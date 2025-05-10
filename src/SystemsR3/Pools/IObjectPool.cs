@@ -6,6 +6,7 @@ namespace SystemsR3.Pools
         where T : class
     {
         void PreAllocate(int? allocationAmount = null);
+        
         void Clear();
         
         T Allocate();

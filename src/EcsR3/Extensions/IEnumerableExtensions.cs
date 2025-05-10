@@ -5,7 +5,6 @@ using EcsR3.Components;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
-using EcsR3.Attributes;
 
 namespace EcsR3.Extensions
 {

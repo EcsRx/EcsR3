@@ -18,14 +18,13 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample
 
         protected override void ApplicationStarted()
         {
-            var defaultPool = EntityDatabase.GetCollection();
-            defaultPool.CreateEntity(new CharacterBlueprint("Bob", 200));
-            defaultPool.CreateEntity(new CharacterBlueprint("Tom", 150));
-            defaultPool.CreateEntity(new CharacterBlueprint("Rolf", 150));
-            defaultPool.CreateEntity(new CharacterBlueprint("Mez", 100));
-            defaultPool.CreateEntity(new CharacterBlueprint("TP", 1000));
-            defaultPool.CreateEntity(new CharacterBlueprint("MasterChief", 100));
-            defaultPool.CreateEntity(new CharacterBlueprint("Weakling", 20));
+            EntityCollection.CreateEntity(new CharacterBlueprint("Bob", 200));
+            EntityCollection.CreateEntity(new CharacterBlueprint("Tom", 150));
+            EntityCollection.CreateEntity(new CharacterBlueprint("Rolf", 150));
+            EntityCollection.CreateEntity(new CharacterBlueprint("Mez", 100));
+            EntityCollection.CreateEntity(new CharacterBlueprint("TP", 1000));
+            EntityCollection.CreateEntity(new CharacterBlueprint("MasterChief", 100));
+            EntityCollection.CreateEntity(new CharacterBlueprint("Weakling", 20));
 
             HandleInput();
         }

@@ -46,29 +46,32 @@ namespace EcsR3.Examples.ExampleApps.Performance
                 var newGroup = ObservableGroupManager.GetObservableGroup(group);
                 observableGroups.Add(newGroup);
             }
+            
+            Console.WriteLine($"Starting with {_availableComponents.Length} components and {observableGroups.Count} Observable groups");
 
             var firstRun = ProcessEntities(ProcessCount);
-            var secondRun = ProcessEntities(ProcessCount);
-            var thirdRun = ProcessEntities(ProcessCount);
-
-            Console.WriteLine($"Processing with {_availableComponents.Length} components and {observableGroups.Count} Observable groups");
-            Console.WriteLine($"Finished In: {(firstRun + secondRun + thirdRun).TotalSeconds}s");
             Console.WriteLine($"First Took: {firstRun.TotalSeconds}s");
+
+            var secondRun = ProcessEntities(ProcessCount);
             Console.WriteLine($"Second Took: {secondRun.TotalSeconds}s");
+
+            var thirdRun = ProcessEntities(ProcessCount);
             Console.WriteLine($"Third Took: {thirdRun.TotalSeconds}s");
+            
+            Console.WriteLine($"Processed with {_availableComponents.Length} components and {observableGroups.Count} Observable groups");
+            Console.WriteLine($"Finished In: {(firstRun + secondRun + thirdRun).TotalSeconds}s");
         }
 
         private TimeSpan ProcessEntities(int amount)
         {
-            var defaultPool = EntityDatabase.GetCollection();
-            EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
+            EntityCollection.RemoveAllEntities();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = defaultPool.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponentTypeIds);
             }

@@ -19,17 +19,17 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Modules
         public void Setup(IDependencyRegistry registry)
         {
             // Override our default save pipeline (binary ones) with the json one
-            registry.Unbind<ISaveEntityDatabasePipeline>();
-            registry.Bind<ISaveEntityDatabasePipeline>(builder =>
+            registry.Unbind<ISaveEntityCollectionPipeline>();
+            registry.Bind<ISaveEntityCollectionPipeline>(builder =>
                 builder.ToMethod(CreateJsonSavePipeline).AsSingleton());
             
             // Override our default load pipeline (binary ones) with the json one
-            registry.Unbind<ILoadEntityDatabasePipeline>();
-            registry.Bind<ILoadEntityDatabasePipeline>(builder =>
+            registry.Unbind<ILoadEntityCollectionPipeline>();
+            registry.Bind<ILoadEntityCollectionPipeline>(builder =>
                 builder.ToMethod(CreateJsonLoadPipeline).AsSingleton());
         }
 
-        public ISaveEntityDatabasePipeline CreateJsonSavePipeline(IDependencyResolver resolver)
+        public ISaveEntityCollectionPipeline CreateJsonSavePipeline(IDependencyResolver resolver)
         {
             // We manually create our serializer here as we dont want the default behaviour which
             // which would be to only persist things with `[Persist]` and `[PersistData]` attributes
@@ -45,7 +45,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Modules
             return PersistityModule.CreateSavePipeline(resolver, serializer, CustomEntityDatabaseFile);
         }
         
-        public ILoadEntityDatabasePipeline CreateJsonLoadPipeline(IDependencyResolver resolver)
+        public ILoadEntityCollectionPipeline CreateJsonLoadPipeline(IDependencyResolver resolver)
         {
             // Manually build deserializer as we want to load everything
             var mappingRegistry = new MappingRegistry(resolver.Resolve<EverythingTypeMapper>());

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components;

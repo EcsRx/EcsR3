@@ -47,7 +47,6 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase
         
         private void HandleInput()
         {
-            var defaultCollection = EntityDatabase.GetCollection();
             var debugPipeline = DependencyResolver.ResolvePipeline(EntityDebugModule.DebugPipeline);
             var randomBlueprint = new RandomEntityBlueprint();
 
@@ -58,7 +57,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase
                 Console.WriteLine("When the application is closed it will save the current entity database");
                 Console.WriteLine("Look in the bin folder for an entity-database.json file, alter it if you want");
                 Console.WriteLine();
-                Console.WriteLine($" - {defaultCollection.Count} Entities Loaded");
+                Console.WriteLine($" - {EntityCollection.Count} Entities Loaded");
                 
                 // Uncomment this if you want to see all the entity content in console window
                 //debugPipeline.Execute(EntityCollectionManager.EntityDatabase);
@@ -69,7 +68,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase
                 
                 var keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Enter)
-                { defaultCollection.CreateEntity(randomBlueprint); }
+                { EntityCollection.CreateEntity(randomBlueprint); }
                 else if (keyPressed.Key == ConsoleKey.Spacebar)
                 { _quit = true; }
             }

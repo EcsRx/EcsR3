@@ -24,7 +24,6 @@ namespace EcsR3.Plugins.Persistence.Transformers
 
             return new EntityCollectionData
             {
-                CollectionId = collection.Id,
                 Entities = entityData
             };
         }

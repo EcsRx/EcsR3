@@ -7,7 +7,7 @@ using SystemsR3.Systems.Conventional;
 using NSubstitute;
 using R3;
 using SystemsR3.Tests.Models;
-using SystemsR3.Tests.SystemsRx.Handlers.Helpers;
+using SystemsR3.Tests.SystemsR3.Handlers.Helpers;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Handlers

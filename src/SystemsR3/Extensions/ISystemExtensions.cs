@@ -9,6 +9,10 @@ namespace SystemsR3.Extensions
 {
     public static class ISystemExtensions
     {
+        public static readonly Type ISystemType = typeof(ISystem);
+        public static readonly Type IReactiveSystem = typeof(IReactiveSystem<>);
+        public static readonly Type IReactToEventSystem = typeof(IReactToEventSystem<>);
+        
         public static bool ShouldMutliThread(this ISystem system)
         {
             return system.GetType()
@@ -36,9 +40,17 @@ namespace SystemsR3.Extensions
         { return system.GetType().GetMatchingInterfaceGenericTypes(systemType); }
         
         public static bool IsReactToEventSystem(this ISystem system)
-        { return system.MatchesSystemTypeWithGeneric(typeof(IReactToEventSystem<>)); }
+        { return system.MatchesSystemTypeWithGeneric(IReactToEventSystem); }
         
         public static bool IsReactiveSystem(this ISystem system)
-        { return system.MatchesSystemTypeWithGeneric(typeof(IReactiveSystem<>)); }
+        { return system.MatchesSystemTypeWithGeneric(IReactiveSystem); }
+        
+        public static IEnumerable<Type> GetSystemTypesImplemented(this ISystem system)
+        {
+            return system.GetType()
+                .GetInterfaces()
+                .Where(x => x.GetInterfaces()
+                    .Any(y => y.IsAssignableFrom(ISystemType)));
+        }
     }
 }

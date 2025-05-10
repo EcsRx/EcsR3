@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using NSubstitute;
 using SystemsR3.Infrastructure;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Systems;
-using NSubstitute;
 using SystemsR3.Tests.Systems;
 using Xunit;
 
-namespace SystemsR3.Tests.SystemsRx
+namespace SystemsR3.Tests.SystemsR3
 {
     public class IApplicationExtensionsTests
     {

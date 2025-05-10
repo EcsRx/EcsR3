@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
+using EcsR3.Entities.Routing;
 using EcsR3.Examples.Application;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
 using EcsR3.Extensions;
-using EcsR3.Infrastructure.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
@@ -35,7 +34,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {                       
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
@@ -48,11 +47,12 @@ namespace EcsR3.Examples.ExampleApps.Performance
             
             var componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             var componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
+            var entityChangeRouter = DependencyResolver.Resolve<IEntityChangeRouter>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, componentDatabase, componentTypeLookup);
+                var entity = new Entity(i, componentDatabase, componentTypeLookup, entityChangeRouter);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);                
             }
@@ -64,7 +64,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities()
         {
-            EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
+            EntityCollection.RemoveAllEntities();
             GC.Collect();
             var timer = Stopwatch.StartNew();
 

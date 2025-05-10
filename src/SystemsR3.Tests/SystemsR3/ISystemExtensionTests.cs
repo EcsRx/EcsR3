@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using NSubstitute;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
-using NSubstitute;
 using Xunit;
 
-namespace SystemsR3.Tests.SystemsRx
+namespace SystemsR3.Tests.SystemsR3
 {
     public class ISystemExtensionTests
     {

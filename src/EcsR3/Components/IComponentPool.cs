@@ -40,15 +40,10 @@ namespace EcsR3.Components
         Observable<bool> OnPoolExtending { get; }
         
         /// <summary>
-        /// Automatically expand the pool
-        /// </summary>
-        void Expand();
-        
-        /// <summary>
-        /// Manually expand the pool
+        /// Expand the pool automatically or by a given amount
         /// </summary>
         /// <param name="amountToAdd"></param>
-        void Expand(int amountToAdd);
+        void Expand(int? amountToAdd = null);
         
         /// <summary>
         /// Set a component to a specific index
@@ -68,5 +63,10 @@ namespace EcsR3.Components
         /// </summary>
         /// <param name="index"></param>
         void Release(int index);
+
+        /// <summary>
+        /// Used to manually clear the pool of all contents
+        /// </summary>
+        void Clear();
     }
 }

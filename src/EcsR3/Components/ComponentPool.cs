@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using R3;
 using SystemsR3.Pools;
+using SystemsR3.Pools.Config;
 
 namespace EcsR3.Components
 {
@@ -10,26 +11,25 @@ namespace EcsR3.Components
     {
         public bool IsStructType { get; }
         
+        public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
-        public T[] Components { get; private set; }
+        public T[] Components => InternalComponents;
+        
+        public T[] InternalComponents;
         
         public int Count { get; private set; }
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
-        public int ExpansionSize { get; private set; }
         
         public Observable<bool> OnPoolExtending => _onPoolExtending;
         private readonly Subject<bool> _onPoolExtending;
         private readonly object _lock = new object();
 
-        public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)
-        { }
-        
-        public ComponentPool(int expansionSize, int initialSize)
+        public ComponentPool(PoolConfig poolConfig = null)
         {
-            Count = initialSize;
-            ExpansionSize = expansionSize;
-            IndexPool = new IndexPool(expansionSize, initialSize);
-            Components = new T[initialSize];
+            PoolConfig = poolConfig ?? new PoolConfig();
+            Count = PoolConfig.InitialSize;
+            IndexPool = new IndexPool(PoolConfig);
+            InternalComponents = new T[PoolConfig.InitialSize];
             _onPoolExtending = new Subject<bool>();
             IsStructType = typeof(T).IsValueType;
         }
@@ -48,10 +48,10 @@ namespace EcsR3.Components
         {
             lock (_lock)
             {
-                var instance = Components[index];
+                var instance = InternalComponents[index];
             
                 if(!IsStructType)
-                { Components[index] = default; }
+                { InternalComponents[index] = default; }
             
                 if(instance is IDisposable disposable)
                 { disposable.Dispose(); }
@@ -60,31 +60,41 @@ namespace EcsR3.Components
             }
         }
 
+        public void Clear()
+        {
+            IndexPool.Clear();
+            Count = PoolConfig.InitialSize;
+
+            for (var i = 0; i < InternalComponents.Length; i++)
+            {
+                if(InternalComponents[i] is IDisposable disposable)
+                { disposable.Dispose(); }
+            }
+            
+            InternalComponents = new T[PoolConfig.InitialSize];
+        }
+
         public void Set(int index, object value)
         {
             lock (_lock)
-            { Components.SetValue(value, index); }
+            { InternalComponents.SetValue(value, index); }
         }
-
-        public void Expand()
-        { Expand(ExpansionSize); }
         
-        public void Expand(int amountToAdd)
+        public void Expand(int? amountToAdd = null)
         {
+            var actualExpansionAmount = amountToAdd ?? PoolConfig.ExpansionSize;
             lock (_lock)
             {
-                var newCount = Components.Length + amountToAdd;
-                var newEntries = new T[newCount];            
-                Components.CopyTo(newEntries, 0);
+                var newCount = InternalComponents.Length + actualExpansionAmount;
+                Array.Resize(ref InternalComponents, newCount);
                 IndexPool.Expand(newCount-1);
-                Components = newEntries;
                 Count = newCount;
             }
             
             _onPoolExtending.OnNext(true);
         }
 
-        public IEnumerator GetEnumerator() => Components.GetEnumerator();
+        public IEnumerator GetEnumerator() => InternalComponents.GetEnumerator();
 
         public void Dispose()
         { _onPoolExtending?.Dispose(); }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities;
+using EcsR3.Groups;
 using EcsR3.Groups.Observable;
 using EcsR3.Lookups;
 using R3;
@@ -15,7 +16,7 @@ namespace EcsR3.Computeds.Groups
         public readonly EntityLookup CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
-        public ObservableGroupToken Token => InternalObservableGroup.Token;
+        public LookupGroup Group => InternalObservableGroup.Group;
         public Observable<IEntity> OnEntityAdded => _onEntityAdded;
         public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;

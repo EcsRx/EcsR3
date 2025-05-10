@@ -1,4 +1,4 @@
-namespace SystemsR3.Tests.Ninject.TestCode
+namespace SystemsR3.Tests.TestCode
 {
     public interface ITestInterface
     {

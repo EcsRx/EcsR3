@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using EcsR3.Collections.Entity;
 using EcsR3.Components;
-using EcsR3.Entities;
-using EcsR3.Examples.ExampleApps.Performance.Components.Specific;
+using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using SystemsR3.Extensions;
 
 namespace EcsR3.Benchmarks.Benchmarks
 {
@@ -27,11 +22,9 @@ namespace EcsR3.Benchmarks.Benchmarks
         [Params(10, 20, 50)]
         public int ComponentCount;
 
-        private IEntityCollection _collection;
-
         public ObservableGroupsAddAndRemoveBenchmark() : base()
         {
-            var componentNamespace = typeof(Component1).Namespace;
+            var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
@@ -40,7 +33,6 @@ namespace EcsR3.Benchmarks.Benchmarks
         public override void Setup()
         {
             var group = new Group(_availableComponentTypes.Take(ComponentCount).ToArray());
-            _collection = EntityDatabase.GetCollection();
             ObservableGroupManager.GetObservableGroup(group);
             
             _availableComponents = _availableComponentTypes
@@ -51,7 +43,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            _collection.RemoveAllEntities();
+            EntityCollection.RemoveAllEntities();
         }
 
         [Benchmark]
@@ -59,7 +51,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = _collection.CreateEntity();
+                var entity = EntityCollection.CreateEntity();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveAllComponents();
             }
