@@ -44,5 +44,12 @@ namespace EcsR3.Extensions
             var excludedComponents = typeLookup.GetComponentTypeIds(group.ExcludedComponents);
             return new LookupGroup(requiredComponents, excludedComponents);
         }
+        
+        public static IGroup GetGroupFor(this IComponentTypeLookup typeLookup, LookupGroup group)
+        {
+            var requiredComponents = typeLookup.GetComponentTypes(group.RequiredComponents);
+            var excludedComponents = typeLookup.GetComponentTypes(group.ExcludedComponents);
+            return new Group(requiredComponents, excludedComponents);
+        }
     }
 }
