@@ -8,11 +8,12 @@ using EcsR3.Components.Lookups;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Groups.Observable;
+using EcsR3.Systems;
 using R3;
 
 namespace EcsR3.Plugins.Batching.Systems
 {
-    public abstract class ManualBatchedSystem : IManualSystem 
+    public abstract class ManualBatchedSystem : IManualSystem, IGroupSystem
     {
         public abstract IGroup Group { get; }
         
