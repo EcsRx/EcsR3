@@ -10,6 +10,8 @@ namespace EcsR3.Components
         where T : IComponent
     {
         public bool IsStructType { get; }
+
+        public Type ComponentType { get; } = typeof(T);
         
         public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }

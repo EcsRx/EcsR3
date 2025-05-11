@@ -30,6 +30,11 @@ namespace EcsR3.Components
         int Count { get; }
         
         /// <summary>
+        /// The type of component this pool contains
+        /// </summary>
+        Type ComponentType { get; }
+        
+        /// <summary>
         /// The amount of indexes remaining in this pool before a resize is needed
         /// </summary>
         int IndexesRemaining { get; }
