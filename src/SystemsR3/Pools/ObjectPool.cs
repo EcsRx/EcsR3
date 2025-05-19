@@ -20,7 +20,7 @@ namespace SystemsR3.Pools
         public ObjectPool(PoolConfig poolConfig = null)
         {
             PoolConfig = poolConfig ?? new PoolConfig(100, 100);
-            IndexPool = new IndexPool(poolConfig);
+            IndexPool = new IndexPool(PoolConfig);
             Objects = new T[PoolConfig.InitialSize];
         }
 
