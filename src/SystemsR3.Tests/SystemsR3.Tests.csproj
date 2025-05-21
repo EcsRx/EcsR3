@@ -25,5 +25,6 @@
     <ProjectReference Include="..\SystemsR3.Infrastructure.Ninject\SystemsR3.Infrastructure.Ninject.csproj" />
     <ProjectReference Include="..\SystemsR3.Infrastructure.MicrosoftDependencyInjection\SystemsR3.Infrastructure.MicrosoftDependencyInjection.csproj" />
     <ProjectReference Include="..\SystemsR3.Infrastructure.DryIoc\SystemsR3.Infrastructure.DryIoc.csproj" />
+    <ProjectReference Include="..\SystemsR3.Plugins.Transforms\SystemsR3.Plugins.Transforms.csproj" />
   </ItemGroup>
 </Project>
