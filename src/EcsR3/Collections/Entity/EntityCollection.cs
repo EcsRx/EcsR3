@@ -12,11 +12,11 @@ namespace EcsR3.Collections.Entity
         
         public readonly Dictionary<int, IEntity> EntityLookup;
 
-        public IEnumerable<IEntity> Value => EntityLookup.Values;
+        public IReadOnlyCollection<IEntity> Value => EntityLookup.Values;
         
         public Observable<IEntity> OnAdded => _onAdded;
         public Observable<IEntity> OnRemoved => _onRemoved;
-        public Observable<IEnumerable<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
         private readonly Subject<IEntity> _onAdded;
         private readonly Subject<IEntity> _onRemoved;

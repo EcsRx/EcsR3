@@ -18,16 +18,5 @@ namespace SystemsR3.Computeds
         /// Event stream for when an element has been removed from this collection
         /// </summary>
         Observable<T> OnRemoved { get; }
-        
-        /// <summary>
-        /// How many elements are within the collection
-        /// </summary>
-        int Count { get; }
-        
-        /// <summary>
-        /// Access an element via its index
-        /// </summary>
-        /// <param name="index"></param>
-        T this[int index] { get; }
     }
 }

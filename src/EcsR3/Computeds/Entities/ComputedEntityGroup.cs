@@ -17,16 +17,18 @@ namespace EcsR3.Computeds.Entities
         public readonly HashSet<int> CachedEntityIds;
         public readonly CompositeDisposable Subscriptions;
 
-        public IEnumerable<IEntity> Value
+        public IReadOnlyCollection<IEntity> Value
         {
             get
             {
                 lock (_lock)
-                { return CachedEntityIds.Select(Collection.Get); }
+                { return EnumerableEntities.ToArray(); }
             }
         }
+        
+        public IEnumerable<IEntity> EnumerableEntities => CachedEntityIds.Select(Collection.Get);
 
-        public Observable<IEnumerable<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
         public Observable<IEntity> OnAdded => _onEntityAdded;
         public Observable<IEntity> OnRemoved => _onEntityRemoved;
@@ -121,7 +123,7 @@ namespace EcsR3.Computeds.Entities
         }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return Value.GetEnumerator(); }
+        { return EnumerableEntities.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }

@@ -7,11 +7,6 @@ namespace EcsR3.Collections.Entity
     public interface IReadOnlyEntityCollection : IComputedCollection<IEntity>
     {
         /// <summary>
-        /// The amount of entities that exist
-        /// </summary>
-        int Count { get; }
-        
-        /// <summary>
         /// Gets the entity from the collection, this will return the IEntity or null
         /// </summary>
         /// <param name="id">The Id of the entity you want to locate</param>

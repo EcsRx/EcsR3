@@ -7,11 +7,11 @@ using R3;
 
 namespace EcsR3.Tests.EcsR3.Computeds.Models
 {
-    public class TestComputedDataFromEntityGroup : ComputedFromEntityGroup<double>
+    public class TestComputedDataDataFromEntityGroup : ComputedDataFromEntityGroup<double>
     {
         public Subject<Unit> ManuallyRefresh = new();
         
-        public TestComputedDataFromEntityGroup(IComputedEntityGroup internalObservableGroup) : base(internalObservableGroup)
+        public TestComputedDataDataFromEntityGroup(IComputedEntityGroup internalObservableGroup) : base(internalObservableGroup)
         {}
 
         protected override Observable<Unit> RefreshWhen()

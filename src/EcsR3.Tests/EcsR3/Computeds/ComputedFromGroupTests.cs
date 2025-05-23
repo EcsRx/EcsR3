@@ -34,7 +34,7 @@ namespace EcsR3.Tests.EcsR3.Computeds
             mockObservableGroup.OnRemoving.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
             
-            var computedGroupData = new TestComputedDataFromEntityGroup(mockObservableGroup);
+            var computedGroupData = new TestComputedDataDataFromEntityGroup(mockObservableGroup);
             Assert.Equal(expectedData, computedGroupData.Value);            
         }
         
@@ -57,7 +57,7 @@ namespace EcsR3.Tests.EcsR3.Computeds
             var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
             mockObservableGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
             
-            var computedGroupData = new TestComputedDataFromEntityGroup(mockObservableGroup);
+            var computedGroupData = new TestComputedDataDataFromEntityGroup(mockObservableGroup);
 
             fakeEntities.Remove(fakeEntity2);
             computedGroupData.ManuallyRefresh.OnNext(Unit.Default);
