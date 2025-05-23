@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using R3;
 
-namespace SystemsR3.Computeds.Collections
+namespace SystemsR3.Computeds
 {
-    public interface IComputedCollection<T> : IComputed<IEnumerable<T>>, IEnumerable<T>
+    public interface IComputedCollection<T> : IComputed<IEnumerable<T>>, IReadOnlyCollection<T>
     {
         /// <summary>
         /// Event stream for when an element has been added to this collection

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Groups;
 
 namespace EcsR3.Collections

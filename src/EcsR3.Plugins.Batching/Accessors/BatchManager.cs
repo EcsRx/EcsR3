@@ -3,9 +3,8 @@ using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
 using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Plugins.Batching.Accessors

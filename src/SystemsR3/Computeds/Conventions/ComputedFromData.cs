@@ -1,33 +1,17 @@
 ﻿using R3;
-using SystemsR3.Extensions;
 
 namespace SystemsR3.Computeds.Conventions
 {
-    public abstract class ComputedFromData<TOutput,TInput> : IComputed<TOutput>
+    public abstract class ComputedFromData<TOutput,TInput> : ComputedFrom<TOutput, TInput>
     {
-        public TOutput ComputedData;
-        public TInput DataSource { get; }
-
-        public TOutput Value => ComputedData;
-        public Observable<TOutput> OnChanged => OnDataChanged;
-        
-        protected readonly CompositeDisposable Subscriptions;
-        protected readonly Subject<TOutput> OnDataChanged;
-        protected readonly object Lock = new object();
-        
-        
-        public ComputedFromData(TInput dataSource)
+        public ComputedFromData(TInput dataSource) : base(dataSource)
         {
-            DataSource = dataSource;
-            Subscriptions = new CompositeDisposable();
-            OnDataChanged = new Subject<TOutput>();
-
             Initialize();
         }
 
         public void Initialize()
         {
-            ListenForChanges();
+            RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
             RefreshData();
         }
         
@@ -44,22 +28,21 @@ namespace SystemsR3.Computeds.Conventions
             OnDataChanged.OnNext(ComputedData);
         }
         
-
         /// <summary>
-        /// Start listening for changes
+        /// The method to indicate when the listings should be updated
         /// </summary>
-        public abstract void ListenForChanges();
+        /// <remarks>
+        /// If there is no checking required outside of adding/removing this can
+        /// return an empty observable, but common usages would be to refresh every update.
+        /// The bool is throw away, but is a workaround for not having a Unit class
+        /// </remarks>
+        /// <returns>An observable trigger that should trigger when the group should refresh</returns>
+        protected abstract Observable<Unit> RefreshWhen();
         
         /// <summary>
         /// The method to update the ComputedData from the DataSource
         /// </summary>
         /// <returns>The transformed data</returns>
-        public abstract void UpdateComputedData();
-
-        public virtual void Dispose()
-        {
-            Subscriptions.DisposeAll();
-            OnDataChanged.Dispose();
-        }
+        protected abstract void UpdateComputedData();
     }
 }

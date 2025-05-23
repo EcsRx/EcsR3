@@ -5,10 +5,9 @@ using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Systems;
 using R3;
 

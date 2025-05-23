@@ -1,4 +1,4 @@
-﻿namespace EcsR3.Groups.Observable.Tracking.Trackers
+﻿namespace EcsR3.Groups.Tracking.Trackers
 {
     /// <summary>
     /// Represents the required changes needed to match a group

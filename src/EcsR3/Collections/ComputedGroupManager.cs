@@ -2,9 +2,8 @@
 using System.Linq;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Lookups;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Extensions;
 using SystemsR3.Extensions;
 

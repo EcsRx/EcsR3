@@ -1,11 +1,10 @@
 using System;
 using System.Threading;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Systems;
 using R3;
 

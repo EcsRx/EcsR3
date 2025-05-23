@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsR3.Computeds.Groups;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;

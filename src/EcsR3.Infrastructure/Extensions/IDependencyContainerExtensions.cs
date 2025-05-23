@@ -2,9 +2,8 @@ using System;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 
 namespace EcsR3.Infrastructure.Extensions
 {

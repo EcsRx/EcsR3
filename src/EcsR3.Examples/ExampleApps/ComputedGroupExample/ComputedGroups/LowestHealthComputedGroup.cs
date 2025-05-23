@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Extensions;
-using EcsR3.Groups.Observable;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups

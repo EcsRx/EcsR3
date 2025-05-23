@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable.Tracking.Trackers;
+using EcsR3.Groups.Tracking.Trackers;
 
-namespace EcsR3.Groups.Observable.Tracking
+namespace EcsR3.Groups.Tracking
 {
     public class GroupTrackerFactory : IGroupTrackerFactory
     {

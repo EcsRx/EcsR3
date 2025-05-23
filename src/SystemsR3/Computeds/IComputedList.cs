@@ -1,18 +1,28 @@
-﻿using R3;
-using SystemsR3.Computeds.Collections.Events;
+﻿using System.Collections.Generic;
+using R3;
 
-namespace SystemsR3.Computeds.Collections
+namespace SystemsR3.Computeds
 {
     /// <summary>
     /// Represents a computed list of elements
     /// </summary>
     /// <typeparam name="T">The data to contain</typeparam>
-    public interface IComputedList<T> : IComputedCollection<T>
+    public interface IComputedList<T> : IComputed<IReadOnlyList<T>>, IReadOnlyList<T>
     {
         /// <summary>
-        /// Event stream for when an element has been changes in this list
+        /// Event stream for when an element has been added to this collection
         /// </summary>
-        Observable<CollectionElementChangedEvent<T>> OnValueChanged { get; }
+        Observable<T> OnAdded { get; }
+        
+        /// <summary>
+        /// Event stream for when an element has been removed from this collection
+        /// </summary>
+        Observable<T> OnRemoved { get; }
+        
+        /// <summary>
+        /// How many elements are within the collection
+        /// </summary>
+        int Count { get; }
         
         /// <summary>
         /// Access an element via its index

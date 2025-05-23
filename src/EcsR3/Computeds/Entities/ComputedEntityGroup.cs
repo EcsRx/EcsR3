@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections.Entity;
-using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
+using EcsR3.Groups;
 using EcsR3.Groups.Tracking.Trackers;
 using R3;
 using SystemsR3.Extensions;
 
-namespace EcsR3.Groups.Computeds
+namespace EcsR3.Computeds.Entities
 {
     public class ComputedEntityGroup : IComputedEntityGroup
     {

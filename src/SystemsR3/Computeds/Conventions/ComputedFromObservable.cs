@@ -3,29 +3,12 @@ using SystemsR3.Extensions;
 
 namespace SystemsR3.Computeds.Conventions
 {
-    public abstract class ComputedFromObservable<TOutput, TInput> : IComputed<TOutput>
+    public abstract class ComputedFromObservable<TOutput, TInput> : ComputedFrom<TOutput, Observable<TInput>>
     {
-        public TOutput ComputedData;
-        public Observable<TInput> DataSource { get; }
-
-        public TOutput Value => ComputedData;
-        public Observable<TOutput> OnChanged => OnDataChanged;
+        public ComputedFromObservable(Observable<TInput> dataSource) : base(dataSource)
+        { DataSource.Subscribe(RefreshData).AddTo(Subscriptions); }
         
-        protected readonly CompositeDisposable Subscriptions;
-        protected readonly Subject<TOutput> OnDataChanged;
-        protected readonly object Lock = new object();
-        
-        
-        public ComputedFromObservable(Observable<TInput> dataSource)
-        {
-            DataSource = dataSource;
-            Subscriptions = new CompositeDisposable();
-            OnDataChanged = new Subject<TOutput>();
-
-            DataSource.Subscribe(RefreshData).AddTo(Subscriptions);
-        }
-        
-        public void RefreshData(TInput data)
+        protected void RefreshData(TInput data)
         {
             lock (Lock)
             {
@@ -42,12 +25,6 @@ namespace SystemsR3.Computeds.Conventions
         /// The method to update the ComputedData from the DataSource
         /// </summary>
         /// <returns>The transformed data</returns>
-        public abstract void UpdateComputedData(TInput data);
-
-        public virtual void Dispose()
-        {
-            Subscriptions.DisposeAll();
-            OnDataChanged.Dispose();
-        }
+        protected abstract void UpdateComputedData(TInput data);
     }
 }

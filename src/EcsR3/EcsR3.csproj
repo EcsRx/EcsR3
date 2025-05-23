@@ -22,4 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SystemsR3\SystemsR3.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Computeds\Collections\" />
+    <Folder Include="Computeds\Groups\" />
+  </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
-﻿using EcsR3.Computeds.Groups;
+﻿using EcsR3.Groups;
 using SystemsR3.Factories;
 
-namespace EcsR3.Groups.Computeds
+namespace EcsR3.Computeds.Entities
 {
     public interface IComputedEntityGroupFactory : IFactory<LookupGroup, IComputedEntityGroup> {}
 }

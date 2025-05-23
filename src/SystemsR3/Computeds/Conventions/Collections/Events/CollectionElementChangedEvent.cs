@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SystemsR3.Computeds.Collections.Events
+namespace SystemsR3.Computeds.Conventions.Collections.Events
 {
     public struct CollectionElementChangedEvent<T> : IEquatable<CollectionElementChangedEvent<T>>
     {

@@ -1,5 +1,4 @@
-using EcsR3.Computeds.Groups;
-using EcsR3.Groups.Observable;
+using EcsR3.Computeds.Entities;
 
 namespace EcsR3.Plugins.Batching.Accessors
 {

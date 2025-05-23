@@ -1,6 +1,6 @@
 ﻿using System;
 using EcsR3.Entities;
-using SystemsR3.Computeds.Collections;
+using SystemsR3.Computeds;
 
 namespace EcsR3.Collections.Entity
 {

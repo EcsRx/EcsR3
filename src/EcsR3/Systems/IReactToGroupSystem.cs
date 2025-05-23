@@ -1,6 +1,5 @@
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable;
 using R3;
 
 namespace EcsR3.Systems

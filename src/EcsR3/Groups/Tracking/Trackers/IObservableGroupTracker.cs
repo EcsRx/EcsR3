@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using R3;
 
-namespace EcsR3.Groups.Observable.Tracking.Trackers
+namespace EcsR3.Groups.Tracking.Trackers
 {
     /// <summary>
     /// Tracks changes to a given group and provides events for when entities join/leave the group

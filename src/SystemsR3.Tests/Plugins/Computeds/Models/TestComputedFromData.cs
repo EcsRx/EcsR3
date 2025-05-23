@@ -1,5 +1,5 @@
 using R3;
-using SystemsR3.Computeds.Data;
+using SystemsR3.Computeds.Conventions;
 
 namespace SystemsR3.Tests.Plugins.Computeds.Models
 {
@@ -10,10 +10,10 @@ namespace SystemsR3.Tests.Plugins.Computeds.Models
         public TestComputedFromData(DummyData data) : base(data)
         {}
 
-        public override Observable<Unit> RefreshWhen()
+        protected override Observable<Unit> RefreshWhen()
         { return ManuallyRefresh; }
 
-        public override int Transform(DummyData data)
-        { return data.Data; }
+        protected override void UpdateComputedData()
+        {}
     }
 }

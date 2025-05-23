@@ -6,13 +6,12 @@ using SystemsR3.Attributes;
 using SystemsR3.Systems.Conventional;
 using SystemsR3.Types;
 using EcsR3.Collections;
-using EcsR3.Computeds.Groups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Events;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Pipelines;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

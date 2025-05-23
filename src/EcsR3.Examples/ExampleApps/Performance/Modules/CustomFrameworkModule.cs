@@ -7,11 +7,11 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
-using EcsR3.Groups.Observable;
-using EcsR3.Groups.Observable.Tracking;
+using EcsR3.Groups.Tracking;
 using EcsR3.Systems.Handlers;
 
 namespace EcsR3.Examples.ExampleApps.Performance.Modules

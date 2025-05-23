@@ -3,7 +3,7 @@ using System.Linq;
 using EcsR3.Entities.Routing;
 using R3;
 
-namespace EcsR3.Groups.Observable.Tracking.Trackers
+namespace EcsR3.Groups.Tracking.Trackers
 {
     public class EntityRouterObservableGroupTracker : IObservableGroupTracker
     {

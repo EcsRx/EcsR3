@@ -14,7 +14,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = expectedData};            
             
             var computedData = new TestComputedFromData(data);
-            Assert.Equal(expectedData, computedData.CachedData);
+            Assert.Equal(expectedData, computedData.ComputedData);
         }
         
         [Fact]
