@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EcsR3.Entities;
 using R3;
+using SystemsR3.Computeds;
 
 namespace EcsR3.Groups.Observable
 {
@@ -16,7 +17,7 @@ namespace EcsR3.Groups.Observable
     /// more performant to use this rather than querying a collection directly.
     /// This can change based upon implementations though.
     /// </remarks>
-    public interface IObservableGroup : IReadOnlyList<IEntity>, IDisposable
+    public interface IObservableGroup : IReadOnlyList<IEntity>, IComputed<IReadOnlyList<IEntity>>, IDisposable
     {
         /// <summary>
         /// The underlying group

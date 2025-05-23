@@ -11,7 +11,7 @@ using SystemsR3.Extensions;
 
 namespace EcsR3.Computeds.Groups
 {
-    public abstract class ComputedGroup : IObservableGroup, IDisposable
+    public abstract class ComputedGroup : IComputedGroup
     {
         public readonly EntityLookup CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
@@ -24,6 +24,10 @@ namespace EcsR3.Computeds.Groups
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
         private readonly Subject<IEntity> _onEntityRemoving;
+
+
+        public IReadOnlyList<IEntity> Value => CachedEntities;
+        public Observable<IReadOnlyList<IEntity>> OnChanged => Observable.Merge(OnEntityAdded, _onEntityRemoved).Select(x => Value);
         
         private readonly object _lock = new object();
         

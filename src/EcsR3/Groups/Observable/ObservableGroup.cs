@@ -17,6 +17,9 @@ namespace EcsR3.Groups.Observable
         public readonly EntityLookup CachedEntities;
         public readonly CompositeDisposable Subscriptions;
 
+        public IReadOnlyList<IEntity> Value => CachedEntities;
+        public Observable<IReadOnlyList<IEntity>> OnChanged => R3.Observable.Merge(OnEntityAdded, OnEntityRemoved).Select(x => Value);
+        
         public Observable<IEntity> OnEntityAdded => _onEntityAdded;
         public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
@@ -104,7 +107,10 @@ namespace EcsR3.Groups.Observable
         }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return CachedEntities.GetEnumerator(); }
+        {
+            lock(_lock)
+            { return CachedEntities.GetEnumerator(); }
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
