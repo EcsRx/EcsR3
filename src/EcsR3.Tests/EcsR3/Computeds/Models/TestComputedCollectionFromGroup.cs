@@ -6,8 +6,7 @@ using EcsR3.Tests.Models;
 using R3;
 
 namespace EcsR3.Tests.EcsR3.Computeds.Models
-{
-    /*
+{/*
     public class TestComputedCollectionFromGroup : ComputedCollectionFromGroup<int>
     {
         public Subject<bool> ManuallyRefresh = new Subject<bool>();
