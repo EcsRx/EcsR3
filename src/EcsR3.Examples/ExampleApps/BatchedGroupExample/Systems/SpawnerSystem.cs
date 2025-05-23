@@ -21,7 +21,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         { _sub = Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => Spawn()); }
 
         public void Spawn()
-        { EntityCollection.CreateEntity(_blueprint); }
+        { EntityCollection.Create(_blueprint); }
 
         public void StopSystem()
         { _sub.Dispose(); }

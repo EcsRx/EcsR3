@@ -11,7 +11,7 @@ namespace EcsR3.Examples.ExampleApps.HelloWorldExample
 
         protected override void ApplicationStarted()
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
 
             var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
             entity.AddComponents(canTalkComponent);

@@ -53,7 +53,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
             var manager = (ComputedGroupManager as ComputedGroupManager);
             var allObservableGroups = manager._computedGroups;
             allObservableGroups.Values.DisposeAll();
@@ -65,7 +65,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveAllComponents();
             }

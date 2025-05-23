@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using SystemsR3.Threading;
@@ -20,7 +21,7 @@ namespace EcsR3.Examples.ExampleApps.Playground.StructBased
             base.SetupEntities();
             
             var batchBuilder = _batchBuilderFactory.Create<StructComponent, StructComponent2>();
-            _componentBatch = batchBuilder.Build(EntityCollection);
+            _componentBatch = batchBuilder.Build(EntityCollection.ToArray());
         }
 
         protected override string Description { get; } = "Uses auto batching to group components mixed with multithreading";

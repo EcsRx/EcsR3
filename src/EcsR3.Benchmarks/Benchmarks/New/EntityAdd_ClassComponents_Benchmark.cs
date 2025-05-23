@@ -30,7 +30,7 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         [IterationCleanup]
         public override void Cleanup()
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
             GetPoolFor<ClassComponent1>().Clear();
             if(ComponentCount >= 2) { GetPoolFor<ClassComponent2>().Clear(); }
             if(ComponentCount == 3) { GetPoolFor<ClassComponent3>().Clear(); }
@@ -41,7 +41,7 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 switch (ComponentCount)
                 {
                     case 1: entity.AddComponents(new ClassComponent1()); break;
@@ -56,7 +56,7 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponent<ClassComponent1>();
                 if(ComponentCount >= 2) { entity.AddComponent<ClassComponent2>(); }
                 if(ComponentCount >= 3) { entity.AddComponent<ClassComponent3>(); }

@@ -33,7 +33,7 @@ namespace EcsR3.Systems.Handlers
         }
 
         // TODO: This is REALLY bad but currently no other way around the dynamic invocation lookup stuff
-        public IEnumerable<Func<IEntity, IDisposable>> CreateEntityProcessorFunctions(ISystem system)
+        public IEnumerable<Func<IEntity, IDisposable>> CreateProcessorFunctions(ISystem system)
         {
             var genericMethods = system.GetGenericDataTypes(typeof(IReactToDataSystem<>))
                 .Select(x => _processEntityMethod.MakeGenericMethod(x));
@@ -64,7 +64,7 @@ namespace EcsR3.Systems.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var processEntityFunctions = CreateEntityProcessorFunctions(system).ToArray();
+            var processEntityFunctions = CreateProcessorFunctions(system).ToArray();
 
             var entityChangeSubscriptions = new CompositeDisposable();
             var entitySubscriptions = new Dictionary<int, IDisposable>();

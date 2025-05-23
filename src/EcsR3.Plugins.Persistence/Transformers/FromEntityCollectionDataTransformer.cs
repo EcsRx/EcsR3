@@ -25,7 +25,7 @@ namespace EcsR3.Plugins.Persistence.Transformers
                 .Select(EntityDataTransformer.Transform)
                 .Cast<IEntity>();
             
-            entities.ForEachRun(collection.AddEntity);
+            entities.ForEachRun(collection.Add);
             return collection;
         }
     }

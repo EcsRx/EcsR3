@@ -40,7 +40,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(availableComponents);
                 entity.RemoveAllComponents();
             }

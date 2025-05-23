@@ -4,7 +4,7 @@ Entities are basically things that exist in your world with components on them, 
 
 ## Creating entities
 
-So entities are created via entity collections so you don't need to do much here other than get the collection you wish to create your entity in and call the `CreateEntity` method which will return you a method to play with.
+So entities are created via entity collections so you don't need to do much here other than get the collection you wish to create your entity in and call the `Create` method which will return you a method to play with.
 
 ## Accessing entities
 

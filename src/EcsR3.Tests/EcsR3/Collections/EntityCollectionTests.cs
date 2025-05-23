@@ -20,7 +20,7 @@ namespace EcsR3.Tests.EcsRx.Collections
             var wasCalled = false;
             entityCollection.EntityAdded.Subscribe(x => wasCalled = true);
             
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             
             Assert.Contains(mockEntity, entityCollection.EntityLookup);
             Assert.Equal(mockEntity, entity);
@@ -41,7 +41,7 @@ namespace EcsR3.Tests.EcsRx.Collections
             var wasCalled = false;
             entityCollection.EntityRemoved.Subscribe(x => wasCalled = true);
             
-            entityCollection.CreateEntity();
+            entityCollection.Create();
             entityCollection.RemoveEntity(mockEntity.Id);
 
             Assert.True(wasCalled);

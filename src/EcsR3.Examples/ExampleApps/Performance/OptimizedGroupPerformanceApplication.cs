@@ -65,14 +65,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponentTypeIds);
             }

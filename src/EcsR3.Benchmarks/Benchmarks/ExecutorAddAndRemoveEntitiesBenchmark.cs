@@ -69,7 +69,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
         }
 
         [Benchmark]
@@ -77,7 +77,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveAllComponents();
             }

@@ -18,7 +18,7 @@ namespace EcsR3.Extensions
                 .ToArray();
             
             for(var i=0;i<entities.Length;i++)
-            { entityCollection.RemoveEntity(entities[i].Id); }
+            { entityCollection.Remove(entities[i].Id); }
         }
 
         public static void RemoveEntitiesContaining(this IEntityCollection entityCollection, params Type[] components)
@@ -28,40 +28,40 @@ namespace EcsR3.Extensions
                 .ToArray();
 
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i].Id); }
+            { entityCollection.Remove(entities[i].Id); }
         }
         
         public static void RemoveEntities(this IEntityCollection entityCollection, Func<IEntity, bool> predicate)
         {
             var entities = entityCollection.Where(predicate).ToArray();
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i].Id); }
+            { entityCollection.Remove(entities[i].Id); }
         }
 
         public static void RemoveEntities(this IEntityCollection entityCollection, params IEntity[] entities)
         {
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i].Id); }
+            { entityCollection.Remove(entities[i].Id); }
         }
 
         public static void RemoveEntities(this IEntityCollection entityCollection, IEnumerable<IEntity> entities)
         {
             foreach (var entity in entities)
-            { entityCollection.RemoveEntity(entity.Id); }
+            { entityCollection.Remove(entity.Id); }
         }
 
         public static IEnumerable<IEntity> Query(this IEntityCollection entityCollection, IEntityCollectionQuery query)
         { return query.Execute(entityCollection); }
 
-        public static IEntity CreateEntity(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
-        { return CreateEntity(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
+        public static IEntity Create(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
+        { return Create(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
         
-        public static IEntity CreateEntity<T>(this IEntityCollection entityCollection) where T : IBlueprint, new()
-        { return CreateEntity(entityCollection, new T()); }
+        public static IEntity Create<T>(this IEntityCollection entityCollection) where T : IBlueprint, new()
+        { return Create(entityCollection, new T()); }
 
-        public static IEntity CreateEntity(this IEntityCollection entityCollection, IEnumerable<IBlueprint> blueprints)
+        public static IEntity Create(this IEntityCollection entityCollection, IEnumerable<IBlueprint> blueprints)
         {
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.ApplyBlueprints(blueprints);
             return entity;
         }

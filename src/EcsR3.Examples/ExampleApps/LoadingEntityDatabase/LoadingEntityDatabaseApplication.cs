@@ -68,7 +68,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase
                 
                 var keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Enter)
-                { EntityCollection.CreateEntity(randomBlueprint); }
+                { EntityCollection.Create(randomBlueprint); }
                 else if (keyPressed.Key == ConsoleKey.Spacebar)
                 { _quit = true; }
             }

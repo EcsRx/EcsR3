@@ -22,7 +22,7 @@ namespace EcsR3.Groups.Observable
             get
             {
                 lock (_lock)
-                { return CachedEntityIds.Select(Collection.GetEntity); }
+                { return CachedEntityIds.Select(Collection.Get); }
             }
         }
 
@@ -72,18 +72,18 @@ namespace EcsR3.Groups.Observable
         public void OnEntityJoinedGroup(int entityId)
         {
             lock (_lock) { CachedEntityIds.Add(entityId); }
-            _onEntityAdded.OnNext(Collection.GetEntity(entityId));
+            _onEntityAdded.OnNext(Collection.Get(entityId));
         }
         
         public void OnEntityLeavingGroup(int entityId)
         {
-            var entity = Collection.GetEntity(entityId);
+            var entity = Collection.Get(entityId);
             _onEntityRemoving.OnNext(entity);
         }
         
         public void OnEntityLeftGroup(int entityId)
         {
-            var entity = Collection.GetEntity(entityId);
+            var entity = Collection.Get(entityId);
             lock (_lock) { CachedEntityIds.Remove(entityId); }
             _onEntityRemoved.OnNext(entity);
         }
@@ -97,7 +97,7 @@ namespace EcsR3.Groups.Observable
         public IEntity Get(int id)
         {
             lock (_lock)
-            { return CachedEntityIds.TryGetValue(id, out var entityId) ? Collection.GetEntity(entityId) : null; }
+            { return CachedEntityIds.TryGetValue(id, out var entityId) ? Collection.Get(entityId) : null; }
         }
 
         public void Dispose()

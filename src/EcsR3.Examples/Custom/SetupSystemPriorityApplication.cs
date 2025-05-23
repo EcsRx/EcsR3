@@ -11,7 +11,7 @@ namespace EcsR3.Examples.Custom
 
         protected override void ApplicationStarted()
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
             
             entity.AddComponents(new FirstComponent());
 

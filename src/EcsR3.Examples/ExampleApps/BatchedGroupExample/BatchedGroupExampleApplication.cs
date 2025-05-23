@@ -22,7 +22,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
             var blueprint = new MoveableBlueprint();
             
             for (var i = 0; i < _entityCount; i++)
-            { EntityCollection.CreateEntity(blueprint); }
+            { EntityCollection.Create(blueprint); }
 
             HandleInput();
         }
