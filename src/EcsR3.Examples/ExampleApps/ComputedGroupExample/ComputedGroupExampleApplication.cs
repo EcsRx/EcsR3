@@ -3,6 +3,7 @@ using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Blueprints;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Modules;
+using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.ComputedGroupExample
 {

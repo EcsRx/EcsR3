@@ -49,10 +49,7 @@ namespace EcsR3.Extensions
             foreach (var entity in entities)
             { entityCollection.Remove(entity.Id); }
         }
-
-        public static IEnumerable<IEntity> Query(this IEntityCollection entityCollection, IEntityCollectionQuery query)
-        { return query.Execute(entityCollection); }
-
+        
         public static IEntity Create(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
         { return Create(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
         
@@ -64,6 +61,23 @@ namespace EcsR3.Extensions
             var entity = entityCollection.Create();
             entity.ApplyBlueprints(blueprints);
             return entity;
+        }
+        
+        public static IReadOnlyList<IEntity> CreateMany(this IEntityCollection entityCollection, int count, params IBlueprint[] blueprints)
+        { return CreateMany(entityCollection, count, (IEnumerable<IBlueprint>)blueprints); }
+        
+        public static IReadOnlyList<IEntity> CreateMany<T>(this IEntityCollection entityCollection, int count) where T : IBlueprint, new()
+        { return CreateMany(entityCollection, count, new T()); }
+        
+        public static IReadOnlyList<IEntity> CreateMany(this IEntityCollection entityCollection, int count, IEnumerable<IBlueprint> blueprints)
+        {
+            var entities = new IEntity[count];
+            for (var i = 0; i < count; i++)
+            {
+                var entity = entityCollection.Create();
+                entity.ApplyBlueprints(blueprints);
+            }
+            return entities;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace EcsR3.Collections.Entity
         /// <param name="blueprint">Optional blueprint to use for the entity (defaults to null)</param>
         /// <param name="id">Id to use for the entity (defaults to null, meaning it'll automatically get the next available id)</param>
         /// <returns></returns>
-        IEntity Create(IBlueprint blueprint = null, int? id = null);
+        IEntity Create(int? id = null);
         
         /// <summary>
         /// This will add an existing entity into the group, it is mainly used for pre-made

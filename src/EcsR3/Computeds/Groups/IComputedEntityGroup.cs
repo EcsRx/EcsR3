@@ -17,7 +17,7 @@ namespace EcsR3.Computeds.Groups
     /// more performant to use this rather than querying a collection directly.
     /// This can change based upon implementations though.
     /// </remarks>
-    public interface IComputedEntityGroup : IComputedCollection<IEntity>, IReadOnlyEntityCollection
+    public interface IComputedEntityGroup : IReadOnlyEntityCollection
     {
         /// <summary>
         /// The underlying group

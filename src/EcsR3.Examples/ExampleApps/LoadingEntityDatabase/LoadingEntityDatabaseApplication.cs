@@ -4,6 +4,7 @@ using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Infrastructure.Ninject;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Blueprints;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Modules;
+using EcsR3.Extensions;
 using EcsR3.Plugins.Persistence;
 using EcsR3.Plugins.Persistence.Extensions;
 

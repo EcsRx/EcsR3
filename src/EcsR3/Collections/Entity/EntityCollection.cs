@@ -33,7 +33,7 @@ namespace EcsR3.Collections.Entity
             _onRemoved = new Subject<IEntity>();
         }
         
-        public IEntity Create(IBlueprint blueprint = null, int? id = null)
+        public IEntity Create(int? id = null)
         {
             IEntity entity;
             lock (_lock)
@@ -46,8 +46,6 @@ namespace EcsR3.Collections.Entity
             }
 
             _onAdded.OnNext(entity);
-            blueprint?.Apply(entity);
-            
             return entity;
         }
 
