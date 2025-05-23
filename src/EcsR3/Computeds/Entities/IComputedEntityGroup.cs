@@ -16,16 +16,8 @@ namespace EcsR3.Computeds.Entities
     /// more performant to use this rather than querying a collection directly.
     /// This can change based upon implementations though.
     /// </remarks>
-    public interface IComputedEntityGroup : IReadOnlyEntityCollection
+    public interface IComputedEntityGroup : IReadOnlyEntityCollection, IComputedGroup
     {
-        /// <summary>
-        /// The underlying group
-        /// </summary>
-        /// <remarks>
-        /// The token contains both components required
-        /// </remarks>
-        LookupGroup Group { get; }
-        
         /// <summary>
         /// Event stream for when an entity is about to be removed from this group
         /// </summary>
