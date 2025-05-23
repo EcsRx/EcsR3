@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;
@@ -16,15 +17,15 @@ namespace EcsR3.Systems.Handlers
     [Priority(10)]
     public class SetupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IComputedGroupManager ComputedGroupManager;
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         private readonly object _lock = new object();
         
-        public SetupSystemHandler(IComputedGroupManager computedGroupManager)
+        public SetupSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
@@ -44,7 +45,7 @@ namespace EcsR3.Systems.Handlers
             }
 
             var castSystem = (ISetupSystem) system;
-            var observableGroup = ComputedGroupManager.GetComputedGroup(castSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
 
             observableGroup.OnAdded
                 .Subscribe(x =>

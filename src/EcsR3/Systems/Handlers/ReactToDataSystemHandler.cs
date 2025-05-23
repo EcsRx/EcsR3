@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;
@@ -17,16 +18,16 @@ namespace EcsR3.Systems.Handlers
     [Priority(3)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
-        public readonly IComputedGroupManager ComputedGroupManager;
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> EntitySubscriptions;
 
         private readonly MethodInfo _processEntityMethod;
         private readonly object _lock = new object();
         
-        public ReactToDataSystemHandler(IComputedGroupManager computedGroupManager)
+        public ReactToDataSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
             EntitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
@@ -76,7 +77,7 @@ namespace EcsR3.Systems.Handlers
             }
 
             var groupSystem = system as IGroupSystem;
-            var observableGroup = ComputedGroupManager.GetComputedGroup(groupSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(groupSystem.Group);
 
             observableGroup.OnAdded
                 .Subscribe(x =>

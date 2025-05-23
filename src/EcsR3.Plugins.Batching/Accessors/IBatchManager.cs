@@ -1,5 +1,6 @@
 using EcsR3.Components;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 
 namespace EcsR3.Plugins.Batching.Accessors
 {

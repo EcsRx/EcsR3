@@ -4,6 +4,7 @@ using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsR3.Plugins.Batching.Factories;
 using EcsR3.Plugins.Batching.Systems;
@@ -13,8 +14,8 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
 {
     public class BatchedMovementSystem : BatchedSystem<PositionComponent, MovementSpeedComponent>
     {
-        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) 
-            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedGroupManager)
+        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) 
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedEntityGroupRegistry)
         {}
 
         protected override Observable<bool> ReactWhen()

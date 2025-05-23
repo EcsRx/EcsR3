@@ -31,7 +31,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
                     .ToArray();
                                 
                 var group = new Group(componentsToTake);
-                ComputedGroupManager.GetComputedGroup(group);
+                ComputedEntityGroupRegistry.GetComputedGroup(group);
             }
             
             var availableComponents = availableComponentTypes

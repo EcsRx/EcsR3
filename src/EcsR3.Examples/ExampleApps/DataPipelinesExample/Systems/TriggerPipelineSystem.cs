@@ -6,7 +6,9 @@ using SystemsR3.Attributes;
 using SystemsR3.Systems.Conventional;
 using SystemsR3.Types;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Events;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Pipelines;
@@ -23,10 +25,10 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
         public PostJsonHttpPipeline SaveJsonPipeline { get; }
         public IComputedEntityGroup PlayerGroup { get; }
         
-        public TriggerPipelineSystem(PostJsonHttpPipeline saveJsonPipeline, IComputedGroupManager computedGroupManager)
+        public TriggerPipelineSystem(PostJsonHttpPipeline saveJsonPipeline, IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
             SaveJsonPipeline = saveJsonPipeline;
-            PlayerGroup = GetPlayerGroup(computedGroupManager);
+            PlayerGroup = GetPlayerGroup(computedEntityGroupRegistry);
         }
 
         public async Task TriggerPipeline(PlayerStateComponent playerState)
@@ -41,8 +43,8 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
         public string MakeDataPretty(string jsonData)
         { return JToken.Parse(jsonData)["data"].ToString(Formatting.Indented); }
 
-        public IComputedEntityGroup GetPlayerGroup(IComputedGroupManager computedGroupManager)
-        { return computedGroupManager.GetComputedGroup(new Group(typeof(PlayerStateComponent))); }
+        public IComputedEntityGroup GetPlayerGroup(IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        { return computedEntityGroupRegistry.GetComputedGroup(new Group(typeof(PlayerStateComponent))); }
         
         public void Process(SavePipelineEvent eventData)
         {

@@ -3,7 +3,9 @@ using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
 using EcsR3.Plugins.Batching.Factories;
 
@@ -16,14 +18,14 @@ namespace EcsR3.Plugins.Batching.Accessors
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IBatchBuilderFactory BatchBuilderFactory { get; }
         public IReferenceBatchBuilderFactory ReferenceBatchBuilderFactory { get; }
-        public IComputedGroupManager ComputedGroupManager { get; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
 
-        public BatchManager(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IReferenceBatchBuilderFactory referenceBatchBuilderFactory, IComputedGroupManager computedGroupManager)
+        public BatchManager(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IReferenceBatchBuilderFactory referenceBatchBuilderFactory, IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             BatchBuilderFactory = batchBuilderFactory;
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             ReferenceBatchBuilderFactory = referenceBatchBuilderFactory;
         }
 

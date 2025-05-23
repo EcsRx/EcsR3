@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;
@@ -17,15 +18,15 @@ namespace EcsR3.Systems.Handlers
     [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IComputedGroupManager ComputedGroupManager;       
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
         private readonly object _lock = new object();
         
-        public ReactToGroupSystemHandler(IComputedGroupManager computedGroupManager, IThreadHandler threadHandler)
+        public ReactToGroupSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry, IThreadHandler threadHandler)
         {
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _threadHandler = threadHandler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
@@ -36,7 +37,7 @@ namespace EcsR3.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var castSystem = (IReactToGroupSystem)system;
-            var observableGroup = ComputedGroupManager.GetComputedGroup(castSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
             var groupPredicate = castSystem.Group as IHasPredicate;
             var isExtendedSystem = system is IReactToGroupExSystem;
             var reactObservable = castSystem.ReactToGroup(observableGroup);

@@ -33,7 +33,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         public override void Setup()
         {
             var group = new Group(_availableComponentTypes.Take(ComponentCount).ToArray());
-            ComputedGroupManager.GetComputedGroup(group);
+            ComputedEntityGroupRegistry.GetComputedGroup(group);
             
             _availableComponents = _availableComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)

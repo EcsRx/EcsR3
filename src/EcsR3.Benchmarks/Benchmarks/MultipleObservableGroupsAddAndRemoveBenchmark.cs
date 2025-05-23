@@ -3,6 +3,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Collections;
 using EcsR3.Components;
+using EcsR3.Computeds;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
@@ -43,7 +44,7 @@ namespace EcsR3.Benchmarks.Benchmarks
                     .ToArray();
                                 
                 var group = new Group(componentsToTake);
-                ComputedGroupManager.GetComputedGroup(group);
+                ComputedEntityGroupRegistry.GetComputedGroup(group);
             }
             
             _availableComponents = _availableComponentTypes
@@ -54,7 +55,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         public override void Cleanup()
         {
             EntityCollection.RemoveAll();
-            var manager = (ComputedGroupManager as ComputedGroupManager);
+            var manager = (ComputedEntityGroupRegistry as ComputedEntityGroupRegistry);
             var allObservableGroups = manager._computedGroups;
             allObservableGroups.Values.DisposeAll();
             manager._computedGroups.Clear();

@@ -8,7 +8,7 @@ using EcsR3.Groups.Tracking.Trackers;
 using R3;
 using SystemsR3.Extensions;
 
-namespace EcsR3.Computeds.Entities
+namespace EcsR3.Computeds.Entities.Registries
 {
     public class ComputedEntityGroup : IComputedEntityGroup
     {

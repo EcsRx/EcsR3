@@ -12,7 +12,9 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
@@ -44,7 +46,7 @@ namespace EcsR3.Tests.Sanity
             _logger = logger;
         }
 
-        private (IComputedGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
+        private (IComputedEntityGroupRegistry, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -65,22 +67,22 @@ namespace EcsR3.Tests.Sanity
             var entityCollection = new EntityCollection(entityFactory);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter);
             var observableGroupFactory = new ComputedEntityGroupFactory(groupTrackerFactory, entityCollection);
-            var observableGroupManager = new ComputedGroupManager(observableGroupFactory, entityCollection, componentLookupType);
+            var observableGroupManager = new ComputedEntityGroupRegistry(observableGroupFactory, entityCollection, componentLookupType);
 
             return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter);
         }
 
-        private SystemExecutor CreateExecutor(IComputedGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
+        private SystemExecutor CreateExecutor(IComputedEntityGroupRegistry observableEntityGroupRegistry, IUpdateScheduler updateScheduler = null)
         {
             var threadHandler = new DefaultThreadHandler();
             updateScheduler ??= new DefaultUpdateScheduler();
-            var reactsToEntityHandler = new ReactToEntitySystemHandler(observableGroupManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
-            var reactsToDataHandler = new ReactToDataSystemHandler(observableGroupManager);
+            var reactsToEntityHandler = new ReactToEntitySystemHandler(observableEntityGroupRegistry);
+            var reactsToGroupHandler = new ReactToGroupSystemHandler(observableEntityGroupRegistry, threadHandler);
+            var reactsToDataHandler = new ReactToDataSystemHandler(observableEntityGroupRegistry);
             var manualSystemHandler = new ManualSystemHandler();
-            var setupHandler = new SetupSystemHandler(observableGroupManager);
-            var teardownHandler = new TeardownSystemHandler(observableGroupManager);
-            var basicEntityHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, updateScheduler);
+            var setupHandler = new SetupSystemHandler(observableEntityGroupRegistry);
+            var teardownHandler = new TeardownSystemHandler(observableEntityGroupRegistry);
+            var basicEntityHandler = new BasicEntitySystemHandler(observableEntityGroupRegistry, threadHandler, updateScheduler);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -149,7 +151,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
 

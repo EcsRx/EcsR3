@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -19,7 +21,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var reactToEntitySystemHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
             
@@ -47,7 +49,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
 
             var fakeGroup = Group.Empty;
@@ -81,7 +83,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
 
             var fakeGroup = Group.Empty;
@@ -121,7 +123,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             
             var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
@@ -145,7 +147,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_destroy_and_dispose_system()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
             var mockDisposable = Substitute.For<IDisposable>();

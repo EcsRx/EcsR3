@@ -5,7 +5,9 @@ using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -17,7 +19,7 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public abstract IGroup Group { get; }
         
-        public IComputedGroupManager ComputedGroupManager { get; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IThreadHandler ThreadHandler { get; }
@@ -26,12 +28,12 @@ namespace EcsR3.Plugins.Batching.Systems
         protected bool ShouldParallelize { get; private set; }
         protected IDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             ThreadHandler = threadHandler;
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
         }
 
         protected abstract void RebuildBatch();
@@ -59,7 +61,7 @@ namespace EcsR3.Plugins.Batching.Systems
 
         public virtual void StartSystem()
         {
-            ObservableGroup = ComputedGroupManager.GetComputedGroup(Group);
+            ObservableGroup = ComputedEntityGroupRegistry.GetComputedGroup(Group);
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();

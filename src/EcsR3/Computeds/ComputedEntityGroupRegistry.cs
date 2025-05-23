@@ -3,13 +3,15 @@ using System.Linq;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities;
-using EcsR3.Groups;
+using EcsR3.Computeds.Entities.Factories;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
+using EcsR3.Groups;
 using SystemsR3.Extensions;
 
-namespace EcsR3.Collections
+namespace EcsR3.Computeds
 {
-    public class ComputedGroupManager : IComputedGroupManager
+    public class ComputedEntityGroupRegistry : IComputedEntityGroupRegistry
     {
         public Dictionary<LookupGroup, IComputedEntityGroup> _computedGroups { get; }
 
@@ -21,7 +23,7 @@ namespace EcsR3.Collections
         
         private readonly object _lock = new object();
         
-        public ComputedGroupManager(IComputedEntityGroupFactory computedEntityGroupFactory, IEntityCollection entityCollection, IComponentTypeLookup componentTypeLookup)
+        public ComputedEntityGroupRegistry(IComputedEntityGroupFactory computedEntityGroupFactory, IEntityCollection entityCollection, IComponentTypeLookup componentTypeLookup)
         {
             ComputedEntityGroupFactory = computedEntityGroupFactory;
             EntityCollection = entityCollection;

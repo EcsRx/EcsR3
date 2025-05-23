@@ -6,6 +6,7 @@ using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
@@ -43,7 +44,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             var observableGroups = new List<IComputedEntityGroup>();
             foreach (var group in groups)
             {
-                var newGroup = ComputedGroupManager.GetComputedGroup(group);
+                var newGroup = ComputedEntityGroupRegistry.GetComputedGroup(group);
                 observableGroups.Add(newGroup);
             }
             

@@ -1,8 +1,8 @@
 ﻿using System;
-using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 
@@ -12,18 +12,15 @@ namespace EcsR3.Computeds.Components
     {
         private readonly int _t1ComponentId;
         
-        public IComponentDatabase ComponentDatabase { get; }
-        
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             
-            if(!DataSource.Group.Matches(_t1ComponentId)) 
+            if(!DataSource.Group.Matches(_t1ComponentId))
             { throw new ArgumentException("ComputedEntityGroup must match component types"); }
             
-            ComponentDatabase = componentDatabase;
             Group = DataSource.Group;
         }
 
@@ -42,11 +39,9 @@ namespace EcsR3.Computeds.Components
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
 
-        public IComponentDatabase ComponentDatabase { get; }
-
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup,
             IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
@@ -57,7 +52,6 @@ namespace EcsR3.Computeds.Components
                 throw new ArgumentException("ComputedEntityGroup must match component types");
             }
 
-            ComponentDatabase = componentDatabase;
             Group = DataSource.Group;
         }
 
@@ -81,12 +75,9 @@ namespace EcsR3.Computeds.Components
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
 
-        public IComponentDatabase ComponentDatabase { get; }
-
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentDatabase componentDatabase,
-            IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
@@ -98,7 +89,6 @@ namespace EcsR3.Computeds.Components
                 throw new ArgumentException("ComputedEntityGroup must match component types");
             }
 
-            ComponentDatabase = componentDatabase;
             Group = DataSource.Group;
         }
 
@@ -124,12 +114,9 @@ namespace EcsR3.Computeds.Components
         private readonly int _t3ComponentId;
         private readonly int _t4ComponentId;
 
-        public IComponentDatabase ComponentDatabase { get; }
-
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentDatabase componentDatabase,
-            IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
@@ -142,7 +129,6 @@ namespace EcsR3.Computeds.Components
                 throw new ArgumentException("ComputedEntityGroup must match component types");
             }
 
-            ComponentDatabase = componentDatabase;
             Group = DataSource.Group;
         }
 

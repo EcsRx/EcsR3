@@ -3,6 +3,7 @@ using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Plugins.Batching.Factories;
@@ -14,8 +15,8 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
     public class ExampleBatchedSystem : ReferenceBatchedSystem<SimpleReadComponent, SimpleWriteComponent>
     {
         public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, 
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager)
-            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedGroupManager)
+            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry)
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedEntityGroupRegistry)
         {}
 
         protected override Observable<bool> ReactWhen()

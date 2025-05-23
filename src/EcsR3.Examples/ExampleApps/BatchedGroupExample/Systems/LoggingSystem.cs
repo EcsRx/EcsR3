@@ -1,5 +1,6 @@
 using System;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Lookups;

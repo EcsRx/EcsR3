@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -17,7 +19,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<ITeardownSystem>();
@@ -42,7 +44,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             mockObservableGroup.OnRemoving.Returns(removeSubject);
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);

@@ -4,6 +4,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Plugins.Batching.Batches;
 using EcsR3.Plugins.Batching.Builders;
 using R3;

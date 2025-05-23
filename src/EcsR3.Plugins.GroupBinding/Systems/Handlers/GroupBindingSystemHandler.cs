@@ -6,7 +6,9 @@ using SystemsR3.Executor.Handlers;
 using SystemsR3.Systems;
 using SystemsR3.Types;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Plugins.GroupBinding.Attributes;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Systems;
@@ -27,10 +29,10 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         private static readonly Type FromGroupAttributeType = typeof(FromGroupAttribute); 
         private static readonly Type FromComponentsAttributeType = typeof(FromComponentsAttribute); 
         
-        public IComputedGroupManager ComputedGroupManager { get; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
 
-        public GroupBindingSystemHandler(IComputedGroupManager computedGroupManager)
-        { ComputedGroupManager = computedGroupManager; }
+        public GroupBindingSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        { ComputedEntityGroupRegistry = computedEntityGroupRegistry; }
 
         public bool CanHandleSystem(ISystem system)
         { return true; }
@@ -76,7 +78,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, property);
             if (group == null) { return; }
 
-            property.SetValue(system, ComputedGroupManager.GetComputedGroup(group));
+            property.SetValue(system, ComputedEntityGroupRegistry.GetComputedGroup(group));
         }
 
         public void ProcessField(FieldInfo field, ISystem system)
@@ -84,7 +86,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, field);
             if (group == null) { return; }
 
-            field.SetValue(system, ComputedGroupManager.GetComputedGroup(group));
+            field.SetValue(system, ComputedEntityGroupRegistry.GetComputedGroup(group));
         }
         
         public void SetupSystem(ISystem system)

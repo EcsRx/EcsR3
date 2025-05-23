@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Extensions;
 using EcsR3.Tests.EcsR3.Computeds.Models;

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -21,7 +23,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var reactToEntitySystemHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, observableScheduler);
@@ -48,7 +50,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var observableSubject = new Subject<ElapsedTime>();
@@ -87,7 +89,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var observableSubject = new Subject<ElapsedTime>();
@@ -112,7 +114,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_destroy_and_dispose_system()
         {
-            var observableGroupManager = Substitute.For<IComputedGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var mockSystem = Substitute.For<IBasicEntitySystem>();

@@ -2,7 +2,9 @@ using System;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
 
 namespace EcsR3.Infrastructure.Extensions
@@ -17,7 +19,7 @@ namespace EcsR3.Infrastructure.Extensions
         /// <returns>The observable group</returns>
         public static IComputedEntityGroup ResolveComputedGroup(this IDependencyResolver resolver, IGroup group)
         {
-            var collectionManager = resolver.Resolve<IComputedGroupManager>();
+            var collectionManager = resolver.Resolve<IComputedEntityGroupRegistry>();
             return collectionManager.GetComputedGroup(group);
         }
         
@@ -29,7 +31,7 @@ namespace EcsR3.Infrastructure.Extensions
         /// <returns></returns>
         public static IComputedEntityGroup ResolveComputedGroup(this IDependencyResolver resolver, params Type[] componentTypes)
         {
-            var collectionManager = resolver.Resolve<IComputedGroupManager>();
+            var collectionManager = resolver.Resolve<IComputedEntityGroupRegistry>();
             var group = new Group(componentTypes);
             return collectionManager.GetComputedGroup(group);
         }

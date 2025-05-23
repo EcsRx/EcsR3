@@ -25,7 +25,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { ComputedGroupManager.GetComputedGroup(group); }
+            { ComputedEntityGroupRegistry.GetComputedGroup(group); }
 
             var firstRun = ProcessEntities(10000);
             var secondRun = ProcessEntities(10000);

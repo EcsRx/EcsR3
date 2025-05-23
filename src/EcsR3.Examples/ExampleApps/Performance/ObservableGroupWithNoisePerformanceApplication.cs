@@ -28,7 +28,7 @@ public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplic
             .ToArray();
         
         var group = new Group(requiredComponents);
-        ComputedGroupManager.GetComputedGroup(group);
+        ComputedEntityGroupRegistry.GetComputedGroup(group);
             
         var availableComponents = availableComponentTypes
             .Select(x => Activator.CreateInstance(x) as IComponent)

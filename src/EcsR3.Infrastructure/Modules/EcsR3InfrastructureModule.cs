@@ -6,7 +6,9 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Groups.Tracking;
@@ -26,7 +28,7 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
-            registry.Bind<IComputedGroupManager, ComputedGroupManager>();
+            registry.Bind<IComputedEntityGroupRegistry, ComputedEntityGroupRegistry>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();

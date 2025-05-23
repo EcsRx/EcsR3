@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
 
-namespace EcsR3.Collections
+namespace EcsR3.Computeds
 {
-    public interface IComputedGroupManager : IDisposable
+    public interface IComputedEntityGroupRegistry : IDisposable
     {
         IEnumerable<IComputedEntityGroup> ComputedGroups { get; }
         IEnumerable<IComputedEntityGroup> GetApplicableGroups(int[] componentTypeIds);

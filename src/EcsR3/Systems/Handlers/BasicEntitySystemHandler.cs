@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using SystemsR3.Attributes;
@@ -18,16 +19,16 @@ namespace EcsR3.Systems.Handlers
     [Priority(6)]
     public class BasicEntitySystemHandler : IConventionalSystemHandler
     {
-        public readonly IComputedGroupManager ComputedGroupManager;
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IUpdateScheduler UpdateScheduler;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
         private readonly object _lock = new object();
         
-        public BasicEntitySystemHandler(IComputedGroupManager computedGroupManager, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
+        public BasicEntitySystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
         {
-            ComputedGroupManager = computedGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _threadHandler = threadHandler;
             UpdateScheduler = updateScheduler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
@@ -40,7 +41,7 @@ namespace EcsR3.Systems.Handlers
         {
             var castSystem = (IBasicEntitySystem)system;
 
-            var observableGroup = ComputedGroupManager.GetComputedGroup(castSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
             var hasEntityPredicate = castSystem.Group is IHasPredicate;
             var runParallel = system.ShouldMutliThread();
             IDisposable subscription;

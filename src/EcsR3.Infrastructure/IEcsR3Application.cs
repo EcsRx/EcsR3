@@ -1,6 +1,7 @@
 using SystemsR3.Infrastructure;
 using EcsR3.Collections;
 using EcsR3.Collections.Entity;
+using EcsR3.Computeds;
 
 namespace EcsR3.Infrastructure
 {
@@ -14,6 +15,6 @@ namespace EcsR3.Infrastructure
         /// <summary>
         /// The observable group manager, allows you to get observable groups
         /// </summary>
-        IComputedGroupManager ComputedGroupManager { get; }
+        IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
     }
 }
