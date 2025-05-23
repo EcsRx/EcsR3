@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities;
@@ -46,16 +47,38 @@ namespace EcsR3.Computeds.Entities.Conventions
             _onEntityRemoving = new Subject<IEntity>();
 
             Subscriptions = new CompositeDisposable();
-            CachedEntityIds = new HashSet<int>();
-
-            dataSource.OnAdded.Subscribe(OnEntityAddedToGroup).AddTo(Subscriptions);
-            dataSource.OnRemoving.Subscribe(_onEntityRemoving.OnNext).AddTo(Subscriptions);
-            dataSource.OnRemoved.Subscribe(_onEntityRemoved.OnNext).AddTo(Subscriptions);
-            
             CachedEntityIds = new HashSet<int>(dataSource.Where(IsEntityValid).Select(x => x.Id));
+
+            ListenForChanges();
+        }
+
+        protected void ListenForChanges()
+        {
+            DataSource.OnAdded.Subscribe(OnEntityAddedToGroup).AddTo(Subscriptions);
+            DataSource.OnRemoving.Subscribe(_onEntityRemoving.OnNext).AddTo(Subscriptions);
+            DataSource.OnRemoved.Subscribe(_onEntityRemoved.OnNext).AddTo(Subscriptions);
+            RefreshWhen().Subscribe(_ => Refresh()).AddTo(Subscriptions);
         }
 
         public abstract bool IsEntityValid(IEntity entity);
+        public virtual Observable<Unit> RefreshWhen() => Observable.Never<Unit>();
+        
+        public virtual void Refresh()
+        {
+            lock (_lock)
+            {
+                Span<int> idsToRemove = stackalloc int[CachedEntityIds.Count];
+                var currentIndex = 0;
+                foreach (var entity in EnumerableEntities)
+                {
+                    if(!IsEntityValid(entity))
+                    { idsToRemove[currentIndex++] = entity.Id; }
+                }
+
+                foreach (var id in idsToRemove[..currentIndex])
+                { CachedEntityIds.Remove(id); }
+            }
+        }
 
         public void OnEntityAddedToGroup(IEntity entity)
         {
