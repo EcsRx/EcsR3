@@ -25,8 +25,8 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
-            registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();
-            registry.Bind<IObservableGroupManager, ObservableGroupManager>();
+            registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
+            registry.Bind<IComputedGroupManager, ComputedGroupManager>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();

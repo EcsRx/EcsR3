@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Groups;
 using EcsR3.Groups.Observable;
 using EcsR3.Plugins.Batching.Batches;
 using EcsR3.Plugins.Batching.Builders;
@@ -11,14 +13,14 @@ namespace EcsR3.Plugins.Batching.Accessors
 {
     public abstract class BatchAccessor : IBatchAccessor, IDisposable
     {
-        public IObservableGroup ObservableGroup { get; }
+        public IComputedEntityGroup ObservableGroup { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IBatchBuilder BatchBuilder { get; }
 
         protected IDisposable Subscriptions;
         
-        protected BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup)
+        protected BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup)
         {
             ObservableGroup = observableGroup;
             ComponentDatabase = componentDatabase;
@@ -31,8 +33,8 @@ namespace EcsR3.Plugins.Batching.Accessors
         protected void SetupAccessor()
         {
             var subscriptions = new CompositeDisposable();
-            ObservableGroup.OnEntityAdded.Subscribe(_ => Refresh()).AddTo(subscriptions);
-            ObservableGroup.OnEntityRemoved.Subscribe(_ => Refresh()).AddTo(subscriptions);
+            ObservableGroup.OnAdded.Subscribe(_ => Refresh()).AddTo(subscriptions);
+            ObservableGroup.OnRemoved.Subscribe(_ => Refresh()).AddTo(subscriptions);
             ReactToPools().AddTo(subscriptions);
             Subscriptions = subscriptions;
 
@@ -52,7 +54,7 @@ namespace EcsR3.Plugins.Batching.Accessors
     {
         public PinnedBatch<T1, T2> Batch { get; private set; }
 
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
+        public BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
         {}
 
@@ -72,7 +74,7 @@ namespace EcsR3.Plugins.Batching.Accessors
         }
 
         public override void Refresh()
-        { Batch = ((IBatchBuilder<T1, T2>) BatchBuilder).Build(ObservableGroup); }
+        { Batch = ((IBatchBuilder<T1, T2>) BatchBuilder).Build(ObservableGroup.Value.ToArray()); }
     }
     
     public class BatchAccessor<T1, T2, T3> : BatchAccessor, IBatchAccessor<T1, T2, T3> 
@@ -82,7 +84,7 @@ namespace EcsR3.Plugins.Batching.Accessors
     {
         public PinnedBatch<T1, T2, T3> Batch { get; private set; }
 
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
+        public BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
         {}
 
@@ -105,7 +107,7 @@ namespace EcsR3.Plugins.Batching.Accessors
         }
 
         public override void Refresh()
-        { Batch = ((IBatchBuilder<T1, T2, T3>) BatchBuilder).Build(ObservableGroup); }
+        { Batch = ((IBatchBuilder<T1, T2, T3>) BatchBuilder).Build(ObservableGroup.Value.ToArray()); }
     }
     
     public class BatchAccessor<T1, T2, T3, T4> : BatchAccessor, IBatchAccessor<T1, T2, T3, T4> 
@@ -116,7 +118,7 @@ namespace EcsR3.Plugins.Batching.Accessors
     {
         public PinnedBatch<T1, T2, T3, T4> Batch { get; private set; }
 
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
+        public BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
         {}
 
@@ -142,7 +144,7 @@ namespace EcsR3.Plugins.Batching.Accessors
         }
 
         public override void Refresh()
-        { Batch = ((IBatchBuilder<T1, T2, T3, T4>) BatchBuilder).Build(ObservableGroup); }
+        { Batch = ((IBatchBuilder<T1, T2, T3, T4>) BatchBuilder).Build(ObservableGroup.Value.ToArray()); }
     }
     
     public class BatchAccessor<T1, T2, T3, T4, T5> : BatchAccessor, IBatchAccessor<T1, T2, T3, T4, T5> 
@@ -154,7 +156,7 @@ namespace EcsR3.Plugins.Batching.Accessors
     {
         public PinnedBatch<T1, T2, T3, T4, T5> Batch { get; private set; }
 
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
+        public BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
         {}
 
@@ -183,7 +185,7 @@ namespace EcsR3.Plugins.Batching.Accessors
         }
 
         public override void Refresh()
-        { Batch = ((IBatchBuilder<T1, T2, T3, T4, T5>) BatchBuilder).Build(ObservableGroup); }
+        { Batch = ((IBatchBuilder<T1, T2, T3, T4, T5>) BatchBuilder).Build(ObservableGroup.Value.ToArray()); }
     }
     
     public class BatchAccessor<T1, T2, T3, T4, T5, T6> : BatchAccessor, IBatchAccessor<T1, T2, T3, T4, T5, T6> 
@@ -196,7 +198,7 @@ namespace EcsR3.Plugins.Batching.Accessors
     {
         public PinnedBatch<T1, T2, T3, T4, T5, T6> Batch { get; private set; }
 
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
+        public BatchAccessor(IComputedEntityGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
         {}
 
@@ -228,6 +230,6 @@ namespace EcsR3.Plugins.Batching.Accessors
         }
 
         public override void Refresh()
-        { Batch = ((IBatchBuilder<T1, T2, T3, T4, T5, T6>) BatchBuilder).Build(ObservableGroup); }
+        { Batch = ((IBatchBuilder<T1, T2, T3, T4, T5, T6>) BatchBuilder).Build(ObservableGroup.Value.ToArray()); }
     }
 }

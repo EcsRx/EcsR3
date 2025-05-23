@@ -20,16 +20,6 @@ public class KeyedCollectionVsDictionaryBenchmarks
 {
     [Params(100,10000,100000)]
     public int Amount;
-    
-    public TestKeyedCollection TestKeyedCollection = new TestKeyedCollection();
-    public Dictionary<int,int> TestDictionary = new Dictionary<int,int>();
-
-    [GlobalSetup]
-    public void Setup()
-    {
-        TestKeyedCollection.Clear();
-        TestDictionary.Clear();
-    }
    
     [Benchmark]
     public void AddLookupRemove_Dictionary()
@@ -55,9 +45,24 @@ public class KeyedCollectionVsDictionaryBenchmarks
         { testKeyedCollection.Add(i); }
         
         for(var i=0;i<Amount;i++)
-        { TestKeyedCollection.TryGetValue(i, out _); }
+        { testKeyedCollection.TryGetValue(i, out _); }
         
         for(var i=0;i<Amount;i++)
-        { TestKeyedCollection.Remove(i); }
+        { testKeyedCollection.Remove(i); }
+    }
+    
+    [Benchmark]
+    public void AddLookupRemove_Hashset()
+    {
+        var testHashset = new HashSet<int>();
+        
+        for(var i=0;i<Amount;i++)
+        { testHashset.Add(i); }
+        
+        for(var i=0;i<Amount;i++)
+        { testHashset.TryGetValue(i, out _); }
+        
+        for(var i=0;i<Amount;i++)
+        { testHashset.Remove(i); }
     }
 }

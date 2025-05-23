@@ -11,11 +11,12 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Modules
     {
         public void Setup(IDependencyRegistry registry)
         {
+            /*
             registry.Bind<ILowestHealthComputedGroup>(x => x.ToMethod(y =>
             {
                 var namedHealthGroup = y.ResolveObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
                 return new LowestHealthComputedGroup(namedHealthGroup);
-            }));
+            }));*/
         }
     }
 }

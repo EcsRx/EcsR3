@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.HelloWorldExample.Components;
 using EcsR3.Extensions;
@@ -13,7 +14,7 @@ namespace EcsR3.Examples.ExampleApps.HelloWorldExample.Systems
     {
         public IGroup Group => new Group(typeof(CanTalkComponent));
 
-        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)

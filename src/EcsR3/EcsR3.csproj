@@ -22,4 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SystemsR3\SystemsR3.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Lookups\" />
+  </ItemGroup>
 </Project>

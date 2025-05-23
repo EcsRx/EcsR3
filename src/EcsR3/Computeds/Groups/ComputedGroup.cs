@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using EcsR3.Entities;
-using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using EcsR3.Lookups;
-using R3;
-using SystemsR3.Extensions;
+﻿
 
 namespace EcsR3.Computeds.Groups
 {
+    /*
     public abstract class ComputedGroup : IComputedGroup
     {
         public readonly EntityLookup CachedEntities;
@@ -26,8 +18,8 @@ namespace EcsR3.Computeds.Groups
         private readonly Subject<IEntity> _onEntityRemoving;
 
 
-        public IReadOnlyList<IEntity> Value => CachedEntities;
-        public Observable<IReadOnlyList<IEntity>> OnChanged => Observable.Merge(OnEntityAdded, _onEntityRemoved).Select(x => Value);
+        public IEnumerable<IEntity> Value => CachedEntities;
+        public Observable<IEnumerable<IEntity>> OnChanged => Observable.Merge(OnEntityAdded, _onEntityRemoved).Select(x => Value);
         
         private readonly object _lock = new object();
         
@@ -86,6 +78,7 @@ namespace EcsR3.Computeds.Groups
             // TODO: Dislike having subs firing within locks, but no nice way to do this currently, maybe refactor later
             lock (_lock)
             {
+                
                 var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
                 var entitiesToRemove = CachedEntities.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
                 var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.Contains(x.Id)).ToArray();
@@ -140,9 +133,6 @@ namespace EcsR3.Computeds.Groups
 
         public virtual IEnumerator<IEntity> GetEnumerator()
         { return PostProcess(CachedEntities).GetEnumerator(); }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        { return GetEnumerator(); }
         
         public virtual void Dispose()
         {
@@ -172,5 +162,5 @@ namespace EcsR3.Computeds.Groups
                 { return CachedEntities.GetByIndex(index); }
             }
         }
-    }
+    }*/
 }

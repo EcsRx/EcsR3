@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsR3.Computeds.Groups;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 
 namespace EcsR3.Collections
 {
-    public interface IObservableGroupManager : IDisposable
+    public interface IComputedGroupManager : IDisposable
     {
-        IReadOnlyList<IObservableGroup> ObservableGroups { get; }
-        IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds);
+        IEnumerable<IComputedEntityGroup> ComputedGroups { get; }
+        IEnumerable<IComputedEntityGroup> GetApplicableGroups(int[] componentTypeIds);
         
         /// <summary>
         /// Gets an ObservableGroup which will observe the given group and maintain a collection of
@@ -21,8 +21,7 @@ namespace EcsR3.Collections
         /// it is created.
         /// </remarks>
         /// <param name="group">The group to match entities on</param>
-        /// <param name="collectionIds">The collection names to use (defaults to null)</param>
         /// <returns>An IObservableGroup monitoring the group passed in</returns>
-        IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds);
+        IComputedEntityGroup GetComputedGroup(IGroup group);
     }
 }

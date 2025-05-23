@@ -9,6 +9,7 @@ using R3;
 
 namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups
 {
+    /*
     public class LowestHealthComputedGroup : ComputedGroup, ILowestHealthComputedGroup
     {
         public LowestHealthComputedGroup(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
@@ -27,5 +28,5 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups
         { return entities.OrderBy(x => x.GetHealthPercentile()); }
 
         
-    }
+    }*/
 }

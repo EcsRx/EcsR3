@@ -7,6 +7,7 @@ using SystemsR3.Extensions;
 
 namespace EcsR3.Computeds
 {
+    /*
     public abstract class ComputedFromGroup<T> : IComputed<T>, IDisposable
     {
         public T CachedData;
@@ -36,8 +37,8 @@ namespace EcsR3.Computeds
 
         public void MonitorChanges()
         {
-            InternalObservableGroup.OnEntityAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
-            InternalObservableGroup.OnEntityRemoving.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalObservableGroup.OnAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalObservableGroup.OnRemoving.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
             RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
         }
 
@@ -79,5 +80,5 @@ namespace EcsR3.Computeds
             Subscriptions.DisposeAll();
             _onDataChanged.Dispose();
         }
-    }
+    }*/
 }

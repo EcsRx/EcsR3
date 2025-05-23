@@ -11,14 +11,15 @@ using SystemsR3.Extensions;
 
 namespace EcsR3.Computeds.Collections
 {
+    /*
     public abstract class ComputedCollectionFromGroup<T> : IComputedCollection<T>, IDisposable
     {
         public IDictionary<int, T> FilteredCache { get; }
         public List<IDisposable> Subscriptions { get; }
         
-        public Observable<CollectionElementChangedEvent<T>> OnAdded => _onElementAdded;
-        public Observable<CollectionElementChangedEvent<T>> OnRemoved => _onElementChanged;
-        public Observable<CollectionElementChangedEvent<T>> OnUpdated => _onElementChanged;
+        public Observable<T> OnAdded => _onElementAdded;
+        public Observable<T> OnRemoved => _onElementChanged;
+        public Observable<T> OnUpdated => _onElementChanged;
         
         public Observable<IEnumerable<T>> OnChanged => _onDataChanged;
 
@@ -143,7 +144,7 @@ namespace EcsR3.Computeds.Collections
             lock (_lock)
             {
                 unprocessedIds = FilteredCache.Keys.ToList();
-                foreach (var entity in InternalObservableGroup)
+                foreach (var entity in InternalObservableGroup.Value)
                 {
                     unprocessedIds.Remove(entity.Id);
                     ProcessEntity(entity);
@@ -212,5 +213,5 @@ namespace EcsR3.Computeds.Collections
                 _onElementRemoved?.Dispose();
             }
         }
-    }
+    }*/
 }

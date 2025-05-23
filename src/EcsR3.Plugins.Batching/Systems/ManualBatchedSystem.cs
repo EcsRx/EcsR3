@@ -5,6 +5,7 @@ using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Groups.Observable;
@@ -17,21 +18,21 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public abstract IGroup Group { get; }
         
-        public IObservableGroupManager ObservableGroupManager { get; }
+        public IComputedGroupManager ComputedGroupManager { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IThreadHandler ThreadHandler { get; }
         
-        protected IObservableGroup ObservableGroup { get; private set; }
+        protected IComputedEntityGroup ObservableGroup { get; private set; }
         protected bool ShouldParallelize { get; private set; }
         protected IDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             ThreadHandler = threadHandler;
-            ObservableGroupManager = observableGroupManager;
+            ComputedGroupManager = computedGroupManager;
         }
 
         protected abstract void RebuildBatch();
@@ -59,15 +60,15 @@ namespace EcsR3.Plugins.Batching.Systems
 
         public virtual void StartSystem()
         {
-            ObservableGroup = ObservableGroupManager.GetObservableGroup(Group);
+            ObservableGroup = ComputedGroupManager.GetComputedGroup(Group);
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();
-            ProcessGroupSubscription(ObservableGroup.OnEntityAdded)
+            ProcessGroupSubscription(ObservableGroup.OnAdded)
                 .Subscribe(_ => RebuildBatch())
                 .AddTo(subscriptions);
            
-            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved)
+            ProcessGroupSubscription(ObservableGroup.OnRemoved)
                 .Subscribe(_ => RebuildBatch())
                 .AddTo(subscriptions);
             

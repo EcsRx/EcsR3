@@ -19,6 +19,6 @@ namespace EcsR3.Tests.EcsRx.Computeds.Models
         { return ManuallyRefresh; }
 
         public override double Transform(IObservableGroup observableGroup)
-        { return observableGroup.Where(x => x.HasComponent<TestComponentThree>()).Average(x => x.GetHashCode()); }
+        { return observableGroup.Value.Where(x => x.HasComponent<TestComponentThree>()).Average(x => x.GetHashCode()); }
     }
 }

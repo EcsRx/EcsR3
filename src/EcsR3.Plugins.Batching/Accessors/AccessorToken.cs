@@ -1,3 +1,4 @@
+using EcsR3.Computeds.Groups;
 using EcsR3.Groups.Observable;
 
 namespace EcsR3.Plugins.Batching.Accessors
@@ -5,9 +6,9 @@ namespace EcsR3.Plugins.Batching.Accessors
     public class AccessorToken
     {
         public int[] ComponentTypeIds { get; }
-        public IObservableGroup ObservableGroup { get; }
+        public IComputedEntityGroup ObservableGroup { get; }
 
-        public AccessorToken(int[] componentTypeIds, IObservableGroup observableGroup)
+        public AccessorToken(int[] componentTypeIds, IComputedEntityGroup observableGroup)
         {
             ComponentTypeIds = componentTypeIds;
             ObservableGroup = observableGroup;

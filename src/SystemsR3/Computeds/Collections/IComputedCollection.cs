@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using R3;
 
 namespace SystemsR3.Computeds.Collections
 {
@@ -9,14 +10,15 @@ namespace SystemsR3.Computeds.Collections
     public interface IComputedCollection<T> : IComputed<IEnumerable<T>>, IEnumerable<T>
     {
         /// <summary>
-        /// Get an element by its index
+        /// Event stream for when an element has been added to this collection
         /// </summary>
-        /// <remarks>
-        /// In some implementations this may be its id not a sequential index
-        /// </remarks>
-        /// <param name="index">index/id of the element</param>
-        T this[int index] {get;}
-
+        Observable<T> OnAdded { get; }
+        
+        /// <summary>
+        /// Event stream for when an element has been removed from this collection
+        /// </summary>
+        Observable<T> OnRemoved { get; }
+        
         /// <summary>
         /// How many elements are within the collection
         /// </summary>

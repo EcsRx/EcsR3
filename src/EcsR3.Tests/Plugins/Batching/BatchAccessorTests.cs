@@ -39,7 +39,7 @@ namespace EcsR3.Tests.Plugins.Batching
             var mockBatchBuilder = Substitute.For<IBatchBuilder<TestStructComponentOne, TestStructComponentTwo>>();
             
             var batchAccessor = new BatchAccessor<TestStructComponentOne,TestStructComponentTwo>(mockObservableGroup, mockComponentDatabase, mockBatchBuilder, mockTypeLookup);          
-            mockBatchBuilder.Received(1).Build(mockObservableGroup);
+            mockBatchBuilder.Received(1).Build(mockObservableGroup.Value);
         }
         
         [Fact]

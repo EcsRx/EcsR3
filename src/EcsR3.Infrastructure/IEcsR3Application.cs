@@ -14,6 +14,6 @@ namespace EcsR3.Infrastructure
         /// <summary>
         /// The observable group manager, allows you to get observable groups
         /// </summary>
-        IObservableGroupManager ObservableGroupManager { get; }
+        IComputedGroupManager ComputedGroupManager { get; }
     }
 }

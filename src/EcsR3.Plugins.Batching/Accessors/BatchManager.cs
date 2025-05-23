@@ -3,6 +3,7 @@ using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Groups;
 using EcsR3.Extensions;
 using EcsR3.Groups.Observable;
 using EcsR3.Plugins.Batching.Factories;
@@ -16,18 +17,18 @@ namespace EcsR3.Plugins.Batching.Accessors
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IBatchBuilderFactory BatchBuilderFactory { get; }
         public IReferenceBatchBuilderFactory ReferenceBatchBuilderFactory { get; }
-        public IObservableGroupManager ObservableGroupManager { get; }
+        public IComputedGroupManager ComputedGroupManager { get; }
 
-        public BatchManager(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IReferenceBatchBuilderFactory referenceBatchBuilderFactory, IObservableGroupManager observableGroupManager)
+        public BatchManager(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IReferenceBatchBuilderFactory referenceBatchBuilderFactory, IComputedGroupManager computedGroupManager)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             BatchBuilderFactory = batchBuilderFactory;
-            ObservableGroupManager = observableGroupManager;
+            ComputedGroupManager = computedGroupManager;
             ReferenceBatchBuilderFactory = referenceBatchBuilderFactory;
         }
 
-        public IBatchAccessor<T1,T2> GetAccessorFor<T1, T2>(IObservableGroup observableGroup) 
+        public IBatchAccessor<T1,T2> GetAccessorFor<T1, T2>(IComputedEntityGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent
         {
@@ -44,7 +45,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IReferenceBatchAccessor<T1,T2> GetReferenceAccessorFor<T1, T2>(IObservableGroup observableGroup) 
+        public IReferenceBatchAccessor<T1,T2> GetReferenceAccessorFor<T1, T2>(IComputedEntityGroup observableGroup) 
             where T1 : class, IComponent 
             where T2 : class, IComponent
         {
@@ -61,7 +62,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IBatchAccessor<T1,T2,T3> GetAccessorFor<T1, T2, T3>(IObservableGroup observableGroup) 
+        public IBatchAccessor<T1,T2,T3> GetAccessorFor<T1, T2, T3>(IComputedEntityGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent 
             where T3 : unmanaged, IComponent
@@ -79,7 +80,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IReferenceBatchAccessor<T1,T2,T3> GetReferenceAccessorFor<T1, T2, T3>(IObservableGroup observableGroup) 
+        public IReferenceBatchAccessor<T1,T2,T3> GetReferenceAccessorFor<T1, T2, T3>(IComputedEntityGroup observableGroup) 
             where T1 : class, IComponent 
             where T2 : class, IComponent 
             where T3 : class, IComponent
@@ -97,7 +98,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IBatchAccessor<T1,T2,T3,T4> GetAccessorFor<T1, T2, T3, T4>(IObservableGroup observableGroup) 
+        public IBatchAccessor<T1,T2,T3,T4> GetAccessorFor<T1, T2, T3, T4>(IComputedEntityGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent 
             where T3 : unmanaged, IComponent 
@@ -116,7 +117,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IReferenceBatchAccessor<T1,T2,T3,T4> GetReferenceAccessorFor<T1, T2, T3, T4>(IObservableGroup observableGroup) 
+        public IReferenceBatchAccessor<T1,T2,T3,T4> GetReferenceAccessorFor<T1, T2, T3, T4>(IComputedEntityGroup observableGroup) 
             where T1 : class, IComponent 
             where T2 : class, IComponent 
             where T3 : class, IComponent 
@@ -135,7 +136,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IBatchAccessor<T1, T2, T3, T4, T5> GetAccessorFor<T1, T2, T3, T4, T5>(IObservableGroup observableGroup) 
+        public IBatchAccessor<T1, T2, T3, T4, T5> GetAccessorFor<T1, T2, T3, T4, T5>(IComputedEntityGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent 
             where T3 : unmanaged, IComponent 
@@ -155,7 +156,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IReferenceBatchAccessor<T1, T2, T3, T4, T5> GetReferenceAccessorFor<T1, T2, T3, T4, T5>(IObservableGroup observableGroup) 
+        public IReferenceBatchAccessor<T1, T2, T3, T4, T5> GetReferenceAccessorFor<T1, T2, T3, T4, T5>(IComputedEntityGroup observableGroup) 
             where T1 : class, IComponent 
             where T2 : class, IComponent 
             where T3 : class, IComponent 
@@ -175,7 +176,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IBatchAccessor<T1, T2, T3, T4, T5,T6> GetAccessorFor<T1, T2, T3, T4, T5, T6>(IObservableGroup observableGroup) 
+        public IBatchAccessor<T1, T2, T3, T4, T5,T6> GetAccessorFor<T1, T2, T3, T4, T5, T6>(IComputedEntityGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent 
             where T3 : unmanaged, IComponent 
@@ -196,7 +197,7 @@ namespace EcsR3.Plugins.Batching.Accessors
             return batchAccessor;
         }
 
-        public IReferenceBatchAccessor<T1, T2, T3, T4, T5, T6> GetReferenceAccessorFor<T1, T2, T3, T4, T5, T6>(IObservableGroup observableGroup) 
+        public IReferenceBatchAccessor<T1, T2, T3, T4, T5, T6> GetReferenceAccessorFor<T1, T2, T3, T4, T5, T6>(IComputedEntityGroup observableGroup) 
             where T1 : class, IComponent 
             where T2 : class, IComponent 
             where T3 : class, IComponent 

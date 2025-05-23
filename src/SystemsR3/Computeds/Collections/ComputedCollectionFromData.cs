@@ -6,6 +6,7 @@ using SystemsR3.Extensions;
 
 namespace SystemsR3.Computeds.Collections
 {
+    /*
     public abstract class ComputedCollectionFromData<TInput, TOutput> : IComputedCollection<TOutput>, IDisposable
     {
         public IList<TOutput> ComputedData { get; }
@@ -15,6 +16,10 @@ namespace SystemsR3.Computeds.Collections
         public IEnumerable<TOutput> Value => GetData();
         
         public TOutput this[int index] => ComputedData[index];
+        
+        public Observable<TOutput> OnAdded { get; }
+        public Observable<TOutput> OnRemoved { get; }
+        
         public int Count => ComputedData.Count;
         public Observable<IEnumerable<TOutput>> OnChanged => onDataChanged;
         
@@ -75,5 +80,5 @@ namespace SystemsR3.Computeds.Collections
             Subscriptions.DisposeAll();
             onDataChanged?.Dispose();
         }
-    }
+    }*/
 }

@@ -11,7 +11,7 @@ namespace EcsR3.Infrastructure
     {
         public IEntityCollection EntityCollection { get; private set; }
         public IComponentDatabase ComponentDatabase { get; private set; }
-        public IObservableGroupManager ObservableGroupManager { get; private set; }
+        public IComputedGroupManager ComputedGroupManager { get; private set; }
         
         /// <summary>
         /// Load any modules that your application needs
@@ -43,7 +43,7 @@ namespace EcsR3.Infrastructure
             base.ResolveApplicationDependencies();
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
-            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
+            ComputedGroupManager = DependencyResolver.Resolve<IComputedGroupManager>();
         }
     }
 }

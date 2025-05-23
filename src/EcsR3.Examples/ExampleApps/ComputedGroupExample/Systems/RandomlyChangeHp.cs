@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsR3.Extensions;
@@ -16,7 +17,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Systems
         public IGroup Group { get; } = new Group(typeof(HasHealthComponent));
         private Random _random = new Random();
         
-        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromMilliseconds(500)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)

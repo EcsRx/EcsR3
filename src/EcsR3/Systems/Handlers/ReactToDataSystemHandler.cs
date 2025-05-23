@@ -17,16 +17,16 @@ namespace EcsR3.Systems.Handlers
     [Priority(3)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
-        public readonly IObservableGroupManager ObservableGroupManager;
+        public readonly IComputedGroupManager ComputedGroupManager;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> EntitySubscriptions;
 
         private readonly MethodInfo _processEntityMethod;
         private readonly object _lock = new object();
         
-        public ReactToDataSystemHandler(IObservableGroupManager observableGroupManager)
+        public ReactToDataSystemHandler(IComputedGroupManager computedGroupManager)
         {
-            ObservableGroupManager = observableGroupManager;
+            ComputedGroupManager = computedGroupManager;
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
             EntitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
@@ -76,18 +76,18 @@ namespace EcsR3.Systems.Handlers
             }
 
             var groupSystem = system as IGroupSystem;
-            var observableGroup = ObservableGroupManager.GetObservableGroup(groupSystem.Group);
+            var observableGroup = ComputedGroupManager.GetComputedGroup(groupSystem.Group);
 
-            observableGroup.OnEntityAdded
+            observableGroup.OnAdded
                 .Subscribe(x =>
                 {
                     // This occurs if we have an add elsewhere removing the entity before this one is called
-                    if (observableGroup.ContainsEntity(x.Id))
+                    if (observableGroup.Contains(x.Id))
                     { SetupEntity(processEntityFunctions, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            observableGroup.OnEntityRemoved
+            observableGroup.OnRemoved
                 .Subscribe(x =>
                 {
                     if (entitySubscriptions.ContainsKey(x.Id)) 
@@ -95,8 +95,7 @@ namespace EcsR3.Systems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            var entitiesToProcess = observableGroup.ToArray();
-            foreach (var entity in entitiesToProcess)
+            foreach (var entity in observableGroup.Value)
             { SetupEntity(processEntityFunctions, entity, entitySubscriptions); }
         }
         

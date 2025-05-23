@@ -20,11 +20,11 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
     {
         public void Setup(IDependencyRegistry registry)
         {
-            registry.Bind<IIdPool, IdPool>();
+            registry.Bind<IIdPool>(x => x.ToInstance(new IdPool()));
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
-            registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();
-            registry.Bind<IObservableGroupManager, ObservableGroupManager>();
+            registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
+            registry.Bind<IComputedGroupManager, ComputedGroupManager>();
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();

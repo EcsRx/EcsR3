@@ -5,6 +5,7 @@ using System.Linq;
 using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
+using EcsR3.Computeds.Groups;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
@@ -40,10 +41,10 @@ namespace EcsR3.Examples.ExampleApps.Performance
             _availableComponentTypeIds = Enumerable.Range(0, _availableComponents.Length-1).ToArray();
             
             var groups = _groupFactory.CreateTestGroups(10).ToArray();
-            var observableGroups = new List<IObservableGroup>();
+            var observableGroups = new List<IComputedEntityGroup>();
             foreach (var group in groups)
             {
-                var newGroup = ObservableGroupManager.GetObservableGroup(group);
+                var newGroup = ComputedGroupManager.GetComputedGroup(group);
                 observableGroups.Add(newGroup);
             }
             

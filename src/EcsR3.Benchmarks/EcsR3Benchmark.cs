@@ -29,7 +29,7 @@ namespace EcsR3.Benchmarks
         public IComponentTypeLookup ComponentTypeLookup;
         public ISystemExecutor SystemExecutor;
         public IEntityChangeRouter EntityChangeRouter;
-        public IObservableGroupManager ObservableGroupManager;
+        public IComputedGroupManager ComputedGroupManager;
         
         // This pulls in a lot of types which let the component type lookup know about them
         public RandomGroupFactory RandomGroupFactory { get; } = new RandomGroupFactory();
@@ -52,7 +52,7 @@ namespace EcsR3.Benchmarks
             DependencyResolver = DependencyRegistry.BuildResolver();
             
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
-            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
+            ComputedGroupManager = DependencyResolver.Resolve<IComputedGroupManager>();
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();

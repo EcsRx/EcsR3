@@ -31,7 +31,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
                     .ToArray();
                                 
                 var group = new Group(componentsToTake);
-                ObservableGroupManager.GetObservableGroup(group);
+                ComputedGroupManager.GetComputedGroup(group);
             }
             
             var availableComponents = availableComponentTypes

@@ -53,7 +53,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         public override void Setup()
         {
             var group = new Group(_availableComponentTypes.Take(ComponentCount).ToArray());
-            ObservableGroupManager.GetObservableGroup(group);
+            ComputedGroupManager.GetComputedGroup(group);
 
             for (var i = 0; i < SystemsToProcess; i++)
             {
