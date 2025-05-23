@@ -28,7 +28,7 @@ public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplic
             .ToArray();
         
         var group = new Group(requiredComponents);
-        ObservableGroupManager.GetObservableGroup(group);
+        ComputedGroupManager.GetComputedGroup(group);
             
         var availableComponents = availableComponentTypes
             .Select(x => Activator.CreateInstance(x) as IComponent)
@@ -38,7 +38,7 @@ public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplic
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(availableComponents);
                 entity.RemoveAllComponents();
             }

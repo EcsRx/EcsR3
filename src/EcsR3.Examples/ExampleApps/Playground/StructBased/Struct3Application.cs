@@ -30,10 +30,8 @@ namespace EcsR3.Examples.ExampleApps.Playground.StructBased
         
         protected override void RunProcess()
         {
-            for (var i = EntityCollection.Count - 1; i >= 0; i--)
+            foreach (var entity in EntityCollection)
             {
-                var entity = EntityCollection[i];
-                
                 ref var basicComponent = ref Components1[entity.ComponentAllocations[StructComponent1TypeId]];
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;

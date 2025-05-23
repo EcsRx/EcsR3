@@ -1,3 +1,4 @@
+using System.Linq;
 using SystemsR3.Threading;
 using EcsR3.Collections;
 using EcsR3.Components;
@@ -22,8 +23,8 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
-            componentTypeLookup, threadHandler, observableGroupManager)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, computedGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2>();
         }
@@ -31,7 +32,7 @@ namespace EcsR3.Plugins.Batching.Systems
         protected override void RebuildBatch()
         {
             _batch.Dispose();
-            _batch = _batchBuilder.Build(ObservableGroup);
+            _batch = _batchBuilder.Build(ObservableGroup.Value.ToArray());
         }
         
         protected override void ProcessBatch()
@@ -67,8 +68,8 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
-            componentTypeLookup, threadHandler, observableGroupManager)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, computedGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3>();
         }
@@ -76,7 +77,7 @@ namespace EcsR3.Plugins.Batching.Systems
         protected override void RebuildBatch()
         {
             _batch.Dispose();
-            _batch = _batchBuilder.Build(ObservableGroup);
+            _batch = _batchBuilder.Build(ObservableGroup.Value.ToArray());
         }
         
         protected override void ProcessBatch()
@@ -113,8 +114,8 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
-            componentTypeLookup, threadHandler, observableGroupManager)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, computedGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4>();
         }
@@ -122,7 +123,7 @@ namespace EcsR3.Plugins.Batching.Systems
         protected override void RebuildBatch()
         {
             _batch.Dispose();
-            _batch = _batchBuilder.Build(ObservableGroup);
+            _batch = _batchBuilder.Build(ObservableGroup.Value.ToArray());
         }
         
         protected override void ProcessBatch()
@@ -162,8 +163,8 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
-            componentTypeLookup, threadHandler, observableGroupManager)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, computedGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5>();
         }
@@ -171,7 +172,7 @@ namespace EcsR3.Plugins.Batching.Systems
         protected override void RebuildBatch()
         {
             _batch.Dispose();
-            _batch = _batchBuilder.Build(ObservableGroup);
+            _batch = _batchBuilder.Build(ObservableGroup.Value.ToArray());
         }
         
         protected override void ProcessBatch()
@@ -212,8 +213,8 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
-            componentTypeLookup, threadHandler, observableGroupManager)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, computedGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5, T6>();
         }
@@ -221,7 +222,7 @@ namespace EcsR3.Plugins.Batching.Systems
         protected override void RebuildBatch()
         {
             _batch.Dispose();
-            _batch = _batchBuilder.Build(ObservableGroup);
+            _batch = _batchBuilder.Build(ObservableGroup.Value.ToArray());
         }
         
         protected override void ProcessBatch()

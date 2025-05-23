@@ -37,7 +37,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             stopwatch.Start();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(new ClassComponent1(), new ClassComponent2());
             }
             stopwatch.Stop();

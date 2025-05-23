@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SystemsR3.Extensions;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -13,9 +12,10 @@ using EcsR3.Systems;
 using EcsR3.Tests.Models;
 using EcsR3.Tests.Systems.PriorityScenarios;
 using NSubstitute;
+using SystemsR3.Extensions;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx
+namespace EcsR3.Tests.EcsR3
 {
     public class IEnumerableExtensionsTests
     {

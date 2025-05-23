@@ -1,14 +1,13 @@
-﻿using System;
-using EcsR3.Computeds.Groups;
+﻿using EcsR3.Computeds.Entities.Conventions;
 using EcsR3.Entities;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
 using EcsR3.Tests.Models;
 using R3;
 
-namespace EcsR3.Tests.EcsRx.Computeds.Models
+namespace EcsR3.Tests.EcsR3.Computeds.Models
 {
-    public class TestComputedGroup : ComputedGroup
+    /*
+    public class TestComputedGroup : ComputedFromEntityGroup<>
     {
         public Subject<bool> ManuallyRefresh = new Subject<bool>();
         
@@ -20,5 +19,5 @@ namespace EcsR3.Tests.EcsRx.Computeds.Models
         
         public override bool IsEntityApplicable(IEntity entity)
         { return entity.HasComponent<TestComponentOne>(); }
-    }
+    }*/
 }

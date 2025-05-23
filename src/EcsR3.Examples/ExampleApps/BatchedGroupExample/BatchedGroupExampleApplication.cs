@@ -3,6 +3,7 @@ using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Blueprints;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Modules;
+using EcsR3.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
 {
@@ -20,10 +21,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
         protected override void ApplicationStarted()
         {
             var blueprint = new MoveableBlueprint();
-            
-            for (var i = 0; i < _entityCount; i++)
-            { EntityCollection.CreateEntity(blueprint); }
-
+            EntityCollection.CreateMany(_entityCount, blueprint);
             HandleInput();
         }
 

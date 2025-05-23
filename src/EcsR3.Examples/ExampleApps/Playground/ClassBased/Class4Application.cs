@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Playground.Components;
@@ -18,7 +19,7 @@ namespace EcsR3.Examples.ExampleApps.Playground.ClassBased
             base.SetupEntities();
             
             var batchBuilder = _referenceBatchBuilderFactory.Create<ClassComponent, ClassComponent2>();
-            _componentBatch = batchBuilder.Build(EntityCollection);
+            _componentBatch = batchBuilder.Build(EntityCollection.ToArray());
         }
 
         protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";

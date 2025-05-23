@@ -30,10 +30,8 @@ namespace EcsR3.Examples.ExampleApps.Playground.StructBased
         
         protected override void RunProcess()
         {
-            for (var i = EntityCollection.Count - 1; i >= 0; i--)
-            {
-                var entity = EntityCollection[i];
-                
+            foreach(var entity in EntityCollection)
+            {   
                 var component1Allocation = entity.ComponentAllocations[StructComponent1TypeId];
                 var basicComponent = Components1[component1Allocation];
                 Components1[component1Allocation] = new StructComponent

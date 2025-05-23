@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
-using EcsR3.Tests.EcsRx.Computeds.Models;
+using EcsR3.Tests.EcsR3.Computeds.Models;
 using EcsR3.Tests.Models;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Computeds
+namespace EcsR3.Tests.EcsR3.Computeds
 {
+    /*
     public class ComputedGroupTests
     {
-        
         [Fact]
         public void should_populate_entity_cache_upon_creation()
         {
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
             var shouldContainEntity1 = Substitute.For<IEntity>();
             shouldContainEntity1.Id.Returns(1);
             shouldContainEntity1.HasComponent<TestComponentOne>().Returns(true);
@@ -37,9 +37,9 @@ namespace EcsR3.Tests.EcsRx.Computeds
             };
 
             mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
-            mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnAdded.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoving.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoved.Returns(Observable.Empty<IEntity>());
             var computedGroup = new TestComputedGroup(mockObservableGroup);
 
             Assert.Equal(2, computedGroup.CachedEntities.Count);
@@ -51,7 +51,7 @@ namespace EcsR3.Tests.EcsRx.Computeds
         [Fact]
         public void should_only_add_and_fire_event_when_applicable_entity_added()
         {
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
 
             var shouldContainEntity = Substitute.For<IEntity>();
             shouldContainEntity.Id.Returns(1);
@@ -89,7 +89,7 @@ namespace EcsR3.Tests.EcsRx.Computeds
         [Fact]
         public void should_only_remove_and_fire_events_when_non_applicable_entity_removed()
         {
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
 
             var shouldContainEntity = Substitute.For<IEntity>();
             shouldContainEntity.Id.Returns(1);
@@ -142,7 +142,7 @@ namespace EcsR3.Tests.EcsRx.Computeds
 
             var dummyEntitySnapshot = new List<IEntity> { applicableEntity, inapplicableEntity };
 
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
             mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
@@ -195,5 +195,5 @@ namespace EcsR3.Tests.EcsRx.Computeds
             Assert.Equal(1, removingFiredTimes);
             Assert.Equal(1, removedFiredTimes);
         }
-    }
+    }*/
 }

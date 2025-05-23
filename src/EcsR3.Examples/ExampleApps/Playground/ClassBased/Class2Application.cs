@@ -25,9 +25,8 @@ namespace EcsR3.Examples.ExampleApps.Playground.ClassBased
 
         protected override void RunProcess()
         {
-            for (var i = EntityCollection.Count - 1; i >= 0; i--)
-            {
-                var entity = EntityCollection[i];
+            foreach(var entity in EntityCollection)
+            {   
                 var basicComponent = entity.GetComponent<ClassComponent>(ClassComponent1TypeId);
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;

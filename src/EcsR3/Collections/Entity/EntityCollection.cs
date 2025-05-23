@@ -1,69 +1,66 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using EcsR3.Blueprints;
-using EcsR3.Collections.Events;
 using EcsR3.Entities;
-using EcsR3.Lookups;
 using R3;
 
 namespace EcsR3.Collections.Entity
 {
-    public class EntityCollection : IEntityCollection, IDisposable
+    public class EntityCollection : IEntityCollection
     {
         public IEntityFactory EntityFactory { get; }
         
-        public readonly EntityLookup EntityLookup;
+        public readonly Dictionary<int, IEntity> EntityLookup;
 
-        public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
-        public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
+        public IReadOnlyCollection<IEntity> Value => EntityLookup.Values;
         
-        private readonly Subject<CollectionEntityEvent> _onEntityAdded;
-        private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
+        public Observable<IEntity> OnAdded => _onAdded;
+        public Observable<IEntity> OnRemoved => _onRemoved;
+        public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        
+        private readonly Subject<IEntity> _onAdded;
+        private readonly Subject<IEntity> _onRemoved;
         
         private readonly object _lock = new object();
         
         public EntityCollection(IEntityFactory entityFactory)
         {
-            EntityLookup = new EntityLookup();
+            EntityLookup = new Dictionary<int, IEntity>();
             EntityFactory = entityFactory;
 
-            _onEntityAdded = new Subject<CollectionEntityEvent>();
-            _onEntityRemoved = new Subject<CollectionEntityEvent>();
+            _onAdded = new Subject<IEntity>();
+            _onRemoved = new Subject<IEntity>();
         }
         
-        public IEntity CreateEntity(IBlueprint blueprint = null, int? id = null)
+        public IEntity Create(int? id = null)
         {
             IEntity entity;
             lock (_lock)
             {
-                if (id.HasValue && EntityLookup.Contains(id.Value))
+                if (id.HasValue && EntityLookup.ContainsKey(id.Value))
                 { throw new InvalidOperationException("id already exists"); }
 
                 entity = EntityFactory.Create(id);
-
-                EntityLookup.Add(entity);
+                EntityLookup.Add(entity.Id, entity);
             }
 
-            _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
-            blueprint?.Apply(entity);
-            
+            _onAdded.OnNext(entity);
             return entity;
         }
 
-        public IEntity GetEntity(int id)
+        public IEntity Get(int id)
         {
             lock(_lock)
             { return EntityLookup[id]; }
         }
 
-        public void RemoveEntity(int id)
+        public void Remove(int id)
         {
-            var entity = GetEntity(id);
-            RemoveEntity(entity);
+            var entity = Get(id);
+            Remove(entity);
         }
 
-        protected void RemoveEntity(IEntity entity)
+        protected void Remove(IEntity entity)
         {
             entity.RemoveAllComponents();
             
@@ -71,34 +68,42 @@ namespace EcsR3.Collections.Entity
             { EntityLookup.Remove(entity.Id); }
             
             EntityFactory.Destroy(entity.Id);
-            _onEntityRemoved.OnNext(new CollectionEntityEvent(entity));
+            _onRemoved.OnNext(entity);
         }
 
-        public void RemoveAllEntities()
+        public void RemoveAll()
         {
             lock (_lock)
             {
-                for (var i = EntityLookup.Count - 1; i >= 0; i--)
-                { RemoveEntity(EntityLookup.GetByIndex(i)); }
+                foreach (var entity in EntityLookup.Values)
+                { Remove(entity); }
+
+                EntityLookup.Clear();
             }
         }
 
-        public void AddEntity(IEntity entity)
+        public void Add(IEntity entity)
         {
             lock (_lock)
-            { EntityLookup.Add(entity); }
+            {
+                if (!EntityLookup.TryAdd(entity.Id, entity))
+                { throw new InvalidOperationException("id already exists"); }
+            }
             
-            _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
+            _onAdded.OnNext(entity);
         }
 
-        public bool ContainsEntity(int id)
+        public bool Contains(int id)
         {
             lock (_lock)
-            { return EntityLookup.Contains(id); }
+            { return EntityLookup.ContainsKey(id); }
         }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return EntityLookup.GetEnumerator(); }
+        {
+            lock (_lock)
+            { return EntityLookup.Values.GetEnumerator(); }
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
@@ -107,9 +112,9 @@ namespace EcsR3.Collections.Entity
         {
             lock (_lock)
             {
-                _onEntityAdded.Dispose();
-                _onEntityRemoved.Dispose();
-                EntityLookup.Clear();
+                _onAdded.Dispose();
+                _onRemoved.Dispose();
+                RemoveAll();
             }
         }
 
@@ -119,15 +124,6 @@ namespace EcsR3.Collections.Entity
             {
                 lock (_lock)
                 { return EntityLookup.Count; }
-            }
-        }
-
-        public IEntity this[int index]
-        {
-            get
-            {
-                lock (_lock)
-                { return EntityLookup.GetByIndex(index); }
             }
         }
     }

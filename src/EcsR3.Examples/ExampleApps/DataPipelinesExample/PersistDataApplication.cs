@@ -20,7 +20,7 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample
 
         protected override void ApplicationStarted()
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
 
             var component = new PlayerStateComponent
             {

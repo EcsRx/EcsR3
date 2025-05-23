@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using SystemsR3.Infrastructure.Dependencies;
-using SystemsR3.Infrastructure.Extensions;
-using SystemsR3.Systems;
 using EcsR3.Infrastructure;
 using EcsR3.Infrastructure.Extensions;
 using EcsR3.Tests.Systems.PriorityScenarios;
 using NSubstitute;
+using SystemsR3.Infrastructure.Dependencies;
+using SystemsR3.Infrastructure.Extensions;
+using SystemsR3.Systems;
 using Xunit;
-
 using ViewApplicationExtensions =  EcsR3.Plugins.Views.Extensions.IEcsRxApplicationExtensions;
 
 
-namespace EcsR3.Tests.EcsRx
+namespace EcsR3.Tests.EcsR3
 {
     public class IApplicationExtensionsTests
     {

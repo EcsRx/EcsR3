@@ -12,12 +12,12 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using EcsR3.Groups.Observable.Tracking;
+using EcsR3.Groups.Tracking;
 using EcsR3.Plugins.Batching.Builders;
 using EcsR3.Plugins.Views.Components;
 using EcsR3.Plugins.Views.Systems;
@@ -44,7 +44,7 @@ namespace EcsR3.Tests.Sanity
             _logger = logger;
         }
 
-        private (IObservableGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
+        private (IComputedGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -64,13 +64,13 @@ namespace EcsR3.Tests.Sanity
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType, entityChangeRouter);
             var entityCollection = new EntityCollection(entityFactory);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter);
-            var observableGroupFactory = new ObservableGroupFactory(groupTrackerFactory, entityCollection);
-            var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityCollection, componentLookupType);
+            var observableGroupFactory = new ComputedEntityGroupFactory(groupTrackerFactory, entityCollection);
+            var observableGroupManager = new ComputedGroupManager(observableGroupFactory, entityCollection, componentLookupType);
 
             return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter);
         }
 
-        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
+        private SystemExecutor CreateExecutor(IComputedGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
         {
             var threadHandler = new DefaultThreadHandler();
             updateScheduler ??= new DefaultUpdateScheduler();
@@ -103,8 +103,8 @@ namespace EcsR3.Tests.Sanity
             var executor = CreateExecutor(observableGroupManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var entityOne = entityCollection.CreateEntity();
-            var entityTwo = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
+            var entityTwo = entityCollection.Create();
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
             entityTwo.AddComponents(new TestComponentTwo());
@@ -117,7 +117,7 @@ namespace EcsR3.Tests.Sanity
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
             var (observableGroupManager, entityCollection, _, componentTypeLookup, entityChangeRouter) = CreateFramework();
-            var entityOne = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
 
             var testComponentOneTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne));
             var testComponentTwoTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo));
@@ -149,7 +149,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
 
@@ -173,10 +173,10 @@ namespace EcsR3.Tests.Sanity
             var teardownCalled = false;
             viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
 
-            var entityOne = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
 
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
@@ -192,11 +192,11 @@ namespace EcsR3.Tests.Sanity
             var actualCallList = new List<string>();
             
             var viewResolverSystem = new HybridSetupSystem(actualCallList.Add, new Group(typeof(TestComponentOne), typeof(ViewComponent)));
-            var entityOne = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
             
             executor.AddSystem(viewResolverSystem);
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
             executor.RemoveSystem(viewResolverSystem);
 
             Assert.Equal(expectedCallList, actualCallList);
@@ -206,7 +206,7 @@ namespace EcsR3.Tests.Sanity
         public unsafe void should_keep_state_with_batches()
         {
             var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.CreateEntity();
+            var entity1 = entityCollection.Create();
 
             var startingInt = 2;
             var finalInt = 10;
@@ -246,7 +246,7 @@ namespace EcsR3.Tests.Sanity
         public unsafe void should_retain_pointer_through_new_struct()
         {
             var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.CreateEntity();
+            var entity1 = entityCollection.Create();
 
             var startingInt = 2;
             var finalInt = 10;
@@ -288,11 +288,11 @@ namespace EcsR3.Tests.Sanity
         {
             var expectedSize = 5000;
             var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var observableGroup = observableGroupManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
+            var observableGroup = observableGroupManager.GetComputedGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
 
             for (var i = 0; i < expectedSize; i++)
             {
-                var entity = entityCollection.CreateEntity();
+                var entity = entityCollection.Create();
                 entity.AddComponents(new ViewComponent(), new TestComponentOne());
             }
             
@@ -312,7 +312,7 @@ namespace EcsR3.Tests.Sanity
             var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveDataTestSystem1(entityCollection);
@@ -332,7 +332,7 @@ namespace EcsR3.Tests.Sanity
             var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveEntityTestSystem1(entityCollection);
@@ -352,7 +352,7 @@ namespace EcsR3.Tests.Sanity
             var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingSetupTestSystem1(entityCollection);
@@ -374,7 +374,7 @@ namespace EcsR3.Tests.Sanity
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingBasicEntitySystem1(entityCollection);
@@ -393,7 +393,7 @@ namespace EcsR3.Tests.Sanity
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveDataTestSystem1(entityCollection);
@@ -417,7 +417,7 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(systemA);
             executor.AddSystem(systemB);
             
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
             
             updateTrigger.OnNext(new ElapsedTime());
@@ -448,7 +448,7 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(system7);
             executor.AddSystem(system8);
             
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
             
             updateTrigger.OnNext(new ElapsedTime());
@@ -479,11 +479,11 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(system7);
             executor.AddSystem(system8);
             
-            var entity1 = entityCollection.CreateEntity();
+            var entity1 = entityCollection.Create();
             entity1.AddComponents(new ComponentWithReactiveProperty(), new TestComponentOne());
-            var entity2 = entityCollection.CreateEntity();
+            var entity2 = entityCollection.Create();
             entity2.AddComponents(new ComponentWithReactiveProperty(), new TestComponentTwo());
-            var entity3 = entityCollection.CreateEntity();
+            var entity3 = entityCollection.Create();
             entity3.AddComponents(new ComponentWithReactiveProperty(), new TestComponentThree());
             
             updateTrigger.OnNext(new ElapsedTime());

@@ -58,7 +58,7 @@ namespace EcsR3.Examples.ExampleApps.Playground
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 SetupEntity(entity);              
             }
         }

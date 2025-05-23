@@ -104,7 +104,7 @@ public class HelloWorldExampleApplication : EcsR3Application
 		SystemExecutor.AddSystem(new TalkingSystem());
 
 		var defaultCollection = EntityCollectionManager.GetCollection();
-		var entity = defaultCollection.CreateEntity();
+		var entity = defaultCollection.Create();
 
 		var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
 		entity.AddComponent(canTalkComponent);

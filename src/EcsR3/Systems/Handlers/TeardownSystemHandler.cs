@@ -13,13 +13,13 @@ namespace EcsR3.Systems.Handlers
     [Priority(10)]
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
-        public readonly IObservableGroupManager ObservableGroupManager;
+        public readonly IComputedGroupManager ComputedGroupManager;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         private readonly object _lock = new object();
         
-        public TeardownSystemHandler(IObservableGroupManager observableGroupManager)
+        public TeardownSystemHandler(IComputedGroupManager computedGroupManager)
         {
-            ObservableGroupManager = observableGroupManager;
+            ComputedGroupManager = computedGroupManager;
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -34,9 +34,9 @@ namespace EcsR3.Systems.Handlers
             { SystemSubscriptions.Add(system, entityChangeSubscriptions); }
 
             var castSystem = (ITeardownSystem) system;
-            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group);
+            var observableGroup = ComputedGroupManager.GetComputedGroup(castSystem.Group);
             
-            observableGroup.OnEntityRemoving
+            observableGroup.OnRemoving
                 .Subscribe(castSystem.Teardown)
                 .AddTo(entityChangeSubscriptions);        
         }

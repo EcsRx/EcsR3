@@ -21,7 +21,7 @@ public class EntityAddStructComponentWithPreAllocationtScenarioApplication : Ecs
         var structComponent1TypeId = ComponentTypeLookup.GetComponentTypeId(typeof(StructComponent1));
         for (var i = 0; i < AllocationAmount; i++)
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
             entity.AddComponent<StructComponent1>(structComponent1TypeId);
         }
     }

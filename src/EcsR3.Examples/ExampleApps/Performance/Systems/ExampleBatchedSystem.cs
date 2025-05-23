@@ -14,8 +14,8 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
     public class ExampleBatchedSystem : ReferenceBatchedSystem<SimpleReadComponent, SimpleWriteComponent>
     {
         public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, 
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager)
-            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
+            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager)
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedGroupManager)
         {}
 
         protected override Observable<bool> ReactWhen()

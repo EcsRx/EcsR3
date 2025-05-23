@@ -10,7 +10,7 @@ using EcsR3.Tests.Models;
 using NSubstitute;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx
+namespace EcsR3.Tests.EcsR3
 {
     public class EntityTests
     {

@@ -1,10 +1,10 @@
-﻿using EcsR3.Components.Lookups;
-using EcsR3.Tests.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using EcsR3.Components.Lookups;
+using EcsR3.Tests.Models;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Components.Lookups
+namespace EcsR3.Tests.EcsR3.Components.Lookups
 {
     public class ComponentTypeLookupTests
     {

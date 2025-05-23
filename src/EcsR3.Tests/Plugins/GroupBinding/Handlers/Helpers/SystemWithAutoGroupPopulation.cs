@@ -1,6 +1,6 @@
+using EcsR3.Computeds.Entities;
 using SystemsR3.Systems;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Plugins.GroupBinding.Attributes;
 using EcsR3.Systems;
 using EcsR3.Tests.Models;
@@ -12,28 +12,28 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers.Helpers
         public IGroup Group => new TestGroupA();
         
         [FromGroup(typeof(TestGroupA))]
-        public IObservableGroup ObservableGroupA { get; set; }
+        public IComputedEntityGroup ObservableGroupA { get; set; }
         
         [FromGroup(typeof(TestGroupA))]
-        public IObservableGroup IgnoredObservableGroup { get; }
+        public IComputedEntityGroup IgnoredObservableGroup { get; }
         
         [FromComponents(typeof(TestComponentTwo))]
-        public IObservableGroup ObservableGroupB { get; set; }
+        public IComputedEntityGroup ObservableGroupB { get; set; }
 
         public int IgnoredProperty { get; set; }
 
         [FromGroup]
-        public IObservableGroup ObservableGroupC;
+        public IComputedEntityGroup ObservableGroupC;
 
         [FromGroup(typeof(TestGroupA))]
-        public IObservableGroup ObservableGroupAInCollection2;
+        public IComputedEntityGroup ObservableGroupAInCollection2;
 
 
         [FromComponents(typeof(TestComponentTwo))]
-        public IObservableGroup ObservableGroupBInCollection5;
+        public IComputedEntityGroup ObservableGroupBInCollection5;
 
         [FromGroup]
-        public IObservableGroup ObservableGroupCInCollection7 { get; set; }
+        public IComputedEntityGroup ObservableGroupCInCollection7 { get; set; }
 
         public int IgnoredField;
     }

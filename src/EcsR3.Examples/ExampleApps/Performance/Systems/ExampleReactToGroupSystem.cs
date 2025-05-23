@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Systems;
 using R3;
 
@@ -14,7 +14,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
     {
         public IGroup Group { get; } = new Group(typeof(SimpleReadComponent), typeof(SimpleWriteComponent));
         
-        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)

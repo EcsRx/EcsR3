@@ -6,7 +6,7 @@ using SystemsR3.Executor.Handlers;
 using SystemsR3.Systems;
 using SystemsR3.Types;
 using EcsR3.Collections;
-using EcsR3.Groups.Observable;
+using EcsR3.Computeds.Entities;
 using EcsR3.Plugins.GroupBinding.Attributes;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Systems;
@@ -27,10 +27,10 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         private static readonly Type FromGroupAttributeType = typeof(FromGroupAttribute); 
         private static readonly Type FromComponentsAttributeType = typeof(FromComponentsAttribute); 
         
-        public IObservableGroupManager ObservableGroupManager { get; }
+        public IComputedGroupManager ComputedGroupManager { get; }
 
-        public GroupBindingSystemHandler(IObservableGroupManager observableGroupManager)
-        { ObservableGroupManager = observableGroupManager; }
+        public GroupBindingSystemHandler(IComputedGroupManager computedGroupManager)
+        { ComputedGroupManager = computedGroupManager; }
 
         public bool CanHandleSystem(ISystem system)
         { return true; }
@@ -60,14 +60,14 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         public PropertyInfo[] GetApplicableProperties(Type systemType)
         {
             return systemType.GetProperties()
-                .Where(x => x.CanWrite && x.PropertyType == typeof(IObservableGroup))
+                .Where(x => x.CanWrite && x.PropertyType == typeof(IComputedEntityGroup))
                 .ToArray();
         }
         
         public FieldInfo[] GetApplicableFields(Type systemType)
         {
             return systemType.GetFields()
-                .Where(x => x.FieldType == typeof(IObservableGroup))
+                .Where(x => x.FieldType == typeof(IComputedEntityGroup))
                 .ToArray();
         }
 
@@ -76,7 +76,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, property);
             if (group == null) { return; }
 
-            property.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
+            property.SetValue(system, ComputedGroupManager.GetComputedGroup(group));
         }
 
         public void ProcessField(FieldInfo field, ISystem system)
@@ -84,7 +84,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, field);
             if (group == null) { return; }
 
-            field.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
+            field.SetValue(system, ComputedGroupManager.GetComputedGroup(group));
         }
         
         public void SetupSystem(ISystem system)

@@ -6,10 +6,10 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
-using EcsR3.Groups.Observable;
-using EcsR3.Groups.Observable.Tracking;
+using EcsR3.Groups.Tracking;
 using EcsR3.Systems.Handlers;
 
 namespace EcsR3.Infrastructure.Modules
@@ -25,8 +25,8 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
-            registry.Bind<IObservableGroupFactory, ObservableGroupFactory>();
-            registry.Bind<IObservableGroupManager, ObservableGroupManager>();
+            registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
+            registry.Bind<IComputedGroupManager, ComputedGroupManager>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();

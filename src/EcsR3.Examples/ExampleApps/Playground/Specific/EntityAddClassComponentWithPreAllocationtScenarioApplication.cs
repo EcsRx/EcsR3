@@ -21,7 +21,7 @@ public class EntityAddClassComponentWithPreAllocationtScenarioApplication : EcsR
         
         for (var i = 0; i < AllocationAmount; i++)
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
             entity.AddComponent<ClassComponent1>();
         }
     }

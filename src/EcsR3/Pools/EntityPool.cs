@@ -19,7 +19,7 @@ namespace EcsR3.Pools
 
         public override IEntity Create()
         {
-            var entity = EntityCollection.CreateEntity();
+            var entity = EntityCollection.Create();
             SetupEntity(entity);
             return entity;
         }

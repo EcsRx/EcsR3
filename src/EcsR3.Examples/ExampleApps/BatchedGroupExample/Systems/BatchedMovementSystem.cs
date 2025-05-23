@@ -13,8 +13,8 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
 {
     public class BatchedMovementSystem : BatchedSystem<PositionComponent, MovementSpeedComponent>
     {
-        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) 
-            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
+        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedGroupManager computedGroupManager) 
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, computedGroupManager)
         {}
 
         protected override Observable<bool> ReactWhen()
