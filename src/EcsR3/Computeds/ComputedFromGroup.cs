@@ -16,6 +16,7 @@ namespace EcsR3.Computeds
         private readonly object _lock = new object();
         
         public IObservableGroup InternalObservableGroup { get; }
+        public Observable<T> OnChanged => _onDataChanged;
 
         protected ComputedFromGroup(IObservableGroup internalObservableGroup)
         {

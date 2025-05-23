@@ -13,8 +13,10 @@ namespace SystemsR3.Computeds.Collections
         
         public TInput DataSource { get; }
         public IEnumerable<TOutput> Value => GetData();
+        
         public TOutput this[int index] => ComputedData[index];
         public int Count => ComputedData.Count;
+        public Observable<IEnumerable<TOutput>> OnChanged => onDataChanged;
         
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
 
@@ -29,10 +31,6 @@ namespace SystemsR3.Computeds.Collections
             MonitorChanges();
             RefreshData();
         }
-        
-        
-        public IDisposable Subscribe(Observer<IEnumerable<TOutput>> observer)
-        { return onDataChanged.Subscribe(observer); }
         
         public void MonitorChanges()
         { RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions); }

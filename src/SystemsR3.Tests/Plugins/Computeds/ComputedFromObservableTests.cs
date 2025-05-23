@@ -25,7 +25,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(10);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             data.Value = expectedData;
 
             var actualData = computedData.Value;
@@ -41,7 +41,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(10);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             computedData.RefreshData(expectedData);
 
             var actualData = computedData.Value;
@@ -57,7 +57,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(expectedData);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             data.OnNext(expectedData);
 
             var actualData = computedData.Value;
@@ -73,7 +73,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(expectedData);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             computedData.RefreshData(expectedData);
 
             var actualData = computedData.Value;

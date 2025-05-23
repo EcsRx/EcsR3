@@ -25,7 +25,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = 10};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
 
             data.Data = expectedData;
             computedData.ManuallyRefresh.OnNext(Unit.Default);
@@ -43,7 +43,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = 10};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
 
             data.Data = expectedData;
             computedData.RefreshData();
@@ -61,7 +61,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = expectedData};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             data.Data = 10;
 
             var actualData = computedData.Value;
@@ -77,7 +77,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = expectedData};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             computedData.ManuallyRefresh.OnNext(Unit.Default);
 
             var actualData = computedData.Value;
@@ -93,7 +93,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = expectedData};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             computedData.RefreshData();
 
             var actualData = computedData.Value;

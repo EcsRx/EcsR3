@@ -19,9 +19,12 @@ namespace EcsR3.Computeds.Collections
         public Observable<CollectionElementChangedEvent<T>> OnAdded => _onElementAdded;
         public Observable<CollectionElementChangedEvent<T>> OnRemoved => _onElementChanged;
         public Observable<CollectionElementChangedEvent<T>> OnUpdated => _onElementChanged;
+        
+        public Observable<IEnumerable<T>> OnChanged => _onDataChanged;
 
         public IObservableGroup InternalObservableGroup { get; }
         public IEnumerable<T> Value => GetData();
+
         public T this[int index]
         {
             get

@@ -17,7 +17,6 @@ namespace EcsR3.Groups.Observable
     /// This can change based upon implementations though.
     /// </remarks>
     public interface IObservableGroup : IReadOnlyList<IEntity>, IDisposable
-
     {
         /// <summary>
         /// The underlying group
@@ -49,6 +48,11 @@ namespace EcsR3.Groups.Observable
         /// <returns>true if it finds the entity, false if it cannot</returns>
         bool ContainsEntity(int id);
         
+        /// <summary>
+        /// Gets the entity from the observable group
+        /// </summary>
+        /// <param name="id">The id of the entity</param>
+        /// <returns>The entity if it exists within the observable group</returns>
         IEntity GetEntity(int id);
     }
 }

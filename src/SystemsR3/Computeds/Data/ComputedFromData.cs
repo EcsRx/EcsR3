@@ -14,7 +14,8 @@ namespace SystemsR3.Computeds.Data
         private readonly object _lock = new object();
         
         public TInput DataSource { get; }
-
+        public Observable<TOutput> OnChanged => _onDataChanged;
+        
         public ComputedFromData(TInput dataSource)
         {
             DataSource = dataSource;
@@ -24,10 +25,7 @@ namespace SystemsR3.Computeds.Data
             MonitorChanges();
             RefreshData();
         }
-                
-        public IDisposable Subscribe(Observer<TOutput> observer)
-        { return _onDataChanged.Subscribe(observer); }
-
+        
         public TOutput Value => GetData();
 
         public void MonitorChanges()
