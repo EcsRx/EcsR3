@@ -69,14 +69,19 @@ namespace EcsR3.Computeds.Entities.Conventions
             {
                 Span<int> idsToRemove = stackalloc int[CachedEntityIds.Count];
                 var currentIndex = 0;
+                
                 foreach (var entity in EnumerableEntities)
                 {
-                    if(!IsEntityValid(entity))
+                    if (!IsEntityValid(entity))
                     { idsToRemove[currentIndex++] = entity.Id; }
                 }
 
                 foreach (var id in idsToRemove[..currentIndex])
-                { CachedEntityIds.Remove(id); }
+                {
+                    _onEntityRemoving.OnNext(DataSource.Get(id));
+                    CachedEntityIds.Remove(id);
+                    _onEntityRemoved.OnNext(DataSource.Get(id));
+                }
             }
         }
 
