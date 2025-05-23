@@ -4,17 +4,10 @@ using System.Collections.Generic;
 using R3;
 using SystemsR3.Extensions;
 
-namespace SystemsR3.Computeds.Collections
+namespace SystemsR3.Computeds.Conventions.Collections
 {
-    /*
-    public abstract class ComputedCollectionFromData<TInput, TOutput> : IComputedCollection<TOutput>, IDisposable
+    public abstract class ComputedListFromData<TOutput, TInput> : ComputedFromData<IReadOnlyList<TOutput>, TInput>, IComputedList<TOutput>
     {
-        public IList<TOutput> ComputedData { get; }
-        public List<IDisposable> Subscriptions { get; }
-        
-        public TInput DataSource { get; }
-        public IEnumerable<TOutput> Value => GetData();
-        
         public TOutput this[int index] => ComputedData[index];
         
         public Observable<TOutput> OnAdded { get; }
@@ -23,9 +16,11 @@ namespace SystemsR3.Computeds.Collections
         public int Count => ComputedData.Count;
         public Observable<IEnumerable<TOutput>> OnChanged => onDataChanged;
         
+        private readonly object _lock = new object();
+        
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
 
-        public ComputedCollectionFromData(TInput dataSource)
+        public ComputedListFromData(TInput dataSource) : base(dataSource)
         {
             DataSource = dataSource;
             Subscriptions = new List<IDisposable>();       
@@ -33,15 +28,25 @@ namespace SystemsR3.Computeds.Collections
             
             onDataChanged = new Subject<IEnumerable<TOutput>>();
             
-            MonitorChanges();
+            ListenForChanges();
             RefreshData();
         }
         
-        public void MonitorChanges()
+        public void ListenForChanges()
         { RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions); }
 
         public void RefreshData()
-        { Transform(DataSource); }
+        {
+            lock (_lock)
+            {
+                var previousHash = ComputedData.GetHashCode();
+                UpdateComputedData();
+                var newHash = ComputedData.GetHashCode();
+                if(newHash == previousHash) { return; }
+            }
+
+            onDataChanged.OnNext(ComputedData);
+        }
 
         /// <summary>
         /// The method to indicate when the listings should be updated
@@ -52,7 +57,7 @@ namespace SystemsR3.Computeds.Collections
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract Observable<bool> RefreshWhen();     
+        public abstract Observable<Unit> RefreshWhen();     
         
         /// <summary>
         /// The method to populate ComputedData and raise events from the data source
@@ -64,13 +69,10 @@ namespace SystemsR3.Computeds.Collections
         /// the ComputedData object
         /// </remarks>
         /// <param name="dataSource">The dataSource to transform</param>
-        public abstract void Transform(TInput dataSource);
-
-        public IEnumerable<TOutput> GetData()
-        { return ComputedData; }
+        public abstract void UpdateComputedData();
 
         public IEnumerator<TOutput> GetEnumerator()
-        { return GetData().GetEnumerator(); }
+        { return Value.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
@@ -80,5 +82,5 @@ namespace SystemsR3.Computeds.Collections
             Subscriptions.DisposeAll();
             onDataChanged?.Dispose();
         }
-    }*/
+    }
 }

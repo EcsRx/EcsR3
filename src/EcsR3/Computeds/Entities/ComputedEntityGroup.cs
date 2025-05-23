@@ -4,11 +4,11 @@ using System.Linq;
 using EcsR3.Collections.Entity;
 using EcsR3.Computeds.Groups;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable.Tracking.Trackers;
-using SystemsR3.Extensions;
+using EcsR3.Groups.Tracking.Trackers;
 using R3;
+using SystemsR3.Extensions;
 
-namespace EcsR3.Groups.Observable
+namespace EcsR3.Groups.Computeds
 {
     public class ComputedEntityGroup : IComputedEntityGroup
     {
@@ -26,14 +26,14 @@ namespace EcsR3.Groups.Observable
             }
         }
 
-        public Observable<IEnumerable<IEntity>> OnChanged => R3.Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<IEnumerable<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
         public Observable<IEntity> OnAdded => _onEntityAdded;
         public Observable<IEntity> OnRemoved => _onEntityRemoved;
         public Observable<IEntity> OnRemoving => _onEntityRemoving;
         
         public IObservableGroupTracker GroupTracker { get; }
-        public IEntityCollection Collection { get; }
+        public IReadOnlyEntityCollection Collection { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -41,7 +41,7 @@ namespace EcsR3.Groups.Observable
         
         private readonly object _lock = new object();
         
-        public ComputedEntityGroup(LookupGroup group, IObservableGroupTracker tracker, IEntityCollection collection)
+        public ComputedEntityGroup(LookupGroup group, IObservableGroupTracker tracker, IReadOnlyEntityCollection collection)
         {
             Group = group;
             Collection = collection;

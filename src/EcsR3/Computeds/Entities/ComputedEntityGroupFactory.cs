@@ -1,8 +1,8 @@
 ﻿using EcsR3.Collections.Entity;
 using EcsR3.Computeds.Groups;
-using EcsR3.Groups.Observable.Tracking;
+using EcsR3.Groups.Tracking;
 
-namespace EcsR3.Groups.Observable
+namespace EcsR3.Groups.Computeds
 {
     public class ComputedEntityGroupFactory : IComputedEntityGroupFactory
     {

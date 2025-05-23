@@ -3,10 +3,6 @@ using R3;
 
 namespace SystemsR3.Computeds.Collections
 {
-    /// <summary>
-    /// Represents a computed collection of elements
-    /// </summary>
-    /// <typeparam name="T">The data to contain</typeparam>
     public interface IComputedCollection<T> : IComputed<IEnumerable<T>>, IEnumerable<T>
     {
         /// <summary>

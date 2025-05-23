@@ -1,44 +1,36 @@
-using System;
-using System.Collections.Generic;
-using EcsR3.Groups.Observable;
 using R3;
 using SystemsR3.Computeds;
 using SystemsR3.Extensions;
 
-namespace EcsR3.Computeds
+namespace EcsR3.Computeds.Entities
 {
-    /*
-    public abstract class ComputedFromGroup<T> : IComputed<T>, IDisposable
+    public abstract class ComputedFromEntityGroup<T> : IComputed<T>
     {
         public T CachedData;
-        public readonly List<IDisposable> Subscriptions;
+        public readonly CompositeDisposable Subscriptions;
         
         private readonly Subject<T> _onDataChanged;
         private readonly object _lock = new object();
         
-        public IObservableGroup InternalObservableGroup { get; }
+        public IComputedEntityGroup InternalComputedGroup { get; }
         public Observable<T> OnChanged => _onDataChanged;
 
-        protected ComputedFromGroup(IObservableGroup internalObservableGroup)
+        protected ComputedFromEntityGroup(IComputedEntityGroup internalComputedGroup)
         {
-            InternalObservableGroup = internalObservableGroup;
-            Subscriptions = new List<IDisposable>();
-            
+            InternalComputedGroup = internalComputedGroup;
+            Subscriptions = new CompositeDisposable();
             _onDataChanged = new Subject<T>();
 
             MonitorChanges();
             RefreshData();
         }
-                
-        public IDisposable Subscribe(Observer<T> observer)
-        { return _onDataChanged.Subscribe(observer); }
 
         public T Value => GetData();
 
         public void MonitorChanges()
         {
-            InternalObservableGroup.OnAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
-            InternalObservableGroup.OnRemoving.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalComputedGroup.OnAdded.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
+            InternalComputedGroup.OnRemoved.Subscribe(_ => RefreshData()).AddTo(Subscriptions);
             RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
         }
 
@@ -46,7 +38,7 @@ namespace EcsR3.Computeds
         {
             lock (_lock)
             {
-                var newData = Transform(InternalObservableGroup);
+                var newData = Transform(InternalComputedGroup);
                 if (newData.Equals(CachedData)) { return; }
                 CachedData = newData;
             }
@@ -68,9 +60,9 @@ namespace EcsR3.Computeds
         /// <summary>
         /// The method to generate given data from the data source
         /// </summary>
-        /// <param name="observableGroup">The group to process</param>
+        /// <param name="computedEntityGroup">The entity group to process</param>
         /// <returns>The transformed data</returns>
-        public abstract T Transform(IObservableGroup observableGroup);
+        public abstract T Transform(IComputedEntityGroup computedEntityGroup);
 
         public T GetData()
         { return CachedData; }
@@ -80,5 +72,5 @@ namespace EcsR3.Computeds
             Subscriptions.DisposeAll();
             _onDataChanged.Dispose();
         }
-    }*/
+    }
 }

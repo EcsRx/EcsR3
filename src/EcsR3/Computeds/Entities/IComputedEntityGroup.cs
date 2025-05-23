@@ -1,10 +1,8 @@
 ﻿using EcsR3.Collections.Entity;
 using EcsR3.Entities;
-using EcsR3.Groups;
 using R3;
-using SystemsR3.Computeds.Collections;
 
-namespace EcsR3.Computeds.Groups
+namespace EcsR3.Groups.Computeds
 {
     /// <summary>
     /// A maintained collection of entities which match a given group
