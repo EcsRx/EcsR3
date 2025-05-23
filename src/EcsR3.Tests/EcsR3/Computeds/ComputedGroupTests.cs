@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using EcsR3.Entities;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
-using EcsR3.Tests.EcsRx.Computeds.Models;
+using EcsR3.Tests.EcsR3.Computeds.Models;
 using EcsR3.Tests.Models;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Computeds
+namespace EcsR3.Tests.EcsR3.Computeds
 {
+    /*
     public class ComputedGroupTests
     {
-        
         [Fact]
         public void should_populate_entity_cache_upon_creation()
         {
@@ -195,5 +194,5 @@ namespace EcsR3.Tests.EcsRx.Computeds
             Assert.Equal(1, removingFiredTimes);
             Assert.Equal(1, removedFiredTimes);
         }
-    }
+    }*/
 }

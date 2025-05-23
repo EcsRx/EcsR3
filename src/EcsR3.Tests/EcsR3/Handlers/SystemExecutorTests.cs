@@ -7,7 +7,7 @@ using SystemsR3.Executor;
 using SystemsR3.Executor.Handlers;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Handlers
+namespace EcsR3.Tests.EcsR3.Handlers
 {
     public class SystemExecutorTests
     {

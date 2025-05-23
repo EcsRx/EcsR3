@@ -48,13 +48,13 @@ namespace EcsR3.Systems.Handlers
             if (!hasEntityPredicate)
             {
                 subscription = UpdateScheduler.OnUpdate
-                    .Subscribe(x => ExecuteForGroup(observableGroup.Value.ToArray(), castSystem, runParallel));
+                    .Subscribe(x => ExecuteForGroup(observableGroup.ToArray(), castSystem, runParallel));
             }
             else
             {
                 var groupPredicate = castSystem.Group as IHasPredicate;
                 subscription = UpdateScheduler.OnUpdate
-                    .Subscribe(x => ExecuteForGroup(observableGroup.Value
+                    .Subscribe(x => ExecuteForGroup(observableGroup
                         .Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel));
             }
 

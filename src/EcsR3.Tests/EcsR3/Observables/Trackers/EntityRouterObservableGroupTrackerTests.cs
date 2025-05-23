@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities.Routing;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable.Tracking.Trackers;
+using EcsR3.Groups.Tracking.Trackers;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Observables.Trackers
+namespace EcsR3.Tests.EcsR3.Observables.Trackers
 {
     public class EntityRouterObservableGroupTrackerTests
     {

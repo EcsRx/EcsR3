@@ -20,6 +20,6 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber; }
 
         public void Process(IEntity entity, int reactionData)
-        { EntityCollection.RemoveEntity(entity.Id); }
+        { EntityCollection.Remove(entity.Id); }
     }
 }

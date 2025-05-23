@@ -17,6 +17,6 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         { EntityCollection = entityCollection; }
 
         public void Setup(IEntity entity)
-        { EntityCollection.RemoveEntity(entity.Id); }
+        { EntityCollection.Remove(entity.Id); }
     }
 }

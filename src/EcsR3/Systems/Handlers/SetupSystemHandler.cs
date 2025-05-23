@@ -63,7 +63,7 @@ namespace EcsR3.Systems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in observableGroup.Value)
+            foreach (var entity in observableGroup)
             { SetupEntity(castSystem, entity, entitySubscriptions); }
         }
         

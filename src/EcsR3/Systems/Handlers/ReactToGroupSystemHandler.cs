@@ -47,9 +47,9 @@ namespace EcsR3.Systems.Handlers
                 IDisposable noPredicateSub;
 
                 if (isExtendedSystem)
-                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Value.ToArray(), (IReactToGroupExSystem)castSystem, runParallel)); }
+                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.ToArray(), (IReactToGroupExSystem)castSystem, runParallel)); }
                 else
-                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Value.ToArray(), castSystem, runParallel)); }
+                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.ToArray(), castSystem, runParallel)); }
 
                 lock (_lock)
                 { _systemSubscriptions.Add(system, noPredicateSub); }
@@ -61,9 +61,9 @@ namespace EcsR3.Systems.Handlers
             IDisposable predicateSub;
             
             if (isExtendedSystem)
-            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Value.Where(groupPredicate.CanProcessEntity).ToList(), (IReactToGroupExSystem)castSystem, runParallel)); }
+            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToArray(), (IReactToGroupExSystem)castSystem, runParallel)); }
             else
-            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Value.Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel)); }
+            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToArray(), castSystem, runParallel)); }
 
             lock (_lock)
             { _systemSubscriptions.Add(system, predicateSub); }

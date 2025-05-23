@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Entities;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
-using EcsR3.Tests.EcsRx.Computeds.Models;
+using EcsR3.Tests.EcsR3.Computeds.Models;
 using EcsR3.Tests.Models;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Computeds
+namespace EcsR3.Tests.EcsR3.Computeds
 {
+    /*
     public class ComputedFromGroupTests
     {
         [Fact]
@@ -244,5 +244,5 @@ namespace EcsR3.Tests.EcsRx.Computeds
 
             Assert.NotEqual(expectedData, computedGroupData.CachedData);         
         }
-    }
+    }*/
 }

@@ -4,7 +4,7 @@ using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Collections
+namespace EcsR3.Tests.EcsR3.Collections
 {
     public class EntityCollectionTests
     {
@@ -18,11 +18,11 @@ namespace EcsR3.Tests.EcsRx.Collections
             var entityCollection = new EntityCollection(mockEntityFactory);
             
             var wasCalled = false;
-            entityCollection.EntityAdded.Subscribe(x => wasCalled = true);
+            entityCollection.OnAdded.Subscribe(x => wasCalled = true);
             
             var entity = entityCollection.Create();
             
-            Assert.Contains(mockEntity, entityCollection.EntityLookup);
+            Assert.Contains(mockEntity, entityCollection.EntityLookup.Values);
             Assert.Equal(mockEntity, entity);
             Assert.True(wasCalled);
         }
@@ -39,10 +39,10 @@ namespace EcsR3.Tests.EcsRx.Collections
             var entityCollection = new EntityCollection(mockEntityFactory);
             
             var wasCalled = false;
-            entityCollection.EntityRemoved.Subscribe(x => wasCalled = true);
+            entityCollection.OnRemoved.Subscribe(x => wasCalled = true);
             
             entityCollection.Create();
-            entityCollection.RemoveEntity(mockEntity.Id);
+            entityCollection.Remove(mockEntity.Id);
 
             Assert.True(wasCalled);
             Assert.DoesNotContain(mockEntity, entityCollection);
@@ -56,9 +56,9 @@ namespace EcsR3.Tests.EcsRx.Collections
             mockEntity.Id.Returns(1);
             
             var entityCollection = new EntityCollection(mockEntityFactory);
-            entityCollection.EntityLookup.Add(mockEntity);
+            entityCollection.EntityLookup.Add(1, mockEntity);
             
-            entityCollection.RemoveEntity(mockEntity.Id);
+            entityCollection.Remove(mockEntity.Id);
 
             mockEntity.Received(1).RemoveAllComponents();
             Assert.DoesNotContain(mockEntity, entityCollection);
@@ -77,11 +77,11 @@ namespace EcsR3.Tests.EcsRx.Collections
             
            
             var entityCollection = new EntityCollection(mockEntityFactory);
-            entityCollection.EntityLookup.Add(mockEntity1);
-            entityCollection.EntityLookup.Add(mockEntity2);
-            entityCollection.EntityLookup.Add(mockEntity3);
+            entityCollection.EntityLookup.Add(1, mockEntity1);
+            entityCollection.EntityLookup.Add(2, mockEntity2);
+            entityCollection.EntityLookup.Add(3, mockEntity3);
             
-            entityCollection.RemoveAllEntities();
+            entityCollection.RemoveAll();
 
             mockEntity1.Received(1).RemoveAllComponents();
             mockEntity2.Received(1).RemoveAllComponents();

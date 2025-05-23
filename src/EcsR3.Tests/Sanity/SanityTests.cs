@@ -12,12 +12,12 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using EcsR3.Groups.Observable.Tracking;
+using EcsR3.Groups.Tracking;
 using EcsR3.Plugins.Batching.Builders;
 using EcsR3.Plugins.Views.Components;
 using EcsR3.Plugins.Views.Systems;
@@ -44,7 +44,7 @@ namespace EcsR3.Tests.Sanity
             _logger = logger;
         }
 
-        private (IObservableGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
+        private (IComputedGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -64,13 +64,13 @@ namespace EcsR3.Tests.Sanity
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType, entityChangeRouter);
             var entityCollection = new EntityCollection(entityFactory);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter);
-            var observableGroupFactory = new ObservableGroupFactory(groupTrackerFactory, entityCollection);
-            var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityCollection, componentLookupType);
+            var observableGroupFactory = new ComputedEntityGroupFactory(groupTrackerFactory, entityCollection);
+            var observableGroupManager = new ComputedGroupManager(observableGroupFactory, entityCollection, componentLookupType);
 
             return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter);
         }
 
-        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
+        private SystemExecutor CreateExecutor(IComputedGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
         {
             var threadHandler = new DefaultThreadHandler();
             updateScheduler ??= new DefaultUpdateScheduler();
@@ -149,7 +149,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
 
@@ -176,7 +176,7 @@ namespace EcsR3.Tests.Sanity
             var entityOne = entityCollection.Create();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
 
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
@@ -196,7 +196,7 @@ namespace EcsR3.Tests.Sanity
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
             
             executor.AddSystem(viewResolverSystem);
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
             executor.RemoveSystem(viewResolverSystem);
 
             Assert.Equal(expectedCallList, actualCallList);
@@ -288,7 +288,7 @@ namespace EcsR3.Tests.Sanity
         {
             var expectedSize = 5000;
             var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var observableGroup = observableGroupManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
+            var observableGroup = observableGroupManager.GetComputedGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
 
             for (var i = 0; i < expectedSize; i++)
             {

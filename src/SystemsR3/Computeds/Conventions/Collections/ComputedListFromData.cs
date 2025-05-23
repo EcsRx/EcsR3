@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using R3;
-using SystemsR3.Extensions;
 
 namespace SystemsR3.Computeds.Conventions.Collections
 {

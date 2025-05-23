@@ -17,7 +17,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem1 = Substitute.For<ISetupSystem>();
@@ -36,7 +36,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_correctly_get_applicable_properties()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
@@ -50,7 +50,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_correctly_get_applicable_fields()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
@@ -64,7 +64,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_get_group_from_members()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
@@ -104,7 +104,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_throw_exception_when_no_group_system_interface_with_empty_group()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemMissingGroup();
             var propertyInfo = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
@@ -124,15 +124,15 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_populate_properties()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedGroupManager>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
             reactToEntitySystemHandler.SetupSystem(dummySystem);
 
             // This could be more specific but given other tests it seems fine for now
-            observableGroupManager.Received(4).GetObservableGroup(Arg.Any<TestGroupA>(), Arg.Any<int[]>());
-            observableGroupManager.Received(2).GetObservableGroup(Arg.Any<Group>(), Arg.Any<int[]>());
+            observableGroupManager.Received(4).GetComputedGroup(Arg.Any<TestGroupA>());
+            observableGroupManager.Received(2).GetComputedGroup(Arg.Any<Group>());
         }
     }
 }

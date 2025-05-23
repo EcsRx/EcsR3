@@ -1,8 +1,9 @@
+using System.Linq;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable;
 using EcsR3.Plugins.Batching.Accessors;
 using EcsR3.Plugins.Batching.Builders;
 using EcsR3.Tests.Models;
@@ -31,15 +32,15 @@ namespace EcsR3.Tests.Plugins.Batching
             mockComponentDatabase.GetPoolFor<TestStructComponentOne>(0).Returns(mockComponentPool1);
             mockComponentDatabase.GetPoolFor<TestStructComponentTwo>(1).Returns(mockComponentPool2);
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
+            mockObservableGroup.OnAdded.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoving.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoved.Returns(Observable.Empty<IEntity>());
             
             var mockBatchBuilder = Substitute.For<IBatchBuilder<TestStructComponentOne, TestStructComponentTwo>>();
             
             var batchAccessor = new BatchAccessor<TestStructComponentOne,TestStructComponentTwo>(mockObservableGroup, mockComponentDatabase, mockBatchBuilder, mockTypeLookup);          
-            mockBatchBuilder.Received(1).Build(mockObservableGroup.Value);
+            mockBatchBuilder.Received(1).Build(mockObservableGroup.ToArray());
         }
         
         [Fact]
@@ -61,10 +62,10 @@ namespace EcsR3.Tests.Plugins.Batching
 
             var entityAddedSubject = new Subject<IEntity>();
             var entityRemovedSubject = new Subject<IEntity>();
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(entityAddedSubject);
-            mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(entityRemovedSubject);
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
+            mockObservableGroup.OnAdded.Returns(entityAddedSubject);
+            mockObservableGroup.OnRemoving.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoved.Returns(entityRemovedSubject);
             
             var mockBatchBuilder = Substitute.For<IBatchBuilder<TestStructComponentOne, TestStructComponentTwo>>();
             
@@ -72,7 +73,7 @@ namespace EcsR3.Tests.Plugins.Batching
             entityAddedSubject.OnNext(null);
             entityRemovedSubject.OnNext(null);
             
-            mockBatchBuilder.Received(3).Build(mockObservableGroup);
+            mockBatchBuilder.Received(3).Build(mockObservableGroup.ToArray());
         }
         
         [Fact]
@@ -94,10 +95,10 @@ namespace EcsR3.Tests.Plugins.Batching
             mockComponentDatabase.GetPoolFor<TestStructComponentOne>(0).Returns(mockComponentPool1);
             mockComponentDatabase.GetPoolFor<TestStructComponentTwo>(1).Returns(mockComponentPool2);
 
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
+            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
+            mockObservableGroup.OnAdded.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoving.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnRemoved.Returns(Observable.Empty<IEntity>());
             
             var mockBatchBuilder = Substitute.For<IBatchBuilder<TestStructComponentOne, TestStructComponentTwo>>();
             
@@ -105,7 +106,7 @@ namespace EcsR3.Tests.Plugins.Batching
             poolChanging1Subject.OnNext(false);
             poolChanging2Subject.OnNext(false);
             
-            mockBatchBuilder.Received(3).Build(mockObservableGroup);
+            mockBatchBuilder.Received(3).Build(mockObservableGroup.ToArray());
         }
     }
 }

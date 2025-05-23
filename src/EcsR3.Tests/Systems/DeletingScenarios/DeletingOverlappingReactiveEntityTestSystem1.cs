@@ -24,6 +24,6 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity);  }
 
         public void Process(IEntity entity)
-        { EntityCollection.RemoveEntity(entity.Id); }
+        { EntityCollection.Remove(entity.Id); }
     }
 }

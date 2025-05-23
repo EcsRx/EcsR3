@@ -14,6 +14,6 @@ namespace SystemsR3.Tests.Plugins.Computeds.Models
         { return ManuallyRefresh; }
 
         protected override void UpdateComputedData()
-        {}
+        { ComputedData = DataSource.Data; }
     }
 }

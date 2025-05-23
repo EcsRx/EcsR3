@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Tests.Models;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx
+namespace EcsR3.Tests.EcsR3
 {
     public class IGroupExtensionTests
     {
