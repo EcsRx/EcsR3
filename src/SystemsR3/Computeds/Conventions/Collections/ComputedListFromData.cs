@@ -8,8 +8,8 @@ namespace SystemsR3.Computeds.Conventions.Collections
     {
         public TOutput this[int index] => ComputedData[index];
         
-        public Observable<TOutput> OnAdded { get; }
-        public Observable<TOutput> OnRemoved { get; }
+        public Observable<TOutput> OnAdded { get; protected set; }
+        public Observable<TOutput> OnRemoved { get; protected set; }
         
         public int Count => ComputedData.Count;
         

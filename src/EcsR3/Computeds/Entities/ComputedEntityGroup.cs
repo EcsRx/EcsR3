@@ -37,9 +37,7 @@ namespace EcsR3.Computeds.Entities
         public IObservableGroupTracker GroupTracker { get; }
         public IReadOnlyEntityCollection Collection { get; }
 
-        private readonly Subject<IEntity> _onEntityAdded;
-        private readonly Subject<IEntity> _onEntityRemoved;
-        private readonly Subject<IEntity> _onEntityRemoving;
+        private readonly Subject<IEntity> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
         
         private readonly object _lock = new object();
         
