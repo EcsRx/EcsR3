@@ -15,6 +15,7 @@ using EcsR3.Components.Lookups;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Factories;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;

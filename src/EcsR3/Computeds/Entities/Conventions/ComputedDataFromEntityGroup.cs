@@ -1,4 +1,3 @@
-using EcsR3.Computeds.Entities.Registries;
 using R3;
 using SystemsR3.Computeds.Conventions;
 

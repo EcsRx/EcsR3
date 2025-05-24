@@ -2,14 +2,12 @@
 using System.Linq;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Lookups;
-using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Factories;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using SystemsR3.Extensions;
 
-namespace EcsR3.Computeds
+namespace EcsR3.Computeds.Entities.Registries
 {
     public class ComputedEntityGroupRegistry : IComputedEntityGroupRegistry
     {
@@ -41,7 +39,11 @@ namespace EcsR3.Computeds
         public IComputedEntityGroup GetComputedGroup(IGroup group)
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(group);
-            
+            return GetComputedGroup(lookupGroup);
+        }
+
+        public IComputedEntityGroup GetComputedGroup(LookupGroup lookupGroup)
+        {
             lock (_lock)
             {
                 if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -57,7 +59,10 @@ namespace EcsR3.Computeds
         public void Dispose()
         {
             lock (_lock)
-            { _computedGroups.Values.DisposeAll(); }
+            {
+                _computedGroups.Values.DisposeAll();
+                _computedGroups.Clear();
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 using EcsR3.Computeds.Entities;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using R3;
 

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsR3.Computeds.Entities;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
 
-namespace EcsR3.Computeds
+namespace EcsR3.Computeds.Entities.Registries
 {
     public interface IComputedEntityGroupRegistry : IDisposable
     {
@@ -24,5 +22,7 @@ namespace EcsR3.Computeds
         /// <param name="group">The group to match entities on</param>
         /// <returns>An IObservableGroup monitoring the group passed in</returns>
         IComputedEntityGroup GetComputedGroup(IGroup group);
+        
+        IComputedEntityGroup GetComputedGroup(LookupGroup group);
     }
 }

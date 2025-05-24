@@ -1,7 +1,6 @@
 using System.Linq;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
 using EcsR3.Tests.Models;
 using R3;

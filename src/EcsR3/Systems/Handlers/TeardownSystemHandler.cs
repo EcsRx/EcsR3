@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EcsR3.Collections;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
 using R3;
 using SystemsR3.Attributes;

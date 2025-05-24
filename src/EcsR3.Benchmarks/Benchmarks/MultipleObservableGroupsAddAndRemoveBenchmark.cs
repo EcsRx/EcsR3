@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;

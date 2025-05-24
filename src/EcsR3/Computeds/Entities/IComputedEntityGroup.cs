@@ -2,7 +2,7 @@
 using EcsR3.Entities;
 using R3;
 
-namespace EcsR3.Computeds.Entities.Registries
+namespace EcsR3.Computeds.Entities
 {
     /// <summary>
     /// A maintained collection of entities which match a given group

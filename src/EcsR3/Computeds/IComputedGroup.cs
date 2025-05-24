@@ -1,8 +1,9 @@
-﻿using EcsR3.Groups;
+﻿using System;
+using EcsR3.Groups;
 
 namespace EcsR3.Computeds
 {
-    public interface IComputedGroup
+    public interface IComputedGroup : IDisposable
     {
         /// <summary>
         /// The underlying group

@@ -4,6 +4,7 @@ using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure

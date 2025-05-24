@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Extensions;
+using EcsR3.Groups;
+using SystemsR3.Extensions;
+
+namespace EcsR3.Computeds.Components.Registries
+{
+    public class ComputedComponentGroupRegistry : IComputedComponentGroupRegistry
+    {
+        private const string CastError = "Existing computed group does not match generic layout, ensure all groups are created with the same generic layout.";
+        
+        public Dictionary<LookupGroup, IComputedComponentGroup> _computedGroups { get; }
+
+        public IEnumerable<IComputedComponentGroup> ComputedGroups => _computedGroups.Values;
+
+        public IComponentTypeLookup ComponentTypeLookup { get; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
+        
+        private readonly object _lock = new object();
+        
+        public ComputedComponentGroupRegistry(IComputedEntityGroupRegistry computedEntityGroupRegistry, IComponentTypeLookup componentTypeLookup)
+        {
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
+            ComponentTypeLookup = componentTypeLookup;
+
+            _computedGroups = new Dictionary<LookupGroup, IComputedComponentGroup>();
+        }
+
+        public void Dispose()
+        {
+            lock (_lock)
+            {
+                _computedGroups.Values.DisposeAll();
+                _computedGroups.Clear();
+            }
+        }
+
+        public IComputedComponentGroup<T1> GetComputedGroup<T1>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+
+        public IComputedComponentGroup<T1, T2> GetComputedGroup<T1, T2>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+
+        public IComputedComponentGroup<T1, T2, T3> GetComputedGroup<T1, T2, T3>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2, T3> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+
+        public IComputedComponentGroup<T1, T2, T3, T4> GetComputedGroup<T1, T2, T3, T4>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2, T3, T4> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+        
+        public IComputedComponentGroup<T1, T2, T3, T4, T5> GetComputedGroup<T1, T2, T3, T4, T5>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2, T3, T4, T5> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+        
+        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6> GetComputedGroup<T1, T2, T3, T4, T5, T6>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2, T3, T4, T5, T6> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+        
+        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> GetComputedGroup<T1, T2, T3, T4, T5, T6, T7>()
+        {
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+            if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
+            {
+                if (!(existingComputedGroup is IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> castComponentGroup)) 
+                { throw new InvalidCastException(CastError); }
+                return castComponentGroup;
+            }
+
+            var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>(ComponentTypeLookup, computedEntityGroup);
+            _computedGroups.Add(lookupGroup, computedGroup);
+            return computedGroup;
+        }
+    }
+}

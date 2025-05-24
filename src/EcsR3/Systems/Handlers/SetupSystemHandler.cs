@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;

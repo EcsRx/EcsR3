@@ -1,5 +1,6 @@
 using EcsR3.Collections;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using SystemsR3.Systems;
 using EcsR3.Plugins.GroupBinding.Attributes;
 

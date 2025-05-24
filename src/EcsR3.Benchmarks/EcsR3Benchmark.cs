@@ -7,6 +7,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Infrastructure.Modules;
