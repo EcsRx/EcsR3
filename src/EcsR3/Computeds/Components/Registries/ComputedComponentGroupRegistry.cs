@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsR3.Components;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Extensions;
@@ -38,7 +39,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
         }
 
-        public IComputedComponentGroup<T1> GetComputedGroup<T1>()
+        public IComputedComponentGroup<T1> GetComputedGroup<T1>() where T1 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -54,7 +55,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
 
-        public IComputedComponentGroup<T1, T2> GetComputedGroup<T1, T2>()
+        public IComputedComponentGroup<T1, T2> GetComputedGroup<T1, T2>() where T1 : IComponent where T2 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -70,7 +71,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
 
-        public IComputedComponentGroup<T1, T2, T3> GetComputedGroup<T1, T2, T3>()
+        public IComputedComponentGroup<T1, T2, T3> GetComputedGroup<T1, T2, T3>() where T1 : IComponent where T2 : IComponent where T3 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -86,7 +87,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
 
-        public IComputedComponentGroup<T1, T2, T3, T4> GetComputedGroup<T1, T2, T3, T4>()
+        public IComputedComponentGroup<T1, T2, T3, T4> GetComputedGroup<T1, T2, T3, T4>() where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -102,7 +103,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
         
-        public IComputedComponentGroup<T1, T2, T3, T4, T5> GetComputedGroup<T1, T2, T3, T4, T5>()
+        public IComputedComponentGroup<T1, T2, T3, T4, T5> GetComputedGroup<T1, T2, T3, T4, T5>() where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -118,7 +119,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
         
-        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6> GetComputedGroup<T1, T2, T3, T4, T5, T6>()
+        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6> GetComputedGroup<T1, T2, T3, T4, T5, T6>() where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))
@@ -134,7 +135,7 @@ namespace EcsR3.Computeds.Components.Registries
             return computedGroup;
         }
         
-        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> GetComputedGroup<T1, T2, T3, T4, T5, T6, T7>()
+        public IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> GetComputedGroup<T1, T2, T3, T4, T5, T6, T7>() where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent where T7 : IComponent
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
             if (_computedGroups.TryGetValue(lookupGroup, out var existingComputedGroup))

@@ -1,18 +1,20 @@
 ﻿using System;
+using EcsR3.Components;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
 using EcsR3.Extensions;
 using EcsR3.Groups;
+using R3;
 
 namespace EcsR3.Computeds.Components
 {
-    public class ComputedComponentGroup<T1> : ComputedDataFromEntityGroup<ComponentBatch<T1>[]>, IComputedComponentGroup<T1>
+    public class ComputedComponentGroup<T1> : ComputedDataFromEntityGroup<ComponentBatch<T1>[]>, IComputedComponentGroup<T1> where T1 : IComponent
     {
         private readonly int _t1ComponentId;
         
         public LookupGroup Group { get; }
-
+        
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
@@ -34,7 +36,9 @@ namespace EcsR3.Computeds.Components
     }
 
     public class ComputedComponentGroup<T1, T2> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2>[]>,
-        IComputedComponentGroup<T1, T2>
+        IComputedComponentGroup<T1, T2> 
+        where T1 : IComponent
+        where T2 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -71,6 +75,9 @@ namespace EcsR3.Computeds.Components
 
     public class ComputedComponentGroup<T1, T2, T3> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3>[]>,
         IComputedComponentGroup<T1, T2, T3>
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -110,6 +117,10 @@ namespace EcsR3.Computeds.Components
     
     public class ComputedComponentGroup<T1, T2, T3, T4> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4>[]>,
         IComputedComponentGroup<T1, T2, T3, T4>
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
+        where T4 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -152,6 +163,11 @@ namespace EcsR3.Computeds.Components
     
     public class ComputedComponentGroup<T1, T2, T3, T4, T5> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5>
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
+        where T4 : IComponent
+        where T5 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -197,6 +213,12 @@ namespace EcsR3.Computeds.Components
     
     public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6>
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
+        where T4 : IComponent
+        where T5 : IComponent
+        where T6 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -206,6 +228,7 @@ namespace EcsR3.Computeds.Components
         private readonly int _t6ComponentId;
 
         public LookupGroup Group { get; }
+        public Observable<Unit> OnRefreshed => OnChanged.Select(x => Unit.Default);
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -245,6 +268,13 @@ namespace EcsR3.Computeds.Components
     
     public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
+        where T4 : IComponent
+        where T5 : IComponent
+        where T6 : IComponent
+        where T7 : IComponent
     {
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
@@ -255,6 +285,7 @@ namespace EcsR3.Computeds.Components
         private readonly int _t7ComponentId;
 
         public LookupGroup Group { get; }
+        public Observable<Unit> OnRefreshed => OnChanged.Select(x => Unit.Default);
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)

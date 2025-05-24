@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using EcsR3.Examples.Custom;
+using EcsR3.Examples.Custom.ComputedComponents;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample;
@@ -69,7 +70,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
 
-            new Class4Application().StartApplication();
+            new CustomComputedStructComponentApplication().StartApplication();
         }
     }
 }
