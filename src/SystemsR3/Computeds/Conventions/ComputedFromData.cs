@@ -1,18 +1,18 @@
-﻿using R3;
+﻿using System;
+using R3;
+using SystemsR3.Extensions;
 
 namespace SystemsR3.Computeds.Conventions
 {
     public abstract class ComputedFromData<TOutput,TInput> : ComputedFrom<TOutput, TInput>
     {
         public ComputedFromData(TInput dataSource) : base(dataSource)
-        {
-            Initialize();
-        }
+        { Initialize(); }
 
         public void Initialize()
         {
             RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
-            RefreshData();
+            Observable.Interval(TimeSpan.FromMilliseconds(1)).SubscribeOnce(x => RefreshData());
         }
         
         public void RefreshData()

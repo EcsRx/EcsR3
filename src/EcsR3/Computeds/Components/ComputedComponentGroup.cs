@@ -21,6 +21,7 @@ namespace EcsR3.Computeds.Components
             { throw new ArgumentException("ComputedEntityGroup must match component types"); }
             
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1>>();
         }
 
         protected override void UpdateComputedData()
@@ -52,6 +53,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2>>();
         }
 
         protected override void UpdateComputedData()
@@ -89,6 +91,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3>>();
         }
 
         protected override void UpdateComputedData()
@@ -129,6 +132,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4>>();
         }
 
         protected override void UpdateComputedData()
@@ -172,6 +176,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5>>();
         }
 
         protected override void UpdateComputedData()
@@ -218,6 +223,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5, T6>>();
         }
 
         protected override void UpdateComputedData()
@@ -267,6 +273,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
+            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>>();
         }
 
         protected override void UpdateComputedData()

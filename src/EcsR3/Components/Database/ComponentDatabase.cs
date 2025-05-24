@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using EcsR3.Components.Lookups;
-using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 
 namespace EcsR3.Components.Database

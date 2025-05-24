@@ -1,5 +1,8 @@
-﻿namespace EcsR3.Computeds.Components
+﻿using System.Runtime.InteropServices;
+
+namespace EcsR3.Computeds.Components
 {
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1>
     {
         public readonly int EntityId;
@@ -13,6 +16,7 @@
         }
     }
     
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2>
     {
         public readonly int EntityId;
@@ -28,6 +32,7 @@
         }
     }
     
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3>
     {
         public readonly int EntityId;
@@ -45,6 +50,7 @@
         }
     }
     
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4>
     {
         public readonly int EntityId;
@@ -64,6 +70,7 @@
         }
     }
         
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5>
     {
         public readonly int EntityId;
@@ -85,6 +92,7 @@
         }
     }
     
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5, T6>
     {
         public readonly int EntityId;
@@ -108,6 +116,7 @@
         }
     }
         
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5, T6, T7>
     {
         public readonly int EntityId;
