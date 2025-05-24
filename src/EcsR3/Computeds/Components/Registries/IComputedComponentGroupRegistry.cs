@@ -1,5 +1,4 @@
 ﻿using System;
-using EcsR3.Computeds.Entities;
 
 namespace EcsR3.Computeds.Components.Registries
 {

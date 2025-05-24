@@ -12,5 +12,6 @@
         void PreAllocateComponents(int componentTypeId, int? allocationSize = null);
         
         IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent;
+        IComponentPool<T> GetPoolFor<T>() where T : IComponent;
     }
 }

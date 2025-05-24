@@ -5,6 +5,8 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Components;
+using EcsR3.Computeds.Components.Registries;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
 using EcsR3.Plugins.Batching.Batches;
@@ -13,6 +15,55 @@ using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Plugins.Batching.Systems
 {
+    public abstract unsafe class BatchedSystem<T1, T2> : ManualBatchedSystem
+        where T1 : unmanaged, IComponent
+        where T2 : unmanaged, IComponent
+    {
+        public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
+        
+        private readonly IComponentPool<T1> _componentPool1;
+        private readonly IComponentPool<T2> _componentPool2;
+        private IComputedComponentGroup<T1, T2> _computedComponentGroup;
+        
+        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
+
+        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        {
+            _componentPool1 = componentDatabase.GetPoolFor<T1>();
+            _componentPool2 = componentDatabase.GetPoolFor<T2>();
+        }
+        
+        protected override IComputedComponentGroup GetComponentGroup()
+        {
+            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2>();
+            return _computedComponentGroup;
+        }
+        
+        protected override void ProcessBatch()
+        {
+            var components1 = _componentPool1.Components;
+            var components2 = _componentPool2.Components;
+            var batches = _computedComponentGroup.Value;
+            
+            if (ShouldParallelize)
+            {
+                ThreadHandler.For(0, batches.Length, i =>
+                {
+                    var batch = batches[i];
+                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
+                });
+                return;
+            }
+
+            for (var i = 0; i < batches.Length; i++)
+            {
+                var batch = batches[i];
+                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
+            }
+        }
+    }
+    
+    /*
     public abstract unsafe class BatchedSystem<T1, T2> : ManualBatchedSystem
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent
@@ -249,5 +300,5 @@ namespace EcsR3.Plugins.Batching.Systems
                     ref *batch.Component6);
             }
         }
-    }
+    }*/
 }

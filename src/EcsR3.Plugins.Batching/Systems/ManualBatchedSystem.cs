@@ -1,14 +1,9 @@
-using System;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Components.Database;
-using EcsR3.Components.Lookups;
-using EcsR3.Computeds;
-using EcsR3.Computeds.Entities;
-using EcsR3.Computeds.Entities.Registries;
-using EcsR3.Entities;
+using EcsR3.Computeds.Components;
+using EcsR3.Computeds.Components.Registries;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using R3;
@@ -19,24 +14,20 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public abstract IGroup Group { get; }
         
-        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
         public IComponentDatabase ComponentDatabase { get; }
-        public IComponentTypeLookup ComponentTypeLookup { get; }
+        public IComputedComponentGroupRegistry ComputedComponentGroupRegistry { get; }
         public IThreadHandler ThreadHandler { get; }
         
-        protected IComputedEntityGroup ObservableGroup { get; private set; }
+        protected IComputedComponentGroup ComputedComponentGroup { get; private set; }
         protected bool ShouldParallelize { get; private set; }
-        protected IDisposable Subscriptions;
+        protected CompositeDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
         {
             ComponentDatabase = componentDatabase;
-            ComponentTypeLookup = componentTypeLookup;
+            ComputedComponentGroupRegistry = computedComponentGroupRegistry;
             ThreadHandler = threadHandler;
-            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
         }
-
-        protected abstract void RebuildBatch();
         
         /// <summary>
         /// This describes when the system should be processed
@@ -59,36 +50,17 @@ namespace EcsR3.Plugins.Batching.Systems
         /// </summary>
         protected abstract void ProcessBatch();
 
+        protected abstract IComputedComponentGroup GetComponentGroup();
+        
         public virtual void StartSystem()
         {
-            ObservableGroup = ComputedEntityGroupRegistry.GetComputedGroup(Group);
+            Subscriptions = new CompositeDisposable();
+            
+            ComputedComponentGroup = GetComponentGroup();
             ShouldParallelize = this.ShouldMutliThread();
-            
-            var subscriptions = new CompositeDisposable();
-            ProcessGroupSubscription(ObservableGroup.OnAdded)
-                .Subscribe(_ => RebuildBatch())
-                .AddTo(subscriptions);
-           
-            ProcessGroupSubscription(ObservableGroup.OnRemoved)
-                .Subscribe(_ => RebuildBatch())
-                .AddTo(subscriptions);
-            
-            RebuildBatch();
-            ReactWhen().Subscribe(_ => RunBatch()).AddTo(subscriptions);
-            
-            Subscriptions = subscriptions;
+            ReactWhen().Subscribe(_ => RunBatch()).AddTo(Subscriptions);
         }
-
-        /// <summary>
-        /// This processes the group level subscription, allowing you to change how the change of a group should be run 
-        /// </summary>
-        /// <param name="groupChange"></param>
-        /// <returns>The observable stream that should be subscribed to</returns>
-        /// <remarks>Out the box it will just pass through the observable but in a lot of cases you may want to
-        /// throttle the group changes so multiple ones within a single frame would be run once.</remarks>
-        protected virtual Observable<IEntity> ProcessGroupSubscription(Observable<IEntity> groupChange)
-        { return groupChange; }
-
+        
         private void RunBatch()
         {
             BeforeProcessing();

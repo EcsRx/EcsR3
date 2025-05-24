@@ -1,15 +1,9 @@
-using System.Linq;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Components.Database;
-using EcsR3.Components.Lookups;
-using EcsR3.Computeds;
-using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Computeds.Components;
+using EcsR3.Computeds.Components.Registries;
 using EcsR3.Groups;
-using EcsR3.Plugins.Batching.Batches;
-using EcsR3.Plugins.Batching.Builders;
-using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Plugins.Batching.Systems
 {
@@ -19,37 +13,43 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
         
-        private readonly IReferenceBatchBuilder<T1, T2> _batchBuilder;
-        protected ReferenceBatch<T1, T2>[] _batches;
-        
-        protected abstract void Process(int entityId, T1 component1, T2 component2);
+        private readonly IComponentPool<T1> _componentPool1;
+        private readonly IComponentPool<T2> _componentPool2;
+        private IComputedComponentGroup<T1, T2> _computedComponentGroup;
 
-        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) : base(componentDatabase,
-            componentTypeLookup, threadHandler, computedEntityGroupRegistry)
+        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         {
-            _batchBuilder = batchBuilderFactory.Create<T1, T2>();
+            _componentPool1 = componentDatabase.GetPoolFor<T1>();
+            _componentPool2 = componentDatabase.GetPoolFor<T2>();
         }
 
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup.Value.ToArray()); }
-        
+        protected abstract void Process(int entityId, T1 component1, T2 component2);
+
+        protected override IComputedComponentGroup GetComponentGroup()
+        {
+            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2>();
+            return _computedComponentGroup;
+        }
+
         protected override void ProcessBatch()
         {
+            var components1 = _componentPool1.Components;
+            var components2 = _componentPool2.Components;
+            var batches = _computedComponentGroup.Value;
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, batches.Length, i =>
                 {
-                    var batch = _batches[i];
-                    Process(batch.EntityId, batch.Component1, batch.Component2);
+                    var batch = batches[i];
+                    Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < batches.Length; i++)
             {
-                var batch = _batches[i];
-                Process(batch.EntityId, batch.Component1, batch.Component2);
+                var batch = batches[i];
+                Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
             }
         }
     }
@@ -61,37 +61,46 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3));
         
-        private readonly IReferenceBatchBuilder<T1, T2, T3> _batchBuilder;
-        protected ReferenceBatch<T1, T2, T3>[] _batches;
-        
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3);
+        private readonly IComponentPool<T1> _componentPool1;
+        private readonly IComponentPool<T2> _componentPool2;
+        private readonly IComponentPool<T3> _componentPool3;
+        private IComputedComponentGroup<T1, T2, T3> _computedComponentGroup;
 
-        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) : base(componentDatabase,
-            componentTypeLookup, threadHandler, computedEntityGroupRegistry)
+        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         {
-            _batchBuilder = batchBuilderFactory.Create<T1, T2, T3>();
+            _componentPool1 = componentDatabase.GetPoolFor<T1>();
+            _componentPool2 = componentDatabase.GetPoolFor<T2>();
+            _componentPool3 = componentDatabase.GetPoolFor<T3>();
         }
 
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup.Value.ToArray()); }
-        
+        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3);
+
+        protected override IComputedComponentGroup GetComponentGroup()
+        {
+            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2, T3>();
+            return _computedComponentGroup;
+        }
+
         protected override void ProcessBatch()
         {
+            var components1 = _componentPool1.Components;
+            var components2 = _componentPool2.Components;
+            var components3 = _componentPool3.Components;
+            var batches = _computedComponentGroup.Value;
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, batches.Length, i =>
                 {
-                    var batch = _batches[i];
-                    Process(batch.EntityId, batch.Component1, batch.Component2, batch.Component3);
+                    var batch = batches[i];
+                    Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation], components3[batch.Component3Allocation]);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < batches.Length; i++)
             {
-                var batch = _batches[i];
-                Process(batch.EntityId, batch.Component1, batch.Component2, batch.Component3);
+                var batch = batches[i];
+                Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation], components3[batch.Component3Allocation]);
             }
         }
     }
@@ -104,134 +113,51 @@ namespace EcsR3.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
         
-        private readonly IReferenceBatchBuilder<T1, T2, T3, T4> _batchBuilder;
-        protected ReferenceBatch<T1, T2, T3, T4>[] _batches;
-        
+        private readonly IComponentPool<T1> _componentPool1;
+        private readonly IComponentPool<T2> _componentPool2;
+        private readonly IComponentPool<T3> _componentPool3;
+        private readonly IComponentPool<T4> _componentPool4;
+        private IComputedComponentGroup<T1, T2, T3, T4> _computedComponentGroup;
+
+        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        {
+            _componentPool1 = componentDatabase.GetPoolFor<T1>();
+            _componentPool2 = componentDatabase.GetPoolFor<T2>();
+            _componentPool3 = componentDatabase.GetPoolFor<T3>();
+            _componentPool4 = componentDatabase.GetPoolFor<T4>();
+        }
+
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4);
 
-        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) : base(componentDatabase,
-            componentTypeLookup, threadHandler, computedEntityGroupRegistry)
+        protected override IComputedComponentGroup GetComponentGroup()
         {
-            _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4>();
+            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4>();
+            return _computedComponentGroup;
         }
 
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup.Value.ToArray()); }
-        
         protected override void ProcessBatch()
         {
+            var components1 = _componentPool1.Components;
+            var components2 = _componentPool2.Components;
+            var components3 = _componentPool3.Components;
+            var components4 = _componentPool4.Components;
+            var batches = _computedComponentGroup.Value;
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, batches.Length, i =>
                 {
-                    var batch = _batches[i];
-                    Process(batch.EntityId, batch.Component1, batch.Component2, 
-                        batch.Component3, batch.Component4);
+                    var batch = batches[i];
+                    Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation], 
+                        components3[batch.Component3Allocation], components4[batch.Component4Allocation]);;
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < batches.Length; i++)
             {
-                var batch = _batches[i];
-                Process(batch.EntityId, batch.Component1, batch.Component2, 
-                    batch.Component3, batch.Component4);
-            }
-        }
-    }
-    
-    public abstract class ReferenceBatchedSystem<T1, T2, T3, T4, T5> : ManualBatchedSystem
-        where T1 : class, IComponent
-        where T2 : class, IComponent
-        where T3 : class, IComponent
-        where T4 : class, IComponent
-        where T5 : class, IComponent
-    {
-        public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
-        
-        private readonly IReferenceBatchBuilder<T1, T2, T3, T4, T5> _batchBuilder;
-        protected ReferenceBatch<T1, T2, T3, T4, T5>[] _batches;
-        
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
-
-        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) : base(componentDatabase,
-            componentTypeLookup, threadHandler, computedEntityGroupRegistry)
-        {
-            _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5>();
-        }
-
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup.Value.ToArray()); }
-        
-        protected override void ProcessBatch()
-        {
-            if (ShouldParallelize)
-            {
-                ThreadHandler.For(0, _batches.Length, i =>
-                {
-                    var batch = _batches[i];
-                    Process(batch.EntityId, batch.Component1, batch.Component2, 
-                        batch.Component3, batch.Component4, batch.Component5);
-                });
-                return;
-            }
-
-            for (var i = 0; i < _batches.Length; i++)
-            {
-                var batch = _batches[i];
-                Process(batch.EntityId, batch.Component1, batch.Component2, 
-                    batch.Component3, batch.Component4, batch.Component5);
-            }
-        }
-    }
-    
-    public abstract class ReferenceBatchedSystem<T1, T2, T3, T4, T5, T6> : ManualBatchedSystem
-        where T1 : class, IComponent
-        where T2 : class, IComponent
-        where T3 : class, IComponent
-        where T4 : class, IComponent
-        where T5 : class, IComponent
-        where T6 : class, IComponent
-    {
-        public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
-        
-        private readonly IReferenceBatchBuilder<T1, T2, T3, T4, T5, T6> _batchBuilder;
-        protected ReferenceBatch<T1, T2, T3, T4, T5, T6>[] _batches;
-        
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
-
-        protected ReferenceBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IComputedEntityGroupRegistry computedEntityGroupRegistry) : base(componentDatabase,
-            componentTypeLookup, threadHandler, computedEntityGroupRegistry)
-        {
-            _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5, T6>();
-        }
-
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup.Value.ToArray()); }
-        
-        protected override void ProcessBatch()
-        {
-            if (ShouldParallelize)
-            {
-                ThreadHandler.For(0, _batches.Length, i =>
-                {
-                    var batch = _batches[i];
-                    Process(batch.EntityId, batch.Component1, batch.Component2, 
-                        batch.Component3, batch.Component4, batch.Component5,
-                        batch.Component6);
-                });
-                return;
-            }
-
-            for (var i = 0; i < _batches.Length; i++)
-            {
-                var batch = _batches[i];
-                Process(batch.EntityId, batch.Component1, batch.Component2, 
-                    batch.Component3, batch.Component4, batch.Component5,
-                    batch.Component6);
+                var batch = batches[i];
+                Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation], 
+                    components3[batch.Component3Allocation], components4[batch.Component4Allocation]);;
             }
         }
     }

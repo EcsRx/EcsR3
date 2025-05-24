@@ -68,6 +68,12 @@ namespace EcsR3.Components.Database
             lock (_lock)
             { return (IComponentPool<T>) ComponentData[componentTypeId]; }
         }
+        
+        public IComponentPool<T> GetPoolFor<T>() where T : IComponent
+        {
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
+            return GetPoolFor<T>(componentTypeId);
+        }
 
         public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent
         {
