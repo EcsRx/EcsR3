@@ -4,6 +4,7 @@ using SystemsR3.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using R3;
@@ -51,6 +52,9 @@ namespace EcsR3.Plugins.Batching.Systems
         protected abstract void ProcessBatch();
 
         protected abstract IComputedComponentGroup GetComponentGroup();
+
+        public IEntity GetEntity(int entityId)
+        { return ComputedComponentGroup.DataSource.Get(entityId); }
         
         public virtual void StartSystem()
         {

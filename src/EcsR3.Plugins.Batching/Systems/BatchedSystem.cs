@@ -1,23 +1,15 @@
-using System.Linq;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Components;
 using EcsR3.Components.Database;
-using EcsR3.Components.Lookups;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
-using EcsR3.Plugins.Batching.Batches;
-using EcsR3.Plugins.Batching.Builders;
-using EcsR3.Plugins.Batching.Factories;
 
 namespace EcsR3.Plugins.Batching.Systems
 {
-    public abstract unsafe class BatchedSystem<T1, T2> : ManualBatchedSystem
-        where T1 : unmanaged, IComponent
-        where T2 : unmanaged, IComponent
+    public abstract class BatchedSystem<T1, T2> : ManualBatchedSystem
+        where T1 : struct, IComponent
+        where T2 : struct, IComponent
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
         
