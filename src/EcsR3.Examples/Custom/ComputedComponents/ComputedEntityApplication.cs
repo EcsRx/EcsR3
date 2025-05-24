@@ -11,14 +11,12 @@ namespace EcsR3.Examples.Custom.ComputedComponents;
 
 public class ComputedEntityApplication : EcsR3ConsoleApplication
 {
-    private bool _quit;
-
     protected override void ApplicationStarted()
     {
-        EntityCollection.CreateMany<ComputedComponentBlueprint>(100000);
+        var entities = EntityCollection.CreateMany<ComputedComponentBlueprint>(100000);
 
         var componentGroup = ComputedEntityGroupRegistry.GetComputedGroup(new Group(typeof(NumberComponent), typeof(Number2Component)));
-        var computed = new ComputedEntityProcessor(ComponentDatabase);
+        var computed = new ComputedEntityProcessor(componentGroup);
 
         Console.WriteLine("Starting");
         var stopwatch = new Stopwatch();

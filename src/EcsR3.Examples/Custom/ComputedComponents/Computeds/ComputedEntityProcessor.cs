@@ -1,22 +1,22 @@
-﻿using System;
-using EcsR3.Components.Database;
-using EcsR3.Computeds.Components;
+﻿using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
 using EcsR3.Examples.Custom.ComputedComponents.Components;
+using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
 public class ComputedEntityProcessor : ComputedDataFromEntityGroup<int>
 {
-    public ComputedComponentProcessor(IComponentDatabase componentDatabase, IComputedComponentGroup<NumberComponent, Number2Component> dataSource) : base(componentDatabase, dataSource)
-    {
-    }
+    public ComputedEntityProcessor(IComputedEntityGroup dataSource) : base(dataSource)
+    {}
 
-    protected override void UpdateComputedData(Memory<(int, NumberComponent, Number2Component)> componentData)
+    protected override void UpdateComputedData()
     {
         ComputedData = 0;
-        var data = componentData.Span;
-        for(var i=0;i<data.Length;i++)
-        { ComputedData += data[i].Item2.Value + data[i].Item3.Value; }
+        foreach (var entity in DataSource)
+        { 
+            ComputedData +=  entity.GetComponent<NumberComponent>().Value 
+                           + entity.GetComponent<Number2Component>().Value; 
+        }
     }
 }

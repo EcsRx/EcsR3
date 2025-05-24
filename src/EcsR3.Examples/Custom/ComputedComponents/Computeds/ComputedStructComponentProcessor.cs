@@ -6,15 +6,13 @@ using EcsR3.Examples.Custom.ComputedComponents.Components;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
-public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<int, NumberComponent, Number2Component>
+public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<int, StructNumberComponent, StructNumber2Component>
 {
-    public ComputedComponentProcessor(IComponentDatabase componentDatabase, 
-        IComputedComponentGroup<NumberComponent, Number2Component> dataSource) 
-        : base(componentDatabase, dataSource)
+    public ComputedStructComponentProcessor(IComponentDatabase componentDatabase, IComputedComponentGroup<StructNumberComponent, StructNumber2Component> dataSource) : base(componentDatabase, dataSource)
     {
     }
 
-    protected override void UpdateComputedData(Memory<(int, NumberComponent, Number2Component)> componentData)
+    protected override void UpdateComputedData(Memory<(int, StructNumberComponent, StructNumber2Component)> componentData)
     {
         ComputedData = 0;
         var data = componentData.Span;

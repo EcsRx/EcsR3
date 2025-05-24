@@ -8,7 +8,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents;
 
-public class ComputedStructComponentApplication : EcsR3ConsoleApplication
+public class CustomComputedStructComponentApplication : EcsR3ConsoleApplication
 {
     protected override void ApplicationStarted()
     {
@@ -17,7 +17,7 @@ public class ComputedStructComponentApplication : EcsR3ConsoleApplication
         var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<StructNumberComponent, StructNumber2Component>();
         componentGroup.RefreshData();
             
-        var computed = new ComputedStructComponentProcessor(ComponentDatabase, componentGroup);
+        var computed = new CustomComputedStructComponentProcessor(ComponentDatabase, componentGroup);
         
         Console.WriteLine("Starting");
         var stopwatch = new Stopwatch();

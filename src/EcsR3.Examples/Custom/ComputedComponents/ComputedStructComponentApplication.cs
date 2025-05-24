@@ -8,16 +8,16 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents;
 
-public class ComputedComponentApplication : EcsR3ConsoleApplication
+public class ComputedStructComponentApplication : EcsR3ConsoleApplication
 {
     protected override void ApplicationStarted()
     {
-        var entities = EntityCollection.CreateMany<ComputedComponentBlueprint>(100000);
+        var entities = EntityCollection.CreateMany<ComputedStructComponentBlueprint>(100000);
 
-        var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<NumberComponent, Number2Component>();
+        var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<StructNumberComponent, StructNumber2Component>();
         componentGroup.RefreshData();
             
-        var computed = new ComputedComponentProcessor(ComponentDatabase, componentGroup);
+        var computed = new ComputedStructComponentProcessor(ComponentDatabase, componentGroup);
         
         Console.WriteLine("Starting");
         var stopwatch = new Stopwatch();
