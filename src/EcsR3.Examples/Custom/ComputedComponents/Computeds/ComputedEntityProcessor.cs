@@ -5,7 +5,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
-public class ComputedEntityProcessor : ComputedDataFromEntityGroup<int>
+public class ComputedEntityProcessor : ComputedFromEntityGroup<int>
 {
     public ComputedEntityProcessor(IComputedEntityGroup dataSource) : base(dataSource)
     {}

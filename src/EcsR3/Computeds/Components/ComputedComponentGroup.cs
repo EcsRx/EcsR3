@@ -9,7 +9,7 @@ using R3;
 
 namespace EcsR3.Computeds.Components
 {
-    public class ComputedComponentGroup<T1> : ComputedDataFromEntityGroup<ComponentBatch<T1>[]>, IComputedComponentGroup<T1> where T1 : IComponent
+    public class ComputedComponentGroup<T1> : ComputedFromEntityGroup<ComponentBatch<T1>[]>, IComputedComponentGroup<T1> where T1 : IComponent
     {
         private readonly int _t1ComponentId;
         
@@ -35,7 +35,7 @@ namespace EcsR3.Computeds.Components
         }
     }
 
-    public class ComputedComponentGroup<T1, T2> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2>[]>,
+    public class ComputedComponentGroup<T1, T2> : ComputedFromEntityGroup<ComponentBatch<T1, T2>[]>,
         IComputedComponentGroup<T1, T2> 
         where T1 : IComponent
         where T2 : IComponent
@@ -73,7 +73,7 @@ namespace EcsR3.Computeds.Components
         }
     }
 
-    public class ComputedComponentGroup<T1, T2, T3> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3>[]>,
+    public class ComputedComponentGroup<T1, T2, T3> : ComputedFromEntityGroup<ComponentBatch<T1, T2, T3>[]>,
         IComputedComponentGroup<T1, T2, T3>
         where T1 : IComponent
         where T2 : IComponent
@@ -115,7 +115,7 @@ namespace EcsR3.Computeds.Components
         }
     }
     
-    public class ComputedComponentGroup<T1, T2, T3, T4> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4>[]>,
+    public class ComputedComponentGroup<T1, T2, T3, T4> : ComputedFromEntityGroup<ComponentBatch<T1, T2, T3, T4>[]>,
         IComputedComponentGroup<T1, T2, T3, T4>
         where T1 : IComponent
         where T2 : IComponent
@@ -161,7 +161,7 @@ namespace EcsR3.Computeds.Components
         }
     }
     
-    public class ComputedComponentGroup<T1, T2, T3, T4, T5> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5>[]>,
+    public class ComputedComponentGroup<T1, T2, T3, T4, T5> : ComputedFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5>
         where T1 : IComponent
         where T2 : IComponent
@@ -211,7 +211,7 @@ namespace EcsR3.Computeds.Components
         }
     }
     
-    public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6>[]>,
+    public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6> : ComputedFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6>
         where T1 : IComponent
         where T2 : IComponent
@@ -266,7 +266,7 @@ namespace EcsR3.Computeds.Components
         }
     }
     
-    public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> : ComputedDataFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>[]>,
+    public class ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> : ComputedFromEntityGroup<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>[]>,
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>
         where T1 : IComponent
         where T2 : IComponent

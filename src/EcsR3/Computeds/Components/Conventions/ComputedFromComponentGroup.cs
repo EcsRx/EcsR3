@@ -6,13 +6,13 @@ using SystemsR3.Computeds.Conventions;
 
 namespace EcsR3.Computeds.Components.Conventions
 {
-    public abstract class ComputedDataFromComponentGroup<TOutput, T1> : ComputedFromData<TOutput, IComputedComponentGroup<T1>> where T1 : IComponent
+    public abstract class ComputedFromComponentGroup<TOutput, T1> : ComputedFromData<TOutput, IComputedComponentGroup<T1>> where T1 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
 
         protected readonly IComponentPool<T1> ComponentPool1;
         
-        protected ComputedDataFromComponentGroup(IComponentDatabase componentDatabase,
+        protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1> dataSource) : base(dataSource)
         {
             ComponentDatabase = componentDatabase;

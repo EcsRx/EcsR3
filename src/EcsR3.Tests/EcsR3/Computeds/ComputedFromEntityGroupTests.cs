@@ -11,7 +11,7 @@ using Xunit;
 
 namespace EcsR3.Tests.EcsR3.Computeds
 {
-    public class ComputedFromGroupTests
+    public class ComputedFromEntityGroupTests
     {
         [Fact]
         public void should_refresh_when_data_changed()
@@ -32,7 +32,7 @@ namespace EcsR3.Tests.EcsR3.Computeds
             var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
             mockObservableGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
             
-            var computedGroupData = new TestComputedDataFromEntityGroup(mockObservableGroup);
+            var computedGroupData = new TestComputedFromEntityGroup(mockObservableGroup);
 
             fakeEntities.Remove(fakeEntity2);
             computedGroupData.ManuallyRefresh.OnNext(Unit.Default);
