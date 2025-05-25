@@ -6,7 +6,7 @@ namespace EcsR3.Examples.Custom.BatchTests.Components
     [StructLayout(LayoutKind.Sequential)]
     public struct StructComponent2 : IComponent
     {
-        public byte IsTrue;
+        public bool IsTrue;
         public int Value;
     }
 }

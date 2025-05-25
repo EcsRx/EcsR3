@@ -59,7 +59,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
             
-            new ManualStructBatchingApplication().StartApplication();
+            new ClassBatchedSystemApplication().StartApplication();
         }
     }
 }

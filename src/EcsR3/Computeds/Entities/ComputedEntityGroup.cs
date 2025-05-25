@@ -67,6 +67,7 @@ namespace EcsR3.Computeds.Entities
                 .AddTo(Subscriptions);
 
             CachedEntityIds = new HashSet<int>(GroupTracker.GetMatchedEntityIds());
+            
         }
 
         public void OnEntityJoinedGroup(int entityId)

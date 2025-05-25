@@ -2,6 +2,7 @@ using System.Numerics;
 using EcsR3.Components;
 using EcsR3.Computeds.Components;
 using EcsR3.Entities;
+using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
 

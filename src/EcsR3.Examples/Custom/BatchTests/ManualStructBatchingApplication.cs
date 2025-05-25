@@ -1,10 +1,9 @@
-using System.Linq;
 using System.Numerics;
 using EcsR3.Components;
 using EcsR3.Computeds.Components;
 using EcsR3.Entities;
+using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Components;
-using EcsR3.Examples.ExampleApps.Playground;
 using EcsR3.Systems.Batching.Accessor;
 
 namespace EcsR3.Examples.Custom.BatchTests
@@ -44,14 +43,13 @@ namespace EcsR3.Examples.Custom.BatchTests
         {
             var (components1, components2) = _structComponentPoolAccessor.GetPoolArrays();
             var batches = _computedComponentGroup.Value;
-            for (var i = batches.Length - 1; i >= 0; i--)
+            foreach (var batch in batches)
             {
-                var batch = batches[i];
                 ref var basic = ref components1[batch.Component1Allocation];
                 ref var basic2 = ref components2[batch.Component2Allocation];
                 basic.Position += Vector3.One;
                 basic.Something += 10;
-                basic2.IsTrue = 1;
+                basic2.IsTrue = true;
                 basic2.Value += 10;
             }
         }

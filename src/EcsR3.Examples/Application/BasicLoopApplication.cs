@@ -1,33 +1,16 @@
 using System;
 using System.Diagnostics;
-using EcsR3.Components.Lookups;
 using EcsR3.Entities;
-using EcsR3.Examples.Application;
-using EcsR3.Examples.Custom.BatchTests.Components;
-using SystemsR3.Infrastructure.Extensions;
 
-namespace EcsR3.Examples.Custom.BatchTests
+namespace EcsR3.Examples.Application
 {
     public abstract class BasicLoopApplication : EcsR3ConsoleApplication
     {
         protected static readonly int EntityCount = 200000;
         protected static readonly int SimulatedUpdates = 100;
-        protected IComponentTypeLookup _componentTypeLookup;
-
-        protected int ClassComponent1TypeId;
-        protected int ClassComponent2TypeId;
-        protected int StructComponent1TypeId;
-        protected int StructComponent2TypeId;
         
         protected override void ApplicationStarted()
         {
-            _componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
-
-            ClassComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent));
-            ClassComponent2TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent2));
-            StructComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(StructComponent));
-            StructComponent2TypeId = _componentTypeLookup.GetComponentTypeId(typeof(StructComponent2));
-            
             var name = GetType().Name;
             Console.WriteLine($"{name} - {Description}");
             var timer = Stopwatch.StartNew();
