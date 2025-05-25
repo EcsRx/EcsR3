@@ -45,6 +45,7 @@ namespace EcsR3.Computeds.Components.Conventions
         where T1 : IComponent where T2 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
+        private (int, T1, T2)[] _batchCache = Array.Empty<(int, T1, T2)>();
 
         protected readonly IComponentPool<T1> ComponentPool1;
         protected readonly IComponentPool<T2> ComponentPool2;
@@ -63,21 +64,22 @@ namespace EcsR3.Computeds.Components.Conventions
         {
             var components1 = ComponentPool1.Components;
             var components2 = ComponentPool2.Components;
-            
             var batches = DataSource.Value;
-            var batchLookup = new Memory<(int, T1, T2)>(new (int, T1, T2)[batches.Length]);
-            var batchLookupSpan = batchLookup.Span;
+            
+            if(_batchCache.Length < batches.Length)
+            { Array.Resize(ref _batchCache, batches.Length); }
 
+            var usedIndexes = 0;
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                batchLookupSpan[i] = (batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
+                _batchCache[usedIndexes++] = (batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
             }
             
-            UpdateComputedData(batchLookup);
+            UpdateComputedData(_batchCache.AsSpan()[..usedIndexes]);
         }
         
-        protected abstract void UpdateComputedData(Memory<(int, T1, T2)> componentData);
+        protected abstract void UpdateComputedData(Span<(int, T1, T2)> componentData);
     }
     
     public abstract class ComputedDataFromComponentGroup<TOutput, T1, T2, T3> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3>> 

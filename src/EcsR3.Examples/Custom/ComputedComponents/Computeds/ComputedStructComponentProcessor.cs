@@ -12,11 +12,10 @@ public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<i
     {
     }
 
-    protected override void UpdateComputedData(Memory<(int, StructNumberComponent, StructNumber2Component)> componentData)
+    protected override void UpdateComputedData(Span<(int, StructNumberComponent, StructNumber2Component)> componentData)
     {
         ComputedData = 0;
-        var data = componentData.Span;
-        for(var i=0;i<data.Length;i++)
-        { ComputedData += data[i].Item2.Value + data[i].Item3.Value; }
+        for(var i=0;i<componentData.Length;i++)
+        { ComputedData += componentData[i].Item2.Value + componentData[i].Item3.Value; }
     }
 }

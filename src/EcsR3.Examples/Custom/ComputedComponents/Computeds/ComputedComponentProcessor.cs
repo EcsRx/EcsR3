@@ -14,11 +14,10 @@ public class ComputedComponentProcessor : ComputedDataFromComponentGroup<int, Nu
     {
     }
 
-    protected override void UpdateComputedData(Memory<(int, NumberComponent, Number2Component)> componentData)
+    protected override void UpdateComputedData(Span<(int, NumberComponent, Number2Component)> componentData)
     {
         ComputedData = 0;
-        var data = componentData.Span;
-        for(var i=0;i<data.Length;i++)
-        { ComputedData += data[i].Item2.Value + data[i].Item3.Value; }
+        for(var i=0;i<componentData.Length;i++)
+        { ComputedData += componentData[i].Item2.Value + componentData[i].Item3.Value; }
     }
 }
