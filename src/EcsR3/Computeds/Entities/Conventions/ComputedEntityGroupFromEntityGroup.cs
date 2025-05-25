@@ -26,7 +26,14 @@ namespace EcsR3.Computeds.Entities.Conventions
             }
         }
         
-        public IEnumerable<IEntity> EnumerableEntities => CachedEntityIds.Select(DataSource.Get);
+        public IEnumerable<IEntity> EnumerableEntities
+        {
+            get
+            {
+                lock(_lock)
+                { return CachedEntityIds.Select(DataSource.Get); }
+            }
+        }
 
         public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
@@ -57,6 +64,7 @@ namespace EcsR3.Computeds.Entities.Conventions
             DataSource.OnAdded.Subscribe(OnEntityAddedToGroup).AddTo(Subscriptions);
             DataSource.OnRemoving.Subscribe(_onEntityRemoving.OnNext).AddTo(Subscriptions);
             DataSource.OnRemoved.Subscribe(_onEntityRemoved.OnNext).AddTo(Subscriptions);
+            
             RefreshWhen().Subscribe(_ => Refresh()).AddTo(Subscriptions);
         }
 
@@ -65,24 +73,31 @@ namespace EcsR3.Computeds.Entities.Conventions
         
         public virtual void Refresh()
         {
-            lock (_lock)
+            foreach (var entity in DataSource)
             {
-                Span<int> idsToRemove = stackalloc int[CachedEntityIds.Count];
-                var currentIndex = 0;
-                
-                foreach (var entity in EnumerableEntities)
+                var isValid = IsEntityValid(entity);
+                var containsEntity = Contains(entity.Id);
+
+                if (isValid)
                 {
-                    if (!IsEntityValid(entity))
-                    { idsToRemove[currentIndex++] = entity.Id; }
+                    if(containsEntity) { continue; }
+
+                    lock (_lock)
+                    { CachedEntityIds.Add(entity.Id); }
+
+                    _onEntityAdded.OnNext(entity);
+                    continue;
                 }
 
-                foreach (var id in idsToRemove[..currentIndex])
-                {
-                    _onEntityRemoving.OnNext(DataSource.Get(id));
-                    CachedEntityIds.Remove(id);
-                    _onEntityRemoved.OnNext(DataSource.Get(id));
-                }
+                if (!containsEntity) { continue; }
+                
+                lock (_lock)
+                { CachedEntityIds.Remove(entity.Id); }
+                
+                _onEntityRemoving.OnNext(entity);
+                _onEntityRemoved.OnNext(entity);
             }
+            
         }
 
         public void OnEntityAddedToGroup(IEntity entity)
