@@ -5,6 +5,7 @@ using EcsR3.Computeds.Components;
 using EcsR3.Entities;
 using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Examples.ExampleApps.Playground;
+using EcsR3.Systems.Batching.Accessor;
 
 namespace EcsR3.Examples.Custom.BatchTests
 {
@@ -13,6 +14,7 @@ namespace EcsR3.Examples.Custom.BatchTests
         private IComputedComponentGroup<StructComponent, StructComponent2> _computedComponentGroup;
         private IComponentPool<StructComponent> _structComponentPool;
         private IComponentPool<StructComponent2> _structComponent2Pool;
+        private BatchPoolAccessor<StructComponent, StructComponent2> _structComponentPoolAccessor;
         
         protected override void SetupEntities()
         {
@@ -21,6 +23,8 @@ namespace EcsR3.Examples.Custom.BatchTests
             
             _structComponent2Pool = ComponentDatabase.GetPoolFor<StructComponent2>();
             _structComponent2Pool.Expand(EntityCount);
+
+            _structComponentPoolAccessor = new BatchPoolAccessor<StructComponent, StructComponent2>(ComponentDatabase);
             
             base.SetupEntities();
             
@@ -38,20 +42,18 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override void RunProcess()
         {
-            var components1 = _structComponentPool.Components;
-            var components2 = _structComponent2Pool.Components;
+            var (components1, components2) = _structComponentPoolAccessor.GetPoolArrays();
             var batches = _computedComponentGroup.Value;
             for (var i = batches.Length - 1; i >= 0; i--)
-                unsafe
-                {
-                    var batch = batches[i];
-                    ref var basic = ref components1[batch.Component1Allocation];
-                    ref var basic2 = ref components2[batch.Component2Allocation];
-                    basic.Position += Vector3.One;
-                    basic.Something += 10;
-                    basic2.IsTrue = 1;
-                    basic2.Value += 10;
-                }
+            {
+                var batch = batches[i];
+                ref var basic = ref components1[batch.Component1Allocation];
+                ref var basic2 = ref components2[batch.Component2Allocation];
+                basic.Position += Vector3.One;
+                basic.Something += 10;
+                basic2.IsTrue = 1;
+                basic2.Value += 10;
+            }
         }
     }
 }

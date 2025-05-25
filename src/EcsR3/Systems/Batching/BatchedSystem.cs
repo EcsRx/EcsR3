@@ -3,6 +3,7 @@ using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Groups;
+using EcsR3.Systems.Batching.Accessor;
 using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching
@@ -13,17 +14,13 @@ namespace EcsR3.Systems.Batching
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
         
-        private readonly IComponentPool<T1> _componentPool1;
-        private readonly IComponentPool<T2> _componentPool2;
+        private readonly BatchPoolAccessor<T1, T2> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2> _computedComponentGroup;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        {
-            _componentPool1 = componentDatabase.GetPoolFor<T1>();
-            _componentPool2 = componentDatabase.GetPoolFor<T2>();
-        }
+        { _batchPoolAccessor = new BatchPoolAccessor<T1, T2>(componentDatabase); }
         
         protected override IComputedComponentGroup GetComponentGroup()
         {
@@ -33,8 +30,7 @@ namespace EcsR3.Systems.Batching
         
         protected override void ProcessBatch()
         {
-            var components1 = _componentPool1.Components;
-            var components2 = _componentPool2.Components;
+            var (components1, components2) = _batchPoolAccessor.GetPoolArrays();
             var batches = _computedComponentGroup.Value;
             
             if (ShouldParallelize)
