@@ -14,22 +14,19 @@ namespace EcsR3.Systems.Batching
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
 
-        private readonly BatchPoolAccessor<T1, T2> _batchPoolAccessor;
-        private IComputedComponentGroup<T1, T2> _computedComponentGroup;
+        protected readonly BatchPoolAccessor<T1, T2> BatchPoolAccessor;
+        protected IComputedComponentGroup<T1, T2> CastComponentGroup => ComputedComponentGroup as IComputedComponentGroup<T1, T2>;
 
         protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { _batchPoolAccessor = new BatchPoolAccessor<T1, T2>(componentDatabase); }
+        { BatchPoolAccessor = new BatchPoolAccessor<T1, T2>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
-        {
-            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2>();
-            return _computedComponentGroup;
-        }
+        { return ComputedComponentGroupRegistry.GetComputedGroup<T1, T2>(); }
 
         protected override void ProcessBatch()
         {
-            var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            var componentArrays = BatchPoolAccessor.GetPoolArrays();
+            ProcessGroup(CastComponentGroup.Value, componentArrays);
         }
         
         protected abstract void ProcessGroup(ComponentBatch<T1, T2>[] componentBatches, (T1[], T2[]) componentPools);
@@ -47,8 +44,6 @@ namespace EcsR3.Systems.Batching
 
         protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3>(componentDatabase); }
-
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3);
 
         protected override IComputedComponentGroup GetComponentGroup()
         {
@@ -79,8 +74,6 @@ namespace EcsR3.Systems.Batching
         protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4>(componentDatabase); }
 
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4);
-
         protected override IComputedComponentGroup GetComponentGroup()
         {
             _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4>();
@@ -110,8 +103,6 @@ namespace EcsR3.Systems.Batching
 
         protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5>(componentDatabase); }
-
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
 
         protected override IComputedComponentGroup GetComponentGroup()
         {
@@ -144,8 +135,6 @@ namespace EcsR3.Systems.Batching
         protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5, T6>(componentDatabase); }
 
-        protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
-
         protected override IComputedComponentGroup GetComponentGroup()
         {
             _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4, T5, T6>();
@@ -159,5 +148,37 @@ namespace EcsR3.Systems.Batching
         }
         
         protected abstract void ProcessGroup(ComponentBatch<T1, T2, T3, T4, T5, T6>[] componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools);
+    }
+    
+    public abstract class RawBatchedSystem<T1, T2, T3, T4, T5, T6, T7> : ManualBatchedSystem
+        where T1 : IComponent
+        where T2 : IComponent
+        where T3 : IComponent
+        where T4 : IComponent
+        where T5 : IComponent
+        where T6 : IComponent
+        where T7 : IComponent
+    {
+        public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+        
+        private readonly BatchPoolAccessor<T1, T2, T3, T4, T5, T6, T7> _batchPoolAccessor;
+        private IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> _computedComponentGroup;
+
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5, T6, T7>(componentDatabase); }
+
+        protected override IComputedComponentGroup GetComponentGroup()
+        {
+            _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4, T5, T6, T7>();
+            return _computedComponentGroup;
+        }
+
+        protected override void ProcessBatch()
+        {
+            var componentArrays = _batchPoolAccessor.GetPoolArrays();
+            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+        }
+        
+        protected abstract void ProcessGroup(ComponentBatch<T1, T2, T3, T4, T5, T6, T7>[] componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools);
     }
 }

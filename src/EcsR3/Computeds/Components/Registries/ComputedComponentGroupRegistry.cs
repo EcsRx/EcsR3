@@ -11,8 +11,9 @@ namespace EcsR3.Computeds.Components.Registries
 {
     public class ComputedComponentGroupRegistry : IComputedComponentGroupRegistry
     {
-        private const string CastError = "Existing computed group does not match generic layout, ensure all groups are created with the same generic layout.";
-        
+        private const string CastError = "Existing computed group does not match generic layout, ensure all component groups are created with the same generic layout.";
+     
+        // We need to ensure there is only 1 computed component listing per group
         public Dictionary<LookupGroup, IComputedComponentGroup> _computedGroups { get; }
 
         public IEnumerable<IComputedComponentGroup> ComputedGroups => _computedGroups.Values;
