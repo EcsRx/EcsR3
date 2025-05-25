@@ -8,12 +8,9 @@ using SystemsR3.Executor.Handlers;
 using SystemsR3.Executor.Handlers.Conventional;
 using SystemsR3.Pools;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
-using EcsR3.Computeds;
-using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
@@ -21,7 +18,6 @@ using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Groups.Tracking;
-using EcsR3.Plugins.Batching.Builders;
 using EcsR3.Plugins.Views.Components;
 using EcsR3.Plugins.Views.Systems;
 using EcsR3.Systems.Handlers;
@@ -203,87 +199,6 @@ namespace EcsR3.Tests.Sanity
             executor.RemoveSystem(viewResolverSystem);
 
             Assert.Equal(expectedCallList, actualCallList);
-        }
-
-        [Fact]
-        public unsafe void should_keep_state_with_batches()
-        {
-            var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.Create();
-
-            var startingInt = 2;
-            var finalInt = 10;
-            var startingFloat = 5.0f;
-            var finalFloat = 20.0f;
-
-            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
-            var component1Allocation = entity1.ComponentAllocations[4];
-            structComponent1.Data = startingInt;
-
-            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
-            var component2Allocation = entity1.ComponentAllocations[5];
-            structComponent2.Data = startingFloat;
-
-            var entities = new[] {entity1};
-            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
-            var batch = batchBuilder.Build(entities);
-
-            ref var initialBatchData = ref batch.Batches[0];
-            ref var component1 = ref *initialBatchData.Component1;
-            ref var component2 = ref *initialBatchData.Component2;
-            Assert.Equal(startingInt, component1.Data);
-            Assert.Equal(startingFloat, component2.Data);
-
-            component1.Data = finalInt;
-            component2.Data = finalFloat;
-
-            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
-            Assert.Equal(finalInt, structComponent1.Data);
-            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
-            Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
-        }
-
-        [Fact]
-        public unsafe void should_retain_pointer_through_new_struct()
-        {
-            var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.Create();
-
-            var startingInt = 2;
-            var finalInt = 10;
-            var startingFloat = 5.0f;
-            var finalFloat = 20.0f;
-
-            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
-            var component1Allocation = entity1.ComponentAllocations[4];
-            structComponent1.Data = startingInt;
-
-            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
-            var component2Allocation = entity1.ComponentAllocations[5];
-            structComponent2.Data = startingFloat;
-
-            var entities = new[] {entity1};
-            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
-            var batch = batchBuilder.Build(entities);
-
-            ref var initialBatchData = ref batch.Batches[0];
-            ref var component1 = ref *initialBatchData.Component1;
-            ref var component2 = ref *initialBatchData.Component2;
-
-            Assert.Equal(startingInt, component1.Data);
-            Assert.Equal(startingFloat, component2.Data);
-
-            component1 = new TestStructComponentOne {Data = finalInt};
-            component2 = new TestStructComponentTwo {Data = finalFloat};
-
-            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
-            Assert.Equal(finalInt, structComponent1.Data);
-            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
-            Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
         }
 
         [Fact]

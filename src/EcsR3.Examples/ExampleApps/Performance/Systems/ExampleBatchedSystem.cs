@@ -2,7 +2,7 @@ using SystemsR3.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Examples.ExampleApps.Performance.Components;
-using EcsR3.Plugins.Batching.Systems;
+using EcsR3.Systems.Batching;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.Performance.Systems

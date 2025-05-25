@@ -1,6 +1,4 @@
-﻿using System;
-using R3;
-using SystemsR3.Extensions;
+﻿using R3;
 
 namespace SystemsR3.Computeds.Conventions
 {
@@ -10,18 +8,15 @@ namespace SystemsR3.Computeds.Conventions
         { Initialize(); }
 
         public void Initialize()
-        {
-            RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
-            Observable.Interval(TimeSpan.FromMilliseconds(1)).SubscribeOnce(x => RefreshData());
-        }
+        { RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions); }
         
         public void RefreshData()
         {
             lock (Lock)
             {
-                var previousHash = ComputedData.GetHashCode();
+                var previousHash = ComputedData?.GetHashCode() ?? -1;
                 UpdateComputedData();
-                var newHash = ComputedData.GetHashCode();
+                var newHash = ComputedData?.GetHashCode() ?? -1;
                 if (previousHash == newHash) { return; }
             }
             

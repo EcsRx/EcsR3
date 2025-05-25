@@ -1,15 +1,10 @@
 using System;
 using System.Numerics;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Components.Database;
-using EcsR3.Components.Lookups;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Components.Registries;
-using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
-using EcsR3.Plugins.Batching.Factories;
-using EcsR3.Plugins.Batching.Systems;
+using EcsR3.Systems.Batching;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems

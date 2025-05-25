@@ -23,7 +23,7 @@ namespace EcsR3.Computeds.Components
             { throw new ArgumentException("ComputedEntityGroup must match component types"); }
             
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
@@ -57,12 +57,12 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
         {
-            ComputedData = new ComponentBatch<T1, T2>[DataSource.Value.Count];
+            ComputedData = new ComponentBatch<T1, T2>[DataSource.Count];
             var index = 0;
             foreach (var entity in DataSource)
             {
@@ -98,7 +98,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
@@ -143,7 +143,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
@@ -192,7 +192,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
@@ -246,7 +246,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5, T6>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()
@@ -304,7 +304,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ComputedData = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>>();
+            RefreshData();
         }
 
         protected override void UpdateComputedData()

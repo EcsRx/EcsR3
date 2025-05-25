@@ -6,7 +6,6 @@ using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Infrastructure;
-using EcsR3.Plugins.Batching;
 using EcsR3.Plugins.Persistence;
 using EcsR3.Plugins.Views;
 using SystemsR3.Infrastructure.Dependencies;
@@ -32,7 +31,6 @@ public abstract class EcsR3BenchmarkConsoleApplication : EcsR3Application
     protected override void LoadPlugins()
     {
         RegisterPlugin(new ViewsPlugin());
-        RegisterPlugin(new BatchPlugin());
         RegisterPlugin(new PersistencePlugin());
             
         DependencyRegistry.Unbind<ComponentDatabaseConfig>();
