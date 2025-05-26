@@ -6,7 +6,7 @@ using R3;
 using SystemsR3.Computeds.Conventions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
-/*
+
 public class CustomComputedStructComponentProcessor : ComputedFromData<int, IComputedComponentGroup<StructNumberComponent, StructNumber2Component>>
 {
     protected readonly IComponentPool<StructNumberComponent> ComponentPool1;
@@ -28,11 +28,11 @@ public class CustomComputedStructComponentProcessor : ComputedFromData<int, ICom
         var components2 = ComponentPool2.Components;
 
         ComputedData = 0;
-        var batches = DataSource.Value;
+        var batches = DataSource.Value.Span;
         for (var i = 0; i < batches.Length; i++)
         {
             var batch = batches[i];
             ComputedData += components1[batch.Component1Allocation].Value + components2[batch.Component2Allocation].Value;
         }
     }
-}*/
+}

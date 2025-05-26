@@ -29,7 +29,7 @@ public class BatchedProcessTestSystem : BatchedSystem<TestComponentOne, TestComp
     public void ForceProcess() => ProcessBatch();
     public long TimesCalled = 0;
 
-    protected override Observable<bool> ReactWhen() => Observable.Never<bool>();
+    protected override Observable<Unit> ReactWhen() => Observable.Never<Unit>();
 
     protected override void Process(int entityId, TestComponentOne component1, TestComponentTwo component2)
     {

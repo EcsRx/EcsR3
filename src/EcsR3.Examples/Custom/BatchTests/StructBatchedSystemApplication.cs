@@ -24,8 +24,8 @@ namespace EcsR3.Examples.Custom.BatchTests
             public StructBatchSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
             {}
 
-            protected override Observable<bool> ReactWhen()
-            { return Observable.Never<bool>(); }
+            protected override Observable<Unit> ReactWhen()
+            { return Observable.Never<Unit>(); }
 
             public void ForceRun() => ProcessBatch();
             

@@ -7,9 +7,6 @@ using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Tests.Models;
 using NSubstitute;
-using NSubstitute.Core;
-using NSubstitute.Extensions;
-using NSubstitute.ReturnsExtensions;
 using R3;
 using Xunit;
 
@@ -17,7 +14,6 @@ namespace EcsR3.Tests.EcsR3.Observables;
 
 public class ComputedComponentGroupTests
 {
-    /*
     [Fact]
     public void should_create_batch_with_correct_values()
     {
@@ -44,7 +40,7 @@ public class ComputedComponentGroupTests
         mockTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
         
         var computedComponentGroup = new ComputedComponentGroup<TestComponentOne, TestComponentTwo>(mockTypeLookup, mockComputedEntityGroup);
-        var batches = computedComponentGroup.Value;
+        var batches = computedComponentGroup.Value.Span;
         Assert.Equal(fakeEntities.Length, batches.Length);
         Assert.Equal(fakeEntities[0].Id, batches[0].EntityId);
         Assert.Equal(22, batches[0].Component1Allocation);
@@ -52,5 +48,5 @@ public class ComputedComponentGroupTests
         Assert.Equal(fakeEntities[1].Id, batches[1].EntityId);
         Assert.Equal(1, batches[1].Component1Allocation);
         Assert.Equal(2, batches[1].Component2Allocation);
-    }*/
+    }
 }

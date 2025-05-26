@@ -8,7 +8,6 @@ using EcsR3.Systems.Batching.Accessor;
 
 namespace EcsR3.Examples.Custom.BatchTests
 {
-    /*
     public class ManualStructBatchingApplication : BasicLoopApplication
     {
         private IComputedComponentGroup<StructComponent, StructComponent2> _computedComponentGroup;
@@ -43,7 +42,7 @@ namespace EcsR3.Examples.Custom.BatchTests
         protected override void RunProcess()
         {
             var (components1, components2) = _structComponentPoolAccessor.GetPoolArrays();
-            var batches = _computedComponentGroup.Value;
+            var batches = _computedComponentGroup.Value.Span;
             foreach (var batch in batches)
             {
                 ref var basic = ref components1[batch.Component1Allocation];
@@ -54,5 +53,5 @@ namespace EcsR3.Examples.Custom.BatchTests
                 basic2.Value += 10;
             }
         }
-    }*/
+    }
 }

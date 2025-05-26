@@ -19,7 +19,7 @@ namespace EcsR3.Systems.Batching
         public IThreadHandler ThreadHandler { get; }
         
         protected IComputedComponentGroup ComputedComponentGroup { get; private set; }
-        protected bool ShouldParallelize { get; private set; }
+        protected bool ShouldMultithread { get; set; }
         protected CompositeDisposable Subscriptions;
 
         protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
@@ -33,7 +33,7 @@ namespace EcsR3.Systems.Batching
         /// This describes when the system should be processed
         /// </summary>
         /// <returns>A trigger indicating that the process should run</returns>
-        protected abstract Observable<bool> ReactWhen();
+        protected abstract Observable<Unit> ReactWhen();
 
         /// <summary>
         /// Do anything before the batch gets processed
@@ -69,7 +69,7 @@ namespace EcsR3.Systems.Batching
             Subscriptions = new CompositeDisposable();
             
             ComputedComponentGroup = GetComponentGroup();
-            ShouldParallelize = this.ShouldMutliThread();
+            ShouldMultithread = this.ShouldMutliThread();
             ReactWhen().Subscribe(_ => RunBatch()).AddTo(Subscriptions);
         }
         

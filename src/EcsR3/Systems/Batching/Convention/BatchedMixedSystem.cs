@@ -19,7 +19,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -52,7 +52,7 @@ namespace EcsR3.Systems.Batching.Convention
         {
             var (components1, components2, components3) = componentPools;
             
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -88,7 +88,7 @@ namespace EcsR3.Systems.Batching.Convention
         {
             var (components1, components2, components3, components4) = componentPools;
             
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -125,7 +125,7 @@ namespace EcsR3.Systems.Batching.Convention
         {
             var (components1, components2, components3, components4, components5) = componentPools;
             
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -165,7 +165,7 @@ namespace EcsR3.Systems.Batching.Convention
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
             
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -206,7 +206,7 @@ namespace EcsR3.Systems.Batching.Convention
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;
             
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {

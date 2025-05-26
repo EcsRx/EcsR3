@@ -7,7 +7,7 @@ using EcsR3.Examples.Custom.ComputedComponents.Computeds;
 using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents;
-/*
+
 public class ComputedStructComponentApplication : EcsR3ConsoleApplication
 {
     protected override void ApplicationStarted()
@@ -30,4 +30,4 @@ public class ComputedStructComponentApplication : EcsR3ConsoleApplication
         stopwatch.Stop();
         Console.WriteLine($"Time Taken: {stopwatch.ElapsedMilliseconds}ms");
     }
-}*/
+}

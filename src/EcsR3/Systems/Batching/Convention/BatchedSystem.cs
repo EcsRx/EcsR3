@@ -21,8 +21,10 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
+                // TODO: This *SHOULD* be faster, but its not, so maybe investigate this in the future
+                /*
                 Parallel.ForEach(Partitioner.Create(0, componentBatches.Length), item =>
                 {
                     var batches = componentBatches.Span;
@@ -32,20 +34,14 @@ namespace EcsR3.Systems.Batching.Convention
                         Process(batch.EntityId, components1[batch.Component1Allocation],
                             components2[batch.Component2Allocation]);
                     }
-                });
-                /*
-                Parallel.For(0, componentBatches.Length, i =>
-                {
-                    var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
                 });*/
-
-                /*
+            
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
                     Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
-                });*/
+                });
+                
                 return;
             }
 
@@ -71,7 +67,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -104,7 +100,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -140,7 +136,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -179,7 +175,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
@@ -202,7 +198,7 @@ namespace EcsR3.Systems.Batching.Convention
         }
     }
     
-        public abstract class BatchedSystem<T1, T2, T3, T4, T5, T6, T7> : RawBatchedSystem<T1, T2, T3, T4, T5, T6, T7>
+    public abstract class BatchedSystem<T1, T2, T3, T4, T5, T6, T7> : RawBatchedSystem<T1, T2, T3, T4, T5, T6, T7>
         where T1 : IComponent
         where T2 : IComponent
         where T3 : IComponent
@@ -219,7 +215,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;
-            if (ShouldParallelize)
+            if (ShouldMultithread)
             {
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {

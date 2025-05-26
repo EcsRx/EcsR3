@@ -26,8 +26,8 @@ namespace EcsR3.Examples.Custom.BatchTests
             public ClassBatchSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
             {}
 
-            protected override Observable<bool> ReactWhen()
-            { return Observable.Never<bool>(); }
+            protected override Observable<Unit> ReactWhen()
+            { return Observable.Never<Unit>(); }
 
             public void ForceRun() => ProcessBatch();
             
@@ -56,7 +56,7 @@ namespace EcsR3.Examples.Custom.BatchTests
             Console.WriteLine("Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100000; i++)
             { batchSystem.ForceRun(); }
             stopwatch.Stop();
             Console.WriteLine($"Time Taken: {stopwatch.ElapsedMilliseconds}ms");
