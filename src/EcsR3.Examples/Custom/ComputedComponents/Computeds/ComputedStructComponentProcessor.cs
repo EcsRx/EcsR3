@@ -6,7 +6,7 @@ using EcsR3.Examples.Custom.ComputedComponents.Components;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
-public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<int, StructNumberComponent, StructNumber2Component>
+public class ComputedStructComponentProcessor : ComputedFromComponentGroup<int, StructNumberComponent, StructNumber2Component>
 {
     public ComputedStructComponentProcessor(IComponentDatabase componentDatabase, IComputedComponentGroup<StructNumberComponent, StructNumber2Component> dataSource) : base(componentDatabase, dataSource)
     {

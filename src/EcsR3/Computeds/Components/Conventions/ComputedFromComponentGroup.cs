@@ -43,7 +43,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-    public abstract class ComputedDataFromComponentGroup<TOutput, T1, T2> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2>> 
+    public abstract class ComputedFromComponentGroup<TOutput, T1, T2> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2>> 
         where T1 : IComponent where T2 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
@@ -52,7 +52,7 @@ namespace EcsR3.Computeds.Components.Conventions
         protected readonly IComponentPool<T1> ComponentPool1;
         protected readonly IComponentPool<T2> ComponentPool2;
         
-        protected ComputedDataFromComponentGroup(IComponentDatabase componentDatabase,
+        protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1, T2> dataSource) : base(dataSource)
         {
             ComponentDatabase = componentDatabase;
@@ -84,7 +84,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-    public abstract class ComputedDataFromComponentGroup<TOutput, T1, T2, T3> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3>> 
+    public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3>> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
@@ -94,7 +94,7 @@ namespace EcsR3.Computeds.Components.Conventions
         protected readonly IComponentPool<T3> ComponentPool3;
         protected (int, T1, T2,T3)[] BatchCache = Array.Empty<(int, T1, T2,T3)>();
         
-        protected ComputedDataFromComponentGroup(IComponentDatabase componentDatabase,
+        protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1, T2, T3> dataSource) : base(dataSource)
         {
             ComponentDatabase = componentDatabase;
@@ -129,7 +129,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-        public abstract class ComputedDataFromComponentGroup<TOutput, T1, T2, T3, T4> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3, T4>> 
+        public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3, T4> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3, T4>> 
             where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
         {
         public IComponentDatabase ComponentDatabase { get; }
@@ -140,7 +140,7 @@ namespace EcsR3.Computeds.Components.Conventions
         protected readonly IComponentPool<T4> ComponentPool4;
         protected (int, T1, T2,T3,T4)[] BatchCache = Array.Empty<(int, T1, T2,T3,T4)>();
         
-        protected ComputedDataFromComponentGroup(IComponentDatabase componentDatabase,
+        protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1, T2, T3, T4> dataSource) : base(dataSource)
         {
             ComponentDatabase = componentDatabase;
