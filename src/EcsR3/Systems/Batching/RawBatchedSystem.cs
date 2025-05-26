@@ -9,7 +9,7 @@ using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching
 {
-        public abstract class RawBatchedSystem<T1, T2> : ManualBatchedSystem
+    public abstract class RawBatchedSystem<T1, T2> : ManualBatchedSystem
         where T1 : IComponent
         where T2 : IComponent
     {
