@@ -19,7 +19,7 @@ namespace EcsR3.Benchmarks
         static void Main(string[] args)
         {
             var benchmarks = new []
-            {/*
+            {
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
@@ -30,12 +30,12 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveWithNoiseBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),
                 
                 BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks))*/
-                //BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark))
-                BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark))
+                BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark))
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);
