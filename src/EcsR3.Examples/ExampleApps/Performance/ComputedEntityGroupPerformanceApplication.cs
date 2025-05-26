@@ -8,7 +8,7 @@ using EcsR3.Groups;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class ObservableGroupPerformanceApplication : EcsR3ConsoleApplication
+    public class ComputedEntityGroupPerformanceApplication : EcsR3ConsoleApplication
     {
         private static readonly int EntityCount = 100000;
         

@@ -29,10 +29,10 @@ namespace EcsR3.Tests.EcsR3.Computeds
 
             var fakeEntities = new List<IEntity> {fakeEntity1, fakeEntity2, fakeEntity3};
             
-            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
-            mockObservableGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            mockComputedEntityGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
             
-            var computedGroupData = new TestComputedFromEntityGroup(mockObservableGroup);
+            var computedGroupData = new TestComputedFromEntityGroup(mockComputedEntityGroup);
 
             fakeEntities.Remove(fakeEntity2);
             computedGroupData.ManuallyRefresh.OnNext(Unit.Default);

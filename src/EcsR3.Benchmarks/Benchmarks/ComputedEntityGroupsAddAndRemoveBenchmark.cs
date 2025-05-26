@@ -10,7 +10,7 @@ using EcsR3.Groups;
 namespace EcsR3.Benchmarks.Benchmarks
 {
     [BenchmarkCategory("Groups")]
-    public class ObservableGroupsAddAndRemoveBenchmark : EcsR3Benchmark
+    public class ComputedEntityGroupsAddAndRemoveBenchmark : EcsR3Benchmark
     {
         private IComponent[] _availableComponents;
         private Type[] _availableComponentTypes;
@@ -22,7 +22,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         [Params(10, 20, 50)]
         public int ComponentCount;
 
-        public ObservableGroupsAddAndRemoveBenchmark() : base()
+        public ComputedEntityGroupsAddAndRemoveBenchmark() : base()
         {
             var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
@@ -47,7 +47,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         }
 
         [Benchmark]
-        public void ObservableGroupAddRemove()
+        public void ComputedEntityGroupAddRemove()
         {
             for (var i = 0; i < EntityCount; i++)
             {

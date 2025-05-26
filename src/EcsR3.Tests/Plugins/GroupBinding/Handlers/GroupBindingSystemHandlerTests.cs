@@ -44,9 +44,9 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
 
             var applicableProperties = reactToEntitySystemHandler.GetApplicableProperties(dummySystem.GetType());
             Assert.Equal(3, applicableProperties.Length);
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupA));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupB));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupCInCollection7));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupA));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupB));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupCInCollection7));
         }
 
         [Fact]
@@ -58,9 +58,9 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
 
             var applicableProperties = reactToEntitySystemHandler.GetApplicableFields(dummySystem.GetType());
             Assert.Equal(3, applicableProperties.Length);
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupC));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupAInCollection2));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupBInCollection5));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupC));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupAInCollection2));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupBInCollection5));
         }
         
         [Fact]
@@ -70,12 +70,12 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
-            var member1 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
-            var member2 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupB));
-            var member3 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupC));
-            var member4 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupAInCollection2));
-            var member5 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupBInCollection5));
-            var member6 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupCInCollection7));
+            var member1 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupA));
+            var member2 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupB));
+            var member3 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupC));
+            var member4 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupAInCollection2));
+            var member5 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupBInCollection5));
+            var member6 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupCInCollection7));
 
             var groupWithAffinity1 = reactToEntitySystemHandler.GetGroupFromAttributeIfAvailable(dummySystem, member1);
             var groupWithAffinity2 = reactToEntitySystemHandler.GetGroupFromAttributeIfAvailable(dummySystem, member2);

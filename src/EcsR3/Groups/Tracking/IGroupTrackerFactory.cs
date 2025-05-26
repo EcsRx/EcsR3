@@ -6,6 +6,6 @@ namespace EcsR3.Groups.Tracking
 {
     public interface IGroupTrackerFactory
     {
-        IObservableGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities = null);
+        IComputedEntityGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities = null);
     }
 }

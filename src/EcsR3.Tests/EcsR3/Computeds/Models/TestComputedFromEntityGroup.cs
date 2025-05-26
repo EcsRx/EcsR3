@@ -11,7 +11,7 @@ namespace EcsR3.Tests.EcsR3.Computeds.Models
     {
         public Subject<Unit> ManuallyRefresh = new();
         
-        public TestComputedFromEntityGroup(IComputedEntityGroup internalObservableGroup) : base(internalObservableGroup)
+        public TestComputedFromEntityGroup(IComputedEntityGroup internalComputedEntityGroup) : base(internalComputedEntityGroup)
         {}
 
         protected override Observable<Unit> RefreshWhen()

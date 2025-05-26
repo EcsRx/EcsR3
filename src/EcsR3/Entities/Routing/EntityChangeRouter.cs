@@ -62,7 +62,7 @@ namespace EcsR3.Entities.Routing
                 if(lastUsedIndexInBuffer == -1) { continue; }
 
                 /*
-                 This is an optimization as we know the EntityRouterObservableGroupTracker subscriber will instantly 
+                 This is an optimization as we know the EntityRouterComputedEntityGroupTracker subscriber will instantly 
                  use the data as its called synchronously so we can use Memory<T> and it can be re-used.
                  
                  There is a worry that anyone could subscribe elsewhere and want to use the data later but they would

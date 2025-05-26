@@ -13,9 +13,9 @@ namespace EcsR3.Groups.Tracking
         public GroupTrackerFactory(IEntityChangeRouter entityChangeRouter)
         { EntityChangeRouter = entityChangeRouter; }
 
-        public IObservableGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities = null)
+        public IComputedEntityGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities = null)
         {
-            var observableGroupTracker = new EntityRouterObservableGroupTracker(EntityChangeRouter, group);
+            var observableGroupTracker = new EntityRouterComputedEntityGroupTracker(EntityChangeRouter, group);
 
             if(initialEntities is null)
             { return observableGroupTracker; }

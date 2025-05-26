@@ -18,7 +18,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
 {
     /// <summary>
     /// This will check all ISystem implementations to see if it contains any properties or fields that are
-    /// IObservableGroups and if they have an attribute to indicate population from a group
+    /// IComputedEntityGroups and if they have an attribute to indicate population from a group
     /// </summary>
     /// <remarks>
     /// The priority is 10 higher than SuperHigh just to make sure it runs before most common systems

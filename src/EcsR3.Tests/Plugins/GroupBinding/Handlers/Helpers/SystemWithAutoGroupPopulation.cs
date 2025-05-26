@@ -12,28 +12,28 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers.Helpers
         public IGroup Group => new TestGroupA();
         
         [FromGroup(typeof(TestGroupA))]
-        public IComputedEntityGroup ObservableGroupA { get; set; }
+        public IComputedEntityGroup ComputedEntityGroupA { get; set; }
         
         [FromGroup(typeof(TestGroupA))]
-        public IComputedEntityGroup IgnoredObservableGroup { get; }
+        public IComputedEntityGroup IgnoredComputedEntityGroup { get; }
         
         [FromComponents(typeof(TestComponentTwo))]
-        public IComputedEntityGroup ObservableGroupB { get; set; }
+        public IComputedEntityGroup ComputedEntityGroupB { get; set; }
 
         public int IgnoredProperty { get; set; }
 
         [FromGroup]
-        public IComputedEntityGroup ObservableGroupC;
+        public IComputedEntityGroup ComputedEntityGroupC;
 
         [FromGroup(typeof(TestGroupA))]
-        public IComputedEntityGroup ObservableGroupAInCollection2;
+        public IComputedEntityGroup ComputedEntityGroupAInCollection2;
 
 
         [FromComponents(typeof(TestComponentTwo))]
-        public IComputedEntityGroup ObservableGroupBInCollection5;
+        public IComputedEntityGroup ComputedEntityGroupBInCollection5;
 
         [FromGroup]
-        public IComputedEntityGroup ObservableGroupCInCollection7 { get; set; }
+        public IComputedEntityGroup ComputedEntityGroupCInCollection7 { get; set; }
 
         public int IgnoredField;
     }

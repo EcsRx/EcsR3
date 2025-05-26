@@ -34,14 +34,14 @@ namespace EcsR3.Computeds.Entities
         public Observable<IEntity> OnRemoved => _onEntityRemoved;
         public Observable<IEntity> OnRemoving => _onEntityRemoving;
         
-        public IObservableGroupTracker GroupTracker { get; }
+        public IComputedEntityGroupTracker GroupTracker { get; }
         public IReadOnlyEntityCollection Collection { get; }
 
         private readonly Subject<IEntity> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
         
         private readonly object _lock = new object();
         
-        public ComputedEntityGroup(LookupGroup group, IObservableGroupTracker tracker, IReadOnlyEntityCollection collection)
+        public ComputedEntityGroup(LookupGroup group, IComputedEntityGroupTracker tracker, IReadOnlyEntityCollection collection)
         {
             Group = group;
             Collection = collection;

@@ -7,7 +7,7 @@ namespace EcsR3.Groups.Tracking.Trackers
     /// <summary>
     /// Tracks changes to a given group and provides events for when entities join/leave the group
     /// </summary>
-    public interface IObservableGroupTracker : IDisposable
+    public interface IComputedEntityGroupTracker : IDisposable
     {
         /// <summary>
         /// The group that is being tracked

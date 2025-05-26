@@ -27,7 +27,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             applicableEntity2.Id.Returns(2);
             notApplicableEntity1.Id.Returns(3);
    
-            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
             mockGroupTracker.GetMatchedEntityIds().Returns(new [] { 1, 2 });
             mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
@@ -53,7 +53,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             applicableEntity.Id.Returns(1);
 
             var onJoinedSubject = new Subject<int>();
-            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
             mockGroupTracker.OnEntityJoinedGroup.Returns(onJoinedSubject);
             mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeftGroup.Returns(new Subject<int>());
@@ -83,7 +83,7 @@ namespace EcsR3.Tests.EcsR3.Observables
 
             var onLeavingSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
-            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
             mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeavingGroup.Returns(onLeavingSubject);
             mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
@@ -120,7 +120,7 @@ namespace EcsR3.Tests.EcsR3.Observables
 
             var onLeavingSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
-            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
             mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeavingGroup.Returns(onLeavingSubject);
             mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
@@ -155,7 +155,7 @@ namespace EcsR3.Tests.EcsR3.Observables
 
             var onJoinedSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
-            var mockGroupTracker = Substitute.For<IObservableGroupTracker>();
+            var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
             mockGroupTracker.OnEntityJoinedGroup.Returns(onJoinedSubject);
             mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);

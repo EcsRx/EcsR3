@@ -10,7 +10,7 @@ using Xunit;
 
 namespace EcsR3.Tests.EcsR3.Observables.Trackers
 {
-    public class EntityRouterObservableGroupTrackerTests
+    public class EntityRouterComputedEntityGroupTrackerTests
     {
         [Fact]
         public void should_start_listening_for_required_changes_when_created()
@@ -22,7 +22,7 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             entityChangeRouter.OnEntityAddedComponents(Arg.Any<int[]>()).Returns(new Subject<EntityChanges>());
             entityChangeRouter.OnEntityRemovingComponents(Arg.Any<int[]>()).Returns(new Subject<EntityChanges>());
             entityChangeRouter.OnEntityRemovedComponents(Arg.Any<int[]>()).Returns(new Subject<EntityChanges>());
-            var groupTracker = new EntityRouterObservableGroupTracker(entityChangeRouter, lookupGroup);
+            var groupTracker = new EntityRouterComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
 
             entityChangeRouter.Received(1).OnEntityAddedComponents(Arg.Is<int[]>(x => x.Length == 2 && x.Contains(1) && x.Contains(2)));
             entityChangeRouter.Received(1).OnEntityAddedComponents(Arg.Is<int[]>(x => x.Length == 1 && x.Contains(3)));
@@ -47,7 +47,7 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             
             entityChangeRouter.OnEntityRemovingComponents(Arg.Any<int[]>()).Returns(removingRequiredComponentsSubject);
             entityChangeRouter.OnEntityRemovedComponents(Arg.Any<int[]>()).Returns(removedRequiredComponentsSubject);
-            var groupTracker = new EntityRouterObservableGroupTracker(entityChangeRouter, lookupGroup);
+            var groupTracker = new EntityRouterComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
 
             var joinedInvocations = new List<int>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
@@ -91,7 +91,7 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
                 .OnEntityRemovedComponents(Arg.Is<int[]>(x => x.Length == 2 && x.Contains(1) && x.Contains(2)))
                 .Returns(removedRequiredComponentsSubject);
 
-            var groupTracker = new EntityRouterObservableGroupTracker(entityChangeRouter, lookupGroup);
+            var groupTracker = new EntityRouterComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
 
             var joinedInvocations = new List<int>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
@@ -144,7 +144,7 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             entityChangeRouter.OnEntityAddedComponents(Arg.Any<int[]>()).Returns(addedRequiredComponentsSubject);
             entityChangeRouter.OnEntityRemovingComponents(Arg.Any<int[]>()).Returns(removingRequiredComponentsSubject);
             entityChangeRouter.OnEntityRemovedComponents(Arg.Any<int[]>()).Returns(removedRequiredComponentsSubject);
-            var groupTracker = new EntityRouterObservableGroupTracker(entityChangeRouter, lookupGroup);
+            var groupTracker = new EntityRouterComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
             
             var joinedInvocations = new List<int>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
@@ -213,7 +213,7 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
                 .OnEntityRemovedComponents(Arg.Is<int[]>(x => x.Length == 1 && x.Contains(2)))
                 .Returns(removedExcludedComponentsSubject);
             
-            var groupTracker = new EntityRouterObservableGroupTracker(entityChangeRouter, lookupGroup);
+            var groupTracker = new EntityRouterComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
             
             var joinedInvocations = new List<int>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);

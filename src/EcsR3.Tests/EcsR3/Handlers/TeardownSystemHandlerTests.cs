@@ -39,16 +39,16 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var fakeEntities = new List<IEntity>();
 
             var removeSubject = new Subject<IEntity>();
-            var mockObservableGroup = Substitute.For<IComputedEntityGroup>();
-            mockObservableGroup.OnAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnRemoving.Returns(removeSubject);
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnRemoving.Returns(removeSubject);
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ITeardownSystem>();
             mockSystem.Group.Returns(fakeGroup);

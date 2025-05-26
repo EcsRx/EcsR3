@@ -41,7 +41,7 @@ namespace EcsR3.Infrastructure
         /// <summary>
         /// Resolve any dependencies the application needs
         /// </summary>
-        /// <remarks>By default it will setup IEntityDatabase, IObservableGroupManager and base class dependencies</remarks>
+        /// <remarks>By default it will setup IEntityDatabase, IComputedEntityGroupManager and base class dependencies</remarks>
         protected override void ResolveApplicationDependencies()
         {
             base.ResolveApplicationDependencies();

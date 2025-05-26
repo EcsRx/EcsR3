@@ -14,7 +14,7 @@ using SystemsR3.Extensions;
 namespace EcsR3.Benchmarks.Benchmarks
 {
     [BenchmarkCategory("Groups")]
-    public class MultipleObservableGroupsAddAndRemoveBenchmark : EcsR3Benchmark
+    public class MultipleComputedEntityGroupsAddAndRemoveBenchmark : EcsR3Benchmark
     {
         private IComponent[] _availableComponents;
         private Type[] _availableComponentTypes;
@@ -24,9 +24,9 @@ namespace EcsR3.Benchmarks.Benchmarks
         public int EntityCount;
         
         [Params(1, 10, 25)]
-        public int ObservableGroups;
+        public int ComputedEntityGroups;
 
-        public MultipleObservableGroupsAddAndRemoveBenchmark() : base()
+        public MultipleComputedEntityGroupsAddAndRemoveBenchmark() : base()
         {
             var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
@@ -36,8 +36,8 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Setup()
         {
-            var componentsPerGroup = _availableComponentTypes.Length / ObservableGroups;
-            for (var i = 0; i < ObservableGroups; i++)
+            var componentsPerGroup = _availableComponentTypes.Length / ComputedEntityGroups;
+            for (var i = 0; i < ComputedEntityGroups; i++)
             {
                 var componentsToTake = _availableComponentTypes
                     .Skip(i*(componentsPerGroup))
@@ -57,13 +57,13 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             EntityCollection.RemoveAll();
             var manager = (ComputedEntityGroupRegistry as ComputedEntityGroupRegistry);
-            var allObservableGroups = manager._computedGroups;
-            allObservableGroups.Values.DisposeAll();
+            var allComputedEntityGroups = manager._computedGroups;
+            allComputedEntityGroups.Values.DisposeAll();
             manager._computedGroups.Clear();
         }
 
         [Benchmark]
-        public void MultipleObservableGroupAddRemove()
+        public void MultipleComputedEntityGroupAddRemove()
         {
             for (var i = 0; i < EntityCount; i++)
             {

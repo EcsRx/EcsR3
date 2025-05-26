@@ -8,7 +8,7 @@ using EcsR3.Groups;
 
 namespace EcsR3.Examples.ExampleApps.Performance;
 
-public class ObservableGroupWithNoisePerformanceApplication : EcsR3ConsoleApplication
+public class ComputedEntityGroupWithNoisePerformanceApplication : EcsR3ConsoleApplication
 {
     private static readonly int EntityCount = 100000;
     private static readonly int Iterations = 3;

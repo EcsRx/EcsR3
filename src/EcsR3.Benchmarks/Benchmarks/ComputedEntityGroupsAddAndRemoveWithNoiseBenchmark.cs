@@ -10,7 +10,7 @@ using EcsR3.Groups;
 namespace EcsR3.Benchmarks.Benchmarks
 {
     [BenchmarkCategory("Groups")]
-    public class ObservableGroupsAddAndRemoveWithNoiseBenchmark : EcsR3Benchmark
+    public class ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark : EcsR3Benchmark
     {
         private IComponent[] _availableComponents;
         private IComponent[] _noiseComponents;
@@ -26,7 +26,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         [Params(10, 20, 50)]
         public int NoiseAmount;
 
-        public ObservableGroupsAddAndRemoveWithNoiseBenchmark() : base()
+        public ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark() : base()
         {
             var componentNamespace = typeof(ClassComponent1).Namespace;
             _availableComponentTypes = _groupFactory.GetComponentTypes
@@ -61,7 +61,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         }
 
         [Benchmark]
-        public void ObservableGroupAddRemove()
+        public void ComputedEntityGroupAddRemove()
         {
             for (var i = 0; i < EntityCount; i++)
             {
