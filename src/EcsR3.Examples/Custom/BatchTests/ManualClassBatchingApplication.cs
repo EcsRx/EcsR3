@@ -40,7 +40,7 @@ namespace EcsR3.Examples.Custom.BatchTests
         {
             var components1 = _classComponentPool.Components;
             var components2 = _classComponent2Pool.Components;
-            var batches = _computedComponentGroup.Value;
+            var batches = _computedComponentGroup.Value.Span;
             for (var i = batches.Length - 1; i >= 0; i--)
             {
                 var batch = batches[i];

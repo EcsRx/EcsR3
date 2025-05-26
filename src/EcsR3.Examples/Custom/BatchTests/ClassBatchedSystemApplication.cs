@@ -1,15 +1,16 @@
 using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Blueprints;
 using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
-using EcsR3.Systems.Batching;
 using EcsR3.Systems.Batching.Convention;
 using R3;
+using SystemsR3.Attributes;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Threading;
 
@@ -19,13 +20,14 @@ namespace EcsR3.Examples.Custom.BatchTests
     {
         public IThreadHandler ThreadHandler { get; private set; }
         
+        [MultiThread]
         public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
         {
             public ClassBatchSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
             {}
 
-            protected override Observable<bool> ReactWhen()
-            { return Observable.Never<bool>(); }
+            protected override Observable<Unit> ReactWhen()
+            { return Observable.Never<Unit>(); }
 
             public void ForceRun() => ProcessBatch();
             
@@ -49,11 +51,12 @@ namespace EcsR3.Examples.Custom.BatchTests
             var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(100000);
             var batchSystem = new ClassBatchSystem(ComponentDatabase, ComputedComponentGroupRegistry, ThreadHandler);
             batchSystem.StartSystem();
+            GC.Collect();
             
             Console.WriteLine("Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100000; i++)
             { batchSystem.ForceRun(); }
             stopwatch.Stop();
             Console.WriteLine($"Time Taken: {stopwatch.ElapsedMilliseconds}ms");

@@ -6,7 +6,7 @@ using EcsR3.Examples.Custom.ComputedComponents.Components;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
-public class ComputedComponentProcessor : ComputedDataFromComponentGroup<int, NumberComponent, Number2Component>
+public class ComputedComponentProcessor : ComputedFromComponentGroup<int, NumberComponent, Number2Component>
 {
     public ComputedComponentProcessor(IComponentDatabase componentDatabase, 
         IComputedComponentGroup<NumberComponent, Number2Component> dataSource) 
@@ -14,11 +14,11 @@ public class ComputedComponentProcessor : ComputedDataFromComponentGroup<int, Nu
     {
     }
 
-    protected override void UpdateComputedData(Memory<(int, NumberComponent, Number2Component)> componentData)
+    protected override void UpdateComputedData(ReadOnlyMemory<(int, NumberComponent, Number2Component)> componentData)
     {
         ComputedData = 0;
-        var data = componentData.Span;
-        for(var i=0;i<data.Length;i++)
-        { ComputedData += data[i].Item2.Value + data[i].Item3.Value; }
+        var span = componentData.Span;
+        for(var i=0;i<componentData.Length;i++)
+        { ComputedData += span[i].Item2.Value + span[i].Item3.Value; }
     }
 }

@@ -28,7 +28,7 @@ public class CustomComputedStructComponentProcessor : ComputedFromData<int, ICom
         var components2 = ComponentPool2.Components;
 
         ComputedData = 0;
-        var batches = DataSource.Value;
+        var batches = DataSource.Value.Span;
         for (var i = 0; i < batches.Length; i++)
         {
             var batch = batches[i];

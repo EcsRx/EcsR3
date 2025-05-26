@@ -1,6 +1,7 @@
 ﻿using System;
 using EcsR3.Examples.Custom;
 using EcsR3.Examples.Custom.BatchTests;
+using EcsR3.Examples.Custom.ComputedComponents;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample;
@@ -45,8 +46,8 @@ namespace EcsR3.Examples
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),
                 
-                new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
-                new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
+                //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
+                //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
             };
 
             var exampleSelector = new SelectionPrompt<Example>()
@@ -56,10 +57,8 @@ namespace EcsR3.Examples
                     .UseConverter(x => x.Name)
                     .AddChoices(availableExamples);
             
-            //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-            //exampleToRun.Executor();
-            
-            new StructBatchedSystemApplication().StartApplication();
+            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
+            exampleToRun.Executor();
         }
     }
 }

@@ -14,8 +14,8 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
         {
         }
 
-        protected override Observable<bool> ReactWhen()
-        { return Observable.Never<bool>(); }
+        protected override Observable<Unit> ReactWhen()
+        { return Observable.Never<Unit>(); }
         
         protected override void Process(int EntityId, SimpleReadComponent component1, SimpleWriteComponent component2)
         {}

@@ -42,7 +42,7 @@ namespace EcsR3.Examples.Custom.BatchTests
         protected override void RunProcess()
         {
             var (components1, components2) = _structComponentPoolAccessor.GetPoolArrays();
-            var batches = _computedComponentGroup.Value;
+            var batches = _computedComponentGroup.Value.Span;
             foreach (var batch in batches)
             {
                 ref var basic = ref components1[batch.Component1Allocation];

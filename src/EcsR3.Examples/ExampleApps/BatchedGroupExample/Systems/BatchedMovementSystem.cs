@@ -15,8 +15,8 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         public BatchedMovementSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         {}
 
-        protected override Observable<bool> ReactWhen()
-        { return Observable.Interval(TimeSpan.FromSeconds(0.5f)).Select(x => true); }
+        protected override Observable<Unit> ReactWhen()
+        { return Observable.Interval(TimeSpan.FromSeconds(0.5f)).Select(x => Unit.Default); }
 
         protected override void Process(int entityId, ref PositionComponent positionComponent, MovementSpeedComponent movementSpeedComponent)
         {
