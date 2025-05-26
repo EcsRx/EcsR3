@@ -46,8 +46,8 @@ namespace EcsR3.Examples
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),
                 
-                new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
-                new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
+                //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
+                //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
             };
 
             var exampleSelector = new SelectionPrompt<Example>()

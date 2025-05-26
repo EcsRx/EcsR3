@@ -8,6 +8,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.BatchTests
 {
+    /*
     public class ManualClassBatchingApplication : BasicLoopApplication
     {
         private IComputedComponentGroup<ClassComponent, ClassComponent2> _computedComponentGroup;
@@ -52,5 +53,5 @@ namespace EcsR3.Examples.Custom.BatchTests
                 basic2.Value += 10;
             }
         }
-    }
+    }*/
 }

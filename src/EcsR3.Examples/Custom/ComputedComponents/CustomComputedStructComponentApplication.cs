@@ -8,6 +8,7 @@ using EcsR3.Extensions;
 
 namespace EcsR3.Examples.Custom.ComputedComponents;
 
+/*
 public class CustomComputedStructComponentApplication : EcsR3ConsoleApplication
 {
     protected override void ApplicationStarted()
@@ -30,4 +31,4 @@ public class CustomComputedStructComponentApplication : EcsR3ConsoleApplication
         stopwatch.Stop();
         Console.WriteLine($"Time Taken: {stopwatch.ElapsedMilliseconds}ms");
     }
-}
+}*/

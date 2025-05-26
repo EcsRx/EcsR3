@@ -7,7 +7,6 @@ using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Blueprints;
 using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
-using EcsR3.Systems.Batching;
 using EcsR3.Systems.Batching.Convention;
 using R3;
 using SystemsR3.Infrastructure.Extensions;

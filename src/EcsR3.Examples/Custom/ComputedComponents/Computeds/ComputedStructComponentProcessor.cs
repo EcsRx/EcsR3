@@ -5,7 +5,7 @@ using EcsR3.Computeds.Components.Conventions;
 using EcsR3.Examples.Custom.ComputedComponents.Components;
 
 namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
-
+/*
 public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<int, StructNumberComponent, StructNumber2Component>
 {
     public ComputedStructComponentProcessor(IComponentDatabase componentDatabase, IComputedComponentGroup<StructNumberComponent, StructNumber2Component> dataSource) : base(componentDatabase, dataSource)
@@ -18,4 +18,4 @@ public class ComputedStructComponentProcessor : ComputedDataFromComponentGroup<i
         for(var i=0;i<componentData.Length;i++)
         { ComputedData += componentData[i].Item2.Value + componentData[i].Item3.Value; }
     }
-}
+}*/

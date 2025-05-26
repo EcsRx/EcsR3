@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.InteropServices;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
@@ -15,27 +17,27 @@ namespace EcsR3.Systems.Batching.Convention
         protected BatchedMixedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
         { }
         
-        protected override void ProcessGroup(ComponentBatch<T1, T2>[] componentBatches, (T1[], T2[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, componentBatches.Length, i =>
+                ThreadHandler.ForEach(MemoryMarshal.ToEnumerable(componentBatches), (batch) =>
                 {
-                    var batch = componentBatches[i];
                     Process(batch.EntityId, ref components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
                 });
                 return;
             }
 
-            for (var i = 0; i < componentBatches.Length; i++)
+            var batches = componentBatches.Span;
+            for (var i = 0; i < batches.Length; i++)
             {
-                var batch = componentBatches[i];
+                var batch = batches[i];
                 Process(batch.EntityId, ref components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
             }
         }
     }
-    
+    /*
     public abstract class BatchedMixedSystem<T1, T2, T3> : RawBatchedSystem<T1,T2,T3>
         where T1 : struct, IComponent
         where T2 : struct, IComponent
@@ -222,5 +224,5 @@ namespace EcsR3.Systems.Batching.Convention
                     components7[batch.Component7Allocation]);
             }
         }
-    }
+    }*/
 }

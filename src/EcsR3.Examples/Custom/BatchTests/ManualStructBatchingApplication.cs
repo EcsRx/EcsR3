@@ -8,6 +8,7 @@ using EcsR3.Systems.Batching.Accessor;
 
 namespace EcsR3.Examples.Custom.BatchTests
 {
+    /*
     public class ManualStructBatchingApplication : BasicLoopApplication
     {
         private IComputedComponentGroup<StructComponent, StructComponent2> _computedComponentGroup;
@@ -53,5 +54,5 @@ namespace EcsR3.Examples.Custom.BatchTests
                 basic2.Value += 10;
             }
         }
-    }
+    }*/
 }
