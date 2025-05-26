@@ -6,7 +6,9 @@ using SystemsR3.Executor.Handlers;
 using SystemsR3.Systems;
 using SystemsR3.Types;
 using EcsR3.Collections;
-using EcsR3.Groups.Observable;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Plugins.GroupBinding.Attributes;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Systems;
@@ -16,7 +18,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
 {
     /// <summary>
     /// This will check all ISystem implementations to see if it contains any properties or fields that are
-    /// IObservableGroups and if they have an attribute to indicate population from a group
+    /// IComputedEntityGroups and if they have an attribute to indicate population from a group
     /// </summary>
     /// <remarks>
     /// The priority is 10 higher than SuperHigh just to make sure it runs before most common systems
@@ -27,10 +29,10 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         private static readonly Type FromGroupAttributeType = typeof(FromGroupAttribute); 
         private static readonly Type FromComponentsAttributeType = typeof(FromComponentsAttribute); 
         
-        public IObservableGroupManager ObservableGroupManager { get; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
 
-        public GroupBindingSystemHandler(IObservableGroupManager observableGroupManager)
-        { ObservableGroupManager = observableGroupManager; }
+        public GroupBindingSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        { ComputedEntityGroupRegistry = computedEntityGroupRegistry; }
 
         public bool CanHandleSystem(ISystem system)
         { return true; }
@@ -60,14 +62,14 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
         public PropertyInfo[] GetApplicableProperties(Type systemType)
         {
             return systemType.GetProperties()
-                .Where(x => x.CanWrite && x.PropertyType == typeof(IObservableGroup))
+                .Where(x => x.CanWrite && x.PropertyType == typeof(IComputedEntityGroup))
                 .ToArray();
         }
         
         public FieldInfo[] GetApplicableFields(Type systemType)
         {
             return systemType.GetFields()
-                .Where(x => x.FieldType == typeof(IObservableGroup))
+                .Where(x => x.FieldType == typeof(IComputedEntityGroup))
                 .ToArray();
         }
 
@@ -76,7 +78,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, property);
             if (group == null) { return; }
 
-            property.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
+            property.SetValue(system, ComputedEntityGroupRegistry.GetComputedGroup(group));
         }
 
         public void ProcessField(FieldInfo field, ISystem system)
@@ -84,7 +86,7 @@ namespace EcsR3.Plugins.GroupBinding.Systems.Handlers
             var group = GetGroupFromAttributeIfAvailable(system, field);
             if (group == null) { return; }
 
-            field.SetValue(system, ObservableGroupManager.GetObservableGroup(group));
+            field.SetValue(system, ComputedEntityGroupRegistry.GetComputedGroup(group));
         }
         
         public void SetupSystem(ISystem system)

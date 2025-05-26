@@ -2,23 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using EcsR3.Collections;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Entities;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
 using EcsR3.Systems;
 using EcsR3.Systems.Handlers;
 using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Handlers
+namespace EcsR3.Tests.EcsR3.Handlers
 {
     public class SetupSystemHandlerTests
     {
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new SetupSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<ISetupSystem>();
@@ -39,16 +41,16 @@ namespace EcsR3.Tests.EcsRx.Handlers
             fakeEntity2.Id.Returns(2);
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(Type.EmptyTypes);
-            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -73,19 +75,19 @@ namespace EcsR3.Tests.EcsRx.Handlers
             fakeEntity2.Id.Returns(2);
             var fakeEntities = new List<IEntity>();
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
             var addingSubject = new Subject<IEntity>();
-            mockObservableGroup.OnEntityAdded.Returns(addingSubject);
-            mockObservableGroup.ContainsEntity(Arg.Is(fakeEntity1.Id)).Returns(true);
-            mockObservableGroup.ContainsEntity(Arg.Is(fakeEntity2.Id)).Returns(true);
-            mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockComputedEntityGroup.OnAdded.Returns(addingSubject);
+            mockComputedEntityGroup.Contains(Arg.Is(fakeEntity1.Id)).Returns(true);
+            mockComputedEntityGroup.Contains(Arg.Is(fakeEntity2.Id)).Returns(true);
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -118,17 +120,17 @@ namespace EcsR3.Tests.EcsRx.Handlers
             fakeEntity1.Id.Returns(1);
             var fakeEntities = new List<IEntity>();
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
             var removingSubject = new Subject<IEntity>();
-            mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(removingSubject);
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnRemoved.Returns(removingSubject);
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -161,15 +163,15 @@ namespace EcsR3.Tests.EcsRx.Handlers
             fakeEntity1.Id.Returns(id1);
             fakeEntity2.Id.Returns(id2);
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id);
-            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -200,15 +202,15 @@ namespace EcsR3.Tests.EcsRx.Handlers
             fakeEntity1.Id.Returns(id1);
             fakeEntity2.Id.Returns(id2);
             
-            var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
-            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);

@@ -9,7 +9,6 @@
     <ItemGroup>
       <ProjectReference Include="..\EcsR3.Examples\EcsR3.Examples.csproj" />
       <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj" />
-      <ProjectReference Include="..\EcsR3.Plugins.Batching\EcsR3.Plugins.Batching.csproj" />
       <ProjectReference Include="..\EcsR3.Plugins.Persistence\EcsR3.Plugins.Persistence.csproj" />
       <ProjectReference Include="..\EcsR3.Plugins.Views\EcsR3.Plugins.Views.csproj" />
     </ItemGroup>

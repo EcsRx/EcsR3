@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;
@@ -16,15 +18,15 @@ namespace EcsR3.Systems.Handlers
     [Priority(10)]
     public class SetupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IObservableGroupManager ObservableGroupManager;
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         private readonly object _lock = new object();
         
-        public SetupSystemHandler(IObservableGroupManager observableGroupManager)
+        public SetupSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
-            ObservableGroupManager = observableGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
@@ -44,18 +46,18 @@ namespace EcsR3.Systems.Handlers
             }
 
             var castSystem = (ISetupSystem) system;
-            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
 
-            observableGroup.OnEntityAdded
+            observableGroup.OnAdded
                 .Subscribe(x =>
                 {
                     // This occurs if we have an add elsewhere removing the entity before this one is called
-                    if (observableGroup.ContainsEntity(x.Id))
+                    if (observableGroup.Contains(x.Id))
                     { SetupEntity(castSystem, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            observableGroup.OnEntityRemoved
+            observableGroup.OnRemoved
                 .Subscribe(x =>
                 {
                     if (entitySubscriptions.ContainsKey(x.Id))
@@ -63,8 +65,7 @@ namespace EcsR3.Systems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            var entities = observableGroup.ToArray();
-            foreach (var entity in entities)
+            foreach (var entity in observableGroup)
             { SetupEntity(castSystem, entity, entitySubscriptions); }
         }
         

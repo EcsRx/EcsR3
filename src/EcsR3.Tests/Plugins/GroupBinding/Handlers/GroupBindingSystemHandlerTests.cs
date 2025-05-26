@@ -1,6 +1,8 @@
 using SystemsR3.Systems;
 using SystemsR3.Systems.Conventional;
 using EcsR3.Collections;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Groups;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Plugins.GroupBinding.Systems.Handlers;
@@ -17,7 +19,7 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem1 = Substitute.For<ISetupSystem>();
@@ -36,44 +38,44 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_correctly_get_applicable_properties()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
             var applicableProperties = reactToEntitySystemHandler.GetApplicableProperties(dummySystem.GetType());
             Assert.Equal(3, applicableProperties.Length);
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupA));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupB));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupCInCollection7));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupA));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupB));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupCInCollection7));
         }
 
         [Fact]
         public void should_correctly_get_applicable_fields()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
             var applicableProperties = reactToEntitySystemHandler.GetApplicableFields(dummySystem.GetType());
             Assert.Equal(3, applicableProperties.Length);
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupC));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupAInCollection2));
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupBInCollection5));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupC));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupAInCollection2));
+            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ComputedEntityGroupBInCollection5));
         }
         
         [Fact]
         public void should_get_group_from_members()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
-            var member1 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
-            var member2 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupB));
-            var member3 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupC));
-            var member4 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupAInCollection2));
-            var member5 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupBInCollection5));
-            var member6 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupCInCollection7));
+            var member1 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupA));
+            var member2 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupB));
+            var member3 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupC));
+            var member4 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupAInCollection2));
+            var member5 = dummySystem.GetType().GetField(nameof(dummySystem.ComputedEntityGroupBInCollection5));
+            var member6 = dummySystem.GetType().GetProperty(nameof(dummySystem.ComputedEntityGroupCInCollection7));
 
             var groupWithAffinity1 = reactToEntitySystemHandler.GetGroupFromAttributeIfAvailable(dummySystem, member1);
             var groupWithAffinity2 = reactToEntitySystemHandler.GetGroupFromAttributeIfAvailable(dummySystem, member2);
@@ -104,10 +106,10 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_throw_exception_when_no_group_system_interface_with_empty_group()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemMissingGroup();
-            var propertyInfo = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
+            var propertyInfo = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableEntityGroupA));
             
             try
             { reactToEntitySystemHandler.ProcessProperty(propertyInfo, dummySystem); }
@@ -124,15 +126,15 @@ namespace EcsR3.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_populate_properties()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
             reactToEntitySystemHandler.SetupSystem(dummySystem);
 
             // This could be more specific but given other tests it seems fine for now
-            observableGroupManager.Received(4).GetObservableGroup(Arg.Any<TestGroupA>(), Arg.Any<int[]>());
-            observableGroupManager.Received(2).GetObservableGroup(Arg.Any<Group>(), Arg.Any<int[]>());
+            observableGroupManager.Received(4).GetComputedGroup(Arg.Any<TestGroupA>());
+            observableGroupManager.Received(2).GetComputedGroup(Arg.Any<Group>());
         }
     }
 }

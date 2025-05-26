@@ -13,7 +13,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Modules
         {
             registry.Bind<ILowestHealthComputedGroup>(x => x.ToMethod(y =>
             {
-                var namedHealthGroup = y.ResolveObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
+                var namedHealthGroup = y.ResolveComputedEntityGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
                 return new LowestHealthComputedGroup(namedHealthGroup);
             }));
         }

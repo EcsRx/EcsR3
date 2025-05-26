@@ -1,5 +1,5 @@
+using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
-using EcsR3.Groups.Observable;
 using R3;
 
 namespace EcsR3.Systems
@@ -26,7 +26,7 @@ namespace EcsR3.Systems
         /// <remarks>
         /// In most use cases you probably want to run this every update/interval
         /// </remarks>
-        Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup);
+        Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup);
         
         /// <summary>
         /// The processor for the entity

@@ -26,14 +26,16 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveWithNoiseBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark))
+                BenchmarkConverter.TypeToBenchmarks(typeof(MultipleComputedEntityGroupsAddAndRemoveBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),
                 
-                //BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
-                //BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
-                //BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks))
+                BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark))
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);

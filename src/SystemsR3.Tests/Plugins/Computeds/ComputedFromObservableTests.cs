@@ -14,7 +14,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(expectedData);          
             
             var computedData = new TestComputedFromObservable(data);
-            Assert.Equal(expectedData, computedData.CachedData);
+            Assert.Equal(expectedData, computedData.ComputedData);
         }
         
         [Fact]
@@ -25,7 +25,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(10);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             data.Value = expectedData;
 
             var actualData = computedData.Value;
@@ -41,8 +41,8 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(10);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
-            computedData.RefreshData(expectedData);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
+            computedData.ForceDataRefresh(expectedData);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);      
@@ -57,7 +57,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(expectedData);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             data.OnNext(expectedData);
 
             var actualData = computedData.Value;
@@ -73,8 +73,8 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new ReactiveProperty<int>(expectedData);
             
             var computedData = new TestComputedFromObservable(data);
-            computedData.Subscribe(x => hasNotified = true);
-            computedData.RefreshData(expectedData);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
+            computedData.ForceDataRefresh(expectedData);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);

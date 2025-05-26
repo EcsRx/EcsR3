@@ -1,30 +1,22 @@
-using System;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Components.Database;
-using EcsR3.Components.Lookups;
-using EcsR3.Entities;
+using EcsR3.Computeds.Components.Registries;
 using EcsR3.Examples.ExampleApps.Performance.Components;
-using EcsR3.Plugins.Batching.Factories;
-using EcsR3.Plugins.Batching.Systems;
+using EcsR3.Systems.Batching;
+using EcsR3.Systems.Batching.Convention;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.Performance.Systems
 {
-    public class ExampleBatchedSystem : ReferenceBatchedSystem<SimpleReadComponent, SimpleWriteComponent>
+    public class ExampleBatchedSystem : BatchedSystem<SimpleReadComponent, SimpleWriteComponent>
     {
-        public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, 
-            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager)
-            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
-        {}
+        public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
-        protected override Observable<bool> ReactWhen()
-        { return Observable.Never<bool>(); }
-
-        // This shows that every time the group changes, it should throttle (actually debounce) and run after 10ms
-        protected override Observable<IEntity> ProcessGroupSubscription(Observable<IEntity> groupChange)
-        { return groupChange.Debounce(TimeSpan.FromMilliseconds(10)); }
-
+        protected override Observable<Unit> ReactWhen()
+        { return Observable.Never<Unit>(); }
+        
         protected override void Process(int EntityId, SimpleReadComponent component1, SimpleWriteComponent component2)
         {}
     }

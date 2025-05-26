@@ -25,7 +25,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { ObservableGroupManager.GetObservableGroup(group); }
+            { ComputedEntityGroupRegistry.GetComputedGroup(group); }
 
             var firstRun = ProcessEntities(10000);
             var secondRun = ProcessEntities(10000);
@@ -39,14 +39,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponents);
             }

@@ -3,6 +3,9 @@ using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Components.Registries;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure
@@ -11,7 +14,8 @@ namespace EcsR3.Infrastructure
     {
         public IEntityCollection EntityCollection { get; private set; }
         public IComponentDatabase ComponentDatabase { get; private set; }
-        public IObservableGroupManager ObservableGroupManager { get; private set; }
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; private set; }
+        public IComputedComponentGroupRegistry ComputedComponentGroupRegistry { get; private set; }
         
         /// <summary>
         /// Load any modules that your application needs
@@ -37,13 +41,14 @@ namespace EcsR3.Infrastructure
         /// <summary>
         /// Resolve any dependencies the application needs
         /// </summary>
-        /// <remarks>By default it will setup IEntityDatabase, IObservableGroupManager and base class dependencies</remarks>
+        /// <remarks>By default it will setup IEntityDatabase, IComputedEntityGroupManager and base class dependencies</remarks>
         protected override void ResolveApplicationDependencies()
         {
             base.ResolveApplicationDependencies();
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
-            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
+            ComputedEntityGroupRegistry = DependencyResolver.Resolve<IComputedEntityGroupRegistry>();
+            ComputedComponentGroupRegistry = DependencyResolver.Resolve<IComputedComponentGroupRegistry>();
         }
     }
 }

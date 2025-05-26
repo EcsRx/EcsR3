@@ -5,11 +5,10 @@ using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Tests.Models;
 using NSubstitute;
-using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx.Collections
+namespace EcsR3.Tests.EcsR3.Collections
 {
     public class ComponentDatabaseTests
     {

@@ -16,7 +16,7 @@ namespace EcsR3.Examples.ExampleApps.HealthExample
 
         protected override void ApplicationStarted()
         {
-            _enemy = EntityCollection.CreateEntity(new EnemyBlueprint(100));
+            _enemy = EntityCollection.Create(new EnemyBlueprint(100));
 
             HandleInput();
         }

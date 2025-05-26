@@ -79,6 +79,14 @@ namespace EcsR3.Entities
         ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
         /// <summary>
+        /// Creates and returns a struct type component
+        /// </summary>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <returns>The ref of the component</returns>
+        /// <remarks>This is meant for struct based components and is used instead of AddComponent</remarks>
+        ref T CreateComponent<T>() where T : struct, IComponent;
+        
+        /// <summary>
         /// Updates a component from its type id with the new values
         /// </summary>
         /// <param name="componentTypeId">The component type id</param>

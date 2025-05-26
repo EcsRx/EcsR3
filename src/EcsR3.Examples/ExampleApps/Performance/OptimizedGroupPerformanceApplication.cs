@@ -5,11 +5,11 @@ using System.Linq;
 using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
+using EcsR3.Computeds.Entities;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
 using EcsR3.Extensions;
-using EcsR3.Groups.Observable;
 using SystemsR3.Infrastructure.Modules;
 
 namespace EcsR3.Examples.ExampleApps.Performance
@@ -40,10 +40,10 @@ namespace EcsR3.Examples.ExampleApps.Performance
             _availableComponentTypeIds = Enumerable.Range(0, _availableComponents.Length-1).ToArray();
             
             var groups = _groupFactory.CreateTestGroups(10).ToArray();
-            var observableGroups = new List<IObservableGroup>();
+            var observableGroups = new List<IComputedEntityGroup>();
             foreach (var group in groups)
             {
-                var newGroup = ObservableGroupManager.GetObservableGroup(group);
+                var newGroup = ComputedEntityGroupRegistry.GetComputedGroup(group);
                 observableGroups.Add(newGroup);
             }
             
@@ -64,14 +64,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            EntityCollection.RemoveAllEntities();
+            EntityCollection.RemoveAll();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = EntityCollection.CreateEntity();
+                var entity = EntityCollection.Create();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponentTypeIds);
             }

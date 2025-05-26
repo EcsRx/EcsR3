@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Extensions;
@@ -17,15 +19,15 @@ namespace EcsR3.Systems.Handlers
     [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IObservableGroupManager _observableGroupManager;       
+        public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
         private readonly object _lock = new object();
         
-        public ReactToGroupSystemHandler(IObservableGroupManager observableGroupManager, IThreadHandler threadHandler)
+        public ReactToGroupSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry, IThreadHandler threadHandler)
         {
-            _observableGroupManager = observableGroupManager;
+            ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _threadHandler = threadHandler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
@@ -36,7 +38,7 @@ namespace EcsR3.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var castSystem = (IReactToGroupSystem)system;
-            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group);
+            var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
             var groupPredicate = castSystem.Group as IHasPredicate;
             var isExtendedSystem = system is IReactToGroupExSystem;
             var reactObservable = castSystem.ReactToGroup(observableGroup);
@@ -47,9 +49,9 @@ namespace EcsR3.Systems.Handlers
                 IDisposable noPredicateSub;
 
                 if (isExtendedSystem)
-                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, (IReactToGroupExSystem)castSystem, runParallel)); }
+                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.ToArray(), (IReactToGroupExSystem)castSystem, runParallel)); }
                 else
-                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, castSystem, runParallel)); }
+                { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.ToArray(), castSystem, runParallel)); }
 
                 lock (_lock)
                 { _systemSubscriptions.Add(system, noPredicateSub); }
@@ -61,9 +63,9 @@ namespace EcsR3.Systems.Handlers
             IDisposable predicateSub;
             
             if (isExtendedSystem)
-            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), (IReactToGroupExSystem)castSystem, runParallel)); }
+            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToArray(), (IReactToGroupExSystem)castSystem, runParallel)); }
             else
-            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel)); }
+            { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToArray(), castSystem, runParallel)); }
 
             lock (_lock)
             { _systemSubscriptions.Add(system, predicateSub); }

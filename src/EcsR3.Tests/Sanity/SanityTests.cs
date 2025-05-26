@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using SystemsR3.Events;
 using SystemsR3.Executor;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Executor.Handlers.Conventional;
 using SystemsR3.Pools;
 using SystemsR3.Threading;
-using EcsR3.Collections;
 using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds.Components.Registries;
+using EcsR3.Computeds.Entities.Factories;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Groups.Observable;
-using EcsR3.Groups.Observable.Tracking;
-using EcsR3.Plugins.Batching.Builders;
+using EcsR3.Groups.Tracking;
 using EcsR3.Plugins.Views.Components;
 using EcsR3.Plugins.Views.Systems;
+using EcsR3.Systems.Batching.Convention;
 using EcsR3.Systems.Handlers;
 using EcsR3.Tests.Helpers;
 using EcsR3.Tests.Models;
@@ -30,6 +32,7 @@ using NSubstitute;
 using R3;
 using SystemsR3.Events.Messages;
 using SystemsR3.Scheduling;
+using SystemsR3.Systems;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,7 +47,7 @@ namespace EcsR3.Tests.Sanity
             _logger = logger;
         }
 
-        private (IObservableGroupManager, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter) CreateFramework()
+        private (IComputedEntityGroupRegistry, IEntityCollection, IComponentDatabase, IComponentTypeLookup, IEntityChangeRouter, IComputedComponentGroupRegistry) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -64,23 +67,24 @@ namespace EcsR3.Tests.Sanity
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType, entityChangeRouter);
             var entityCollection = new EntityCollection(entityFactory);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter);
-            var observableGroupFactory = new ObservableGroupFactory(groupTrackerFactory, entityCollection);
-            var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityCollection, componentLookupType);
+            var observableGroupFactory = new ComputedEntityGroupFactory(groupTrackerFactory, entityCollection);
+            var observableGroupManager = new ComputedEntityGroupRegistry(observableGroupFactory, entityCollection, componentLookupType);
+            var computedComponentGroupRegistry = new ComputedComponentGroupRegistry(observableGroupManager, componentLookupType);
 
-            return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter);
+            return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter, computedComponentGroupRegistry);
         }
 
-        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
+        private SystemExecutor CreateExecutor(IComputedEntityGroupRegistry observableEntityGroupRegistry, IUpdateScheduler updateScheduler = null)
         {
             var threadHandler = new DefaultThreadHandler();
             updateScheduler ??= new DefaultUpdateScheduler();
-            var reactsToEntityHandler = new ReactToEntitySystemHandler(observableGroupManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
-            var reactsToDataHandler = new ReactToDataSystemHandler(observableGroupManager);
+            var reactsToEntityHandler = new ReactToEntitySystemHandler(observableEntityGroupRegistry);
+            var reactsToGroupHandler = new ReactToGroupSystemHandler(observableEntityGroupRegistry, threadHandler);
+            var reactsToDataHandler = new ReactToDataSystemHandler(observableEntityGroupRegistry);
             var manualSystemHandler = new ManualSystemHandler();
-            var setupHandler = new SetupSystemHandler(observableGroupManager);
-            var teardownHandler = new TeardownSystemHandler(observableGroupManager);
-            var basicEntityHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, updateScheduler);
+            var setupHandler = new SetupSystemHandler(observableEntityGroupRegistry);
+            var teardownHandler = new TeardownSystemHandler(observableEntityGroupRegistry);
+            var basicEntityHandler = new BasicEntitySystemHandler(observableEntityGroupRegistry, threadHandler, updateScheduler);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -99,12 +103,12 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var (observableGroupManager, entityCollection, _, _, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, _, _, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var entityOne = entityCollection.CreateEntity();
-            var entityTwo = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
+            var entityTwo = entityCollection.Create();
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
             entityTwo.AddComponents(new TestComponentTwo());
@@ -116,8 +120,8 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
-            var (observableGroupManager, entityCollection, _, componentTypeLookup, entityChangeRouter) = CreateFramework();
-            var entityOne = entityCollection.CreateEntity();
+            var (observableGroupManager, entityCollection, _, componentTypeLookup, entityChangeRouter, _) = CreateFramework();
+            var entityOne = entityCollection.Create();
 
             var testComponentOneTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne));
             var testComponentTwoTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo));
@@ -149,7 +153,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
-            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
 
@@ -162,7 +166,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_trigger_both_setup_and_teardown_for_view_resolver()
         {
-            var (observableGroupManager, entityCollection, _, _, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, _, _, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
             var viewResolverSystem = new TestViewResolverSystem(new EventSystem(new MessageBroker(), new DefaultThreadHandler()),
                 new Group(typeof(TestComponentOne), typeof(ViewComponent)));
@@ -173,10 +177,10 @@ namespace EcsR3.Tests.Sanity
             var teardownCalled = false;
             viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
 
-            var entityOne = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
 
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
@@ -185,114 +189,33 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_call_setup_system_before_setup_and_teardown_for_entities_on_view_system()
         {
-            var (observableGroupManager, entityCollection, _, _, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, _, _, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
             var expectedCallList = new[] { "start-system", "setup", "teardown", "stop-system" };
             var actualCallList = new List<string>();
             
             var viewResolverSystem = new HybridSetupSystem(actualCallList.Add, new Group(typeof(TestComponentOne), typeof(ViewComponent)));
-            var entityOne = entityCollection.CreateEntity();
+            var entityOne = entityCollection.Create();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
             
             executor.AddSystem(viewResolverSystem);
-            entityCollection.RemoveEntity(entityOne.Id);
+            entityCollection.Remove(entityOne.Id);
             executor.RemoveSystem(viewResolverSystem);
 
             Assert.Equal(expectedCallList, actualCallList);
         }
 
         [Fact]
-        public unsafe void should_keep_state_with_batches()
-        {
-            var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.CreateEntity();
-
-            var startingInt = 2;
-            var finalInt = 10;
-            var startingFloat = 5.0f;
-            var finalFloat = 20.0f;
-
-            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
-            var component1Allocation = entity1.ComponentAllocations[4];
-            structComponent1.Data = startingInt;
-
-            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
-            var component2Allocation = entity1.ComponentAllocations[5];
-            structComponent2.Data = startingFloat;
-
-            var entities = new[] {entity1};
-            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
-            var batch = batchBuilder.Build(entities);
-
-            ref var initialBatchData = ref batch.Batches[0];
-            ref var component1 = ref *initialBatchData.Component1;
-            ref var component2 = ref *initialBatchData.Component2;
-            Assert.Equal(startingInt, component1.Data);
-            Assert.Equal(startingFloat, component2.Data);
-
-            component1.Data = finalInt;
-            component2.Data = finalFloat;
-
-            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
-            Assert.Equal(finalInt, structComponent1.Data);
-            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
-            Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
-        }
-
-        [Fact]
-        public unsafe void should_retain_pointer_through_new_struct()
-        {
-            var (_, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var entity1 = entityCollection.CreateEntity();
-
-            var startingInt = 2;
-            var finalInt = 10;
-            var startingFloat = 5.0f;
-            var finalFloat = 20.0f;
-
-            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
-            var component1Allocation = entity1.ComponentAllocations[4];
-            structComponent1.Data = startingInt;
-
-            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
-            var component2Allocation = entity1.ComponentAllocations[5];
-            structComponent2.Data = startingFloat;
-
-            var entities = new[] {entity1};
-            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
-            var batch = batchBuilder.Build(entities);
-
-            ref var initialBatchData = ref batch.Batches[0];
-            ref var component1 = ref *initialBatchData.Component1;
-            ref var component2 = ref *initialBatchData.Component2;
-
-            Assert.Equal(startingInt, component1.Data);
-            Assert.Equal(startingFloat, component2.Data);
-
-            component1 = new TestStructComponentOne {Data = finalInt};
-            component2 = new TestStructComponentTwo {Data = finalFloat};
-
-            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
-            Assert.Equal(finalInt, structComponent1.Data);
-            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
-            Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
-        }
-
-        [Fact]
         public void should_allocate_entities_correctly()
         {
             var expectedSize = 5000;
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
-            var observableGroup = observableGroupManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
+            var observableGroup = observableGroupManager.GetComputedGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
 
             for (var i = 0; i < expectedSize; i++)
             {
-                var entity = entityCollection.CreateEntity();
+                var entity = entityCollection.Create();
                 entity.AddComponents(new ViewComponent(), new TestComponentOne());
             }
             
@@ -309,10 +232,10 @@ namespace EcsR3.Tests.Sanity
         [Fact(Skip = "This wont work due to how R3 handles disposing, need to look at in more depth")]
         public void should_handle_deletion_while_setting_up_in_reactive_data_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveDataTestSystem1(entityCollection);
@@ -329,10 +252,10 @@ namespace EcsR3.Tests.Sanity
         [Fact(Skip = "This wont work due to how R3 handles disposing, need to look at in more depth")]
         public void should_handle_deletion_while_setting_up_in_reactive_entity_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveEntityTestSystem1(entityCollection);
@@ -349,10 +272,10 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_handle_deletion_while_setting_up_in_setup_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var executor = CreateExecutor(observableGroupManager);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingSetupTestSystem1(entityCollection);
@@ -369,12 +292,12 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_listen_for_removals_on_basic_entity_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var updateTrigger = new Subject<ElapsedTime>();
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingBasicEntitySystem1(entityCollection);
@@ -388,12 +311,12 @@ namespace EcsR3.Tests.Sanity
         [Fact(Skip = "This wont work due to how R3 handles disposing, need to look at in more depth")]
         public void should_handle_removals_during_add_between_different_system_types()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var updateTrigger = new Subject<ElapsedTime>();
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
 
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
 
             var systemA = new DeletingReactiveDataTestSystem1(entityCollection);
@@ -407,7 +330,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_handle_removals_during_add_phase_across_two_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var updateTrigger = new Subject<ElapsedTime>();
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
@@ -417,7 +340,7 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(systemA);
             executor.AddSystem(systemB);
             
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
             
             updateTrigger.OnNext(new ElapsedTime());
@@ -426,7 +349,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_handle_removals_during_add_phase_across_multiple_systems()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var updateTrigger = new Subject<ElapsedTime>();
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
@@ -448,7 +371,7 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(system7);
             executor.AddSystem(system8);
             
-            var entity = entityCollection.CreateEntity();
+            var entity = entityCollection.Create();
             entity.AddComponent(new ComponentWithReactiveProperty());
             
             updateTrigger.OnNext(new ElapsedTime());
@@ -457,7 +380,7 @@ namespace EcsR3.Tests.Sanity
         [Fact]
         public void should_handle_removals_during_add_phase_across_multiple_systems_with_overlapping_groups()
         {
-            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _) = CreateFramework();
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, _) = CreateFramework();
             var updateTrigger = new Subject<ElapsedTime>();
             var updateScheduler = new ManualUpdateScheduler(updateTrigger);
             var executor = CreateExecutor(observableGroupManager, updateScheduler);
@@ -479,14 +402,70 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(system7);
             executor.AddSystem(system8);
             
-            var entity1 = entityCollection.CreateEntity();
+            var entity1 = entityCollection.Create();
             entity1.AddComponents(new ComponentWithReactiveProperty(), new TestComponentOne());
-            var entity2 = entityCollection.CreateEntity();
+            var entity2 = entityCollection.Create();
             entity2.AddComponents(new ComponentWithReactiveProperty(), new TestComponentTwo());
-            var entity3 = entityCollection.CreateEntity();
+            var entity3 = entityCollection.Create();
             entity3.AddComponents(new ComponentWithReactiveProperty(), new TestComponentThree());
             
             updateTrigger.OnNext(new ElapsedTime());
+        }
+
+        [Fact]
+        public void should_call_batched_process_correct_number_of_times()
+        {
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, computedComponentGroupRegistry) = CreateFramework();
+            
+            var entityCount = 1000;
+            var entities = entityCollection.CreateMany<BatchedProcessTestSystem.BatchedProcessTestBlueprint>(entityCount);
+
+            var timesToProcess = 100;
+            var batchedTestSystem = new BatchedProcessTestSystem(componentDatabase, computedComponentGroupRegistry, new DefaultThreadHandler());
+            batchedTestSystem.StartSystem();
+            
+            for (var i = 0; i < timesToProcess; i++)
+            { batchedTestSystem.ForceProcess(); }
+            
+            var expectedCalls = entityCount * timesToProcess;
+            Assert.Equal(expectedCalls, batchedTestSystem.TimesCalled);
+        }
+        
+        [Fact]
+        public void should_call_batched_process_correct_number_of_times_with_multithreading()
+        {
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, computedComponentGroupRegistry) = CreateFramework();
+            
+            var entityCount = 1000;
+            var entities = entityCollection.CreateMany<BatchedProcessTestSystem.BatchedProcessTestBlueprint>(entityCount);
+
+            var timesToProcess = 100;
+            var batchedTestSystem = new MultithreadedBatchedProcessTestSystem(componentDatabase, computedComponentGroupRegistry, new DefaultThreadHandler());
+            batchedTestSystem.StartSystem();
+            
+            for (var i = 0; i < timesToProcess; i++)
+            { batchedTestSystem.ForceProcess(); }
+            
+            var expectedCalls = entityCount * timesToProcess;
+            Assert.Equal(expectedCalls, batchedTestSystem.TimesCalled);
+        }
+
+        [Fact]
+        public void should_correctly_loop_all_elements_with_parallel_for()
+        {
+            var elementCount = 1000;
+            var timesCalled = 0;
+            var _lock = new object();
+            
+            Parallel.For(0, elementCount, i =>
+            {
+                lock (_lock)
+                {
+                    timesCalled++;
+                }
+            });
+
+            Assert.Equal(elementCount, timesCalled);
         }
     }
 }

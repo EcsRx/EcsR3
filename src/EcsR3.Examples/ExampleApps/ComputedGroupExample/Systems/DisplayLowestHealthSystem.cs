@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsR3.Computeds.Groups;
+using System.Linq;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
@@ -31,15 +31,17 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Systems
             Console.SetCursorPosition(0,0);
             Console.Clear();
 
+            var allEntities = (_lowestHealthGroup as LowestHealthComputedGroup).DataSource;
             Console.WriteLine(" == All Characters HP == ");
-            foreach (var entity in ((ComputedGroup)_lowestHealthGroup).InternalObservableGroup)
+            foreach (var entity in allEntities.OrderBy(x => x.GetHealthPercentile()))
             { Console.WriteLine($"{entity.GetName()} - {entity.GetHealthPercentile()}% hp ({entity.GetHealthString()})"); }
 
             Console.WriteLine();
             
+            _lowestHealthGroup.Refresh();
             var position = 1;
             Console.WriteLine(" == Characters With HP < 50% == ");
-            foreach (var entity in _lowestHealthGroup)
+            foreach (var entity in _lowestHealthGroup.OrderBy(x => x.GetHealthPercentile()))
             { Console.WriteLine($"{position++}) {entity.GetName()} - {entity.GetHealthPercentile()}% hp ({entity.GetHealthString()})"); }
         }
     }

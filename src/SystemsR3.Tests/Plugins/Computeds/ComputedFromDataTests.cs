@@ -8,16 +8,6 @@ namespace SystemsR3.Tests.Plugins.Computeds
     public class ComputedFromDataTests
     {
         [Fact]
-        public void should_populate_on_creation()
-        {
-            var expectedData = 10;
-            var data = new DummyData{Data = expectedData};            
-            
-            var computedData = new TestComputedFromData(data);
-            Assert.Equal(expectedData, computedData.CachedData);
-        }
-        
-        [Fact]
         public void should_refresh_value_and_raise_event_when_data_changed_and_refreshed_implicitly()
         {
             var expectedData = 20;
@@ -25,7 +15,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = 10};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
 
             data.Data = expectedData;
             computedData.ManuallyRefresh.OnNext(Unit.Default);
@@ -43,7 +33,7 @@ namespace SystemsR3.Tests.Plugins.Computeds
             var data = new DummyData{Data = 10};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
 
             data.Data = expectedData;
             computedData.RefreshData();
@@ -54,46 +44,34 @@ namespace SystemsR3.Tests.Plugins.Computeds
         }
         
         [Fact]
-        public void should_not_refresh_value_when_datasource_changed_but_not_refreshed()
+        public void should_refresh_value_when_refresh_when_is_triggered()
         {
             var expectedData = 20;
             var hasNotified = false;
-            var data = new DummyData{Data = expectedData};
+            var data = new DummyData{Data = 15};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
-            data.Data = 10;
-
-            var actualData = computedData.Value;
-            Assert.Equal(expectedData, actualData);
-            Assert.False(hasNotified);
-        }
-        
-        [Fact]
-        public void should_not_refresh_value_or_notify_when_datasource_not_changed_even_when_refreshed_implicitly()
-        {
-            var expectedData = 20;
-            var hasNotified = false;
-            var data = new DummyData{Data = expectedData};
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             
-            var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            data.Data = expectedData;
             computedData.ManuallyRefresh.OnNext(Unit.Default);
 
             var actualData = computedData.Value;
             Assert.Equal(expectedData, actualData);
-            Assert.False(hasNotified);
+            Assert.True(hasNotified);
         }
-                
+        
         [Fact]
-        public void should_not_refresh_value_or_notify_when_datasource_not_changed_even_when_refreshed_explicitly()
+        public void should_not_notify_when_datasource_not_changed_when_refreshing()
         {
             var expectedData = 20;
             var hasNotified = false;
             var data = new DummyData{Data = expectedData};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => hasNotified = true);
+            computedData.RefreshData();
+            
+            computedData.OnChanged.Subscribe(x => hasNotified = true);
             computedData.RefreshData();
 
             var actualData = computedData.Value;

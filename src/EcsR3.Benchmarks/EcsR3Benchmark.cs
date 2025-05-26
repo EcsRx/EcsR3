@@ -6,6 +6,9 @@ using EcsR3.Collections.Entity;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Computeds;
+using EcsR3.Computeds.Components.Registries;
+using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Infrastructure.Modules;
@@ -29,7 +32,8 @@ namespace EcsR3.Benchmarks
         public IComponentTypeLookup ComponentTypeLookup;
         public ISystemExecutor SystemExecutor;
         public IEntityChangeRouter EntityChangeRouter;
-        public IObservableGroupManager ObservableGroupManager;
+        public IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
+        public IComputedComponentGroupRegistry ComputedComponentGroupRegistry;
         
         // This pulls in a lot of types which let the component type lookup know about them
         public RandomGroupFactory RandomGroupFactory { get; } = new RandomGroupFactory();
@@ -52,11 +56,12 @@ namespace EcsR3.Benchmarks
             DependencyResolver = DependencyRegistry.BuildResolver();
             
             EntityCollection = DependencyResolver.Resolve<IEntityCollection>();
-            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
+            ComputedEntityGroupRegistry = DependencyResolver.Resolve<IComputedEntityGroupRegistry>();
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
             EntityChangeRouter = DependencyResolver.Resolve<EntityChangeRouter>();
+            ComputedComponentGroupRegistry = DependencyResolver.Resolve<IComputedComponentGroupRegistry>();
         }
 
         [GlobalSetup]

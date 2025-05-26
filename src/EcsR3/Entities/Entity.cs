@@ -81,7 +81,7 @@ namespace EcsR3.Entities
 
         public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
         {
-            var defaultComponent = default(T);
+            var defaultComponent = new T();
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
 
             lock (_lock)
@@ -93,7 +93,23 @@ namespace EcsR3.Entities
             EntityChangeRouter.PublishEntityAddedComponents(Id, new []{componentTypeId});
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
-        
+
+        public ref T CreateComponent<T>() where T : struct, IComponent
+        {
+            var defaultComponent = new T();
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
+            var allocationId = ComponentDatabase.Allocate(componentTypeId);
+
+            lock (_lock)
+            {
+                InternalComponentAllocations[componentTypeId] = allocationId;
+                ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
+            }
+            
+            EntityChangeRouter.PublishEntityAddedComponents(Id, new []{componentTypeId});
+            return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
+        }
+
         public void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent
         {
             lock (_lock)

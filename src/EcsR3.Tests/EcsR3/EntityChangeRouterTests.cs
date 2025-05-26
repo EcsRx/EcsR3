@@ -5,7 +5,7 @@ using NSubstitute;
 using R3;
 using Xunit;
 
-namespace EcsR3.Tests.EcsRx;
+namespace EcsR3.Tests.EcsR3;
 
 public class EntityChangeRouterTests
 {

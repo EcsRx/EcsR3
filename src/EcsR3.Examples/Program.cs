@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using EcsR3.Examples.Custom;
+using EcsR3.Examples.Custom.BatchTests;
+using EcsR3.Examples.Custom.ComputedComponents;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample;
@@ -8,9 +9,6 @@ using EcsR3.Examples.ExampleApps.HealthExample;
 using EcsR3.Examples.ExampleApps.HelloWorldExample;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase;
 using EcsR3.Examples.ExampleApps.Performance;
-using EcsR3.Examples.ExampleApps.Playground.ClassBased;
-using EcsR3.Examples.ExampleApps.Playground.Specific;
-using EcsR3.Examples.ExampleApps.Playground.StructBased;
 using Spectre.Console;
 
 namespace EcsR3.Examples
@@ -48,15 +46,8 @@ namespace EcsR3.Examples
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),
                 
-                new Example("Dev: Using Classes 1", () => new Class1Application().StartApplication()),
-                new Example("Dev: Using Classes 2", () => new Class2Application().StartApplication()),
-                new Example("Dev: Using Classes 3", () => new Class3Application().StartApplication()),
-                new Example("Dev: Using Classes 4", () => new Class4Application().StartApplication()),
-                new Example("Dev: Using Structs 1", () => new Struct1Application().StartApplication()),
-                new Example("Dev: Using Structs 2", () => new Struct2Application().StartApplication()),
-                new Example("Dev: Using Structs 3", () => new Struct3Application().StartApplication()),
-                new Example("Dev: Using Structs 4", () => new Struct4Application().StartApplication()),
-                new Example("Dev: Using Structs 4", () => new Struct4BApplication().StartApplication())
+                //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
+                //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
             };
 
             var exampleSelector = new SelectionPrompt<Example>()

@@ -18,6 +18,6 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         { EntityCollection = entityCollection; }
 
         public void Process(IEntity entity, ElapsedTime elapsedTime)
-        { EntityCollection.RemoveEntity(entity.Id); }
+        { EntityCollection.Remove(entity.Id); }
     }
 }
