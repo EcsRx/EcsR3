@@ -9,6 +9,7 @@ using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
 using EcsR3.Systems.Batching.Convention;
 using R3;
+using SystemsR3.Attributes;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Threading;
 
@@ -18,6 +19,7 @@ namespace EcsR3.Examples.Custom.BatchTests
     {
         public IThreadHandler ThreadHandler { get; private set; }
         
+        [MultiThread]
         public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
         {
             public ClassBatchSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)

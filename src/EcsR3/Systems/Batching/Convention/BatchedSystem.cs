@@ -1,5 +1,7 @@
 using System;
+using System.Buffers;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
@@ -22,8 +24,9 @@ namespace EcsR3.Systems.Batching.Convention
             var (components1, components2) = componentPools;
             if (ShouldParallelize)
             {
-                ThreadHandler.ForEach(MemoryMarshal.ToEnumerable(componentBatches), (batch) =>
+                ThreadHandler.For(0, componentBatches.Length, i =>
                 {
+                    var batch = componentBatches.Span[i];
                     Process(batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
                 });
                 return;

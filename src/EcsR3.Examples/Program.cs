@@ -60,7 +60,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
             
-            new ComputedComponentApplication().StartApplication();
+            new ClassBatchedSystemApplication().StartApplication();
         }
     }
 }

@@ -9,6 +9,7 @@ using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
 using EcsR3.Systems.Batching.Convention;
 using R3;
+using SystemsR3.Attributes;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Threading;
 
