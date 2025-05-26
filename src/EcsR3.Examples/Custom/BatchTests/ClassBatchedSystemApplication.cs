@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Examples.Application;
@@ -50,6 +51,7 @@ namespace EcsR3.Examples.Custom.BatchTests
             var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(100000);
             var batchSystem = new ClassBatchSystem(ComponentDatabase, ComputedComponentGroupRegistry, ThreadHandler);
             batchSystem.StartSystem();
+            GC.Collect();
             
             Console.WriteLine("Starting");
             var stopwatch = new Stopwatch();

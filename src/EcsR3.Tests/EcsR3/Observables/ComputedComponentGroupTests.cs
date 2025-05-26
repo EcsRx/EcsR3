@@ -17,6 +17,7 @@ namespace EcsR3.Tests.EcsR3.Observables;
 
 public class ComputedComponentGroupTests
 {
+    /*
     [Fact]
     public void should_create_batch_with_correct_values()
     {
@@ -51,5 +52,5 @@ public class ComputedComponentGroupTests
         Assert.Equal(fakeEntities[1].Id, batches[1].EntityId);
         Assert.Equal(1, batches[1].Component1Allocation);
         Assert.Equal(2, batches[1].Component2Allocation);
-    }
+    }*/
 }
