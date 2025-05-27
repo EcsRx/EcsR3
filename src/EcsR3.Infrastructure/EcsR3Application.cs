@@ -1,7 +1,7 @@
 using SystemsR3.Infrastructure;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Components.Database;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Components.Registries;

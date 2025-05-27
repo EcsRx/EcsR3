@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace EcsR3.Collections.Entity
+﻿namespace EcsR3.Collections.Entities
 {
     public interface IEntityAllocationDatabase
     {
         public const int NoAllocation = -1;
         
-        int AllocateEntity();
+        int AllocateEntity(int? id = null);
+        int[] AllocateEntities(int count);
         void ReleaseEntity(int entityId);
         int AllocateComponent(int componentTypeId, int entityId);
         int[] AllocateComponents(int[] componentTypeId, int entityId);

@@ -1,7 +1,7 @@
 using System;
 using SystemsR3.Systems.Conventional;
 using EcsR3.Blueprints;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Blueprints;
 using EcsR3.Extensions;
 using R3;

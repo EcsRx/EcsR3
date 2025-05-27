@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Blueprints;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Components;
 using EcsR3.Entities;
 

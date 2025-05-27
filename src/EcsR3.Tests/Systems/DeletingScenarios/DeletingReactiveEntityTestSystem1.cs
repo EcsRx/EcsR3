@@ -1,5 +1,5 @@
 using System;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Entities;
 using EcsR3.Extensions;
 using EcsR3.Groups;

@@ -1,8 +1,9 @@
+using EcsR3.Collections.Entities;
+using EcsR3.Collections.Entities.Pools;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Pools;
-using EcsR3.Collections.Entity;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Components.Registries;
@@ -23,7 +24,7 @@ namespace EcsR3.Infrastructure.Modules
         public void Setup(IDependencyRegistry registry)
         {
             // Register ECS specific infrastructure
-            registry.Bind<IIdPool>(x => x.ToInstance(new IdPool()));
+            registry.Bind<IEntityIdPool>(x => x.ToInstance(new EntityIdPool()));
             registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
             registry.Bind<IEntityFactory, EntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();

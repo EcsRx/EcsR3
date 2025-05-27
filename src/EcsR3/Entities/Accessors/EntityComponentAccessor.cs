@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;

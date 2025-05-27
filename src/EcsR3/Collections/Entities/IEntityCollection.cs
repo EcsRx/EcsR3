@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EcsR3.Entities;
 
-namespace EcsR3.Collections.Entity
+namespace EcsR3.Collections.Entities
 {
     /// <summary>
     /// The entity collection is a container for entities, it can be seen as a Repository of sorts

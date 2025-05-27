@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Infrastructure;
 using EcsR3.Plugins.Persistence.Modules;

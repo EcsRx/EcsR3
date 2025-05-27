@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using CommunityToolkit.HighPerformance;
+using EcsR3.Collections.Entities.Pools;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
 using EcsR3.Helpers;
 using R3;
-using SystemsR3.Pools;
 
-namespace EcsR3.Collections.Entity
+namespace EcsR3.Collections.Entities
 {
     public class EntityAllocationDatabase : IEntityAllocationDatabase, IDisposable
     {
         public const int NoAllocation = IEntityAllocationDatabase.NoAllocation;
         
-        public IIdPool EntityIdPool { get; }
+        public IEntityIdPool EntityIdPool { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IEntityChangeRouter EntityChangeRouter { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
@@ -31,7 +30,7 @@ namespace EcsR3.Collections.Entity
         /// <remarks>First dimension is component type id, second dimension is entity id</remarks>
         protected int[,] ComponentAllocationData;
 
-        public EntityAllocationDatabase(IIdPool entityIdPool, IComponentDatabase componentDatabase, IEntityChangeRouter entityChangeRouter, IComponentTypeLookup componentTypeLookup)
+        public EntityAllocationDatabase(IEntityIdPool entityIdPool, IComponentDatabase componentDatabase, IEntityChangeRouter entityChangeRouter, IComponentTypeLookup componentTypeLookup)
         {
             EntityIdPool = entityIdPool;
             ComponentDatabase = componentDatabase;
@@ -48,8 +47,17 @@ namespace EcsR3.Collections.Entity
             ResizeAllEntityAllocations(EntityLength);
         }
 
-        public int AllocateEntity()
-        { return EntityIdPool.AllocateInstance(); }
+        public int AllocateEntity(int? id = null)
+        {
+            if(!id.HasValue)
+            { return EntityIdPool.AllocateInstance(); }
+
+            EntityIdPool.AllocateSpecificId(id.Value);
+            return id.Value;
+        }
+        
+        public int[] AllocateEntities(int count)
+        { return EntityIdPool.AllocateMany(count); }
 
         public void ReleaseEntity(int entityId)
         {

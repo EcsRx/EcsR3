@@ -39,7 +39,7 @@ namespace SystemsR3.Pools
             }
         }
         
-        public IReadOnlyList<int> AllocateMany(int count)
+        public int[] AllocateMany(int count)
         {
             lock (_lock)
             {

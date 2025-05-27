@@ -1,8 +1,7 @@
-﻿using System;
-using EcsR3.Entities;
+﻿using EcsR3.Entities;
 using SystemsR3.Computeds;
 
-namespace EcsR3.Collections.Entity
+namespace EcsR3.Collections.Entities
 {
     public interface IReadOnlyEntityCollection : IComputedCollection<IEntity>
     {

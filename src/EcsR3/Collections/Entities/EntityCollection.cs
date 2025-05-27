@@ -2,13 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using R3;
 
-namespace EcsR3.Collections.Entity
+namespace EcsR3.Collections.Entities
 {
     public class EntityCollection : IEntityCollection
     {
-        public IEntityFactory EntityFactory { get; }
+        public IEntityAllocationDatabase EntityAllocationDatabase { get; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; }
         
         public readonly Dictionary<int, IEntity> EntityLookup;
 
@@ -23,10 +25,11 @@ namespace EcsR3.Collections.Entity
         
         private readonly object _lock = new object();
         
-        public EntityCollection(IEntityFactory entityFactory)
+        public EntityCollection(IEntityAllocationDatabase entityAllocationDatabase, IEntityComponentAccessor entityComponentAccessor)
         {
             EntityLookup = new Dictionary<int, IEntity>();
-            EntityFactory = entityFactory;
+            EntityAllocationDatabase = entityAllocationDatabase;
+            EntityComponentAccessor = entityComponentAccessor;
 
             _onAdded = new Subject<IEntity>();
             _onRemoved = new Subject<IEntity>();
@@ -40,7 +43,8 @@ namespace EcsR3.Collections.Entity
                 if (id.HasValue && EntityLookup.ContainsKey(id.Value))
                 { throw new InvalidOperationException("id already exists"); }
 
-                entity = EntityFactory.Create(id);
+                var entityId= EntityAllocationDatabase.AllocateEntity(id);
+                entity = new Entity(entityId, EntityComponentAccessor);
                 EntityLookup.Add(entity.Id, entity);
             }
 
@@ -50,11 +54,15 @@ namespace EcsR3.Collections.Entity
 
         public IEntity[] CreateMany(int count)
         {
-            var entities = EntityFactory.CreateMany(count);
+            var entityIds = EntityAllocationDatabase.AllocateEntities(count);
+            var entities = new IEntity[count];
             lock (_lock)
             {
                 for (var i = 0; i < entities.Length; i++)
-                { EntityLookup.Add(entities[i].Id, entities[i]); }
+                {
+                    entities[i] = new Entity(entityIds[i], EntityComponentAccessor);
+                    EntityLookup.Add(entities[i].Id, entities[i]);
+                }
             }
             return entities;
         }
@@ -84,7 +92,7 @@ namespace EcsR3.Collections.Entity
             lock (_lock)
             { EntityLookup.Remove(entity.Id); }
             
-            EntityFactory.Destroy(entity.Id);
+            EntityAllocationDatabase.ReleaseEntity(entity.Id);
             _onRemoved.OnNext(entity);
         }
 

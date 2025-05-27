@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using EcsR3.Collections.Entity;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Examples.ExampleApps.Performance.Systems;

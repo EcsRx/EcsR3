@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Extensions;

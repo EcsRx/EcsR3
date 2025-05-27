@@ -1,6 +1,6 @@
 using SystemsR3.Infrastructure;
 using EcsR3.Collections;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Entities.Registries;
 
