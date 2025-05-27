@@ -5,8 +5,8 @@ using R3;
 using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
-{   
-    public class IndexPool : IPool<int>
+{
+    public class IndexPool : IIndexPool
     {
         public PoolConfig PoolConfig { get; }
         
@@ -38,6 +38,17 @@ namespace SystemsR3.Pools
                 return AvailableIndexes.Pop();
             }
         }
+        
+        public IReadOnlyList<int> AllocateMany(int count)
+        {
+            lock (_lock)
+            {
+                if(AvailableIndexes.Count < count)
+                { Expand(_lastMax + count); }
+
+                return AvailableIndexes.Take(count).ToArray();
+            }
+        }
 
         public void ReleaseInstance(int index)
         {
@@ -53,6 +64,29 @@ namespace SystemsR3.Pools
                 { return; }
                 
                 AvailableIndexes.Push(index);
+            }
+        }
+        
+        public void ReleaseMany(IReadOnlyList<int> instances)
+        {
+            var maxId = 0;
+            for (var i = 0; i < instances.Count; i++)
+            {
+                var id = instances[i];
+                
+                if(id <= 0)
+                { throw new ArgumentException("id has to be >= 1"); }
+                
+                if(id > maxId){ maxId = id; }
+            }
+            
+            if (maxId > _lastMax)
+            { Expand(maxId); }
+
+            lock (_lock)
+            {
+                for (var i = 0; i < instances.Count; i++)
+                { AvailableIndexes.Push(instances[i]); }
             }
         }
 
