@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components.Lookups;
 using SystemsR3.Pools.Config;
@@ -88,14 +89,28 @@ namespace EcsR3.Components.Database
             { return ref componentPool.Components[allocationIndex]; }
         }
 
-        public T[] GetComponents<T>(int componentTypeId) where T : IComponent
-        { return GetPoolFor<T>(componentTypeId).Components; }
-
         public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
         {
             var componentPool = GetPoolFor<T>(componentTypeId);
             lock (_lock)
             { componentPool.Components[allocationIndex] = component; }
+        }
+
+        public void SetMany(int[] componentTypeIds, int[] allocationIndexs, IReadOnlyList<IComponent> components)
+        {
+            if (componentTypeIds.Length != allocationIndexs.Length || componentTypeIds.Length != components.Count)
+            { throw new ArgumentException("Component type ids, allocation indexs and components must all be the same length"); }
+            
+            lock (_lock)
+            {
+                for (var i = 0; i < components.Count; i++)
+                {
+                    var componentTypeId = componentTypeIds[i];
+                    var allocationIndex = allocationIndexs[i];
+                    var component = components[i];
+                    ComponentData[componentTypeId].Set(allocationIndex, component);
+                }
+            }
         }
 
         public void Remove(int componentTypeId, int allocationIndex)

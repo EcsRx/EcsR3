@@ -17,18 +17,6 @@ namespace EcsR3.Extensions
 
         public static IComponent CreateDefault(this IComponentTypeLookup typeLookup, int typeId)
         { return Activator.CreateInstance(typeLookup.GetComponentType(typeId)) as IComponent; }
-        
-        public static int[] GetComponentTypeIds(this IComponentTypeLookup typeLookup, params Type[] types)
-        { return types.Select(typeLookup.GetComponentTypeId).ToArray(); }
-
-        public static Type[] GetComponentTypes(this IComponentTypeLookup typeLookup, params int[] typeIds)
-        { return typeIds.Select(typeLookup.GetComponentType).ToArray(); }
-        
-        public static int[] GetComponentTypes(this IComponentTypeLookup typeLookup, IEnumerable<Type> types)
-        { return types.Select(typeLookup.GetComponentTypeId).ToArray(); }
-
-        public static Type[] GetComponentTypes(this IComponentTypeLookup typeLookup, IEnumerable<int> typeIds)
-        { return typeIds.Select(typeLookup.GetComponentType).ToArray(); }
 
         public static LookupGroup GetLookupGroupFor(this IComponentTypeLookup typeLookup, IGroup group)
         {
@@ -45,6 +33,6 @@ namespace EcsR3.Extensions
         }
         
         public static LookupGroup GetLookupGroupFor(this IComponentTypeLookup typeLookup, params Type[] componentTypes)
-        { return new LookupGroup(GetComponentTypeIds(typeLookup, componentTypes), Array.Empty<int>()); }
+        { return new LookupGroup(typeLookup.GetComponentTypeIds(componentTypes), Array.Empty<int>()); }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EcsR3.Blueprints;
 using EcsR3.Entities;
 
 namespace EcsR3.Collections.Entity
@@ -23,7 +22,7 @@ namespace EcsR3.Collections.Entity
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        IReadOnlyList<IEntity> CreateMany(int count);
+        IEntity[] CreateMany(int count);
         
         /// <summary>
         /// This will add an existing entity into the group, it is mainly used for pre-made

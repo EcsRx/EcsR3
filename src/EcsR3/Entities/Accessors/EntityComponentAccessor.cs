@@ -26,14 +26,9 @@ namespace EcsR3.Entities.Accessors
         
         public void AddComponents(int entityId, IReadOnlyList<IComponent> components)
         {
-            var componentTypeIds = new int[components.Count];
-            for (var i = 0; i < components.Count; i++)
-            {
-                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
-                var allocationId = EntityAllocationDatabase.AllocateComponent(componentTypeId, entityId);
-                ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
-                componentTypeIds[i] = componentTypeId;
-            }
+            var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(components);
+            var allocationIds = EntityAllocationDatabase.AllocateComponents(componentTypeIds, entityId);
+            ComponentDatabase.SetMany(componentTypeIds, allocationIds, components);
             
             EntityChangeRouter.PublishEntityAddedComponents(entityId, componentTypeIds);
         }

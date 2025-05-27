@@ -12,7 +12,10 @@ namespace EcsR3.Components.Lookups
         int[] AllComponentTypeIds { get; }
         IReadOnlyDictionary<Type, int> GetComponentTypeMappings();
         int GetComponentTypeId(Type type);
+        int[] GetComponentTypeIds(IReadOnlyList<Type> type);
+        int[] GetComponentTypeIds(IReadOnlyList<IComponent> components);
         Type GetComponentType(int typeId);
+        Type[] GetComponentTypes(IReadOnlyList<int> typeIds);
         bool IsComponentStruct(int componentTypeId);
         bool IsComponentDisposable(int componentTypeId);
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CommunityToolkit.HighPerformance;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -76,6 +77,27 @@ namespace EcsR3.Collections.Entity
             }
 
             return allocationId;
+        }
+        
+        public int[] AllocateComponents(int[] componentTypeIds, int entityId)
+        {
+            var allocationIds = new int[componentTypeIds.Length];
+            lock (_lock)
+            {
+                for (var i = 0; i < componentTypeIds.Length; i++)
+                {
+                    var componentTypeId = componentTypeIds[i];
+                    var allocationId = ComponentAllocationData[componentTypeId, entityId];
+                    if(allocationId != NoAllocation)
+                    { 
+                        allocationIds[i] = allocationId; 
+                        continue;
+                    }
+                    
+                    allocationIds[i] = ComponentDatabase.Allocate(componentTypeId);
+                }
+            }
+            return allocationIds;
         }
 
         public bool HasComponent(int componentTypeId, int entityId)

@@ -37,7 +37,7 @@ namespace EcsR3.Entities
         public void Destroy(int entityId)
         { IdPool.ReleaseInstance(entityId); }
 
-        public IReadOnlyList<IEntity> CreateMany(int count)
+        public IEntity[] CreateMany(int count)
         {
             var ids = IdPool.AllocateMany(count);
             var entities = new IEntity[count];

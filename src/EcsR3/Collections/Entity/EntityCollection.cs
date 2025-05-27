@@ -48,15 +48,14 @@ namespace EcsR3.Collections.Entity
             return entity;
         }
 
-        public IReadOnlyList<IEntity> CreateMany(int count)
+        public IEntity[] CreateMany(int count)
         {
             var entities = EntityFactory.CreateMany(count);
             lock (_lock)
             {
-                for (var i = 0; i < entities.Count; i++)
+                for (var i = 0; i < entities.Length; i++)
                 { EntityLookup.Add(entities[i].Id, entities[i]); }
             }
-
             return entities;
         }
 
