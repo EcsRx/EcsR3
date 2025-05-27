@@ -90,13 +90,6 @@ namespace EcsR3.Entities.Accessors
             var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
             return ComponentDatabase.Get(allocationId, componentTypeId);
         }
-        
-        public T GetComponent<T>(int entityId) where T : IComponent
-        {
-            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
-            return (T)ComponentDatabase.Get(allocationId, componentTypeId);
-        }
 
         public ref T GetComponentRef<T>(int entityId) where T : struct, IComponent
         {
@@ -115,12 +108,6 @@ namespace EcsR3.Entities.Accessors
         public bool HasComponent(int entityId, Type componentType)
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
-            return EntityAllocationDatabase.HasComponent(componentTypeId, entityId);
-        }
-
-        public bool HasComponent<T>(int entityId)
-        {
-            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             return EntityAllocationDatabase.HasComponent(componentTypeId, entityId);
         }
     }

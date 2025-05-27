@@ -1,7 +1,5 @@
 ﻿using System;
 using EcsR3.Examples.Custom;
-using EcsR3.Examples.Custom.BatchTests;
-using EcsR3.Examples.Custom.ComputedComponents;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample;
