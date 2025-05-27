@@ -9,6 +9,8 @@ namespace SystemsR3.Pools
     {
         public PoolConfig PoolConfig { get; }
         
+        public int Size => _lastMax;
+        
         private int _lastMax;
         private readonly object _lock = new object();
         

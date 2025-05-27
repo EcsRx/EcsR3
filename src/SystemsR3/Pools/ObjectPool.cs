@@ -14,6 +14,10 @@ namespace SystemsR3.Pools
         
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
         public int PopulatedCount { get; private set; }
+        public int Size
+        {
+            get { lock(_lock){ return Objects.Length; } }
+        }
         
         private readonly object _lock = new object();
 
@@ -42,7 +46,7 @@ namespace SystemsR3.Pools
             Expand(actualAllocation);
         }
 
-        public T Allocate()
+        public T AllocateInstance()
         {
             lock (_lock)
             {
@@ -68,7 +72,7 @@ namespace SystemsR3.Pools
         public virtual void OnAllocated(T instance) {}
         public virtual void OnReleased(T instance) {}
 
-        public void Release(T instance)
+        public void ReleaseInstance(T instance)
         {
             lock (_lock)
             {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using EcsR3.Blueprints;
 using EcsR3.Components.Database;
+using EcsR3.Entities;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Systems;
 using EcsR3.Examples.Application;
@@ -14,6 +16,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
 {
     public class MakingLotsOfEntitiesApplication : EcsR3ConsoleApplication
     {
+        class LotsOfEntitiesBlueprint : IBlueprint
+        {
+            public void Apply(IEntity entity)
+            {
+                entity.AddComponents(new ClassComponent1(), new ClassComponent2());
+            }
+        }
+        
         private static readonly int EntityCount = 100000;
 
         public override ComponentDatabaseConfig GetComponentDatabaseConfig => new ComponentDatabaseConfig()
@@ -35,11 +45,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             Console.WriteLine($"Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (var i = 0; i < EntityCount; i++)
-            {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(new ClassComponent1(), new ClassComponent2());
-            }
+            EntityCollection.CreateMany<LotsOfEntitiesBlueprint>(EntityCount);
             stopwatch.Stop();
             Console.WriteLine($"Finished In: {stopwatch.ElapsedMilliseconds}ms");
         }

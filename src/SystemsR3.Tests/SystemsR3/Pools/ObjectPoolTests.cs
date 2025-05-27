@@ -68,7 +68,7 @@ public class ObjectPoolTests
         var expectedSize = 5;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
         var objectPool = new TestObjectPool(poolConfig);
-        objectPool.Allocate();
+        objectPool.AllocateInstance();
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -84,7 +84,7 @@ public class ObjectPoolTests
         var poolConfig = new PoolConfig(expansionSize, expansionSize);
         var objectPool = new TestObjectPool(poolConfig);
         for (var i = 0; i < numberToAllocate; i++)
-        { objectPool.Allocate(); }
+        { objectPool.AllocateInstance(); }
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -99,8 +99,8 @@ public class ObjectPoolTests
 
         for (var i = 0; i < 10; i++)
         {
-            var instance = objectPool.Allocate();
-            objectPool.Release(instance);
+            var instance = objectPool.AllocateInstance();
+            objectPool.ReleaseInstance(instance);
         }
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -114,11 +114,11 @@ public class ObjectPoolTests
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
         var objectPool = new TestObjectPool(poolConfig);
 
-        var instance = objectPool.Allocate();
-        objectPool.Release(instance);
-        objectPool.Release(instance);
-        objectPool.Release(instance);
-        objectPool.Release(instance);
+        var instance = objectPool.AllocateInstance();
+        objectPool.ReleaseInstance(instance);
+        objectPool.ReleaseInstance(instance);
+        objectPool.ReleaseInstance(instance);
+        objectPool.ReleaseInstance(instance);
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -131,8 +131,8 @@ public class ObjectPoolTests
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
         var objectPool = new TestObjectPool(poolConfig);
 
-        var instance1 = objectPool.Allocate();
-        var instance2 = objectPool.Allocate();
+        var instance1 = objectPool.AllocateInstance();
+        var instance2 = objectPool.AllocateInstance();
         
         objectPool.Clear();
 
@@ -150,14 +150,14 @@ public class ObjectPoolTests
         var poolConfig = new PoolConfig(expansionSize, expansionSize);
         var objectPool = new TestObjectPool(poolConfig);
 
-        var instance1 = objectPool.Allocate();
-        var instance2 = objectPool.Allocate();
+        var instance1 = objectPool.AllocateInstance();
+        var instance2 = objectPool.AllocateInstance();
         
         objectPool.Clear();
         
-        var instance4 = objectPool.Allocate();
-        var instance5 = objectPool.Allocate();
-        var instance6 = objectPool.Allocate();
+        var instance4 = objectPool.AllocateInstance();
+        var instance5 = objectPool.AllocateInstance();
+        var instance6 = objectPool.AllocateInstance();
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -178,15 +178,15 @@ public class ObjectPoolTests
         objectPool.Expand(15);
         
         for (var i = 0; i < amountToFirstAllocate; i++)
-        { allocatedObjects.Add(objectPool.Allocate()); }
+        { allocatedObjects.Add(objectPool.AllocateInstance()); }
         
         objectPool.Expand(15);
 
         for (var i = 0; i < amountToSecondAllocate; i++)
-        { allocatedObjects.Add(objectPool.Allocate()); }
+        { allocatedObjects.Add(objectPool.AllocateInstance()); }
         
         for(var i=0;i<allocatedObjects.Count;i++)
-        { objectPool.Release(allocatedObjects[i]); }
+        { objectPool.ReleaseInstance(allocatedObjects[i]); }
 
         Assert.Equal(70, allocatedObjects.Count);
         Assert.Equal(75, objectPool.Objects.Length);

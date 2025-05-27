@@ -9,6 +9,8 @@ namespace SystemsR3.Pools
         /// </summary>
         PoolConfig PoolConfig { get; }
         
+        int Size { get; }
+        
         /// <summary>
         /// Allocates an instance in the pool for use
         /// </summary>
