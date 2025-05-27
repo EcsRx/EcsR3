@@ -1,4 +1,5 @@
-﻿using EcsR3.Blueprints;
+﻿using System.Collections.Generic;
+using EcsR3.Blueprints;
 using EcsR3.Entities;
 
 namespace EcsR3.Collections.Entity
@@ -13,10 +14,16 @@ namespace EcsR3.Collections.Entity
         /// This will create and return a new entity.
         /// If required you can pass in a blueprint which the created entity will conform to
         /// </summary>
-        /// <param name="blueprint">Optional blueprint to use for the entity (defaults to null)</param>
         /// <param name="id">Id to use for the entity (defaults to null, meaning it'll automatically get the next available id)</param>
         /// <returns></returns>
         IEntity Create(int? id = null);
+
+        /// <summary>
+        /// Creates many entities at once
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        IReadOnlyList<IEntity> CreateMany(int count);
         
         /// <summary>
         /// This will add an existing entity into the group, it is mainly used for pre-made
@@ -32,6 +39,12 @@ namespace EcsR3.Collections.Entity
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
         void Remove(int id);
+        
+        /// <summary>
+        /// Removes many entities at once
+        /// </summary>
+        /// <param name="ids"></param>
+        void RemoveMany(IReadOnlyList<int> ids);
         
         /// <summary>
         /// Removes all entities from the collection

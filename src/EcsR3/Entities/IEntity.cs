@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsR3.Components;
-using R3;
 
 namespace EcsR3.Entities
 {
@@ -54,29 +53,12 @@ namespace EcsR3.Entities
         IComponent GetComponent(Type componentType);        
         
         /// <summary>
-        /// Gets a component from the entity based upon its component type id
-        /// </summary>
-        /// <param name="componentTypeId">The id of the component type</param>
-        /// <returns>The component instance if found, or null if not</returns>
-        IComponent GetComponent(int componentTypeId);
-        
-        /// <summary>
         /// Gets a component from its type id
         /// </summary>
-        /// <param name="componentTypeId">The component type id</param>
         /// <typeparam name="T">The type of the component</typeparam>
         /// <returns>The ref of the component</returns>
         /// <remarks>This is meant for struct based components</remarks>
-        ref T GetComponent<T>(int componentTypeId) where T : IComponent;
-        
-        /// <summary>
-        /// Adds a component from its type id
-        /// </summary>
-        /// <param name="componentTypeId">The component type id</param>
-        /// <typeparam name="T">The type of the component</typeparam>
-        /// <returns>The ref of the component</returns>
-        /// <remarks>This is meant for struct based components</remarks>
-        ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
+        ref T GetComponentRef<T>() where T : struct, IComponent;
         
         /// <summary>
         /// Creates and returns a struct type component
@@ -89,11 +71,10 @@ namespace EcsR3.Entities
         /// <summary>
         /// Updates a component from its type id with the new values
         /// </summary>
-        /// <param name="componentTypeId">The component type id</param>
         /// <param name="newValue">The struct containing new values</param>
         /// <typeparam name="T">The type of the component</typeparam>
         /// <remarks>This is meant for struct based components</remarks>
-        void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent;
+        void UpdateComponent<T>(T newValue) where T : struct, IComponent;
         
         /// <summary>
         /// Removes all components with matching type ids
@@ -107,12 +88,5 @@ namespace EcsR3.Entities
         /// <param name="componentType">Type of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(Type componentType);
-        
-        /// <summary>
-        /// Checks to see if the entity contains the given component based on its type id
-        /// </summary>
-        /// <param name="componentTypeId">Type id of component to look for</param>
-        /// <returns>true if the component can be found, false if it cant be</returns>
-        bool HasComponent(int componentTypeId);
     }
 }

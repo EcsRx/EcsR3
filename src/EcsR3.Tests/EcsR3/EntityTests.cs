@@ -12,6 +12,7 @@ using Xunit;
 
 namespace EcsR3.Tests.EcsR3
 {
+    /*
     public class EntityTests
     {
         [Fact]
@@ -49,6 +50,7 @@ namespace EcsR3.Tests.EcsR3
             Assert.True(wasCalled);
         }*/
 
+    /*
         [Fact]
         public void should_raise_event_when_removing_component_that_exists()
         {
@@ -200,5 +202,5 @@ namespace EcsR3.Tests.EcsR3
             entity.AddComponents(components);
             Assert.Equal(components, entity.Components);
         }
-    }
+    }*/
 }

@@ -32,12 +32,12 @@ namespace EcsR3.Benchmarks.Benchmarks
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
         }
-
+        
         public override void Setup()
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
+                var entity = new Entity(i, EntityComponentAccessor);
                 _entities.Add(entity);
             }
 

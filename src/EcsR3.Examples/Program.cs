@@ -38,8 +38,6 @@ namespace EcsR3.Examples
                 new Example("Scenario: System Priorities", () => new SetupSystemPriorityApplication().StartApplication()),
                 
                 new Example("Performance: Systems", () => new SimpleSystemApplication().StartApplication()),
-                new Example("Performance: Default Entity", () => new EntityPerformanceApplication().StartApplication()),
-                new Example("Performance: Optimised Entity", () => new OptimizedEntityPerformanceApplication().StartApplication()),
                 new Example("Performance: Default Group", () => new GroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),

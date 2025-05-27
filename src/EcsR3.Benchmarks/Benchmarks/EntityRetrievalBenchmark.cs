@@ -61,7 +61,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
+                var entity = new Entity(i, EntityComponentAccessor);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

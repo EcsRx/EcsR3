@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using R3;
 using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
@@ -14,6 +15,9 @@ namespace SystemsR3.Pools
         private int _lastMax;
         private readonly object _lock = new object();
         
+        public Observable<int> OnSizeChanged => _onSizeChanged;
+        private Subject<int> _onSizeChanged;
+        
         public readonly Stack<int> AvailableIndexes;
 
         public IndexPool(PoolConfig poolConfig = null)
@@ -21,6 +25,7 @@ namespace SystemsR3.Pools
             PoolConfig = poolConfig ?? new PoolConfig(1000, 100);
             _lastMax = PoolConfig.InitialSize;
             AvailableIndexes = new Stack<int>(Enumerable.Range(0, _lastMax).Reverse());
+            _onSizeChanged = new Subject<int>();
         }
         
         public int AllocateInstance()
@@ -62,6 +67,7 @@ namespace SystemsR3.Pools
             { AvailableIndexes.Push(entry); }
             
             _lastMax += increaseBy;
+            _onSizeChanged.OnNext(Size);
         }
 
         public void Clear()
@@ -72,5 +78,8 @@ namespace SystemsR3.Pools
                 AvailableIndexes.Clear();
             }
         }
+        
+        public void Dispose()
+        { _onSizeChanged?.Dispose(); }
     }
 }

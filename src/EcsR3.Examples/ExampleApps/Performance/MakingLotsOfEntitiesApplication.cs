@@ -26,12 +26,12 @@ namespace EcsR3.Examples.ExampleApps.Performance
         
         private static readonly int EntityCount = 100000;
 
-        public override ComponentDatabaseConfig GetComponentDatabaseConfig => new ComponentDatabaseConfig()
+        public override ComponentDatabaseConfig GetComponentDatabaseConfig => new()
         {
             PoolSpecificConfig =
             {
-                {typeof(ClassComponent1), new PoolConfig(100000) },
-                {typeof(ClassComponent2), new PoolConfig(100000) }
+                {typeof(ClassComponent1), new PoolConfig(EntityCount) },
+                {typeof(ClassComponent2), new PoolConfig(EntityCount) }
             }
         };
 

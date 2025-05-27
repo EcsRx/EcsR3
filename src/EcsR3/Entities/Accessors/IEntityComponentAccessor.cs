@@ -31,6 +31,13 @@ namespace EcsR3.Entities.Accessors
         IComponent GetComponent(int entityId, Type componentType);
         
         /// <summary>
+        /// Gets all components for an entity
+        /// </summary>
+        /// <param name="entityId">The entity Id</param>
+        /// <returns>All components the entity owns</returns>
+        IEnumerable<IComponent> GetComponents(int entityId);
+        
+        /// <summary>
         /// Removes all components with matching type ids
         /// </summary>
         /// <param name="componentsTypeIds">The component type ids</param>
@@ -42,5 +49,7 @@ namespace EcsR3.Entities.Accessors
         /// <param name="componentType">Type of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(int entityId, Type componentType);
+
+        int[] GetAllocations(int entityId);
     }
 }

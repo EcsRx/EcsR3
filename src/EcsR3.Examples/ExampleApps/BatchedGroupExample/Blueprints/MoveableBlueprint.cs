@@ -3,7 +3,6 @@ using EcsR3.Blueprints;
 using EcsR3.Entities;
 using EcsR3.Extensions;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
-using EcsR3.Examples.ExampleApps.BatchedGroupExample.Lookups;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Blueprints
 {
@@ -17,9 +16,9 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Blueprints
         public void Apply(IEntity entity)
         {
             entity.AddComponent(new NameComponent {Name = $"BatchedEntity-{entity.Id}"});
-            entity.AddComponent<PositionComponent>(ComponentLookupTypes.PositionComponentId);
+            entity.CreateComponent<PositionComponent>();
                 
-            ref var movementSpeedComponent = ref entity.AddComponent<MovementSpeedComponent>(ComponentLookupTypes.MovementSpeedComponentId);
+            ref var movementSpeedComponent = ref entity.CreateComponent<MovementSpeedComponent>();
             movementSpeedComponent.Speed = (float)_random.NextDouble() * (MaximumMovementSpeed - MinimumMovementSpeed) + MinimumMovementSpeed;
         }
     }

@@ -20,7 +20,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         public void Process(IEntity entity)
         {
             var nameComponent = entity.GetComponent<NameComponent>();
-            var positionComponent = entity.GetComponent<PositionComponent>(ComponentLookupTypes.PositionComponentId);
+            var positionComponent = entity.GetComponent<PositionComponent>();
             Console.WriteLine($"{nameComponent.Name} - {positionComponent.Position}");
         }
 

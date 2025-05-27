@@ -9,6 +9,7 @@ using EcsR3.Components.Lookups;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities.Accessors;
 using EcsR3.Entities.Routing;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Infrastructure.Modules;
@@ -34,6 +35,8 @@ namespace EcsR3.Benchmarks
         public IEntityChangeRouter EntityChangeRouter;
         public IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public IComputedComponentGroupRegistry ComputedComponentGroupRegistry;
+        public IEntityAllocationDatabase EntityAllocationDatabase;
+        public IEntityComponentAccessor EntityComponentAccessor;
         
         // This pulls in a lot of types which let the component type lookup know about them
         public RandomGroupFactory RandomGroupFactory { get; } = new RandomGroupFactory();
@@ -62,6 +65,8 @@ namespace EcsR3.Benchmarks
             SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
             EntityChangeRouter = DependencyResolver.Resolve<EntityChangeRouter>();
             ComputedComponentGroupRegistry = DependencyResolver.Resolve<IComputedComponentGroupRegistry>();
+            EntityAllocationDatabase = DependencyResolver.Resolve<IEntityAllocationDatabase>();
+            EntityComponentAccessor = DependencyResolver.Resolve<IEntityComponentAccessor>();
         }
 
         [GlobalSetup]

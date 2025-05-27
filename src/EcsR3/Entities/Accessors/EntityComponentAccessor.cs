@@ -46,7 +46,7 @@ namespace EcsR3.Entities.Accessors
             ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
-        
+
         public void RemoveComponents(int entityId, IReadOnlyList<int> componentsTypeIds)
         {
             var lastIndex = 0;
@@ -83,6 +83,18 @@ namespace EcsR3.Entities.Accessors
             var allComponentIds = EntityAllocationDatabase.GetAllEntityComponents(entityId);
             RemoveComponents(entityId, allComponentIds);
         }
+        
+        public IEnumerable<IComponent> GetComponents(int entityId)
+        {
+            var componentAllocations = EntityAllocationDatabase.GetEntityAllocations(entityId);
+            for (var i = 0; i < componentAllocations.Length; i++)
+            {
+                if(componentAllocations[i] == IEntityAllocationDatabase.NoAllocation) { continue; }
+
+                var allocationIndex = componentAllocations[i];
+                yield return ComponentDatabase.Get(i, allocationIndex);
+            }
+        }
 
         public IComponent GetComponent(int entityId, Type componentType)
         {
@@ -110,5 +122,8 @@ namespace EcsR3.Entities.Accessors
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             return EntityAllocationDatabase.HasComponent(componentTypeId, entityId);
         }
+
+        public int[] GetAllocations(int entityId)
+        { return EntityAllocationDatabase.GetEntityAllocations(entityId); }
     }
 }

@@ -46,7 +46,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
     {
         for (var i = 0; i < EntityCount; i++)
         {
-            var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
+            var entity = new Entity(i, EntityComponentAccessor);
             _entities.Add(entity);
         }
 

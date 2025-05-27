@@ -48,6 +48,18 @@ namespace EcsR3.Collections.Entity
             return entity;
         }
 
+        public IReadOnlyList<IEntity> CreateMany(int count)
+        {
+            var entities = EntityFactory.CreateMany(count);
+            lock (_lock)
+            {
+                for (var i = 0; i < entities.Count; i++)
+                { EntityLookup.Add(entities[i].Id, entities[i]); }
+            }
+
+            return entities;
+        }
+
         public IEntity Get(int id)
         {
             lock(_lock)
@@ -58,6 +70,12 @@ namespace EcsR3.Collections.Entity
         {
             var entity = Get(id);
             Remove(entity);
+        }
+
+        public void RemoveMany(IReadOnlyList<int> ids)
+        {
+            for(var i=0;i<ids.Count;i++)
+            { Remove(ids[i]); }
         }
 
         protected void Remove(IEntity entity)

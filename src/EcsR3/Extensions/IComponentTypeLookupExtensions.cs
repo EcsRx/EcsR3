@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using EcsR3.Components;
-using EcsR3.Components.Accessor;
 using EcsR3.Components.Lookups;
 using EcsR3.Groups;
 
@@ -31,12 +29,6 @@ namespace EcsR3.Extensions
 
         public static Type[] GetComponentTypes(this IComponentTypeLookup typeLookup, IEnumerable<int> typeIds)
         { return typeIds.Select(typeLookup.GetComponentType).ToArray(); }
-
-        public static IComponentAccessor<T> GetAccessorFor<T>(this IComponentTypeLookup typeLookup)
-        {
-            var componentTypeId = typeLookup.GetComponentTypeId(typeof(T));
-            return new ComponentAccessor<T>(componentTypeId);
-        }
 
         public static LookupGroup GetLookupGroupFor(this IComponentTypeLookup typeLookup, IGroup group)
         {

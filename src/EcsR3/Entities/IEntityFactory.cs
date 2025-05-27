@@ -1,4 +1,5 @@
-﻿using SystemsR3.Factories;
+﻿using System.Collections.Generic;
+using SystemsR3.Factories;
 
 namespace EcsR3.Entities
 {
@@ -12,5 +13,6 @@ namespace EcsR3.Entities
     public interface IEntityFactory : IFactory<int?, IEntity>
     {
         void Destroy(int entityId);
+        IReadOnlyList<IEntity> CreateMany(int count);
     }
 }

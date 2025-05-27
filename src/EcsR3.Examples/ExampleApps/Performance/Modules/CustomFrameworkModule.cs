@@ -24,7 +24,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
         public void Setup(IDependencyRegistry registry)
         {
             registry.Bind<IIdPool>(x => x.ToInstance(new IdPool()));
-            registry.Bind<IEntityFactory, DefaultEntityFactory>();
+            registry.Bind<IEntityFactory, EntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
             registry.Bind<IComputedEntityGroupRegistry, ComputedEntityGroupRegistry>();

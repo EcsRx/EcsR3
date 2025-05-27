@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using R3;
 using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
@@ -19,6 +20,9 @@ namespace SystemsR3.Pools
             get { lock(_lock){ return Objects.Length; } }
         }
         
+        public Observable<int> OnSizeChanged => _onSizeChanged;
+        private Subject<int> _onSizeChanged;
+
         private readonly object _lock = new object();
 
         public ObjectPool(PoolConfig poolConfig = null)
@@ -26,6 +30,7 @@ namespace SystemsR3.Pools
             PoolConfig = poolConfig ?? new PoolConfig(100, 100);
             IndexPool = new IndexPool(PoolConfig);
             Objects = new T[PoolConfig.InitialSize];
+            _onSizeChanged = new Subject<int>();
         }
 
         public void PreAllocate(int? allocationAmount = null)
@@ -121,6 +126,7 @@ namespace SystemsR3.Pools
                 Array.Resize(ref Objects, newCount);
                 IndexPool.Expand(newCount-1);
                 FillIndexes(originalCount);
+                _onSizeChanged.OnNext(Size);
             }
         }
 
@@ -129,5 +135,8 @@ namespace SystemsR3.Pools
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
+        
+        public void Dispose()
+        { _onSizeChanged?.Dispose(); }
     }
 }

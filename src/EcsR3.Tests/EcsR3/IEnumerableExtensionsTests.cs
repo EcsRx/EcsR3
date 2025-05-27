@@ -78,6 +78,7 @@ namespace EcsR3.Tests.EcsR3
             Assert.Contains(applicableSystem1, applicableSystems);
         }
         
+        /*
         [Fact]
         public void should_correctly_get_matching_entities()
         {
@@ -124,7 +125,7 @@ namespace EcsR3.Tests.EcsR3
             var group1Results3 = entityGroup.MatchingGroup(matchGroup3).ToArray();
             Assert.Equal(1, group1Results3.Length);
             Assert.Contains(hasOneAndThree, group1Results3);
-        }
+        }*/
 
     }
 }

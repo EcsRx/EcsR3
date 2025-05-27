@@ -22,7 +22,7 @@ public class EntityAddStructComponentWithPreAllocationtScenarioApplication : Ecs
         for (var i = 0; i < AllocationAmount; i++)
         {
             var entity = EntityCollection.Create();
-            entity.AddComponent<StructComponent1>(structComponent1TypeId);
+            entity.CreateComponent<StructComponent1>();
         }
     }
 }

@@ -4,11 +4,12 @@ using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
 using EcsR3.Helpers;
+using R3;
 using SystemsR3.Pools;
 
 namespace EcsR3.Collections.Entity
 {
-    public class EntityAllocationDatabase : IEntityAllocationDatabase
+    public class EntityAllocationDatabase : IEntityAllocationDatabase, IDisposable
     {
         public const int NoAllocation = IEntityAllocationDatabase.NoAllocation;
         
@@ -19,6 +20,9 @@ namespace EcsR3.Collections.Entity
         
         public int ComponentLength { get; protected set; }
         public int EntityLength { get; protected set; }
+
+        private CompositeDisposable _subs = new CompositeDisposable();
+        private object _lock = new object();
 
         /// <summary>
         /// Contains all component allocations for all entities
@@ -32,10 +36,15 @@ namespace EcsR3.Collections.Entity
             ComponentDatabase = componentDatabase;
             EntityChangeRouter = entityChangeRouter;
             ComponentTypeLookup = componentTypeLookup;
-            EntityLength = EntityIdPool.Size;
+            EntityLength = EntityIdPool.Size+1;
+
+            EntityIdPool.OnSizeChanged
+                .Subscribe(ResizeAllEntityAllocations)
+                .AddTo(_subs);
             
-            ComponentAllocationData = new int[ComponentLength, EntityIdPool.Size];
-            ResizeAllEntityAllocations(EntityIdPool.Size);
+            ComponentLength = componentTypeLookup.AllComponentTypeIds.Length;
+            ComponentAllocationData = new int[ComponentLength, EntityLength];
+            ResizeAllEntityAllocations(EntityLength);
         }
 
         public int AllocateEntity()
@@ -45,7 +54,10 @@ namespace EcsR3.Collections.Entity
         {
             for (var componentTypeId = 0; componentTypeId < ComponentAllocationData.Length; componentTypeId++)
             {
-                var allocationId = ComponentAllocationData[componentTypeId, entityId];
+                int allocationId;
+                lock (_lock)
+                { allocationId = ComponentAllocationData[componentTypeId, entityId]; }
+                
                 if(allocationId == NoAllocation) { continue; }
                 ReleaseComponent(componentTypeId, entityId);
             }
@@ -53,32 +65,47 @@ namespace EcsR3.Collections.Entity
 
         public int AllocateComponent(int componentTypeId, int entityId)
         {
-            var currentAllocation = ComponentAllocationData[componentTypeId, entityId];
-            if(currentAllocation != NoAllocation) { return currentAllocation;}
-            
-            var allocationId = ComponentDatabase.Allocate(componentTypeId);
-            ComponentAllocationData[componentTypeId, entityId] = allocationId;
+            int allocationId;
+            lock (_lock)
+            {
+                allocationId = ComponentAllocationData[componentTypeId, entityId];
+                if(allocationId != NoAllocation) { return allocationId;}
+
+                allocationId = ComponentDatabase.Allocate(componentTypeId);
+                ComponentAllocationData[componentTypeId, entityId] = allocationId;
+            }
+
             return allocationId;
         }
 
         public bool HasComponent(int componentTypeId, int entityId)
-        { return ComponentAllocationData[componentTypeId, entityId] == NoAllocation; }
+        {
+            lock (_lock)
+            { return ComponentAllocationData[componentTypeId, entityId] == NoAllocation; }
+        }
 
         public int ReleaseComponent(int componentTypeId, int entityId)
         {
-            var allocationId = ComponentAllocationData[componentTypeId, entityId];
-            if(allocationId == NoAllocation) { return NoAllocation; }
-            
-            ComponentAllocationData[componentTypeId, entityId] = NoAllocation;
-            ComponentDatabase.Remove(componentTypeId, allocationId);
+            int allocationId;
+            lock (_lock)
+            { 
+                allocationId = ComponentAllocationData[componentTypeId, entityId];
+                if(allocationId == NoAllocation) { return NoAllocation; }
+
+                ComponentAllocationData[componentTypeId, entityId] = NoAllocation;
+                ComponentDatabase.Remove(componentTypeId, allocationId);
+            }
             return allocationId;
         }
 
         public void ResizeAllEntityAllocations(int newEntityLength)
         {
-            if(EntityLength >= newEntityLength) { return ; }
-            ArrayHelper.Resize2DArray(ref ComponentAllocationData, ComponentLength, newEntityLength);
-            EntityLength = newEntityLength;
+            lock (_lock)
+            {
+                if(EntityLength >= newEntityLength) { return ; }
+                ArrayHelper.Resize2DArray(ref ComponentAllocationData, ComponentLength, newEntityLength);
+                EntityLength = newEntityLength + 1;
+            }
         }
         
         public int[] GetEntityAllocations(int entityId)
@@ -108,9 +135,14 @@ namespace EcsR3.Collections.Entity
             var spanData = new Span2D<int>(ComponentAllocationData);
             return spanData.GetColumn(componentTypeId).ToArray();
         }
-        
+
         public int GetEntityComponentAllocation(int componentTypeId, int entityId)
-        { return ComponentAllocationData[componentTypeId, entityId]; }
-        
+        {
+            lock (_lock)
+            { return ComponentAllocationData[componentTypeId, entityId]; }
+        }
+
+        public void Dispose()
+        { _subs?.Dispose(); }
     }
 }

@@ -36,7 +36,7 @@ namespace EcsR3.Extensions
             return entity;
         }
 
-        public static IEntity ApplyBlueprints(this IEntity entity, IEnumerable<IBlueprint> blueprints)
+        public static IEntity ApplyBlueprints(this IEntity entity, IReadOnlyCollection<IBlueprint> blueprints)
         {
             foreach (var blueprint in blueprints)
             { blueprint.Apply(entity); }
@@ -107,7 +107,7 @@ namespace EcsR3.Extensions
         /// <typeparam name="T">The type of component to retrieve</typeparam>
         /// <param name="entity">entity to use</param>
         /// <returns>The component instance if found, or null if not</returns>
-        public static T GetComponent<T>(this IEntity entity) where T : class, IComponent
+        public static T GetComponent<T>(this IEntity entity) where T : IComponent
         {
             var componentType = typeof(T);
             return (T)entity.GetComponent(componentType);
@@ -129,24 +129,7 @@ namespace EcsR3.Extensions
 
             return true;
         }
-        
-        /// <summary>
-        /// Checks to see if the entity contains all of the given components
-        /// </summary>
-        /// <param name="entity">The entity to action on</param>
-        /// <param name="componentTypeIds">Type ids of components to check for</param>
-        /// <returns>true if all the component was found, false if one or more is missing</returns>
-        public static bool HasAllComponents(this IEntity entity, params int[] componentTypeIds)
-        {
-            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
-            {
-                if(!entity.HasComponent(componentTypeIds[index]))
-                { return false; }
-            }
 
-            return true;
-        }
-        
         /// <summary>
         /// Checks to see if the entity contains any of the given components
         /// </summary>
@@ -165,60 +148,11 @@ namespace EcsR3.Extensions
         }        
         
         /// <summary>
-        /// Checks to see if the entity contains any of the given components
-        /// </summary>
-        /// <param name="entity">The entity to action on</param>
-        /// <param name="componentTypeIds">Type ids of the components to check for</param>
-        /// <returns>true if any components were found, false if no matching components were found</returns>
-        public static bool HasAnyComponents(this IEntity entity, params int[] componentTypeIds)
-        {
-            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
-            {
-                if(entity.HasComponent(componentTypeIds[index]))
-                { return true; }
-            }
-
-            return false;
-        }
-        
-        /// <summary>
-        /// Checks how many of the components requested the entity has
-        /// </summary>
-        /// <param name="entity">The entity to action on</param>
-        /// <param name="componentTypeIds">Type ids of the components to check for</param>
-        /// <returns>The number of matching components found</returns>
-        public static int MatchingComponentCount(this IEntity entity, params int[] componentTypeIds)
-        {
-            var count = 0;
-            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
-            {
-                if (entity.HasComponent(componentTypeIds[index]))
-                { count++; }
-            }
-
-            return count;
-        }
-        
-        /// <summary>
         /// Adds all components to the entity
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="components"></param>
         public static void AddComponents(this IEntity entity, params IComponent[] components)
         { entity.AddComponents(components); }
-        
-        /// <summary>
-        /// Allows you to create all components required for a group
-        /// </summary>
-        /// <param name="entity">The entity to add components to</param>
-        /// <param name="group">The group to create components for</param>
-        public static void AddComponentsFor(this IEntity entity, IGroup group)
-        {
-            var components = group.CreateRequiredComponents();
-            entity.AddComponents(components);
-        }
-        
-        public static void RemoveComponents(this IEntity entity, params int[] componentsTypeIds)
-        { entity.RemoveComponents(componentsTypeIds); }
     }
 }

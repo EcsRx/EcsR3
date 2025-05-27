@@ -51,30 +51,30 @@ namespace EcsR3.Extensions
         }
         
         public static IEntity Create(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
-        { return Create(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
+        { return Create(entityCollection, (IReadOnlyCollection<IBlueprint>)blueprints); }
         
         public static IEntity Create<T>(this IEntityCollection entityCollection) where T : IBlueprint, new()
         { return Create(entityCollection, new T()); }
 
-        public static IEntity Create(this IEntityCollection entityCollection, IEnumerable<IBlueprint> blueprints)
+        public static IEntity Create(this IEntityCollection entityCollection, IReadOnlyCollection<IBlueprint> blueprints)
         {
             var entity = entityCollection.Create();
             entity.ApplyBlueprints(blueprints);
             return entity;
         }
-        
+
         public static IReadOnlyList<IEntity> CreateMany(this IEntityCollection entityCollection, int count, params IBlueprint[] blueprints)
-        { return CreateMany(entityCollection, count, (IEnumerable<IBlueprint>)blueprints); }
+        { return CreateMany(entityCollection, count, (IReadOnlyCollection<IBlueprint>)blueprints); }
         
         public static IReadOnlyList<IEntity> CreateMany<T>(this IEntityCollection entityCollection, int count) where T : IBlueprint, new()
         { return CreateMany(entityCollection, count, new T()); }
         
-        public static IReadOnlyList<IEntity> CreateMany(this IEntityCollection entityCollection, int count, IEnumerable<IBlueprint> blueprints)
+        public static IReadOnlyList<IEntity> CreateMany(this IEntityCollection entityCollection, int count, IReadOnlyCollection<IBlueprint> blueprints)
         {
-            var entities = new IEntity[count];
+            var entities = entityCollection.CreateMany(count);
             for (var i = 0; i < count; i++)
             {
-                var entity = entityCollection.Create();
+                var entity = entities[i];
                 entity.ApplyBlueprints(blueprints);
             }
             return entities;
