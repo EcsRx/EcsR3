@@ -26,7 +26,6 @@ namespace EcsR3.Infrastructure.Modules
             // Register ECS specific infrastructure
             registry.Bind<IEntityIdPool>(x => x.ToInstance(new EntityIdPool()));
             registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
-            registry.Bind<IEntityFactory, EntityFactory>();
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
             registry.Bind<IComputedEntityGroupRegistry, ComputedEntityGroupRegistry>();
