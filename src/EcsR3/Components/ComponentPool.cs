@@ -121,12 +121,15 @@ namespace EcsR3.Components
             { InternalComponents[index] = value; }
         }
 
-        public void Set(int[] index, IReadOnlyList<T> value)
+        public void Set(int[] indexes, IReadOnlyList<T> value)
         {
             lock (_lock)
             {
-                for (var i = 0; i < index.Length; i++)
-                { InternalComponents[index[i]] = value[i]; }
+                for (var i = 0; i < indexes.Length; i++)
+                {
+                    var allocationIndex = indexes[i];
+                    InternalComponents[allocationIndex] = value[i];
+                }
             }
         }
         

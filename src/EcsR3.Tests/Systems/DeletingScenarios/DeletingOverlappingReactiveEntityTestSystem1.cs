@@ -22,9 +22,9 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         { EntityCollection = entityCollection; }
 
         public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity);  }
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber.Select(x => entityId);  }
 
         public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { EntityCollection.Remove(entity.Id); }
+        { EntityCollection.Remove(entityId); }
     }
 }

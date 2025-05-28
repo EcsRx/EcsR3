@@ -39,5 +39,27 @@ namespace EcsR3.Extensions
         
         public static void AddComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent, new()
         { accessor.AddComponents(entityId, new T()); }
+
+        public static void CreateComponent<T>(this IEntityComponentAccessor accessor, int entityId)
+            where T : IComponent, new()
+        { accessor.CreateComponent<T>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new()
+        { accessor.CreateComponents<T1, T2>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2, T3>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new()
+        { accessor.CreateComponents<T1, T2, T3>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2, T3, T4>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new()
+        { accessor.CreateComponents<T1, T2, T3, T4>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2, T3, T4, T5>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new()
+        { accessor.CreateComponents<T1, T2, T3, T4, T5>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2, T3, T4, T5, T6>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new()
+        { accessor.CreateComponents<T1, T2, T3, T4, T5, T6>(new[] { entityId }); }
+        
+        public static void CreateComponents<T1, T2, T3, T4, T5, T6, T7>(this IEntityComponentAccessor accessor, int entityId) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new() where T7 : IComponent, new()
+        { accessor.CreateComponents<T1, T2, T3, T4, T5, T6, T7>(new[] { entityId }); }
     }
 }

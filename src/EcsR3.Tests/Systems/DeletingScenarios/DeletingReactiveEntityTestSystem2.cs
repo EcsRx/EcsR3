@@ -14,7 +14,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
         
         public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity); }
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber.Select(x => entityId); }
 
         public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
         { throw new Exception("Should Not Get Called"); }

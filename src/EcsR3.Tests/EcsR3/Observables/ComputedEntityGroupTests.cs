@@ -17,31 +17,27 @@ namespace EcsR3.Tests.EcsR3.Observables
         [Fact]
         public void should_include_matching_entity_snapshot_on_creation()
         {
+            var id1 = 1;
+            var id2 = 2;
+            var id3 = 3;
+            
             var accessorToken = new LookupGroup(new[]{1}, Array.Empty<int>());
-
-            var applicableEntity1 = Substitute.For<IEntity>();
-            var applicableEntity2 = Substitute.For<IEntity>();
-            var notApplicableEntity1 = Substitute.For<IEntity>();
-
-            applicableEntity1.Id.Returns(1);
-            applicableEntity2.Id.Returns(2);
-            notApplicableEntity1.Id.Returns(3);
+            var ownedEntities = new List<int> { id1, id2 };
    
             var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
-            mockGroupTracker.GetMatchedEntityIds().Returns(new [] { 1, 2 });
+            mockGroupTracker.GetMatchedEntityIds().Returns(ownedEntities);
             mockGroupTracker.OnEntityJoinedGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeavingGroup.Returns(new Subject<int>());
             mockGroupTracker.OnEntityLeftGroup.Returns(new Subject<int>());
             
             var mockEntityCollection = Substitute.For<IEntityCollection>();
-            mockEntityCollection.Get(1).Returns(applicableEntity1);
-            mockEntityCollection.Get(2).Returns(applicableEntity2);
+            mockEntityCollection.GetEnumerator().Returns(ownedEntities.GetEnumerator());
     
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             
             Assert.Equal(2, observableGroup.CachedEntityIds.Count);
-            Assert.Contains(applicableEntity1.Id, observableGroup.CachedEntityIds);
-            Assert.Contains(applicableEntity2.Id, observableGroup.CachedEntityIds);
+            Assert.Contains(id1, observableGroup.CachedEntityIds);
+            Assert.Contains(id2, observableGroup.CachedEntityIds);
         }
 
         [Fact]
@@ -49,8 +45,8 @@ namespace EcsR3.Tests.EcsR3.Observables
         {
             var group = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
-            var applicableEntity = Substitute.For<IEntity>();
-            applicableEntity.Id.Returns(1);
+            var id1 = 1;
+            var entities = new List<int> { id1 };
 
             var onJoinedSubject = new Subject<int>();
             var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
@@ -59,18 +55,18 @@ namespace EcsR3.Tests.EcsR3.Observables
             mockGroupTracker.OnEntityLeftGroup.Returns(new Subject<int>());
             
             var mockEntityCollection = Substitute.For<IEntityCollection>();
-            mockEntityCollection.Get(1).Returns(applicableEntity);
+            mockEntityCollection.GetEnumerator().Returns(entities.GetEnumerator());
 
             var observableGroup = new ComputedEntityGroup(group, mockGroupTracker, mockEntityCollection);
 
             var invocations = new List<int>();
             observableGroup.OnAdded.Subscribe(invocations.Add);
             
-            onJoinedSubject.OnNext(applicableEntity.Id);
+            onJoinedSubject.OnNext(id1);
 
             Assert.NotEmpty(invocations);
-            Assert.Single(observableGroup.CachedEntityIds, applicableEntity.Id);
-            Assert.Single(invocations, applicableEntity);
+            Assert.Single(observableGroup.CachedEntityIds, id1);
+            Assert.Single(invocations, id1);
         }
         
         [Fact]
@@ -78,8 +74,8 @@ namespace EcsR3.Tests.EcsR3.Observables
         {
             var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
-            var applicableEntity = Substitute.For<IEntity>();
-            applicableEntity.Id.Returns(1);
+            var id1 = 1;
+            var entities = new List<int> { id1 };
 
             var onLeavingSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
@@ -89,10 +85,10 @@ namespace EcsR3.Tests.EcsR3.Observables
             mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
             
             var mockEntityCollection = Substitute.For<IEntityCollection>();
-            mockEntityCollection.Get(1).Returns(applicableEntity);
+            mockEntityCollection.GetEnumerator().Returns(entities.GetEnumerator());
 
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
-            observableGroup.CachedEntityIds.Add(1);
+            observableGroup.CachedEntityIds.Add(id1);
             
             var removingInvocations = new List<int>();
             observableGroup.OnRemoving.Subscribe(removingInvocations.Add);
@@ -100,13 +96,13 @@ namespace EcsR3.Tests.EcsR3.Observables
             var removedInvocations = new List<int>();
             observableGroup.OnRemoved.Subscribe(removedInvocations.Add);
             
-            onLeavingSubject.OnNext(applicableEntity.Id);
-            onLeftSubject.OnNext(applicableEntity.Id);
+            onLeavingSubject.OnNext(id1);
+            onLeftSubject.OnNext(id1);
 
             Assert.NotEmpty(removingInvocations);
-            Assert.Single(removingInvocations, applicableEntity);
+            Assert.Single(removingInvocations, id1);
             Assert.NotEmpty(removedInvocations);
-            Assert.Single(removedInvocations, applicableEntity);
+            Assert.Single(removedInvocations, id1);
             Assert.Empty(observableGroup.CachedEntityIds);
         }
         
@@ -115,9 +111,9 @@ namespace EcsR3.Tests.EcsR3.Observables
         {
             var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
-            var applicableEntity = Substitute.For<IEntity>();
-            applicableEntity.Id.Returns(1);
-
+            var id1 = 1;
+            var entities = new List<int> { id1 };
+            
             var onLeavingSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
             var mockGroupTracker = Substitute.For<IComputedEntityGroupTracker>();
@@ -126,7 +122,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             mockGroupTracker.OnEntityLeftGroup.Returns(onLeftSubject);
             
             var mockEntityCollection = Substitute.For<IEntityCollection>();
-            mockEntityCollection.Get(1).Returns(applicableEntity);
+            mockEntityCollection.GetEnumerator().Returns(entities.GetEnumerator());
 
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             observableGroup.CachedEntityIds.Add(1);
@@ -137,12 +133,12 @@ namespace EcsR3.Tests.EcsR3.Observables
             var removedInvocations = new List<int>();
             observableGroup.OnRemoved.Subscribe(removedInvocations.Add);
             
-            onLeavingSubject.OnNext(applicableEntity.Id);
+            onLeavingSubject.OnNext(id1);
 
             Assert.NotEmpty(removingInvocations);
-            Assert.Single(removingInvocations, applicableEntity);
+            Assert.Single(removingInvocations, id1);
             Assert.Empty(removedInvocations);
-            Assert.Single(observableGroup.CachedEntityIds, applicableEntity.Id);
+            Assert.Single(observableGroup.CachedEntityIds, id1);
         }
         
         [Fact]
@@ -150,8 +146,8 @@ namespace EcsR3.Tests.EcsR3.Observables
         {
             var accessorToken = new LookupGroup(new[]{1, 2}, Array.Empty<int>());
 
-            var applicableEntity = Substitute.For<IEntity>();
-            applicableEntity.Id.Returns(1);
+            var id1 = 1;
+            var entities = new List<int> { id1 };
 
             var onJoinedSubject = new Subject<int>();
             var onLeftSubject = new Subject<int>();
@@ -166,8 +162,8 @@ namespace EcsR3.Tests.EcsR3.Observables
             var changeInvocations = new List<int[]>();
             observableGroup.OnChanged.Subscribe(x => changeInvocations.Add(x.ToArray()));
             
-            onJoinedSubject.OnNext(applicableEntity.Id);
-            onLeftSubject.OnNext(applicableEntity.Id);
+            onJoinedSubject.OnNext(id1);
+            onLeftSubject.OnNext(id1);
 
             Assert.NotEmpty(changeInvocations);
             Assert.Equal(2, changeInvocations.Count);

@@ -13,7 +13,7 @@ namespace EcsR3.Tests.Systems
 
         public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            var testComponent = entity.GetComponent<TestComponentOne>();
+            var testComponent = entityComponentAccessor.GetComponent<TestComponentOne>(entityId);
             testComponent.Data = "woop";
         }
     }

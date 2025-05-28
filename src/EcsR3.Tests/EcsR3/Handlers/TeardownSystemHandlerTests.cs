@@ -36,13 +36,12 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_teardown_entity_when_removed()
         {
-            var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(1);
-            var fakeEntities = new List<IEntity>();
+            var id1 = 1;
+            var fakeEntities = new List<int> { id1 };
 
-            var removeSubject = new Subject<IEntity>();
+            var removeSubject = new Subject<int>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<int>());
             mockComputedEntityGroup.OnRemoving.Returns(removeSubject);
             mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
@@ -59,9 +58,9 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var systemHandler = new TeardownSystemHandler(entityComponentAccessor, observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
-            removeSubject.OnNext(fakeEntity1);
+            removeSubject.OnNext(id1);
             
-            mockSystem.Received(1).Teardown(Arg.Is(fakeEntity1));
+            mockSystem.Received(1).Teardown(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id1));
             Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
             Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
         }

@@ -44,6 +44,7 @@ namespace EcsR3.Collections.Entities
             
             ComponentLength = componentTypeLookup.AllComponentTypeIds.Length;
             ComponentAllocationData = new int[ComponentLength, EntityLength];
+            new Span2D<int>(ComponentAllocationData).Fill(NoAllocation);
             ResizeAllEntityAllocations(EntityLength);
         }
 
@@ -110,6 +111,9 @@ namespace EcsR3.Collections.Entities
         
         public int[] AllocateComponent(int componentTypeId, int[] entityIds)
         {
+            if(entityIds.Length > EntityLength) 
+            { ResizeAllEntityAllocations(entityIds.Length); }
+            
             lock (_lock)
             {
                 var newAllocations = ComponentDatabase.Allocate(componentTypeId, entityIds.Length);
