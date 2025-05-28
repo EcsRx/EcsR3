@@ -3,6 +3,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching.Convention
@@ -11,8 +12,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T1 : IComponent
         where T2 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2);
 
@@ -57,8 +59,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T2 : IComponent
         where T3 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3);
 
@@ -90,8 +93,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T3 : IComponent
         where T4 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4);
         
@@ -126,8 +130,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T4 : IComponent
         where T5 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        {  }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
 
@@ -165,8 +170,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T5 : IComponent
         where T6 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
         
@@ -205,8 +211,9 @@ namespace EcsR3.Systems.Batching.Convention
         where T6 : IComponent
         where T7 : IComponent
     {
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
+        protected BatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
 
         protected abstract void Process(int entityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6, T7 component7);
         

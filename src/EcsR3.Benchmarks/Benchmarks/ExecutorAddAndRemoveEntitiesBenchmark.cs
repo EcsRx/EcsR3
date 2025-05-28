@@ -78,9 +78,9 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(_availableComponents);
-                entity.RemoveAllComponents();
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, _availableComponents);
+                EntityComponentAccessor.RemoveAllComponents(entityId);
             }
         }
     }

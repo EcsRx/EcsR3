@@ -1,11 +1,13 @@
 ﻿using EcsR3.Blueprints;
 using EcsR3.Collections.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 
 namespace EcsR3.Pools
 {
+    /*
     /// <summary>
     /// Allows you to pool entities which are pre-configured with a blueprint then override the
     /// OnAllocated and OnReleased methods to do the custom logic you need for when they are
@@ -16,10 +18,10 @@ namespace EcsR3.Pools
     {
         public T Blueprint { get; } = new T();
 
-        public BlueprintedEntityPool(IEntityCollection entityCollection, PoolConfig poolConfig = null) : base(entityCollection, poolConfig)
+        public BlueprintedEntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor, PoolConfig poolConfig = null) : base(entityCollection, entityComponentAccessor, poolConfig)
         {}
         
-        public override void SetupEntity(IEntity entity)
-        { Blueprint.Apply(entity); }
-    }
+        public override void SetupEntity(int entityId)
+        { Blueprint.Apply(EntityComponentAccessor, entityId); }
+    }*/
 }

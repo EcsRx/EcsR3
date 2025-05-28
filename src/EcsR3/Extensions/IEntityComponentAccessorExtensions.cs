@@ -1,4 +1,7 @@
-﻿using EcsR3.Components;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EcsR3.Components;
 using EcsR3.Entities.Accessors;
 
 namespace EcsR3.Extensions
@@ -8,22 +11,34 @@ namespace EcsR3.Extensions
         /// <summary>
         /// Checks to see if the entity contains the given component based on its type id
         /// </summary>
+        /// <param name="accessor">The entity accessor</param>
         /// <param name="entityId">The entity Id to check on</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         public static bool HasComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
-        {
-            return accessor.HasComponent(entityId, typeof(T));
-        }
+        { return accessor.HasComponent(entityId, typeof(T)); }
 
         public static T GetComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
-        {
-            return (T)accessor.GetComponent(entityId, typeof(T));
-        }
+        { return (T)accessor.GetComponent(entityId, typeof(T)); }
         
         public static void RemoveComponent(this IEntityComponentAccessor accessor, int entityId, IComponent component)
         { accessor.RemoveComponents(entityId, component.GetType()); }
         
         public static void RemoveComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
         { accessor.RemoveComponents(entityId, typeof(T)); }
+        
+        public static void RemoveComponents(this IEntityComponentAccessor accessor, int entityId, params Type[] componentTypes)
+        { accessor.RemoveComponents(entityId, componentTypes); }
+        
+        public static void RemoveComponents(this IEntityComponentAccessor accessor, int entityId, params IComponent[] components)
+        { accessor.RemoveComponents(entityId, components.Select(x => x.GetType()).ToArray()); }
+        
+        public static void AddComponent(this IEntityComponentAccessor accessor, int entityId, IComponent component)
+        { accessor.AddComponents(entityId, component); }
+        
+        public static void AddComponents(this IEntityComponentAccessor accessor, int entityId, params IComponent[] components)
+        { accessor.AddComponents(entityId, components); }
+        
+        public static void AddComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent, new()
+        { accessor.AddComponents(entityId, new T()); }
     }
 }

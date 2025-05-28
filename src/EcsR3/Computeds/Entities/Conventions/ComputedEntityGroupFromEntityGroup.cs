@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using R3;
@@ -106,13 +104,7 @@ namespace EcsR3.Computeds.Entities.Conventions
             lock(_lock)
             { return CachedEntityIds.Contains(id); }
         }
-
-        public IEntity Get(int id)
-        {
-            lock (_lock)
-            { return CachedEntityIds.TryGetValue(id, out var entityId) ? DataSource.Get(entityId) : null; }
-        }
-
+        
         public void Dispose()
         {
             lock (_lock)

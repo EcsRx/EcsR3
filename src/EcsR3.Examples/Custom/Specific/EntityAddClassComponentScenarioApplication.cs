@@ -4,7 +4,7 @@ using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Extensions;
 
-namespace EcsR3.Examples.ExampleApps.Playground.Specific;
+namespace EcsR3.Examples.Custom.Specific;
 
 public class EntityAddClassComponentScenarioApplication : EcsR3BenchmarkConsoleApplication
 {
@@ -20,7 +20,7 @@ public class EntityAddClassComponentScenarioApplication : EcsR3BenchmarkConsoleA
         for (var i = 0; i < AllocationAmount; i++)
         {
             var entity = EntityCollection.Create();
-            entity.AddComponent<ClassComponent1>();
+            EntityComponentAccessor.AddComponent<ClassComponent1>(entity);
         }
     }
 }

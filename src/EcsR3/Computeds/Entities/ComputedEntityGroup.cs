@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections.Entities;
-using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Groups.Tracking.Trackers;
 using R3;
@@ -91,12 +90,6 @@ namespace EcsR3.Computeds.Entities
         {
             lock(_lock)
             { return CachedEntityIds.Contains(id); }
-        }
-
-        public IEntity Get(int id)
-        {
-            lock (_lock)
-            { return CachedEntityIds.TryGetValue(id, out var entityId) ? Collection.Get(entityId) : null; }
         }
 
         public void Dispose()

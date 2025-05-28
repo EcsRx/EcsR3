@@ -2,6 +2,7 @@ using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using R3;
 using SystemsR3.Extensions;
@@ -16,17 +17,19 @@ namespace EcsR3.Systems.Batching
         
         public IComponentDatabase ComponentDatabase { get; }
         public IComputedComponentGroupRegistry ComputedComponentGroupRegistry { get; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; }
         public IThreadHandler ThreadHandler { get; }
         
         protected IComputedComponentGroup ComputedComponentGroup { get; private set; }
         protected bool ShouldMultithread { get; set; }
         protected CompositeDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
         {
             ComponentDatabase = componentDatabase;
             ComputedComponentGroupRegistry = computedComponentGroupRegistry;
             ThreadHandler = threadHandler;
+            EntityComponentAccessor = entityComponentAccessor;
         }
         
         /// <summary>
@@ -55,14 +58,6 @@ namespace EcsR3.Systems.Batching
         /// </summary>
         /// <returns></returns>
         protected abstract IComputedComponentGroup GetComponentGroup();
-
-        /// <summary>
-        /// Gets the entity from its provided id
-        /// </summary>
-        /// <param name="entityId">The entity id to lookup</param>
-        /// <returns>The entity instance associated with this id</returns>
-        public IEntity GetEntity(int entityId)
-        { return ComputedComponentGroup.DataSource.Get(entityId); }
         
         public virtual void StartSystem()
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
-using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
@@ -15,7 +14,7 @@ namespace EcsR3.Benchmarks.Benchmarks
     {
         private IComponent[] _availableComponents;
         private Type[] _availableComponentTypes;
-        private List<IEntity> _entities = new List<IEntity>();
+        private List<int> _entities = new List<int>();
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         
         [Params(1000, 10000, 100000)]
@@ -33,43 +32,42 @@ namespace EcsR3.Benchmarks.Benchmarks
                 .ToArray();
         }
 
-        public void ProcessEntity(IEntity entity)
+        public void ProcessEntity(int entityId)
         {
-            entity.GetComponent<ClassComponent1>();
-            entity.GetComponent<ClassComponent2>();
-            entity.GetComponent<ClassComponent3>();
-            entity.GetComponent<ClassComponent4>();
-            entity.GetComponent<ClassComponent5>();
-            entity.GetComponent<ClassComponent6>();
-            entity.GetComponent<ClassComponent7>();
-            entity.GetComponent<ClassComponent8>();
-            entity.GetComponent<ClassComponent9>();
-            entity.GetComponent<ClassComponent10>();
-            entity.GetComponent<ClassComponent11>();
-            entity.GetComponent<ClassComponent12>();
-            entity.GetComponent<ClassComponent13>();
-            entity.GetComponent<ClassComponent14>();
-            entity.GetComponent<ClassComponent15>();
-            entity.GetComponent<ClassComponent16>();
-            entity.GetComponent<ClassComponent17>();
-            entity.GetComponent<ClassComponent18>();
-            entity.GetComponent<ClassComponent19>();
-            entity.GetComponent<ClassComponent20>();
+            EntityComponentAccessor.GetComponent<ClassComponent1>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent2>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent3>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent4>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent5>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent6>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent7>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent8>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent9>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent10>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent11>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent12>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent13>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent14>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent15>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent16>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent17>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent18>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent19>(entityId);
+            EntityComponentAccessor.GetComponent<ClassComponent20>(entityId);
         }
 
         public override void Setup()
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, EntityComponentAccessor);
-                entity.AddComponents(_availableComponents);
-                _entities.Add(entity);
+                EntityComponentAccessor.AddComponents(i, _availableComponents);
+                _entities.Add(i);
             }
         }
 
         public override void Cleanup()
         {
-            _entities.ForEach(x => x.RemoveAllComponents());
+            _entities.ForEach(x => EntityComponentAccessor.RemoveAllComponents(x));
             _entities.Clear();
         }
 
@@ -85,7 +83,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             var ignore = false;
             for (var i = 0; i < EntityCount; i++)
-            { ignore = _entities[i].HasAllComponents(_availableComponentTypes); }
+            { ignore = EntityComponentAccessor.HasAllComponents(_entities[i], _availableComponentTypes); }
             return ignore;
         }
         
@@ -94,7 +92,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             var ignore = false;
             for (var i = 0; i < EntityCount; i++)
-            { ignore = _entities[i].HasAnyComponents(_availableComponentTypes); }
+            { ignore = EntityComponentAccessor.HasAnyComponents(_entities[i], _availableComponentTypes); }
             return ignore;
         }
     }

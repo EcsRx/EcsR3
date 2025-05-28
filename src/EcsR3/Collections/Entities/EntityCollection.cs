@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
 
@@ -35,52 +34,31 @@ namespace EcsR3.Collections.Entities
             _onRemoved = new Subject<int>();
         }
         
-        public IEntity Create(int? id = null)
+        public int Create(int? id = null)
         {
-            IEntity entity;
+            int entityId;
             lock (_lock)
             {
                 if (id.HasValue && EntityLookup.Contains(id.Value))
                 { throw new InvalidOperationException("id already exists"); }
 
-                var entityId= EntityAllocationDatabase.AllocateEntity(id);
-                entity = new Entity(entityId, EntityComponentAccessor);
-                EntityLookup.Add(entity.Id);
+                entityId= EntityAllocationDatabase.AllocateEntity(id);
+                EntityLookup.Add(entityId);
             }
 
-            _onAdded.OnNext(entity.Id);
-            return entity;
+            _onAdded.OnNext(entityId);
+            return entityId;
         }
 
-        public IEntity[] CreateMany(int count)
+        public int[] CreateMany(int count)
         {
             var entityIds = EntityAllocationDatabase.AllocateEntities(count);
-            var entities = new IEntity[count];
             lock (_lock)
             {
-                for (var i = 0; i < entities.Length; i++)
-                {
-                    entities[i] = new Entity(entityIds[i], EntityComponentAccessor);
-                    EntityLookup.Add(entities[i].Id);
-                }
+                for (var i = 0; i < entityIds.Length; i++)
+                { EntityLookup.Add(entityIds[i]); }
             }
-            return entities;
-        }
-
-        public IEntity Get(int id)
-        {
-            lock (_lock)
-            {
-                return EntityLookup.Contains(id) ? 
-                    new Entity(id, EntityComponentAccessor) 
-                    : null;
-            }
-        }
-
-        public void Remove(int id)
-        {
-            var entity = Get(id);
-            Remove(entity);
+            return entityIds;
         }
 
         public void RemoveMany(IReadOnlyList<int> ids)
@@ -89,15 +67,15 @@ namespace EcsR3.Collections.Entities
             { Remove(ids[i]); }
         }
 
-        protected void Remove(IEntity entity)
+        public void Remove(int entityId)
         {
-            entity.RemoveAllComponents();
+            EntityComponentAccessor.RemoveAllComponents(entityId);
             
             lock (_lock)
-            { EntityLookup.Remove(entity.Id); }
+            { EntityLookup.Remove(entityId); }
             
-            EntityAllocationDatabase.ReleaseEntity(entity.Id);
-            _onRemoved.OnNext(entity.Id);
+            EntityAllocationDatabase.ReleaseEntity(entityId);
+            _onRemoved.OnNext(entityId);
         }
 
         public void RemoveAll()
@@ -109,17 +87,6 @@ namespace EcsR3.Collections.Entities
 
                 EntityLookup.Clear();
             }
-        }
-
-        public void Add(IEntity entity)
-        {
-            lock (_lock)
-            {
-                if(!EntityLookup.Add(entity.Id))
-                { throw new InvalidOperationException("id already exists"); }
-            }
-            
-            _onAdded.OnNext(entity.Id);
         }
 
         public bool Contains(int id)

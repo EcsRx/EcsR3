@@ -1,12 +1,11 @@
 ﻿using System;
-using SystemsR3.Attributes;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
-using EcsR3.Examples.Custom.Groups;
+using EcsR3.Examples.Custom.SystemPriority.Groups;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using SystemsR3.Attributes;
 
-namespace EcsR3.Examples.Custom.Systems
+namespace EcsR3.Examples.Custom.SystemPriority.Systems
 {
     [Priority(10)]
     public class FirstSystem : ISetupSystem

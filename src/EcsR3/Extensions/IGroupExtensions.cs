@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components;
-using EcsR3.Entities;
 using EcsR3.Groups;
 
 namespace EcsR3.Extensions
@@ -55,9 +54,6 @@ namespace EcsR3.Extensions
             
             return true;
         }
-       
-        public static bool ContainsAllRequiredComponents(this IGroup group, IEntity entity)
-        { return entity.HasAllComponents(group.RequiredComponents); }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEnumerable<IComponent> components)
         {
@@ -84,9 +80,6 @@ namespace EcsR3.Extensions
             return false;
         }
         
-        public static bool ContainsAnyRequiredComponents(this IGroup group, IEntity entity)
-        { return entity.HasAnyComponents(group.RequiredComponents); }
-        
         public static bool ContainsAnyExcludedComponents(this IGroup group, IEnumerable<IComponent> components)
         {
             var castComponents = components.Select(x => x.GetType()).ToArray();
@@ -96,9 +89,6 @@ namespace EcsR3.Extensions
         public static bool ContainsAnyExcludedComponents(this IGroup group, params Type[] componentTypes)
         { return group.ExcludedComponents.Any(componentTypes.Contains); }
         
-        public static bool ContainsAnyExcludedComponents(this IGroup group, IEntity entity)
-        { return entity.HasAnyComponents(group.ExcludedComponents); }
-
         public static bool ContainsAny(this IGroup group, params IComponent[] components)
         {
             var requiredContains = group.ContainsAnyRequiredComponents(components);
@@ -114,22 +104,6 @@ namespace EcsR3.Extensions
             if(requiredContains) { return true; }
 
             return group.ExcludedComponents.Any(componentTypes.Contains);
-        }
-        
-        public static bool ContainsAny(this IGroup group, IEntity entity)
-        {
-            var requiredContains = group.ContainsAnyRequiredComponents(entity);
-            if(requiredContains) { return true; }
-
-            return group.ContainsAnyExcludedComponents(entity);
-        }
-
-        public static bool Matches(this IGroup group, IEntity entity)
-        {
-            if(group.ExcludedComponents.Length == 0)
-            { return ContainsAllRequiredComponents(group, entity); }
-            
-            return ContainsAllRequiredComponents(group, entity) && !ContainsAnyExcludedComponents(group, entity);
         }
         
         /// <summary>

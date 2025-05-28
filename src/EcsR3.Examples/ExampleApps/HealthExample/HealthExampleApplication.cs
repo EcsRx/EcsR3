@@ -11,19 +11,19 @@ namespace EcsR3.Examples.ExampleApps.HealthExample
     public class HealthExampleApplication : EcsR3ConsoleApplication
     {
         private bool _quit;
-        private IEntity _enemy;
+        private int _enemyId;
         private readonly Random _random = new Random();
 
         protected override void ApplicationStarted()
         {
-            _enemy = EntityCollection.Create(new EnemyBlueprint(100));
+            _enemyId = EntityCollection.Create(EntityComponentAccessor, new EnemyBlueprint(100));
 
             HandleInput();
         }
 
         private void HandleInput()
         {
-            var healthComponent = _enemy.GetComponent<HealthComponent>();
+            var healthComponent = EntityComponentAccessor.GetComponent<HealthComponent>(_enemyId);
 
             while (!_quit)
             {

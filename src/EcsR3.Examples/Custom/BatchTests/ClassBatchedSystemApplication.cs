@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Blueprints;
 using EcsR3.Examples.Custom.BatchTests.Components;
@@ -23,8 +24,9 @@ namespace EcsR3.Examples.Custom.BatchTests
         [MultiThread]
         public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
         {
-            public ClassBatchSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-            {}
+            public ClassBatchSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+            {
+            }
 
             protected override Observable<Unit> ReactWhen()
             { return Observable.Never<Unit>(); }
@@ -48,8 +50,8 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override void ApplicationStarted()
         {
-            var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(100000);
-            var batchSystem = new ClassBatchSystem(ComponentDatabase, ComputedComponentGroupRegistry, ThreadHandler);
+            var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(EntityComponentAccessor, 100000);
+            var batchSystem = new ClassBatchSystem(ComponentDatabase, EntityComponentAccessor, ComputedComponentGroupRegistry, ThreadHandler);
             batchSystem.StartSystem();
             GC.Collect();
             

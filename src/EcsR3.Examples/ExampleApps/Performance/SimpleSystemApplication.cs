@@ -19,8 +19,8 @@ namespace EcsR3.Examples.ExampleApps.Performance
             
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, new SimpleReadComponent(), new SimpleWriteComponent());
             }
 
             RunSingleThread();

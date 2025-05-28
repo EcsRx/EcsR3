@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Components;
 using EcsR3.Computeds.Entities;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Examples.ExampleApps.Performance.Modules;
-using EcsR3.Extensions;
 using SystemsR3.Infrastructure.Modules;
 
 namespace EcsR3.Examples.ExampleApps.Performance
@@ -71,9 +69,9 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(_availableComponents);
-                entity.RemoveComponents(_availableComponentTypeIds);
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, _availableComponents);
+                EntityComponentAccessor.RemoveComponents(entityId, _availableComponentTypeIds);
             }
 
             timer.Stop();

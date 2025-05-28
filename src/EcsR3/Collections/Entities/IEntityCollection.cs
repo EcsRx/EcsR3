@@ -15,22 +15,14 @@ namespace EcsR3.Collections.Entities
         /// </summary>
         /// <param name="id">Id to use for the entity (defaults to null, meaning it'll automatically get the next available id)</param>
         /// <returns></returns>
-        IEntity Create(int? id = null);
+        int Create(int? id = null);
 
         /// <summary>
         /// Creates many entities at once
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        IEntity[] CreateMany(int count);
-        
-        /// <summary>
-        /// This will add an existing entity into the group, it is mainly used for pre-made
-        /// entities which have been created from persisted data/serializers etc.
-        /// Should be used with care as you should only have an entity in one collection.
-        /// </summary>
-        /// <param name="entity">Entity to add to the collection</param>
-        void Add(IEntity entity);
+        int[] CreateMany(int count);
         
         /// <summary>
         /// This will remove the entity from the collection and optionally destroy the entity.

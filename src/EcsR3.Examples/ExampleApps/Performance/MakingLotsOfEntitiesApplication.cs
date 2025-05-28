@@ -3,6 +3,7 @@ using System.Diagnostics;
 using EcsR3.Blueprints;
 using EcsR3.Components.Database;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Systems;
 using EcsR3.Examples.Application;
@@ -18,9 +19,9 @@ namespace EcsR3.Examples.ExampleApps.Performance
     {
         class LotsOfEntitiesBlueprint : IBlueprint
         {
-            public void Apply(IEntity entity)
+            public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
             {
-                entity.AddComponents(new ClassComponent1(), new ClassComponent2());
+                entityComponentAccessor.AddComponents(entityId, new ClassComponent1(), new ClassComponent2());
             }
         }
         
@@ -45,7 +46,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
             Console.WriteLine($"Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            EntityCollection.CreateMany<LotsOfEntitiesBlueprint>(EntityCount);
+            EntityCollection.CreateMany<LotsOfEntitiesBlueprint>(EntityComponentAccessor, EntityCount);
             stopwatch.Stop();
             Console.WriteLine($"Finished In: {stopwatch.ElapsedMilliseconds}ms");
         }

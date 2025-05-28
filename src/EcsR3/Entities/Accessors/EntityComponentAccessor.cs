@@ -67,7 +67,7 @@ namespace EcsR3.Entities.Accessors
             EntityChangeRouter.PublishEntityRemovedComponents(entityId, sanitisedComponentsIds);
         }
 
-        public void RemoveComponents(int entityId, params Type[] componentTypes)
+        public void RemoveComponents(int entityId, IReadOnlyList<Type> componentTypes)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(componentTypes);
             RemoveComponents(entityId, componentTypeIds);
@@ -117,8 +117,28 @@ namespace EcsR3.Entities.Accessors
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             return EntityAllocationDatabase.HasComponent(componentTypeId, entityId);
         }
-
+        
         public int[] GetAllocations(int entityId)
         { return EntityAllocationDatabase.GetEntityAllocations(entityId); }
+
+        public bool HasAllComponents(int entityId, IReadOnlyList<Type> componentTypes)
+        {
+            for(var i=0;i<componentTypes.Count;i++)
+            {
+                var componentType = componentTypes[i];
+                if(!HasComponent(entityId, componentType)) { return false; }
+            }
+            return true;
+        }
+
+        public bool HasAnyComponents(int entityId, IReadOnlyList<Type> componentTypes)
+        {
+            for(var i=0;i<componentTypes.Count;i++)
+            {
+                var componentType = componentTypes[i];
+                if(HasComponent(entityId, componentType)) { return true; }
+            }
+            return false;
+        }
     }
 }

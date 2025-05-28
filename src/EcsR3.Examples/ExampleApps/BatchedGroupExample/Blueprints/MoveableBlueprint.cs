@@ -1,6 +1,6 @@
 using System;
 using EcsR3.Blueprints;
-using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
 
@@ -13,12 +13,12 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Blueprints
         
         private readonly Random _random = new Random();
 
-        public void Apply(IEntity entity)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            entity.AddComponent(new NameComponent {Name = $"BatchedEntity-{entity.Id}"});
-            entity.CreateComponent<PositionComponent>();
+            entityComponentAccessor.AddComponent(entityId, new NameComponent {Name = $"BatchedEntity-{entityId}"});
+            entityComponentAccessor.CreateComponent<PositionComponent>(entityId);
                 
-            ref var movementSpeedComponent = ref entity.CreateComponent<MovementSpeedComponent>();
+            ref var movementSpeedComponent = ref entityComponentAccessor.CreateComponent<MovementSpeedComponent>(entityId);
             movementSpeedComponent.Speed = (float)_random.NextDouble() * (MaximumMovementSpeed - MinimumMovementSpeed) + MinimumMovementSpeed;
         }
     }
