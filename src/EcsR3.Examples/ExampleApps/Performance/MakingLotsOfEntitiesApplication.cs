@@ -15,11 +15,11 @@ namespace EcsR3.Examples.ExampleApps.Performance
 {
     public class MakingLotsOfEntitiesApplication : EcsR3ConsoleApplication
     {
-        class LotsOfEntitiesBlueprint : IBlueprint
+        class LotsOfEntitiesBlueprint : IBatchedBlueprint
         {
-            public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
+            public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
             {
-                entityComponentAccessor.AddComponents(entityId, new ClassComponent1(), new ClassComponent2());
+                entityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entityIds);
             }
         }
         

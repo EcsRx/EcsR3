@@ -21,5 +21,6 @@
     {
        int[] AllocateComponent(int componentTypeId, int[] entityIds);
        int[] ReleaseComponent(int componentTypeId, int[] entityIds);
+       int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds);
     }
 }

@@ -81,6 +81,21 @@ namespace EcsR3.Components.Database
             lock (_lock)
             { return componentPool.Components[allocationIndex]; }
         }
+        
+        public T[] Get<T>(int componentTypeId, int[] allocationIndexes) where T : IComponent
+        {
+            var componentPool = GetPoolFor<T>(componentTypeId);
+            var components = new T[allocationIndexes.Length];
+            lock (_lock)
+            {
+                for (var i = 0; i < allocationIndexes.Length; i++)
+                {
+                    var allocationIndex = allocationIndexes[i];
+                    components[i] = componentPool.Components[allocationIndex];
+                }
+            }
+            return components;
+        }
 
         public ref T GetRef<T>(int componentTypeId, int allocationIndex) where T : IComponent
         {
@@ -88,6 +103,21 @@ namespace EcsR3.Components.Database
             lock (_lock)
             { return ref componentPool.Components[allocationIndex]; }
         }
+        /*
+        public ref T[] GetRef<T>(int componentTypeId, int[] allocationIndexes) where T : IComponent
+        {
+            var componentRefs = new ref T[allocationIndexes.Length];
+            var componentPool = GetPoolFor<T>(componentTypeId);
+            lock (_lock)
+            {
+                for (var i = 0; i < allocationIndexes.Length; i++)
+                {
+                    var allocationIndex = allocationIndexes[i];
+                    componentRefs[i] = ref componentPool.Components[allocationIndex];
+                }
+            }
+            return componentRefs;
+        }*/
 
         public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
         {

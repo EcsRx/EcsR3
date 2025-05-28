@@ -20,18 +20,18 @@ namespace EcsR3.Extensions
             { blueprint.Apply(accessor, entity); }
             return entity;
         }
-
-        public static IReadOnlyList<int> CreateMany(this IEntityCollection entityCollection,  IEntityComponentAccessor accessor, int count, params IBlueprint[] blueprints)
-        { return CreateMany(entityCollection, accessor, count, (IReadOnlyCollection<IBlueprint>)blueprints); }
         
-        public static IReadOnlyList<int> CreateMany<T>(this IEntityCollection entityCollection,  IEntityComponentAccessor accessor, int count) where T : IBlueprint, new()
+        public static IReadOnlyList<int> CreateMany(this IEntityCollection entityCollection,  IEntityComponentAccessor accessor, int count, params IBatchedBlueprint[] blueprints)
+        { return CreateMany(entityCollection, accessor, count, (IReadOnlyCollection<IBatchedBlueprint>)blueprints); }
+        
+        public static IReadOnlyList<int> CreateMany<T>(this IEntityCollection entityCollection,  IEntityComponentAccessor accessor, int count) where T : IBatchedBlueprint, new()
         { return CreateMany(entityCollection, accessor, count, new T()); }
         
-        public static IReadOnlyList<int> CreateMany(this IEntityCollection entityCollection, IEntityComponentAccessor accessor, int count, IReadOnlyCollection<IBlueprint> blueprints)
+        public static IReadOnlyList<int> CreateMany(this IEntityCollection entityCollection, IEntityComponentAccessor accessor, int count, IReadOnlyCollection<IBatchedBlueprint> blueprints)
         {
             var entities = entityCollection.CreateMany(count);
             foreach (var blueprint in blueprints)
-            { blueprint.ApplyToAll(accessor, entities); }
+            { blueprint.Apply(accessor, entities); }
             return entities;
         }
     }

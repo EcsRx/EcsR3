@@ -10,7 +10,6 @@ using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Extensions;
 using EcsR3.Systems.Batching.Convention;
 using R3;
-using SystemsR3.Attributes;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Threading;
 
@@ -48,7 +47,7 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override void ApplicationStarted()
         {
-            var entities = EntityCollection.CreateMany<BatchStructComponentBlueprint>(EntityComponentAccessor, 100000);
+            EntityCollection.CreateMany<BatchStructComponentBlueprint>(EntityComponentAccessor, 100000);
             var batchSystem = new StructBatchSystem(ComponentDatabase, EntityComponentAccessor, ComputedComponentGroupRegistry, ThreadHandler);
             batchSystem.StartSystem();
             

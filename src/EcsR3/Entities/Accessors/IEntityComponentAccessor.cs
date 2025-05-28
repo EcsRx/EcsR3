@@ -4,7 +4,7 @@ using EcsR3.Components;
 
 namespace EcsR3.Entities.Accessors
 {
-    public interface IEntityComponentAccessor : IEntityStructComponentAccessor
+    public interface IEntityComponentAccessor : IEntityStructComponentAccessor, IBatchEntityComponentAccessor
     {
         /// <summary>
         /// Adds all provided components to the entity

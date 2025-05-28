@@ -16,12 +16,13 @@ namespace EcsR3.Benchmarks.Benchmarks;
 [BenchmarkCategory("Systems")]
 public class BatchSystemMultiThreadingBenchmark : EcsR3Benchmark
 {
-    public class ClassBatchSystemBlueprint : IBlueprint
+    public class ClassBatchSystemBlueprint : IBlueprint, IBatchedBlueprint
     {
         public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        {
-            entityComponentAccessor.AddComponents(entityId, new ClassComponent(), new ClassComponent2());
-        }
+        { entityComponentAccessor.AddComponents(entityId, new ClassComponent(), new ClassComponent2()); }
+
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
+        { entityComponentAccessor.CreateComponents<ClassComponent, ClassComponent2>(entityIds); }
     }
     
     public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
