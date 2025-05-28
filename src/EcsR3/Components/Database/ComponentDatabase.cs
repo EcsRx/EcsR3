@@ -96,9 +96,16 @@ namespace EcsR3.Components.Database
             { componentPool.Components[allocationIndex] = component; }
         }
 
-        public void SetMany(int[] componentTypeIds, int[] allocationIndexs, IReadOnlyList<IComponent> components)
+        public void Set<T>(int componentTypeId, int[] allocationIndexes, IReadOnlyList<T> components) where T : IComponent
         {
-            if (componentTypeIds.Length != allocationIndexs.Length || componentTypeIds.Length != components.Count)
+            var componentPool = GetPoolFor<T>(componentTypeId);
+            lock (_lock)
+            { componentPool.Set(allocationIndexes, components); }
+        }
+
+        public void SetMany(int[] componentTypeIds, int[] allocationIndexes, IReadOnlyList<IComponent> components)
+        {
+            if (componentTypeIds.Length != allocationIndexes.Length || componentTypeIds.Length != components.Count)
             { throw new ArgumentException("Component type ids, allocation indexs and components must all be the same length"); }
             
             lock (_lock)
@@ -106,7 +113,7 @@ namespace EcsR3.Components.Database
                 for (var i = 0; i < components.Count; i++)
                 {
                     var componentTypeId = componentTypeIds[i];
-                    var allocationIndex = allocationIndexs[i];
+                    var allocationIndex = allocationIndexes[i];
                     var component = components[i];
                     ComponentData[componentTypeId].Set(allocationIndex, component);
                 }
@@ -118,6 +125,12 @@ namespace EcsR3.Components.Database
             lock (_lock)
             { ComponentData[componentTypeId].Release(allocationIndex); }
         }
+        
+        public void Remove(int componentTypeId, int[] allocationIndex)
+        {
+            lock (_lock)
+            { ComponentData[componentTypeId].Release(allocationIndex); }
+        }
 
         public int Allocate(int componentTypeId)
         {
@@ -125,6 +138,15 @@ namespace EcsR3.Components.Database
             {
                 var pool = ComponentData[componentTypeId];
                 return pool.Allocate();
+            }
+        }
+        
+        public int[] Allocate(int componentTypeId, int count)
+        {
+            lock (_lock)
+            {
+                var pool = ComponentData[componentTypeId];
+                return pool.Allocate(count);
             }
         }
 

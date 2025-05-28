@@ -39,7 +39,7 @@ namespace SystemsR3.Pools
             }
         }
         
-        public int[] AllocateMany(int count)
+        public int[] Allocate(int count)
         {
             lock (_lock)
             {
@@ -67,12 +67,12 @@ namespace SystemsR3.Pools
             }
         }
         
-        public void ReleaseMany(IReadOnlyList<int> instances)
+        public void Release(IReadOnlyList<int> indexes)
         {
             var maxId = 0;
-            for (var i = 0; i < instances.Count; i++)
+            for (var i = 0; i < indexes.Count; i++)
             {
-                var id = instances[i];
+                var id = indexes[i];
                 
                 if(id <= 0)
                 { throw new ArgumentException("id has to be >= 1"); }
@@ -85,8 +85,8 @@ namespace SystemsR3.Pools
 
             lock (_lock)
             {
-                for (var i = 0; i < instances.Count; i++)
-                { AvailableIndexes.Push(instances[i]); }
+                for (var i = 0; i < indexes.Count; i++)
+                { AvailableIndexes.Push(indexes[i]); }
             }
         }
 

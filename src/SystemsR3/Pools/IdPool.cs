@@ -87,7 +87,7 @@ namespace SystemsR3.Pools
         public void Dispose()
         { _onSizeChanged?.Dispose(); }
 
-        public int[] AllocateMany(int count)
+        public int[] Allocate(int count)
         {
             lock (_lock)
             {
@@ -101,7 +101,7 @@ namespace SystemsR3.Pools
             }
         }
 
-        public void ReleaseMany(IReadOnlyList<int> instances)
+        public void Release(IReadOnlyList<int> instances)
         {
             var maxId = 0;
             for (var i = 0; i < instances.Count; i++)

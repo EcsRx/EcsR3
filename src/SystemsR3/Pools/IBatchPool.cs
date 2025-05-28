@@ -4,7 +4,7 @@ namespace SystemsR3.Pools
 {
     public interface IBatchPool<T>
     {
-        T[] AllocateMany(int count);
-        void ReleaseMany(IReadOnlyList<T> instances);
+        T[] Allocate(int count);
+        void Release(IReadOnlyList<T> instances);
     }
 }

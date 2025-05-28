@@ -61,7 +61,7 @@ namespace EcsR3.Collections.Entities
             return entityIds;
         }
 
-        public void RemoveMany(IReadOnlyList<int> ids)
+        public void Remove(IReadOnlyList<int> ids)
         {
             for(var i=0;i<ids.Count;i++)
             { Remove(ids[i]); }

@@ -41,6 +41,14 @@ namespace EcsR3.Entities.Accessors
             ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
+        
+        public void CreateComponent<T>(int[] entityIds) where T : struct, IComponent
+        {
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
+            var allocationIds = EntityAllocationDatabase.AllocateComponent(componentTypeId, entityIds);
+            var newComponents = new T[entityIds.Length];
+            ComponentDatabase.Set(componentTypeId, allocationIds, newComponents);
+        }
 
         public void RemoveComponents(int entityId, IReadOnlyList<int> componentsTypeIds)
         {

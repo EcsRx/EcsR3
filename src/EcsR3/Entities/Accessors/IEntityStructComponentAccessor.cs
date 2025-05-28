@@ -13,6 +13,13 @@ namespace EcsR3.Entities.Accessors
         ref T CreateComponent<T>(int entityId) where T : struct, IComponent;
         
         /// <summary>
+        /// Creates the component for multiple entities at once
+        /// </summary>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <remarks>As you are batch creating you need to pull out the components via GetComponent if you want them</remarks>
+        void CreateComponent<T>(int[] entityIds) where T : struct, IComponent;
+        
+        /// <summary>
         /// Gets a component from its type id
         /// </summary>
         /// <param name="componentTypeId">The component type id</param>

@@ -35,7 +35,7 @@ namespace EcsR3.Collections.Entities
         /// Removes many entities at once
         /// </summary>
         /// <param name="ids"></param>
-        void RemoveMany(IReadOnlyList<int> ids);
+        void Remove(IReadOnlyList<int> ids);
         
         /// <summary>
         /// Removes all entities from the collection

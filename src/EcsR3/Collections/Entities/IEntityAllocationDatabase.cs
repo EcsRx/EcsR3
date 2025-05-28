@@ -1,6 +1,6 @@
 ﻿namespace EcsR3.Collections.Entities
 {
-    public interface IEntityAllocationDatabase
+    public interface IEntityAllocationDatabase : IBatchEntityAllocationDatabase
     {
         public const int NoAllocation = -1;
         
@@ -15,5 +15,11 @@
         int[] GetAllEntityComponents(int entityId);
         int[] GetEntitiesWithComponent(int componentTypeId);
         int GetEntityComponentAllocation(int componentTypeId, int entityId);
+    }
+    
+    public interface IBatchEntityAllocationDatabase
+    {
+       int[] AllocateComponent(int componentTypeId, int[] entityIds);
+       int[] ReleaseComponent(int componentTypeId, int[] entityIds);
     }
 }

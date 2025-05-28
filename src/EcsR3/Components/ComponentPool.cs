@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using R3;
 using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
@@ -16,7 +17,7 @@ namespace EcsR3.Components
         public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
         public T[] Components => InternalComponents;
-        
+
         public T[] InternalComponents;
         
         public int Count { get; private set; }
@@ -46,6 +47,12 @@ namespace EcsR3.Components
             }
         }
 
+        public int[] Allocate(int count)
+        {
+            lock (_lock)
+            { return IndexPool.Allocate(count); }
+        }
+
         public void Release(int index)
         {
             lock (_lock)
@@ -59,6 +66,25 @@ namespace EcsR3.Components
                 { disposable.Dispose(); }
             
                 IndexPool.ReleaseInstance(index);
+            }
+        }
+
+        public void Release(int[] indexes)
+        {
+            lock (_lock)
+            {
+                for (var i = 0; i < indexes.Length; i++)
+                {
+                    var index = indexes[i];
+                    var instance = InternalComponents[index];
+            
+                    if(!IsStructType)
+                    { InternalComponents[index] = default; }
+            
+                    if(instance is IDisposable disposable)
+                    { disposable.Dispose(); }
+                }
+                IndexPool.Release(indexes);
             }
         }
 
@@ -80,6 +106,21 @@ namespace EcsR3.Components
         {
             lock (_lock)
             { InternalComponents.SetValue(value, index); }
+        }
+        
+        public void Set(int index, T value)
+        {
+            lock(_lock)
+            { InternalComponents[index] = value; }
+        }
+
+        public void Set(int[] index, IReadOnlyList<T> value)
+        {
+            lock (_lock)
+            {
+                for (var i = 0; i < index.Length; i++)
+                { InternalComponents[index[i]] = value[i]; }
+            }
         }
         
         public void Expand(int? amountToAdd = null)
