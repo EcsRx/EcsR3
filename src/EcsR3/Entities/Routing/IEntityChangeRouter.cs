@@ -13,5 +13,9 @@ namespace EcsR3.Entities.Routing
         void PublishEntityAddedComponents(int entityId, int[] componentIds);
         void PublishEntityRemovingComponents(int entityId, int[] componentId);
         void PublishEntityRemovedComponents(int entityId, int[] componentId);
+        
+        void PublishEntityAddedComponents(int[] entityId, int[] componentIds);
+        void PublishEntityRemovingComponents(int[] entityId, int[] componentId);
+        void PublishEntityRemovedComponents(int[] entityId, int[] componentId);
     }
 }

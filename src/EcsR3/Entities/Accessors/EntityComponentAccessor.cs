@@ -65,8 +65,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T>(entityIds)
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
         
         public void CreateComponents<T1, T2>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new()
@@ -77,8 +76,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T2>(entityIds)
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
 
         public void CreateComponents<T1, T2, T3>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new()
@@ -90,8 +88,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T3>(entityIds)
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
 
         public void CreateComponents<T1, T2, T3, T4>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new()
@@ -104,8 +101,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T4>(entityIds)
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
 
         public void CreateComponents<T1, T2, T3, T4, T5>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new()
@@ -119,8 +115,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T5>(entityIds)
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
 
         public void CreateComponents<T1, T2, T3, T4, T5, T6>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new()
@@ -135,8 +130,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T6>(entityIds),
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
         
         public void CreateComponents<T1, T2, T3, T4, T5, T6, T7>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new() where T7 : IComponent, new()
@@ -152,8 +146,7 @@ namespace EcsR3.Entities.Accessors
                 CreateComponentBatch<T7>(entityIds),
             };
             
-            for(var i=0;i<entityIds.Length;i++)
-            { EntityChangeRouter.PublishEntityAddedComponents(entityIds[i], componentTypeIds); }
+            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
         }
         
         public void RemoveComponents(int entityId, IReadOnlyList<int> componentsTypeIds)

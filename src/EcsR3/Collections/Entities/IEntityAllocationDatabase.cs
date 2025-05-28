@@ -15,6 +15,7 @@
         int[] GetAllEntityComponents(int entityId);
         int[] GetEntitiesWithComponent(int componentTypeId);
         int GetEntityComponentAllocation(int componentTypeId, int entityId);
+        void PreAllocate(int count);
     }
     
     public interface IBatchEntityAllocationDatabase

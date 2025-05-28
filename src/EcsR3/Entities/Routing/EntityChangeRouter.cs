@@ -39,6 +39,15 @@ namespace EcsR3.Entities.Routing
         public void PublishEntityRemovingComponents(int entityId, int[] componentIds)
         { PublishEntityComponentEvent(entityId, componentIds, _onComponentRemovingForGroup); }
         
+        public void PublishEntityRemovedComponents(int[] entityIds, int[] componentIds)
+        { PublishEntityComponentEvent(entityIds, componentIds, _onComponentRemovedForGroup); }
+        
+        public void PublishEntityAddedComponents(int[] entityIds, int[] componentIds)
+        { PublishEntityComponentEvent(entityIds, componentIds, _onComponentAddedForGroup); }
+        
+        public void PublishEntityRemovingComponents(int[] entityIds, int[] componentIds)
+        { PublishEntityComponentEvent(entityIds, componentIds, _onComponentRemovingForGroup); }
+        
         public void PublishEntityRemovedComponents(int entityId, int[] componentIds)
         { PublishEntityComponentEvent(entityId, componentIds, _onComponentRemovedForGroup); }
         
@@ -70,6 +79,27 @@ namespace EcsR3.Entities.Routing
                  */
                 ReadOnlyMemory<int> bufferAsMemory = buffer;
                 outstandingSubs.Value.OnNext(new EntityChanges(entityId, bufferAsMemory[..(lastUsedIndexInBuffer+1)]));
+            }
+        }
+        
+        public void PublishEntityComponentEvent(int[] entityIds, int[] componentIds, Dictionary<ComponentContract, Subject<EntityChanges>> source)
+        {
+            var buffer = new int[componentIds.Length];
+            foreach (var outstandingSubs in source)
+            {
+                var lastUsedIndexInBuffer = outstandingSubs.Key.GetMatchingComponentIdsNoAlloc(componentIds, buffer);
+                if(lastUsedIndexInBuffer == -1) { continue; }
+
+                /*
+                 This is an optimization as we know the EntityRouterComputedEntityGroupTracker subscriber will instantly
+                 use the data as its called synchronously so we can use Memory<T> and it can be re-used.
+
+                 There is a worry that anyone could subscribe elsewhere and want to use the data later but they would
+                 need to convert it to an array in that scenario, if they didnt they would just have garbage data.
+                 */
+                ReadOnlyMemory<int> bufferAsMemory = buffer;
+                for (var i = 0; i < entityIds.Length; i++)
+                { outstandingSubs.Value.OnNext(new EntityChanges(entityIds[i], bufferAsMemory[..(lastUsedIndexInBuffer+1)])); }
             }
         }
     }

@@ -3,19 +3,16 @@ using System.Diagnostics;
 using EcsR3.Blueprints;
 using EcsR3.Components.Database;
 using EcsR3.Entities.Accessors;
-using SystemsR3.Infrastructure.Extensions;
-using SystemsR3.Systems;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
-using EcsR3.Examples.ExampleApps.Performance.Systems;
 using EcsR3.Extensions;
 using SystemsR3.Pools.Config;
 
 namespace EcsR3.Examples.ExampleApps.Performance
 {
-    public class MakingLotsOfEntitiesApplication : EcsR3ConsoleApplication
+    public class MakingLotsOfClassEntitiesApplication : EcsR3ConsoleApplication
     {
-        class LotsOfEntitiesBlueprint : IBatchedBlueprint
+        class LotsOfClassEntitiesBlueprint : IBatchedBlueprint
         {
             public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
             {
@@ -34,17 +31,14 @@ namespace EcsR3.Examples.ExampleApps.Performance
             }
         };
 
-        protected override void BindSystems()
-        {
-            DependencyRegistry.Bind<ISystem, ExampleBatchedSystem>();
-        }
-
         protected override void ApplicationStarted()
         {
+            EntityAllocationDatabase.PreAllocate(EntityCount);
+            
             Console.WriteLine($"Starting");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            EntityCollection.CreateMany<LotsOfEntitiesBlueprint>(EntityComponentAccessor, EntityCount);
+            EntityCollection.CreateMany<LotsOfClassEntitiesBlueprint>(EntityComponentAccessor, EntityCount);
             stopwatch.Stop();
             Console.WriteLine($"Finished In: {stopwatch.ElapsedMilliseconds}ms");
         }

@@ -41,7 +41,8 @@ namespace EcsR3.Examples
                 new Example("Performance: Systems", () => new SimpleSystemApplication().StartApplication()),
                 new Example("Performance: Default Group", () => new GroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
-                new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),
+                new Example("Performance: Entity Creation With Class Components", () => new MakingLotsOfClassEntitiesApplication().StartApplication()),
+                new Example("Performance: Entity Creation With Struct Components", () => new MakingLotsOfStructEntitiesApplication().StartApplication()),
                 
                 //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
                 //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
@@ -57,7 +58,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
             
-            new MakingLotsOfEntitiesApplication().StartApplication();
+            new MakingLotsOfClassEntitiesApplication().StartApplication();
         }
     }
 }

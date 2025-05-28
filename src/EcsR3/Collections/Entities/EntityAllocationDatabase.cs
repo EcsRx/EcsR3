@@ -212,7 +212,10 @@ namespace EcsR3.Collections.Entities
             lock (_lock)
             { return ComponentAllocationData[componentTypeId, entityId]; }
         }
-        
+
+        public void PreAllocate(int count)
+        { ResizeAllEntityAllocations(count); }
+
         public int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds)
         {
             var spanData = new Span2D<int>(ComponentAllocationData);
