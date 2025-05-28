@@ -28,7 +28,7 @@ namespace EcsR3.Collections.Entities
         /// Contains all component allocations for all entities
         /// </summary>
         /// <remarks>First dimension is component type id, second dimension is entity id</remarks>
-        protected int[,] ComponentAllocationData;
+        public int[,] ComponentAllocationData;
 
         public EntityAllocationDatabase(IEntityIdPool entityIdPool, IComponentDatabase componentDatabase, IEntityChangeRouter entityChangeRouter, IComponentTypeLookup componentTypeLookup)
         {
@@ -62,7 +62,7 @@ namespace EcsR3.Collections.Entities
 
         public void ReleaseEntity(int entityId)
         {
-            for (var componentTypeId = 0; componentTypeId < ComponentAllocationData.Length; componentTypeId++)
+            for (var componentTypeId = 0; componentTypeId < ComponentLength; componentTypeId++)
             {
                 int allocationId;
                 lock (_lock)
@@ -186,16 +186,16 @@ namespace EcsR3.Collections.Entities
         public int[] GetEntityAllocations(int entityId)
         {
             var spanData = new Span2D<int>(ComponentAllocationData);
-            return spanData.GetRow(entityId).ToArray();
+            return spanData.GetColumn(entityId).ToArray();
         }
         
-        public int[] GetAllEntityComponents(int entityId)
+        public int[] GetAllocatedComponentTypes(int entityId)
         {
             Span<int> possibleComponents = stackalloc int[ComponentLength];
             var usedIndexes = 0;
             
             var spanData = new Span2D<int>(ComponentAllocationData);
-            var allComponentAllocations = spanData.GetRow(entityId);
+            var allComponentAllocations = spanData.GetColumn(entityId);
             for(var i=0; i<allComponentAllocations.Length; i++)
             {
                 if(allComponentAllocations[i] == NoAllocation) { continue; }
@@ -208,7 +208,7 @@ namespace EcsR3.Collections.Entities
         public int[] GetEntitiesWithComponent(int componentTypeId)
         {
             var spanData = new Span2D<int>(ComponentAllocationData);
-            return spanData.GetColumn(componentTypeId).ToArray();
+            return spanData.GetRow(componentTypeId).ToArray();
         }
 
         public int GetEntityComponentAllocation(int componentTypeId, int entityId)
@@ -223,7 +223,7 @@ namespace EcsR3.Collections.Entities
         public int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds)
         {
             var spanData = new Span2D<int>(ComponentAllocationData);
-            var componentColumn = spanData.GetColumn(componentTypeId);
+            var componentColumn = spanData.GetRow(componentTypeId);
             var allocationIds = new int[entityIds.Length];
             for (var i = 0; i < entityIds.Length; i++)
             {

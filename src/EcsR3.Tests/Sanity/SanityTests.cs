@@ -178,9 +178,9 @@ namespace EcsR3.Tests.Sanity
             executor.AddSystem(viewResolverSystem);
 
             var setupCalled = false;
-            viewResolverSystem.OnSetup = entity => { setupCalled = true; };
+            viewResolverSystem.OnSetup = entityId => { setupCalled = true; };
             var teardownCalled = false;
-            viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
+            viewResolverSystem.OnTeardown = entityId => { teardownCalled = true; };
 
             var entityId = entityCollection.Create();
             entityComponentAccessor.AddComponents(entityId, new TestComponentOne(), new ViewComponent());

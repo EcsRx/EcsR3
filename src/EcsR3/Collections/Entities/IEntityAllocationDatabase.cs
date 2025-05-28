@@ -12,7 +12,7 @@
         bool HasComponent(int componentTypeId, int entityId);
         int ReleaseComponent(int componentTypeId, int entityId);
         int[] GetEntityAllocations(int entityId);
-        int[] GetAllEntityComponents(int entityId);
+        int[] GetAllocatedComponentTypes(int entityId);
         int[] GetEntitiesWithComponent(int componentTypeId);
         int GetEntityComponentAllocation(int componentTypeId, int entityId);
         void PreAllocate(int count);

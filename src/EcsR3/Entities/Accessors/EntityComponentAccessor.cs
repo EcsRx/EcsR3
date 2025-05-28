@@ -182,7 +182,7 @@ namespace EcsR3.Entities.Accessors
 
         public void RemoveAllComponents(int entityId)
         {
-            var allComponentIds = EntityAllocationDatabase.GetAllEntityComponents(entityId);
+            var allComponentIds = EntityAllocationDatabase.GetAllocatedComponentTypes(entityId);
             RemoveComponents(entityId, allComponentIds);
         }
         
