@@ -73,7 +73,7 @@ namespace EcsR3.Tests.Sanity
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter, entityAllocationDatabase);
             var observableGroupFactory = new ComputedEntityGroupFactory(groupTrackerFactory, entityCollection);
             var observableGroupManager = new ComputedEntityGroupRegistry(observableGroupFactory, entityCollection, componentLookupType);
-            var computedComponentGroupRegistry = new ComputedComponentGroupRegistry(observableGroupManager, componentLookupType);
+            var computedComponentGroupRegistry = new ComputedComponentGroupRegistry(observableGroupManager, componentLookupType, entityAllocationDatabase);
 
             return (observableGroupManager, entityCollection, componentDatabase, componentLookupType, entityChangeRouter, computedComponentGroupRegistry, entityComponentAccessor);
         }

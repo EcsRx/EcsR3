@@ -5,7 +5,7 @@ using R3;
 
 namespace EcsR3.Groups.Tracking.Trackers
 {
-    public class EntityRouterComputedEntityGroupTracker : IComputedEntityGroupTracker
+    public class ComputedEntityGroupTracker : IComputedEntityGroupTracker
     {
         public LookupGroup Group { get; }
         
@@ -23,7 +23,7 @@ namespace EcsR3.Groups.Tracking.Trackers
         private readonly object _lock = new object();
         private readonly CompositeDisposable _componentSubscriptions = new CompositeDisposable();
 
-        public EntityRouterComputedEntityGroupTracker(IEntityChangeRouter entityChangeRouter, LookupGroup group)
+        public ComputedEntityGroupTracker(IEntityChangeRouter entityChangeRouter, LookupGroup group)
         {
             Group = group;
             EntityChangeRouter = entityChangeRouter;

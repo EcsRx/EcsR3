@@ -16,7 +16,7 @@ public class ComputedEntityApplication : EcsR3ConsoleApplication
         var entities = EntityCollection.CreateMany<ComputedComponentBlueprint>(100000);
 
         var componentGroup = ComputedEntityGroupRegistry.GetComputedGroup(new Group(typeof(NumberComponent), typeof(Number2Component)));
-        var computed = new ComputedEntityProcessor(componentGroup);
+        var computed = new ComputedEntityProcessor(EntityComponentAccessor, componentGroup);
 
         Console.WriteLine("Starting");
         var stopwatch = new Stopwatch();

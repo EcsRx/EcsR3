@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsR3.Collections.Entities;
 using EcsR3.Components;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities.Registries;
@@ -19,14 +20,16 @@ namespace EcsR3.Computeds.Components.Registries
         public IEnumerable<IComputedComponentGroup> ComputedGroups => _computedGroups.Values;
 
         public IComponentTypeLookup ComponentTypeLookup { get; }
+        public IEntityAllocationDatabase EntityAllocationDatabase { get; }
         public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; }
         
         private readonly object _lock = new object();
         
-        public ComputedComponentGroupRegistry(IComputedEntityGroupRegistry computedEntityGroupRegistry, IComponentTypeLookup componentTypeLookup)
+        public ComputedComponentGroupRegistry(IComputedEntityGroupRegistry computedEntityGroupRegistry, IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase entityAllocationDatabase)
         {
             ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             ComponentTypeLookup = componentTypeLookup;
+            EntityAllocationDatabase = entityAllocationDatabase;
 
             _computedGroups = new Dictionary<LookupGroup, IComputedComponentGroup>();
         }
@@ -51,7 +54,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -67,7 +70,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -83,7 +86,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2, T3>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -99,7 +102,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -115,7 +118,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -131,7 +134,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }
@@ -147,7 +150,7 @@ namespace EcsR3.Computeds.Components.Registries
             }
 
             var computedEntityGroup = ComputedEntityGroupRegistry.GetComputedGroup(lookupGroup);
-            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>(ComponentTypeLookup, computedEntityGroup);
+            var computedGroup = new ComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>(ComponentTypeLookup, EntityAllocationDatabase, computedEntityGroup);
             _computedGroups.Add(lookupGroup, computedGroup);
             return computedGroup;
         }

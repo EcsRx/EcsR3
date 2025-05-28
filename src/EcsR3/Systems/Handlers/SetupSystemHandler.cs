@@ -52,7 +52,7 @@ namespace EcsR3.Systems.Handlers
                 .Subscribe(x =>
                 {
                     // This occurs if we have an add elsewhere removing the entity before this one is called
-                    if (observableGroup.Contains(x.Id))
+                    if (observableGroup.Contains(x))
                     { SetupEntity(castSystem, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
@@ -60,8 +60,8 @@ namespace EcsR3.Systems.Handlers
             observableGroup.OnRemoved
                 .Subscribe(x =>
                 {
-                    if (entitySubscriptions.ContainsKey(x.Id))
-                    { entitySubscriptions.RemoveAndDispose(x.Id); }
+                    if (entitySubscriptions.ContainsKey(x))
+                    { entitySubscriptions.RemoveAndDispose(x); }
                 })
                 .AddTo(entityChangeSubscriptions);
 

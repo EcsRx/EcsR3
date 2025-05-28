@@ -3,7 +3,7 @@ using SystemsR3.Computeds;
 
 namespace EcsR3.Collections.Entities
 {
-    public interface IReadOnlyEntityCollection : IComputedCollection<IEntity>
+    public interface IReadOnlyEntityCollection : IComputedCollection<int>
     {
         /// <summary>
         /// Gets the entity from the collection, this will return the IEntity or null

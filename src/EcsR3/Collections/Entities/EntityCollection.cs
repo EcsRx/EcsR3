@@ -12,27 +12,27 @@ namespace EcsR3.Collections.Entities
         public IEntityAllocationDatabase EntityAllocationDatabase { get; }
         public IEntityComponentAccessor EntityComponentAccessor { get; }
         
-        public readonly Dictionary<int, IEntity> EntityLookup;
+        public readonly HashSet<int> EntityLookup;
 
-        public IReadOnlyCollection<IEntity> Value => EntityLookup.Values;
+        public IReadOnlyCollection<int> Value => EntityLookup;
         
-        public Observable<IEntity> OnAdded => _onAdded;
-        public Observable<IEntity> OnRemoved => _onRemoved;
-        public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<int> OnAdded => _onAdded;
+        public Observable<int> OnRemoved => _onRemoved;
+        public Observable<IReadOnlyCollection<int>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
-        private readonly Subject<IEntity> _onAdded;
-        private readonly Subject<IEntity> _onRemoved;
+        private readonly Subject<int> _onAdded;
+        private readonly Subject<int> _onRemoved;
         
         private readonly object _lock = new object();
         
         public EntityCollection(IEntityAllocationDatabase entityAllocationDatabase, IEntityComponentAccessor entityComponentAccessor)
         {
-            EntityLookup = new Dictionary<int, IEntity>();
+            EntityLookup = new HashSet<int>();
             EntityAllocationDatabase = entityAllocationDatabase;
             EntityComponentAccessor = entityComponentAccessor;
 
-            _onAdded = new Subject<IEntity>();
-            _onRemoved = new Subject<IEntity>();
+            _onAdded = new Subject<int>();
+            _onRemoved = new Subject<int>();
         }
         
         public IEntity Create(int? id = null)
@@ -40,15 +40,15 @@ namespace EcsR3.Collections.Entities
             IEntity entity;
             lock (_lock)
             {
-                if (id.HasValue && EntityLookup.ContainsKey(id.Value))
+                if (id.HasValue && EntityLookup.Contains(id.Value))
                 { throw new InvalidOperationException("id already exists"); }
 
                 var entityId= EntityAllocationDatabase.AllocateEntity(id);
                 entity = new Entity(entityId, EntityComponentAccessor);
-                EntityLookup.Add(entity.Id, entity);
+                EntityLookup.Add(entity.Id);
             }
 
-            _onAdded.OnNext(entity);
+            _onAdded.OnNext(entity.Id);
             return entity;
         }
 
@@ -61,7 +61,7 @@ namespace EcsR3.Collections.Entities
                 for (var i = 0; i < entities.Length; i++)
                 {
                     entities[i] = new Entity(entityIds[i], EntityComponentAccessor);
-                    EntityLookup.Add(entities[i].Id, entities[i]);
+                    EntityLookup.Add(entities[i].Id);
                 }
             }
             return entities;
@@ -69,8 +69,12 @@ namespace EcsR3.Collections.Entities
 
         public IEntity Get(int id)
         {
-            lock(_lock)
-            { return EntityLookup[id]; }
+            lock (_lock)
+            {
+                return EntityLookup.Contains(id) ? 
+                    new Entity(id, EntityComponentAccessor) 
+                    : null;
+            }
         }
 
         public void Remove(int id)
@@ -93,15 +97,15 @@ namespace EcsR3.Collections.Entities
             { EntityLookup.Remove(entity.Id); }
             
             EntityAllocationDatabase.ReleaseEntity(entity.Id);
-            _onRemoved.OnNext(entity);
+            _onRemoved.OnNext(entity.Id);
         }
 
         public void RemoveAll()
         {
             lock (_lock)
             {
-                foreach (var entity in EntityLookup.Values)
-                { Remove(entity); }
+                foreach (var entityId in EntityLookup)
+                { Remove(entityId); }
 
                 EntityLookup.Clear();
             }
@@ -111,23 +115,23 @@ namespace EcsR3.Collections.Entities
         {
             lock (_lock)
             {
-                if (!EntityLookup.TryAdd(entity.Id, entity))
+                if(!EntityLookup.Add(entity.Id))
                 { throw new InvalidOperationException("id already exists"); }
             }
             
-            _onAdded.OnNext(entity);
+            _onAdded.OnNext(entity.Id);
         }
 
         public bool Contains(int id)
         {
             lock (_lock)
-            { return EntityLookup.ContainsKey(id); }
+            { return EntityLookup.Contains(id); }
         }
 
-        public IEnumerator<IEntity> GetEnumerator()
+        public IEnumerator<int> GetEnumerator()
         {
             lock (_lock)
-            { return EntityLookup.Values.GetEnumerator(); }
+            { return EntityLookup.GetEnumerator(); }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

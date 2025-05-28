@@ -1,43 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using EcsR3.Blueprints;
 using EcsR3.Collections.Entities;
-using EcsR3.Components;
 using EcsR3.Entities;
 
 namespace EcsR3.Extensions
 {
     public static class IEntityCollectionExtensions
     {
-        public static void RemoveEntitiesContaining<T>(this IEntityCollection entityCollection)
-            where T : class, IComponent
-        {
-            var entities = entityCollection
-                .Where(entity => entity.HasComponent<T>())
-                .ToArray();
-            
-            for(var i=0;i<entities.Length;i++)
-            { entityCollection.Remove(entities[i].Id); }
-        }
-
-        public static void RemoveEntitiesContaining(this IEntityCollection entityCollection, params Type[] components)
-        {
-            var entities = entityCollection
-                .Where(entity => components.Any(x => entity.HasAllComponents(x)))
-                .ToArray();
-
-            for (var i = 0; i < entities.Length; i++)
-            { entityCollection.Remove(entities[i].Id); }
-        }
-        
-        public static void RemoveEntities(this IEntityCollection entityCollection, Func<IEntity, bool> predicate)
-        {
-            var entities = entityCollection.Where(predicate).ToArray();
-            for (var i = 0; i < entities.Length; i++)
-            { entityCollection.Remove(entities[i].Id); }
-        }
-
         public static void RemoveEntities(this IEntityCollection entityCollection, params IEntity[] entities)
         {
             for (var i = 0; i < entities.Length; i++)

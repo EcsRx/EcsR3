@@ -1,3 +1,4 @@
+using EcsR3.Entities.Accessors;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Components;
@@ -13,8 +14,9 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Modules
         {
             registry.Bind<ILowestHealthComputedGroup>(x => x.ToMethod(y =>
             {
+                var entityAccessor = y.Resolve<IEntityComponentAccessor>();
                 var namedHealthGroup = y.ResolveComputedEntityGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
-                return new LowestHealthComputedGroup(namedHealthGroup);
+                return new LowestHealthComputedGroup(entityAccessor, namedHealthGroup);
             }));
         }
     }
