@@ -5,6 +5,7 @@ using EcsR3.Collections;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
@@ -22,13 +23,15 @@ namespace EcsR3.Systems.Handlers
     {
         public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IUpdateScheduler UpdateScheduler;
+        public readonly IEntityComponentAccessor EntityComponentAccessor;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
         private readonly object _lock = new object();
         
-        public BasicEntitySystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
+        public BasicEntitySystemHandler(IEntityComponentAccessor entityComponentAccessor, IComputedEntityGroupRegistry computedEntityGroupRegistry, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
         {
+            EntityComponentAccessor = entityComponentAccessor;
             ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _threadHandler = threadHandler;
             UpdateScheduler = updateScheduler;
@@ -43,39 +46,28 @@ namespace EcsR3.Systems.Handlers
             var castSystem = (IBasicEntitySystem)system;
 
             var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
-            var hasEntityPredicate = castSystem.Group is IHasPredicate;
             var runParallel = system.ShouldMutliThread();
             IDisposable subscription;
             
-            if (!hasEntityPredicate)
-            {
-                subscription = UpdateScheduler.OnUpdate
-                    .Subscribe(x => ExecuteForGroup(observableGroup.ToArray(), castSystem, runParallel));
-            }
-            else
-            {
-                var groupPredicate = castSystem.Group as IHasPredicate;
-                subscription = UpdateScheduler.OnUpdate
-                    .Subscribe(x => ExecuteForGroup(observableGroup
-                        .Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel));
-            }
-
+            subscription = UpdateScheduler.OnUpdate
+                .Subscribe(x => ExecuteForGroup(observableGroup.ToArray(), castSystem, runParallel));
+           
             lock (_lock)
             { _systemSubscriptions.Add(system, subscription); }
         }
 
-        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IBasicEntitySystem castSystem, bool runParallel = false)
+        private void ExecuteForGroup(IReadOnlyList<int> entities, IBasicEntitySystem castSystem, bool runParallel = false)
         {
             var elapsedTime = UpdateScheduler.ElapsedTime;
             if (runParallel)
             {
                 _threadHandler.For(0, entities.Count, i =>
-                { castSystem.Process(entities[i], elapsedTime); });
+                { castSystem.Process(EntityComponentAccessor, entities[i], elapsedTime); });
                 return;
             }
             
             for (var i = entities.Count - 1; i >= 0; i--)
-            { castSystem.Process(entities[i], elapsedTime); }
+            { castSystem.Process(EntityComponentAccessor, entities[i], elapsedTime); }
         }
 
         public void DestroySystem(ISystem system)

@@ -11,9 +11,19 @@ namespace EcsR3.Extensions
         /// <param name="entityId">The entity Id to check on</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         public static bool HasComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
-        { return accessor.HasComponent(entityId, typeof(T)); }
-        
+        {
+            return accessor.HasComponent(entityId, typeof(T));
+        }
+
         public static T GetComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
-        { return (T)accessor.GetComponent(entityId, typeof(T)); }
+        {
+            return (T)accessor.GetComponent(entityId, typeof(T));
+        }
+        
+        public static void RemoveComponent(this IEntityComponentAccessor accessor, int entityId, IComponent component)
+        { accessor.RemoveComponents(entityId, component.GetType()); }
+        
+        public static void RemoveComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent
+        { accessor.RemoveComponents(entityId, typeof(T)); }
     }
 }

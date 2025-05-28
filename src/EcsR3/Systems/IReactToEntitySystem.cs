@@ -1,5 +1,6 @@
 using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using R3;
 
 namespace EcsR3.Systems
@@ -22,12 +23,12 @@ namespace EcsR3.Systems
         /// </summary>
         /// <param name="entity">The entity to react to</param>
         /// <returns>Observable indicating when the system should execute</returns>
-        Observable<IEntity> ReactToEntity(IEntity entity);
+        Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId);
 
         /// <summary>
         /// The processor to handle the entity reaction
         /// </summary>
         /// <param name="entity">The entity to use</param>
-        void Process(IEntity entity);
+        void Process(IEntityComponentAccessor entityComponentAccessor, int entityId);
     }
 }

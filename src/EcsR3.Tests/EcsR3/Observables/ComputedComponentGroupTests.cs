@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EcsR3.Collections.Entities;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Tests.Models;
 using NSubstitute;
@@ -27,19 +29,21 @@ public class ComputedComponentGroupTests
         
         var fakeEntities = new []{ fakeEntity1, fakeEntity2 };
         
-        var onChangedHandler = new Subject<IReadOnlyCollection<IEntity>>();
+        var onChangedHandler = new Subject<IReadOnlyCollection<int>>();
         var dummyGroup = new LookupGroup([0,1], []);
         var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
         mockComputedEntityGroup.Count.Returns(fakeEntities.Length);
         mockComputedEntityGroup.Group.Returns(dummyGroup);
         mockComputedEntityGroup.OnChanged.Returns(onChangedHandler);
-        mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.Select(x => x).GetEnumerator());
+        mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.Select(x => x.Id).GetEnumerator());
 
         var mockTypeLookup = Substitute.For<IComponentTypeLookup>();
         mockTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
         mockTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
+
+        var mockEntityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
         
-        var computedComponentGroup = new ComputedComponentGroup<TestComponentOne, TestComponentTwo>(mockTypeLookup, mockComputedEntityGroup);
+        var computedComponentGroup = new ComputedComponentGroup<TestComponentOne, TestComponentTwo>(mockTypeLookup, mockEntityAllocationDatabase, mockComputedEntityGroup);
         var batches = computedComponentGroup.Value.Span;
         Assert.Equal(fakeEntities.Length, batches.Length);
         Assert.Equal(fakeEntities[0].Id, batches[0].EntityId);

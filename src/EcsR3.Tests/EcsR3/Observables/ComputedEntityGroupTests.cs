@@ -63,7 +63,7 @@ namespace EcsR3.Tests.EcsR3.Observables
 
             var observableGroup = new ComputedEntityGroup(group, mockGroupTracker, mockEntityCollection);
 
-            var invocations = new List<IEntity>();
+            var invocations = new List<int>();
             observableGroup.OnAdded.Subscribe(invocations.Add);
             
             onJoinedSubject.OnNext(applicableEntity.Id);
@@ -94,10 +94,10 @@ namespace EcsR3.Tests.EcsR3.Observables
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             observableGroup.CachedEntityIds.Add(1);
             
-            var removingInvocations = new List<IEntity>();
+            var removingInvocations = new List<int>();
             observableGroup.OnRemoving.Subscribe(removingInvocations.Add);
             
-            var removedInvocations = new List<IEntity>();
+            var removedInvocations = new List<int>();
             observableGroup.OnRemoved.Subscribe(removedInvocations.Add);
             
             onLeavingSubject.OnNext(applicableEntity.Id);
@@ -131,10 +131,10 @@ namespace EcsR3.Tests.EcsR3.Observables
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             observableGroup.CachedEntityIds.Add(1);
             
-            var removingInvocations = new List<IEntity>();
+            var removingInvocations = new List<int>();
             observableGroup.OnRemoving.Subscribe(removingInvocations.Add);
             
-            var removedInvocations = new List<IEntity>();
+            var removedInvocations = new List<int>();
             observableGroup.OnRemoved.Subscribe(removedInvocations.Add);
             
             onLeavingSubject.OnNext(applicableEntity.Id);
@@ -163,7 +163,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             var mockEntityCollection = Substitute.For<IEntityCollection>();
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
 
-            var changeInvocations = new List<IEntity[]>();
+            var changeInvocations = new List<int[]>();
             observableGroup.OnChanged.Subscribe(x => changeInvocations.Add(x.ToArray()));
             
             onJoinedSubject.OnNext(applicableEntity.Id);

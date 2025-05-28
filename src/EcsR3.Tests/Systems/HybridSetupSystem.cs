@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using SystemsR3.Systems.Conventional;
@@ -18,12 +19,12 @@ public class HybridSetupSystem : ISetupSystem, ITeardownSystem, IManualSystem
         OnMethodCalled = onMethodCalled;
     }
 
-    public void Setup(IEntity entity)
+    public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
     {
         OnMethodCalled("setup");
     }
     
-    public void Teardown(IEntity entity)
+    public void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
     {
         OnMethodCalled("teardown");
     }

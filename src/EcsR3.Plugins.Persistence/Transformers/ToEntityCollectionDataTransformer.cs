@@ -18,7 +18,7 @@ namespace EcsR3.Plugins.Persistence.Transformers
             var collection = (IEntityCollection)original;
 
             var entityData = collection
-                .Select(EntityDataTransformer.Transform)
+                .Select(x => EntityDataTransformer.Transform(x))
                 .Cast<EntityData>()
                 .ToList();
 

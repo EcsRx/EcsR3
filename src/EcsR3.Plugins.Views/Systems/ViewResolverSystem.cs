@@ -1,5 +1,6 @@
 ﻿using SystemsR3.Events;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Plugins.Views.Components;
@@ -20,25 +21,24 @@ namespace EcsR3.Plugins.Views.Systems
 
         public abstract IViewHandler CreateViewHandler();
         
-        protected virtual void OnViewRemoved(IEntity entity, ViewComponent viewComponent)
+        protected virtual void OnViewRemoved(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
         { ViewHandler.DestroyView(viewComponent.View); }
 
-        protected abstract void OnViewCreated(IEntity entity, ViewComponent viewComponent);
-
-        public virtual void Setup(IEntity entity)
+        protected abstract void OnViewCreated(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent);
+        
+        public virtual void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            var viewComponent = entity.GetComponent<ViewComponent>();
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
+            OnViewRemoved(entityComponentAccessor, entityId, viewComponent);
+        }
+
+        public virtual void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        {
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
             if (viewComponent.View != null) { return; }
 
             viewComponent.View = ViewHandler.CreateView();
-            OnViewCreated(entity, viewComponent);
-        }
-
-        public virtual void Teardown(IEntity entity)
-        {
-            var viewComponent = entity.GetComponent<ViewComponent>();
-            OnViewRemoved(entity, viewComponent);
-
+            OnViewCreated(entityComponentAccessor, entityId, viewComponent);
         }
 
         public void StartSystem()

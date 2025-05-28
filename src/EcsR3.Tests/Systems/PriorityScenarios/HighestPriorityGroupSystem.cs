@@ -1,4 +1,5 @@
 ﻿using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Plugins.Views.Systems;
 using EcsR3.Systems;
@@ -17,14 +18,14 @@ namespace EcsR3.Tests.Systems.PriorityScenarios
     {
         public IGroup Group => null;
         
-        public void Setup(IEntity entity) {}
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId) {}
     }
     
     [Priority(102)]
     public class HighestPriorityViewResolverSystem : IViewResolverSystem
     {
         public IGroup Group => null;
-        public void Teardown(IEntity entity){}
-        public void Setup(IEntity entity){}
+        public void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId){}
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId){}
     }
 }

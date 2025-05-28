@@ -1,5 +1,6 @@
 using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using R3;
 
 namespace EcsR3.Systems
@@ -32,6 +33,6 @@ namespace EcsR3.Systems
         /// The processor for the entity
         /// </summary>
         /// <param name="entity">The entity to process</param>
-        void Process(IEntity entity);
+        void Process(IEntityComponentAccessor entityComponentAccessor, int entityId);
     }
 }

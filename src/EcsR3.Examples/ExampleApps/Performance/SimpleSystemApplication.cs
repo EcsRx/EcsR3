@@ -31,7 +31,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         {
             var timer = Stopwatch.StartNew();
             foreach(var entity in EntityCollection)
-            { _groupSystem.Process(entity); }
+            { _groupSystem.Process(EntityComponentAccessor, entity); }
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
@@ -41,7 +41,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         private void RunMultiThreaded()
         {
             var timer = Stopwatch.StartNew();
-            Parallel.ForEach(EntityCollection, _groupSystem.Process);
+            Parallel.ForEach(EntityCollection, x => _groupSystem.Process(EntityComponentAccessor, x));
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
