@@ -202,7 +202,7 @@ namespace EcsR3.Entities.Accessors
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
-            return ComponentDatabase.Get(allocationId, componentTypeId);
+            return ComponentDatabase.Get(componentTypeId, allocationId);
         }
         
         public T[] GetComponent<T>(int[] entityIds) where T : IComponent, new()
@@ -216,7 +216,7 @@ namespace EcsR3.Entities.Accessors
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
-            return ref ComponentDatabase.GetRef<T>(allocationId, componentTypeId);
+            return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
         public void UpdateComponent<T>(int entityId, T newValue) where T : struct, IComponent

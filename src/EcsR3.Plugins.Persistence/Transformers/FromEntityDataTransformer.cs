@@ -16,9 +16,8 @@ namespace EcsR3.Plugins.Persistence.Transformers
         public object Transform(object converted)
         {
             var entityData = (EntityData) converted;
-            var entity = new Entity(entityData.EntityId, EntityComponentAccessor);
-            entity.AddComponents(entityData.Components.ToArray());
-            return entity;
+            EntityComponentAccessor.AddComponents(entityData.EntityId, entityData.Components.ToArray());
+            return entityData.EntityId;
         }
     }
 }

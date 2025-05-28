@@ -69,10 +69,19 @@ namespace EcsR3.Components.Database
             { return (IComponentPool<T>) ComponentData[componentTypeId]; }
         }
         
+        public IComponentPool GetPoolFor(int componentTypeId)
+        { return ComponentData[componentTypeId]; }
+        
         public IComponentPool<T> GetPoolFor<T>() where T : IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             return GetPoolFor<T>(componentTypeId);
+        }
+
+        public IComponentPool GetPoolFor(Type type)
+        {
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(type);
+            return ComponentData[componentTypeId];
         }
 
         public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent
@@ -80,6 +89,13 @@ namespace EcsR3.Components.Database
             var componentPool = GetPoolFor<T>(componentTypeId);
             lock (_lock)
             { return componentPool.Components[allocationIndex]; }
+        }
+        
+        public IComponent Get(int componentTypeId, int allocationIndex)
+        {
+            var componentPool = GetPoolFor(componentTypeId);
+            lock (_lock)
+            { return componentPool.Get(allocationIndex); }
         }
         
         public T[] Get<T>(int componentTypeId, int[] allocationIndexes) where T : IComponent

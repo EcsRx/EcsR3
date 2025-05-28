@@ -70,7 +70,14 @@ namespace EcsR3.Components
         /// </summary>
         /// <param name="index">the index to set</param>
         /// <param name="value">the component to use</param>
-        void Set(int index, object value);
+        void Set(int index, IComponent value);
+
+        /// <summary>
+        /// Returns the component at a given index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        IComponent Get(int index);
         
         /// <summary>
         /// Allocates space for the pools and indexes

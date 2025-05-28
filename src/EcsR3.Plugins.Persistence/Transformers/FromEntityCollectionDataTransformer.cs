@@ -26,9 +26,9 @@ namespace EcsR3.Plugins.Persistence.Transformers
             var collection = new EntityCollection(EntityAllocationDatabase, EntityComponentAccessor);
             var entities = collectionData.Entities
                 .Select(EntityDataTransformer.Transform)
-                .Cast<IEntity>();
+                .Cast<int>();
             
-            entities.ForEachRun(collection.Add);
+            entities.ForEachRun(x => collection.Create(x));
             return collection;
         }
     }

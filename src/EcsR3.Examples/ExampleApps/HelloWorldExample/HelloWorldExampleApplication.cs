@@ -14,7 +14,7 @@ namespace EcsR3.Examples.ExampleApps.HelloWorldExample
             var entityId = EntityCollection.Create();
 
             var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
-            EntityComponentAccessor.AddComponents(entityId, canTalkComponent);
+            EntityComponentAccessor.AddComponent(entityId, canTalkComponent);
 
             HandleInput();
         }

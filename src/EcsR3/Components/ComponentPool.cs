@@ -102,11 +102,18 @@ namespace EcsR3.Components
             InternalComponents = new T[PoolConfig.InitialSize];
         }
 
-        public void Set(int index, object value)
+        public void Set(int index, IComponent value)
         {
             lock (_lock)
             { InternalComponents.SetValue(value, index); }
         }
+        
+        public IComponent Get(int index)
+        {
+            lock (_lock)
+            { return InternalComponents[index]; }
+        }
+
         
         public void Set(int index, T value)
         {
