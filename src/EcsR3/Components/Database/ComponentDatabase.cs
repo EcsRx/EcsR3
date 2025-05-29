@@ -119,6 +119,7 @@ namespace EcsR3.Components.Database
             lock (_lock)
             { return ref componentPool.Components[allocationIndex]; }
         }
+        
         /*
         public ref T[] GetRef<T>(int componentTypeId, int[] allocationIndexes) where T : IComponent
         {

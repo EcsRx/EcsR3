@@ -196,4 +196,71 @@ public class EntityAllocationDatabaseTests
         Assert.Equal(-1, allocations[componentTypeId2]);
         Assert.Equal(23, allocations[componentTypeId3]);
     }
+    
+    [Fact]
+    public void should_allocate_components_individually_correctly()
+    {
+        // Easier to just have a real one of these
+        var entityIdPool = new EntityIdPool();
+        
+        var componentTypeId1 = 0;
+        var componentTypeId2 = 1;
+        var componentTypeId3 = 2;
+        var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
+        
+        var mockComponentDatabase = Substitute.For<IComponentDatabase>();
+        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
+        var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
+
+        mockComponentDatabase.Allocate(componentTypeId1).Returns(22);
+        mockComponentDatabase.Allocate(componentTypeId2).Returns(51);
+        mockComponentDatabase.Allocate(componentTypeId3).Returns(74);
+        
+        var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
+            mockEntityChangeRouter, mockComponentTypeLookup);
+
+        var entityId = 3;
+        var allocation1 = entityAllocationDatabase.AllocateComponent(componentTypeId1, entityId);
+        var allocation2 = entityAllocationDatabase.AllocateComponent(componentTypeId3, entityId);
+
+        Assert.Equal(22, allocation1);
+        Assert.Equal(74, allocation2);
+        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId]);
+        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+    }
+    
+    [Fact]
+    public void should_batch_allocate_components_correctly()
+    {
+        // Easier to just have a real one of these
+        var entityIdPool = new EntityIdPool();
+        
+        var componentTypeId1 = 0;
+        var componentTypeId2 = 1;
+        var componentTypeId3 = 2;
+        var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
+        
+        var mockComponentDatabase = Substitute.For<IComponentDatabase>();
+        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
+        var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
+
+        mockComponentDatabase.Allocate(componentTypeId1).Returns(22);
+        mockComponentDatabase.Allocate(componentTypeId2).Returns(51);
+        mockComponentDatabase.Allocate(componentTypeId3).Returns(74);
+        
+        var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
+            mockEntityChangeRouter, mockComponentTypeLookup);
+
+        var entityId = 3;
+        var allocations = entityAllocationDatabase.AllocateComponents([componentTypeId1, componentTypeId3], entityId);
+
+        Assert.Equal(22, allocations[0]);
+        Assert.Equal(74, allocations[1]);
+        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId]);
+        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+    }
 }
