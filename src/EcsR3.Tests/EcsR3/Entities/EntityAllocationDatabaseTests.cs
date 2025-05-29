@@ -7,13 +7,44 @@ using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
 using NSubstitute;
-using R3;
+using SystemsR3.Pools.Config;
 using Xunit;
 
 namespace EcsR3.Tests.EcsR3.Entities;
 
 public class EntityAllocationDatabaseTests
 {
+    [Theory]
+    [InlineData(1,1,10)]
+    [InlineData(5,10,20)]
+    [InlineData(5,50,100)]
+    public void should_resize_correctly(int startingComponentCount, int startingEntityCount, int resizeEntityCount)
+    {
+        // Easier to just have a real one of these
+        var entityIdPool = new EntityIdPool(new PoolConfig(startingEntityCount, resizeEntityCount));
+
+        var componentTypeIds =Enumerable.Range(0, startingComponentCount).ToArray();
+        
+        var mockComponentDatabase = Substitute.For<IComponentDatabase>();
+        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
+        var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
+        
+        var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
+            mockEntityChangeRouter, mockComponentTypeLookup);
+
+        entityAllocationDatabase.ResizeAllEntityAllocations(resizeEntityCount);
+
+        Assert.Equal(startingComponentCount, entityAllocationDatabase.ComponentAllocationData.GetLength(0));
+        Assert.Equal(resizeEntityCount, entityAllocationDatabase.ComponentAllocationData.GetLength(1));
+
+        for (var i = 0; i < entityAllocationDatabase.ComponentAllocationData.GetLength(0); i++)
+        {
+            for (var j = 0; j < entityAllocationDatabase.ComponentAllocationData.GetLength(1); j++)
+            { Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[i, j]); }
+        }
+    }
+    
     [Theory]
     [InlineData(1)]
     [InlineData(100)]

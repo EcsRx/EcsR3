@@ -202,6 +202,9 @@ namespace EcsR3.Entities.Accessors
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
+            if(allocationId == IEntityAllocationDatabase.NoAllocation) 
+            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityId}]"); }
+            
             return ComponentDatabase.Get(componentTypeId, allocationId);
         }
         
@@ -209,6 +212,13 @@ namespace EcsR3.Entities.Accessors
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityIds);
+
+            for (var i = 0; i < allocationIds.Length; i++)
+            {
+                if(allocationIds[i] == IEntityAllocationDatabase.NoAllocation) 
+                { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityIds[i]}]"); }
+            }
+            
             return ComponentDatabase.Get<T>(componentTypeId, allocationIds);
         }
 
@@ -216,6 +226,9 @@ namespace EcsR3.Entities.Accessors
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
+            if(allocationId == IEntityAllocationDatabase.NoAllocation) 
+            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityId}]"); }
+            
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         

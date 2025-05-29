@@ -103,7 +103,9 @@ namespace EcsR3.Collections.Entities
                         continue;
                     }
                     
-                    allocationIds[i] = ComponentDatabase.Allocate(componentTypeId);
+                    allocationId = ComponentDatabase.Allocate(componentTypeId);
+                    ComponentAllocationData[componentTypeId, entityId] = allocationId;
+                    allocationIds[i] = allocationId;
                 }
             }
             return allocationIds;
