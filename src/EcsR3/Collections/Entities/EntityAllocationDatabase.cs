@@ -140,7 +140,7 @@ namespace EcsR3.Collections.Entities
         public bool HasComponent(int componentTypeId, int entityId)
         {
             lock (_lock)
-            { return ComponentAllocationData[componentTypeId, entityId] == NoAllocation; }
+            { return ComponentAllocationData[componentTypeId, entityId] != NoAllocation; }
         }
 
         public int ReleaseComponent(int componentTypeId, int entityId)
@@ -209,8 +209,44 @@ namespace EcsR3.Collections.Entities
 
         public int[] GetEntitiesWithComponent(int componentTypeId)
         {
-            var spanData = new Span2D<int>(ComponentAllocationData);
-            return spanData.GetRow(componentTypeId).ToArray();
+            Span2D<int> spanData;
+            lock (_lock) { spanData = new Span2D<int>(ComponentAllocationData); }
+            var componentEntities = spanData.GetRow(componentTypeId);
+            Span<int> potentialEntities = stackalloc int[EntityLength];
+            
+            var usedIndexes = 0;
+            for (var i = 0; i < componentEntities.Length; i++)
+            {
+                if(componentEntities[i] == NoAllocation) { continue; }
+                potentialEntities[usedIndexes++] = i;
+            }
+            return potentialEntities[..usedIndexes].ToArray();
+        }
+        
+        public int[] GetEntitiesWithComponents(int[] componentTypeIds)
+        {
+            if(componentTypeIds.Length == 0) { return Array.Empty<int>(); }
+            var seedingEntities = GetEntitiesWithComponent(componentTypeIds[0]);
+
+            Span<int> potentialEntities = stackalloc int[seedingEntities.Length];
+            var usedIndexes = 0;
+            lock (_lock)
+            {
+                for (var i = 0; i < seedingEntities.Length; i++)
+                {
+                    var match = false;
+                    var entityId = seedingEntities[i];
+                    for (var j = 1; j < componentTypeIds.Length; j++)
+                    {
+                        var componentTypeId = componentTypeIds[j]; 
+                        if(ComponentAllocationData[componentTypeId, entityId] == NoAllocation) { break; }
+                        match = true;
+                    }
+                    if(!match) { continue; }
+                    potentialEntities[usedIndexes++] = entityId;
+                }
+            }
+            return potentialEntities[..usedIndexes].ToArray();
         }
 
         public int GetEntityComponentAllocation(int componentTypeId, int entityId)
