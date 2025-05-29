@@ -46,7 +46,11 @@ namespace SystemsR3.Pools
                 if(AvailableIndexes.Count < count)
                 { Expand(_lastMax + count); }
 
-                return AvailableIndexes.Take(count).ToArray();
+                var allocations = new int[count];
+                for (var i = 0; i < count; i++)
+                { allocations[i] = AvailableIndexes.Pop(); }
+                
+                return allocations;
             }
         }
 

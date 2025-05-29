@@ -260,7 +260,8 @@ namespace EcsR3.Collections.Entities
 
         public int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds)
         {
-            var spanData = new Span2D<int>(ComponentAllocationData);
+            Span2D<int> spanData;
+            lock (_lock) { spanData = new Span2D<int>(ComponentAllocationData); }
             var componentColumn = spanData.GetRow(componentTypeId);
             var allocationIds = new int[entityIds.Length];
             for (var i = 0; i < entityIds.Length; i++)

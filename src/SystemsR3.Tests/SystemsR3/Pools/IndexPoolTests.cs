@@ -96,8 +96,23 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var indexPool = new IndexPool(poolConfig);
             var index = indexPool.AllocateInstance();
             
-            Assert.InRange(index, 0, 10);
+            Assert.Equal(0, index);
             Assert.DoesNotContain(index, indexPool.AvailableIndexes);
+        }
+        
+        [Fact]
+        public void should_batch_allocate_and_remove_next_available_index()
+        {
+            var allocationAmount = 10;
+            var expectedAllocations = Enumerable.Range(0, allocationAmount).ToArray();
+            
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
+            var actualAllocations = indexPool.Allocate(allocationAmount);
+            
+            Assert.Equal(expectedAllocations, actualAllocations);
+            for (var i = 0; i < actualAllocations.Length; i++)
+            { Assert.DoesNotContain(actualAllocations[i], indexPool.AvailableIndexes); }
         }
         
         [Fact]

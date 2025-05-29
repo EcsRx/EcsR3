@@ -49,6 +49,9 @@ namespace EcsR3.Components
 
         public int[] Allocate(int count)
         {
+            if(count > IndexesRemaining) 
+            { Expand(count); }
+            
             lock (_lock)
             { return IndexPool.Allocate(count); }
         }

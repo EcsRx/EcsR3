@@ -58,6 +58,21 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         }
         
         [Fact]
+        public void should_batch_allocate_and_remove_next_available_id()
+        {
+            var allocationSize = 10;
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
+            
+            var expectedIds = Enumerable.Range(1, allocationSize).ToArray();
+            var ids = idPool.Allocate(allocationSize);
+            
+            Assert.Equal(expectedIds, ids);
+            for (var i = 0; i < ids.Length; i++)
+            { Assert.DoesNotContain(ids[i], idPool.AvailableIds); }
+        }
+        
+        [Fact]
         public void should_expand_and_allocate_and_remove_next_available_id_when_empty()
         {
             var defaultExpansionAmount = 30;

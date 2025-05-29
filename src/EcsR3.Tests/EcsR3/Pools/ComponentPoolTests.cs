@@ -79,7 +79,25 @@ namespace EcsR3.Tests.EcsR3.Pools
             var allocation = componentPool.Allocate();
             
             Assert.Equal(0, allocation);
+            Assert.Equal(initialSize, componentPool.InternalComponents.Length);
             Assert.Equal(0, componentPool.IndexesRemaining);
+        }
+        
+        [Fact]
+        public void should_batch_allocate_correctly()
+        {
+            var initialSize = 1;
+            var expansionSize = 10;
+            var allocationSize = 10;
+            var expectedSize = initialSize + expansionSize;
+            
+            var poolConfig = new PoolConfig(initialSize, expansionSize);
+            var componentPool = new ComponentPool<TestComponentOne>(poolConfig);
+            var allocations = componentPool.Allocate(allocationSize);
+            
+            Assert.Equal(allocationSize, allocations.Length);
+            Assert.Equal(expectedSize, componentPool.InternalComponents.Length);
+            Assert.Equal(1, componentPool.IndexesRemaining);
         }
         
         [Fact]
