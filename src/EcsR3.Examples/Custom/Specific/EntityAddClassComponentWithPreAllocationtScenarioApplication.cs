@@ -22,7 +22,7 @@ public class EntityAddClassComponentWithPreAllocationtScenarioApplication : EcsR
         for (var i = 0; i < AllocationAmount; i++)
         {
             var entityId = EntityCollection.Create();
-            EntityComponentAccessor.AddComponent<ClassComponent1>(entityId);
+            EntityComponentAccessor.CreateComponent<ClassComponent1>(entityId);
         }
     }
 }

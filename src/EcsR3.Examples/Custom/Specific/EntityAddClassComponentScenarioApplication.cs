@@ -20,7 +20,7 @@ public class EntityAddClassComponentScenarioApplication : EcsR3BenchmarkConsoleA
         for (var i = 0; i < AllocationAmount; i++)
         {
             var entity = EntityCollection.Create();
-            EntityComponentAccessor.AddComponent<ClassComponent1>(entity);
+            EntityComponentAccessor.CreateComponent<ClassComponent1>(entity);
         }
     }
 }

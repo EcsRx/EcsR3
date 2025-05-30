@@ -36,9 +36,6 @@ namespace EcsR3.Extensions
         
         public static void AddComponents(this IEntityComponentAccessor accessor, int entityId, params IComponent[] components)
         { accessor.AddComponents(entityId, components); }
-        
-        public static void AddComponent<T>(this IEntityComponentAccessor accessor, int entityId) where T : IComponent, new()
-        { accessor.AddComponents(entityId, new T()); }
 
         public static void CreateComponent<T>(this IEntityComponentAccessor accessor, int entityId)
             where T : IComponent, new()

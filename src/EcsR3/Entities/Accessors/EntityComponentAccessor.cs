@@ -43,7 +43,7 @@ namespace EcsR3.Entities.Accessors
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
 
-        public int CreateComponentBatch<T>(int[] entityIds) where T : IComponent, new()
+        protected int CreateComponentBatch<T>(int[] entityIds) where T : IComponent, new()
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
             var allocationIds = EntityAllocationDatabase.AllocateComponent(componentTypeId, entityIds);

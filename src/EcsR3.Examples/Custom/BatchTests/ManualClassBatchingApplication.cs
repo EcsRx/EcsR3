@@ -33,8 +33,8 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override void SetupEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            entityComponentAccessor.AddComponent<ClassComponent>(entityId);
-            entityComponentAccessor.AddComponent<ClassComponent2>(entityId);
+            entityComponentAccessor.CreateComponent<ClassComponent>(entityId);
+            entityComponentAccessor.CreateComponent<ClassComponent2>(entityId);
         }
 
         protected override void RunProcess()
