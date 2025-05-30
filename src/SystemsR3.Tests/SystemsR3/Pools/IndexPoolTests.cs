@@ -111,6 +111,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var actualAllocations = indexPool.AllocateMany(allocationAmount);
             
             Assert.Equal(expectedAllocations, actualAllocations);
+            Assert.Equal(expectedAllocations.Length, actualAllocations.Distinct().Count());
             for (var i = 0; i < actualAllocations.Length; i++)
             { Assert.DoesNotContain(actualAllocations[i], indexPool.AvailableIndexes); }
         }

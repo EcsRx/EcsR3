@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsR3.Examples.Custom.BatchTests;
 using EcsR3.Examples.Custom.SystemPriority;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
@@ -57,7 +58,7 @@ namespace EcsR3.Examples
             //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             //exampleToRun.Executor();
             
-            new MakingLotsOfClassEntitiesApplication().StartApplication();
+            new StructBatchedSystemApplication().StartApplication();
         }
     }
 }

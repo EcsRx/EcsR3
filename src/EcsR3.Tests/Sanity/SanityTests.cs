@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
 using System.Threading.Tasks;
 using EcsR3.Collections.Entities;
@@ -453,24 +455,6 @@ namespace EcsR3.Tests.Sanity
             
             var expectedCalls = entityCount * timesToProcess;
             Assert.Equal(expectedCalls, batchedTestSystem.TimesCalled);
-        }
-
-        [Fact]
-        public void should_correctly_loop_all_elements_with_parallel_for()
-        {
-            var elementCount = 1000;
-            var timesCalled = 0;
-            var _lock = new object();
-            
-            Parallel.For(0, elementCount, i =>
-            {
-                lock (_lock)
-                {
-                    timesCalled++;
-                }
-            });
-
-            Assert.Equal(elementCount, timesCalled);
         }
     }
 }

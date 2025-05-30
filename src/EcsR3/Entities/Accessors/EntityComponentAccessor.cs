@@ -6,6 +6,7 @@ using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
 using EcsR3.Extensions;
+using SystemsR3.Utility;
 
 namespace EcsR3.Entities.Accessors
 {
@@ -221,7 +222,7 @@ namespace EcsR3.Entities.Accessors
             
             return ComponentDatabase.Get<T>(componentTypeId, allocationIds);
         }
-
+        
         public ref T GetComponentRef<T>(int entityId) where T : struct, IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
@@ -230,6 +231,13 @@ namespace EcsR3.Entities.Accessors
             { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityId}]"); }
             
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
+        }
+        
+        public RefBuffer<T> GetComponentRef<T>(int[] entityIds) where T : struct, IComponent
+        {
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
+            var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityIds);
+            return ComponentDatabase.GetRef<T>(componentTypeId, allocationIds);
         }
         
         public void UpdateComponent<T>(int entityId, T newValue) where T : struct, IComponent

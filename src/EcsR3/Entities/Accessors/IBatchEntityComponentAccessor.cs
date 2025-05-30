@@ -1,4 +1,5 @@
 ﻿using EcsR3.Components;
+using SystemsR3.Utility;
 
 namespace EcsR3.Entities.Accessors
 {
@@ -78,5 +79,11 @@ namespace EcsR3.Entities.Accessors
         /// </summary>
         /// <typeparam name="T">The type of the component</typeparam>
         T[] GetComponent<T>(int[] entityIds) where T : IComponent, new();
+        
+        /// <summary>
+        /// Gets the components for multiple entities at once
+        /// </summary>
+        /// <typeparam name="T">The type of the component</typeparam>
+        RefBuffer<T> GetComponentRef<T>(int[] entityIds) where T : struct, IComponent;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components.Lookups;
 using SystemsR3.Pools.Config;
+using SystemsR3.Utility;
 
 namespace EcsR3.Components.Database
 {
@@ -120,21 +121,12 @@ namespace EcsR3.Components.Database
             { return ref componentPool.Components[allocationIndex]; }
         }
         
-        /*
-        public ref T[] GetRef<T>(int componentTypeId, int[] allocationIndexes) where T : IComponent
+        
+        public RefBuffer<T> GetRef<T>(int componentTypeId, int[] allocationIndexes) where T : struct, IComponent
         {
-            var componentRefs = new ref T[allocationIndexes.Length];
             var componentPool = GetPoolFor<T>(componentTypeId);
-            lock (_lock)
-            {
-                for (var i = 0; i < allocationIndexes.Length; i++)
-                {
-                    var allocationIndex = allocationIndexes[i];
-                    componentRefs[i] = ref componentPool.Components[allocationIndex];
-                }
-            }
-            return componentRefs;
-        }*/
+            return new RefBuffer<T>(componentPool.Components, allocationIndexes);
+        }
 
         public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
         {

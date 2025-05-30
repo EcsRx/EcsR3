@@ -23,15 +23,18 @@ public class BatchStructComponentBlueprint : IBlueprint, IBatchedBlueprint
     public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
     {
         entityComponentAccessor.CreateComponents<StructComponent, StructComponent2>(entityIds);
-
-        for (var i = 0; i < entityIds.Length; i++)
+        var structComponents = entityComponentAccessor.GetComponentRef<StructComponent>(entityIds);
+        for (var i = 0; i < structComponents.Count; i++)
         {
-            var entityId = entityIds[i];
-            ref var structComponent = ref entityComponentAccessor.GetComponentRef<StructComponent>(entityId);
+            ref var structComponent = ref structComponents[i];
             structComponent.Something = _random.Next();
             structComponent.Position = new Vector3(_random.Next(), _random.Next(), _random.Next());
+        }
         
-            ref var struct2Component = ref entityComponentAccessor.GetComponentRef<StructComponent2>(entityId);
+        var structComponent2 = entityComponentAccessor.GetComponentRef<StructComponent2>(entityIds);
+        for (var i = 0; i < structComponent2.Count; i++)
+        {
+            ref var struct2Component = ref structComponent2[i];
             struct2Component.Value = _random.Next(0, 10);
         }
     }

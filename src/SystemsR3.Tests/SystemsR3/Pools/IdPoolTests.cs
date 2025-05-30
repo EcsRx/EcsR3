@@ -68,6 +68,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var ids = idPool.AllocateMany(allocationSize);
             
             Assert.Equal(expectedIds, ids);
+            Assert.Equal(expectedIds.Length, ids.Distinct().Count());
             for (var i = 0; i < ids.Length; i++)
             { Assert.DoesNotContain(ids[i], idPool.AvailableIds); }
         }
