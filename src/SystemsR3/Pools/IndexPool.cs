@@ -28,7 +28,7 @@ namespace SystemsR3.Pools
             _onSizeChanged = new Subject<int>();
         }
         
-        public int AllocateInstance()
+        public int Allocate()
         {
             lock (_lock)
             {
@@ -39,7 +39,7 @@ namespace SystemsR3.Pools
             }
         }
         
-        public int[] Allocate(int count)
+        public int[] AllocateMany(int count)
         {
             lock (_lock)
             {
@@ -54,7 +54,7 @@ namespace SystemsR3.Pools
             }
         }
 
-        public void ReleaseInstance(int index)
+        public void Release(int index)
         {
             if(index < 0)
             { throw new ArgumentException("index has to be >= 0"); }
@@ -71,10 +71,10 @@ namespace SystemsR3.Pools
             }
         }
         
-        public void Release(IReadOnlyList<int> indexes)
+        public void ReleaseMany(int[] indexes)
         {
             var maxId = 0;
-            for (var i = 0; i < indexes.Count; i++)
+            for (var i = 0; i < indexes.Length; i++)
             {
                 var id = indexes[i];
                 
@@ -89,7 +89,7 @@ namespace SystemsR3.Pools
 
             lock (_lock)
             {
-                for (var i = 0; i < indexes.Count; i++)
+                for (var i = 0; i < indexes.Length; i++)
                 { AvailableIndexes.Push(indexes[i]); }
             }
         }

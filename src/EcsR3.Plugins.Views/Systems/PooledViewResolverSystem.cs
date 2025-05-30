@@ -36,14 +36,14 @@ namespace EcsR3.Plugins.Views.Systems
         protected virtual void RecycleView(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
         {
             var view = viewComponent.View;
-            ViewPool.ReleaseInstance(view);
+            ViewPool.Release(view);
             viewComponent.View = null;
             OnViewRecycled(entityComponentAccessor, view, entityId);
         }
 
         protected virtual object AllocateView(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
         {
-            var viewToAllocate = ViewPool.AllocateInstance();
+            var viewToAllocate = ViewPool.Allocate();
             viewComponent.View = viewToAllocate;
             OnViewAllocated(entityComponentAccessor, viewToAllocate, entityId);
             return viewToAllocate;

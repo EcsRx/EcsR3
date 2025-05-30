@@ -28,7 +28,7 @@ namespace SystemsR3.Pools
             _onSizeChanged = new Subject<int>();
         }
 
-        public int AllocateInstance()
+        public int Allocate()
         {
             lock (_lock)
             {
@@ -59,7 +59,7 @@ namespace SystemsR3.Pools
             }
         }
 
-        public void ReleaseInstance(int id)
+        public void Release(int id)
         {
             if(id <= 0)
             { throw new ArgumentException("id has to be >= 1"); }
@@ -87,7 +87,7 @@ namespace SystemsR3.Pools
         public void Dispose()
         { _onSizeChanged?.Dispose(); }
 
-        public int[] Allocate(int count)
+        public int[] AllocateMany(int count)
         {
             lock (_lock)
             {
@@ -101,10 +101,10 @@ namespace SystemsR3.Pools
             }
         }
 
-        public void Release(IReadOnlyList<int> instances)
+        public void ReleaseMany(int[] instances)
         {
             var maxId = 0;
-            for (var i = 0; i < instances.Count; i++)
+            for (var i = 0; i < instances.Length; i++)
             {
                 var id = instances[i];
                 

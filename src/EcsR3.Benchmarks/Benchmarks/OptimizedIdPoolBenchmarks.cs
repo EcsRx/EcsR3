@@ -27,10 +27,10 @@ namespace EcsR3.Benchmarks.Benchmarks
         public void OptimizedAllocationAndRelease()
         {
             for (var i = 0; i < PoolCount; i++)
-            { IdList[i] = IdPool.AllocateInstance(); }
+            { IdList[i] = IdPool.Allocate(); }
             
             for(var i = 0; i < PoolCount; i++)
-            { IdPool.ReleaseInstance(IdList[i]); }
+            { IdPool.Release(IdList[i]); }
         }
     }
 }

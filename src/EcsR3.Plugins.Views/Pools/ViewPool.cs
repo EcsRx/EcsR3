@@ -4,7 +4,7 @@ using SystemsR3.Pools.Config;
 
 namespace EcsR3.Plugins.Views.Pools
 {
-    public class ViewPool : ObjectPool<object>
+    public class ViewPool : GenericPool<object>
     {
         public IViewHandler ViewHandler { get; }
 

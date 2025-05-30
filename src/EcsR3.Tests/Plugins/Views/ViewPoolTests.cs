@@ -18,7 +18,7 @@ public class ViewPoolTests
         var poolConfig = new PoolConfig(2);
         var viewPool = new ViewPool(mockViewHandler, poolConfig);
         
-        var instance = viewPool.AllocateInstance();
+        var instance = viewPool.Allocate();
         
         mockViewHandler.Received(2).CreateView();
         mockViewHandler.Received(poolConfig.InitialSize).SetActiveState(Arg.Any<object>(), false);
@@ -49,8 +49,8 @@ public class ViewPoolTests
         var poolConfig = new PoolConfig(2);
         var viewPool = new ViewPool(mockViewHandler, poolConfig);
         
-        var instance = viewPool.AllocateInstance();
-        viewPool.ReleaseInstance(instance);
+        var instance = viewPool.Allocate();
+        viewPool.Release(instance);
         
         mockViewHandler.Received(1).SetActiveState(Arg.Any<object>(), true);
         mockViewHandler.Received(poolConfig.InitialSize+1).SetActiveState(Arg.Any<object>(), false);

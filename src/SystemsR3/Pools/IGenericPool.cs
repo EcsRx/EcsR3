@@ -2,8 +2,7 @@
 
 namespace SystemsR3.Pools
 {
-    public interface IObjectPool<T> : IPool<T>, IEnumerable<T>
-        where T : class
+    public interface IGenericPool<T> : IPool<T>, IEnumerable<T>
     {
         void PreAllocate(int? allocationAmount = null);
         

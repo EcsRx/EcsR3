@@ -51,14 +51,14 @@ namespace EcsR3.Collections.Entities
         public int AllocateEntity(int? id = null)
         {
             if(!id.HasValue)
-            { return EntityIdPool.AllocateInstance(); }
+            { return EntityIdPool.Allocate(); }
 
             EntityIdPool.AllocateSpecificId(id.Value);
             return id.Value;
         }
         
         public int[] AllocateEntities(int count)
-        { return EntityIdPool.Allocate(count); }
+        { return EntityIdPool.AllocateMany(count); }
 
         public void ReleaseEntity(int entityId)
         {

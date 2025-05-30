@@ -11,14 +11,14 @@ namespace EcsR3.Pools
     /// re-assigned for use or released from use.
     /// </summary>
     /// <typeparam name="T">A blueprint that has a default constructor</typeparam>
-    public class BlueprintedEntityPool<T> : EntityPool where T : IBlueprint, new()
+    public class BatchedBlueprintedEntityPool<T> : BatchedEntityPool where T : IBatchedBlueprint, new()
     {
         public T Blueprint { get; } = new T();
 
-        public BlueprintedEntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor, PoolConfig poolConfig = null) : base(entityCollection, entityComponentAccessor, poolConfig)
+        public BatchedBlueprintedEntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor, PoolConfig poolConfig = null) : base(entityCollection, entityComponentAccessor, poolConfig)
         {}
         
-        public override void SetupEntity(int entityId)
-        { Blueprint.Apply(EntityComponentAccessor, entityId); }
+        public override void SetupEntity(int[] entityIds)
+        { Blueprint.Apply(EntityComponentAccessor, entityIds); }
     }
 }

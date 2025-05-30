@@ -11,20 +11,26 @@ namespace SystemsR3.Pools
         /// </summary>
         PoolConfig PoolConfig { get; }
         
+        /// <summary>
+        /// The current size of the pool
+        /// </summary>
         int Size { get; }
+        
+        /// <summary>
+        /// Observable to fire when the size of the pool has changed
+        /// </summary>
+        Observable<int> OnSizeChanged { get; }
         
         /// <summary>
         /// Allocates an instance in the pool for use
         /// </summary>
         /// <returns>An instance to use</returns>
-        T AllocateInstance();
+        T Allocate();
         
         /// <summary>
         /// Frees up the pooled item for re-allocation
         /// </summary>
         /// <param name="instance">The instance to put back in the pool</param>
-        void ReleaseInstance(T instance);
-        
-        Observable<int> OnSizeChanged { get; }
+        void Release(T instance);
     }
 }

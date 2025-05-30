@@ -43,7 +43,7 @@ namespace EcsR3.Components
             {
                 if(IndexesRemaining == 0) 
                 { Expand(); }
-                return IndexPool.AllocateInstance();
+                return IndexPool.Allocate();
             }
         }
 
@@ -53,7 +53,7 @@ namespace EcsR3.Components
             { Expand(count); }
             
             lock (_lock)
-            { return IndexPool.Allocate(count); }
+            { return IndexPool.AllocateMany(count); }
         }
 
         public void Release(int index)
@@ -68,7 +68,7 @@ namespace EcsR3.Components
                 if(instance is IDisposable disposable)
                 { disposable.Dispose(); }
             
-                IndexPool.ReleaseInstance(index);
+                IndexPool.Release(index);
             }
         }
 
@@ -87,7 +87,7 @@ namespace EcsR3.Components
                     if(instance is IDisposable disposable)
                     { disposable.Dispose(); }
                 }
-                IndexPool.Release(indexes);
+                IndexPool.ReleaseMany(indexes);
             }
         }
 

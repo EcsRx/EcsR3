@@ -8,28 +8,31 @@ namespace EcsR3.Pools
     /// <summary>
     /// Allows you to create a pool of entities which can be reused without having to constantly re-create them
     /// </summary>
-    public abstract class EntityPool : GenericPool<int>
+    public abstract class BatchedEntityPool : BatchedGenericPool<int>
     {
         public IEntityCollection EntityCollection { get; }
         public IEntityComponentAccessor EntityComponentAccessor { get; }
 
-        protected EntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor,
+        protected BatchedEntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor,
             PoolConfig poolConfig = null) : base(poolConfig)
         {
             EntityCollection = entityCollection;
             EntityComponentAccessor = entityComponentAccessor;
         }
 
-        public abstract void SetupEntity(int entityId);
+        public abstract void SetupEntity(int[] entityIds);
 
-        public override int Create()
+        public override int[] Create(int count)
         {
-            var entityId = EntityCollection.Create();
-            SetupEntity(entityId);
-            return entityId;
+            var entityIds = EntityCollection.CreateMany(count);
+            SetupEntity(entityIds);
+            return entityIds;
         }
 
-        public override void Destroy(int entityId)
-        { EntityComponentAccessor.RemoveAllComponents(entityId); }
+        public override void Destroy(int[] entityIds)
+        {
+            for (var i = 0; i < entityIds.Length; i++)
+            { EntityComponentAccessor.RemoveAllComponents(entityIds[i]); }
+        }
     }
 }

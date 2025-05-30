@@ -38,9 +38,9 @@ namespace SystemsR3.Tests.TestCode
         public bool IsDestroyed { get; set; }
     }
     
-    public class TestObjectPool : ObjectPool<TestPooledObject>
+    public class TestGenericPool : GenericPool<TestPooledObject>
     {
-        public TestObjectPool(PoolConfig config = null) : base(config)
+        public TestGenericPool(PoolConfig config = null) : base(config)
         { }
 
         public override TestPooledObject Create()
