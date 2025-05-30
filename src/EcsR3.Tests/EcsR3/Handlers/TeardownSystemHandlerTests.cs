@@ -5,6 +5,7 @@ using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using EcsR3.Systems.Handlers;
@@ -18,9 +19,10 @@ namespace EcsR3.Tests.EcsR3.Handlers
     {
         [Fact]
         public void should_correctly_handle_systems()
-        {
+        { 
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
-            var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
+            var teardownSystemHandler = new TeardownSystemHandler(entityComponentAccessor, observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<ITeardownSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -34,16 +36,16 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_teardown_entity_when_removed()
         {
-            var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(1);
-            var fakeEntities = new List<IEntity>();
+            var id1 = 1;
+            var fakeEntities = new List<int> { id1 };
 
-            var removeSubject = new Subject<IEntity>();
+            var removeSubject = new Subject<int>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<int>());
             mockComputedEntityGroup.OnRemoving.Returns(removeSubject);
             mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
             var fakeGroup = Substitute.For<IGroup>();
@@ -53,12 +55,12 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockSystem = Substitute.For<ITeardownSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new TeardownSystemHandler(observableGroupManager);
+            var systemHandler = new TeardownSystemHandler(entityComponentAccessor, observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
-            removeSubject.OnNext(fakeEntity1);
+            removeSubject.OnNext(id1);
             
-            mockSystem.Received(1).Teardown(Arg.Is(fakeEntity1));
+            mockSystem.Received(1).Teardown(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id1));
             Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
             Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
         }

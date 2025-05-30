@@ -6,6 +6,7 @@ using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using EcsR3.Systems.Handlers;
@@ -20,8 +21,9 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
-            var reactToEntitySystemHandler = new SetupSystemHandler(observableGroupManager);
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
+            var computedEntityGroupRegistry = Substitute.For<IComputedEntityGroupRegistry>();
+            var reactToEntitySystemHandler = new SetupSystemHandler(entityComponentAccessor, computedEntityGroupRegistry);
             
             var fakeMatchingSystem = Substitute.For<ISetupSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -33,17 +35,16 @@ namespace EcsR3.Tests.EcsR3.Handlers
         }
         
         [Fact]
-        public void should_execute_system_without_predicate()
+        public void should_execute_system()
         {
-            var fakeEntity1 = Substitute.For<IEntity>();
-            var fakeEntity2 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(1);
-            fakeEntity2.Id.Returns(2);
-            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
+            var id1 = 1;
+            var id2 = 2;
+            var fakeEntities = new List<int> { id1, id2 };
             
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<int>());
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<int>());
             mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
@@ -55,11 +56,11 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(observableGroupManager);
+            var systemHandler = new SetupSystemHandler(entityComponentAccessor, observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id1));
+            mockSystem.Received(1).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id2));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
@@ -67,21 +68,20 @@ namespace EcsR3.Tests.EcsR3.Handlers
         }
         
         [Fact]
-        public void should_execute_system_when_entity_added_without_predicate()
+        public void should_execute_system_when_entity_added()
         {
-            var fakeEntity1 = Substitute.For<IEntity>();
-            var fakeEntity2 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(1);
-            fakeEntity2.Id.Returns(2);
-            var fakeEntities = new List<IEntity>();
+            var id1 = 1;
+            var id2 = 2;
+            var fakeEntities = new List<int> { id1, id2 };
             
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            var addingSubject = new Subject<IEntity>();
+            var addingSubject = new Subject<int>();
             mockComputedEntityGroup.OnAdded.Returns(addingSubject);
-            mockComputedEntityGroup.Contains(Arg.Is(fakeEntity1.Id)).Returns(true);
-            mockComputedEntityGroup.Contains(Arg.Is(fakeEntity2.Id)).Returns(true);
-            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockComputedEntityGroup.Contains(Arg.Is(id1)).Returns(true);
+            mockComputedEntityGroup.Contains(Arg.Is(id2)).Returns(true);
+            mockComputedEntityGroup.OnRemoved.Returns(new Subject<int>());
+            mockComputedEntityGroup.GetEnumerator().Returns(new List<int>().GetEnumerator());
             
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
 
@@ -92,21 +92,21 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(observableGroupManager);
+            var systemHandler = new SetupSystemHandler(entityComponentAccessor, observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
-            mockSystem.Received(0).Setup(Arg.Is(fakeEntity1));
-            mockSystem.Received(0).Setup(Arg.Is(fakeEntity2));
+            mockSystem.Received(0).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id1));
+            mockSystem.Received(0).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id2));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
 
-            addingSubject.OnNext(fakeEntity1);
-            addingSubject.OnNext(fakeEntity2);
+            addingSubject.OnNext(id1);
+            addingSubject.OnNext(id2);
             
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id1));
+            mockSystem.Received(1).Setup(Arg.Any<IEntityComponentAccessor>(), Arg.Is(id2));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
@@ -116,13 +116,13 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_dispose_observables_when_entity_removed()
         {
-            var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(1);
-            var fakeEntities = new List<IEntity>();
+            var id1 = 1;
+            var fakeEntities = new List<int>();
             
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            var removingSubject = new Subject<IEntity>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
+            var removingSubject = new Subject<int>();
+            mockComputedEntityGroup.OnAdded.Returns(new Subject<int>());
             mockComputedEntityGroup.OnRemoved.Returns(removingSubject);
             mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
@@ -135,13 +135,13 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(observableGroupManager);
+            var systemHandler = new SetupSystemHandler(entityComponentAccessor, observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
 
             var mockDisposable = Substitute.For<IDisposable>();
-            systemHandler._entitySubscriptions[mockSystem].Add(fakeEntity1.Id, mockDisposable);
+            systemHandler._entitySubscriptions[mockSystem].Add(id1, mockDisposable);
             
-            removingSubject.OnNext(fakeEntity1);
+            removingSubject.OnNext(id1);
             
             mockDisposable.Received(1).Dispose();
             
@@ -149,91 +149,6 @@ namespace EcsR3.Tests.EcsR3.Handlers
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
-        }
-        
-        [Fact]
-        public void should_execute_systems_when_predicate_met()
-        {
-            var id1 = 1;
-            var id2 = 2;
-            
-            var fakeEntity1 = Substitute.For<IEntity>();
-            var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
-            fakeEntity1.Id.Returns(id1);
-            fakeEntity2.Id.Returns(id2);
-            
-            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
-            
-            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
-
-            var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id);
-            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
-            
-            var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.Group.Returns(fakeGroup);
-
-            var systemHandler = new SetupSystemHandler(observableGroupManager);
-            systemHandler.SetupSystem(mockSystem);
-            
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
-            mockSystem.Received(0).Setup(Arg.Is(fakeEntity2));
-            
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity2.Id));
-        }
-        
-        [Fact]
-        public void should_execute_systems_when_predicate_met_after_period()
-        {
-            var id1 = 1;
-            var id2 = 2;
-            var expectedDate = DateTime.Now + TimeSpan.FromMilliseconds(500);
-            
-            var fakeEntity1 = Substitute.For<IEntity>();
-            var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
-            fakeEntity1.Id.Returns(id1);
-            fakeEntity2.Id.Returns(id2);
-            
-            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.OnAdded.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.OnRemoved.Returns(new Subject<IEntity>());
-            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
-            
-            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
-
-            var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
-            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
-            
-            var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.Group.Returns(fakeGroup);
-
-            var systemHandler = new SetupSystemHandler(observableGroupManager);
-            systemHandler.SetupSystem(mockSystem);
-            
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity1.Id));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity2.Id));
-
-            Thread.Sleep(2000);
-            mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
-            mockSystem.Received(0).Setup(Arg.Is(fakeEntity2));
-            
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(1, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity2.Id));
         }
     }
 }

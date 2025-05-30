@@ -1,4 +1,5 @@
-﻿using EcsR3.Components.Database;
+﻿using EcsR3.Collections.Entities;
+using EcsR3.Components.Database;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Ninject;
 using EcsR3.Infrastructure;
@@ -12,6 +13,7 @@ namespace EcsR3.Examples.Application
     public abstract class EcsR3ConsoleApplication : EcsR3Application
     {
         public override IDependencyRegistry DependencyRegistry { get; } = new NinjectDependencyRegistry();
+        public IEntityAllocationDatabase EntityAllocationDatabase { get; private set; }        
 
         public virtual ComponentDatabaseConfig GetComponentDatabaseConfig { get; } = new();
         
@@ -27,6 +29,12 @@ namespace EcsR3.Examples.Application
         protected override void StartSystems()
         {
             this.StartAllBoundReactiveSystems();
+        }
+        
+        protected override void ResolveApplicationDependencies()
+        {
+            base.ResolveApplicationDependencies();
+            EntityAllocationDatabase = DependencyResolver.Resolve<IEntityAllocationDatabase>();
         }
     }
 }

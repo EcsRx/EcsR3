@@ -6,6 +6,7 @@ using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using EcsR3.Systems.Handlers;
@@ -24,9 +25,10 @@ namespace EcsR3.Tests.EcsR3.Handlers
         public void should_correctly_handle_systems()
         {
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
-            var reactToEntitySystemHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, observableScheduler);
+            var reactToEntitySystemHandler = new BasicEntitySystemHandler(entityComponentAccessor, observableGroupManager, threadHandler, observableScheduler);
             
             var fakeMatchingSystem = Substitute.For<IBasicEntitySystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IManualSystem>();
@@ -40,13 +42,10 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_execute_system_without_predicate()
         {
-            var fakeEntities = new List<IEntity>
-            {
-                Substitute.For<IEntity>(),
-                Substitute.For<IEntity>()
-            };
+            var fakeEntities = new List<int> { 1,2 };
             
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockComputedEntityGroup.Count.Returns(fakeEntities.Count);
             
@@ -62,51 +61,12 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var mockSystem = Substitute.For<IBasicEntitySystem>();
             mockSystem.Group.Returns(fakeGroup);
             
-            var systemHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, observableScheduler);
+            var systemHandler = new BasicEntitySystemHandler(entityComponentAccessor, observableGroupManager, threadHandler, observableScheduler);
             systemHandler.SetupSystem(mockSystem);
             
             observableSubject.OnNext(new ElapsedTime());
             
-            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>(), default);
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
-        }
-        
-        [Fact]
-        public void should_only_execute_system_when_predicate_met()
-        {
-            var entityToMatch = Substitute.For<IEntity>();
-            var idToMatch = 1;
-            entityToMatch.Id.Returns(idToMatch);
-            
-            var fakeEntities = new List<IEntity>
-            {
-                entityToMatch,
-                Substitute.For<IEntity>()
-            };
-
-            var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
-            mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
-            mockComputedEntityGroup.Count.Returns(fakeEntities.Count);
-            
-            var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
-            var threadHandler = Substitute.For<IThreadHandler>();
-            var observableScheduler = Substitute.For<IUpdateScheduler>();
-            var observableSubject = new Subject<ElapsedTime>();
-            observableScheduler.OnUpdate.Returns(observableSubject);
-            
-            var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
-            observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
-
-            var mockSystem = Substitute.For<IBasicEntitySystem>();
-            mockSystem.Group.Returns(fakeGroup);
-            
-            var systemHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, observableScheduler);
-            systemHandler.SetupSystem(mockSystem);
-            
-            observableSubject.OnNext(new ElapsedTime());
-            
-            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch), default);
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<int>(), default);
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -114,13 +74,14 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_destroy_and_dispose_system()
         {
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var observableGroupManager = Substitute.For<IComputedEntityGroupRegistry>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var mockSystem = Substitute.For<IBasicEntitySystem>();
             var mockDisposable = Substitute.For<IDisposable>();
             
-            var systemHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, observableScheduler);
+            var systemHandler = new BasicEntitySystemHandler(entityComponentAccessor, observableGroupManager, threadHandler, observableScheduler);
             systemHandler._systemSubscriptions.Add(mockSystem, mockDisposable);
             systemHandler.DestroySystem(mockSystem);
             

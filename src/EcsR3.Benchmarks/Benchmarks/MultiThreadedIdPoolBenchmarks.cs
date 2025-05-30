@@ -25,8 +25,8 @@ namespace EcsR3.Benchmarks.Benchmarks
         [Benchmark]
         public void MultithreadedAllocationAndRelease()
         {
-            Parallel.For(0, PoolCount, i => IdList[i] = IdPool.AllocateInstance());
-            Parallel.For(0, PoolCount, i => IdPool.ReleaseInstance( IdList[i]));
+            Parallel.For(0, PoolCount, i => IdList[i] = IdPool.Allocate());
+            Parallel.For(0, PoolCount, i => IdPool.Release( IdList[i]));
         }
     }
 }

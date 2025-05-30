@@ -1,6 +1,7 @@
 using System;
 using EcsR3.Collections.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -17,10 +18,10 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingReactiveEntityTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public Observable<IEntity> ReactToEntity(IEntity entity)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity); }
+        public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber.Select(x => entityId); }
 
-        public void Process(IEntity entity)
-        { EntityCollection.Remove(entity.Id); }
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        { EntityCollection.Remove(entityId); }
     }
 }

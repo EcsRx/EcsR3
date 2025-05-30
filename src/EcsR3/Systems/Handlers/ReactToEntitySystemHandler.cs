@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities.Registries;
-using EcsR3.Entities;
-using EcsR3.Groups;
-using EcsR3.Extensions;
+using EcsR3.Entities.Accessors;
 using R3;
 using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
@@ -20,12 +15,14 @@ namespace EcsR3.Systems.Handlers
     {
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IEntityComponentAccessor EntityComponentAccessor;
         public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         
         private readonly object _lock = new object();
         
-        public ReactToEntitySystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        public ReactToEntitySystemHandler(IEntityComponentAccessor entityComponentAccessor, IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
+            EntityComponentAccessor = entityComponentAccessor;
             ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
@@ -51,7 +48,7 @@ namespace EcsR3.Systems.Handlers
                 .Subscribe(x =>
                 {
                     // This occurs if we have an add elsewhere removing the entity before this one is called
-                    if (observableGroup.Contains(x.Id))
+                    if (observableGroup.Contains(x))
                     { SetupEntity(castSystem, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
@@ -60,8 +57,8 @@ namespace EcsR3.Systems.Handlers
                 .Subscribe(x =>
                 {
                     // This is if the add elsewhere removes the entity, which triggers this before the add is
-                    if (entitySubscriptions.ContainsKey(x.Id))
-                    { entitySubscriptions.RemoveAndDispose(x.Id); }
+                    if (entitySubscriptions.ContainsKey(x))
+                    { entitySubscriptions.RemoveAndDispose(x); }
                 })
                 .AddTo(entityChangeSubscriptions);
 
@@ -69,17 +66,17 @@ namespace EcsR3.Systems.Handlers
             { SetupEntity(castSystem, entity, entitySubscriptions); }
         }
 
-        public void SetupEntity(IReactToEntitySystem system, IEntity entity, Dictionary<int, IDisposable> subs)
+        public void SetupEntity(IReactToEntitySystem system, int entityId, Dictionary<int, IDisposable> subs)
         {
             lock (_lock)
-            { subs.Add(entity.Id, null); }
+            { subs.Add(entityId, null); }
                 
-            var subscription = ProcessEntity(system, entity);
+            var subscription = ProcessEntity(system, entityId);
 
             lock (_lock)
             {
-                if (subs.ContainsKey(entity.Id))
-                { subs[entity.Id] = subscription; }
+                if (subs.ContainsKey(entityId))
+                { subs[entityId] = subscription; }
                 else
                 { subscription.Dispose(); }
             }
@@ -98,21 +95,10 @@ namespace EcsR3.Systems.Handlers
             }
         }
         
-        public IDisposable ProcessEntity(IReactToEntitySystem system, IEntity entity)
+        public IDisposable ProcessEntity(IReactToEntitySystem system, int entityId)
         {
-            var hasEntityPredicate = system.Group is IHasPredicate;
-            var reactObservable = system.ReactToEntity(entity);
-            
-            if (!hasEntityPredicate)
-            { return reactObservable.Subscribe(system.Process); }
-
-            var groupPredicate = system.Group as IHasPredicate;
-            return reactObservable?
-                .Subscribe(x =>
-                {
-                    if(groupPredicate.CanProcessEntity(x))
-                    { system.Process(x); }
-                });
+            var reactObservable = system.ReactToEntity(EntityComponentAccessor, entityId);
+            return reactObservable.Subscribe(x => system.Process(EntityComponentAccessor, x));
         }
 
         public void Dispose()

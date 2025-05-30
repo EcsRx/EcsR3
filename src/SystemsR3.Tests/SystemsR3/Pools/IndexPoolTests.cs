@@ -80,7 +80,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
 
             for (var i = 0; i < expectedAllocations; i++)
             {
-                var index = indexPool.AllocateInstance();
+                var index = indexPool.Allocate();
                 actualIndexEntries.Add(index);
             }
 
@@ -94,10 +94,26 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         {
             var poolConfig = new PoolConfig(10, 10);
             var indexPool = new IndexPool(poolConfig);
-            var index = indexPool.AllocateInstance();
+            var index = indexPool.Allocate();
             
-            Assert.InRange(index, 0, 10);
+            Assert.Equal(0, index);
             Assert.DoesNotContain(index, indexPool.AvailableIndexes);
+        }
+        
+        [Fact]
+        public void should_batch_allocate_and_remove_next_available_index()
+        {
+            var allocationAmount = 10;
+            var expectedAllocations = Enumerable.Range(0, allocationAmount).ToArray();
+            
+            var poolConfig = new PoolConfig(10, 10);
+            var indexPool = new IndexPool(poolConfig);
+            var actualAllocations = indexPool.AllocateMany(allocationAmount);
+            
+            Assert.Equal(expectedAllocations, actualAllocations);
+            Assert.Equal(expectedAllocations.Length, actualAllocations.Distinct().Count());
+            for (var i = 0; i < actualAllocations.Length; i++)
+            { Assert.DoesNotContain(actualAllocations[i], indexPool.AvailableIndexes); }
         }
         
         [Fact]
@@ -109,7 +125,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
             var indexPool = new IndexPool(poolConfig);
             indexPool.Clear();
-            var index = indexPool.AllocateInstance();
+            var index = indexPool.Allocate();
 
             var expectedIdEntries = Enumerable.Range(0, expectedSize).ToList();
 
@@ -123,8 +139,8 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         {
             var poolConfig = new PoolConfig(10, 10);
             var indexPool = new IndexPool(poolConfig);
-            var index = indexPool.AllocateInstance();
-            indexPool.ReleaseInstance(index);
+            var index = indexPool.Allocate();
+            indexPool.Release(index);
             
             Assert.Contains(index, indexPool.AvailableIndexes);
         }
@@ -135,7 +151,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var poolConfig = new PoolConfig(10, 10);
             var indexPool = new IndexPool(poolConfig);
             var index = 100;
-            indexPool.ReleaseInstance(index);
+            indexPool.Release(index);
             
             Assert.DoesNotContain(index, indexPool.AvailableIndexes);
         }
@@ -145,10 +161,10 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         {
             var poolConfig = new PoolConfig(10, 10);
             var indexPool = new IndexPool(poolConfig);
-            var index = indexPool.AllocateInstance();
-            indexPool.ReleaseInstance(index);
-            indexPool.ReleaseInstance(index);
-            indexPool.ReleaseInstance(index);
+            var index = indexPool.Allocate();
+            indexPool.Release(index);
+            indexPool.Release(index);
+            indexPool.Release(index);
             
             Assert.Contains(index, indexPool.AvailableIndexes);
         }

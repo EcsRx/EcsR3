@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities.Registries;
-using EcsR3.Extensions;
+using EcsR3.Entities.Accessors;
 using R3;
 using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
@@ -15,12 +13,14 @@ namespace EcsR3.Systems.Handlers
     [Priority(10)]
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
+        public readonly IEntityComponentAccessor EntityComponentAccessor;
         public readonly IComputedEntityGroupRegistry ComputedEntityGroupRegistry;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         private readonly object _lock = new object();
         
-        public TeardownSystemHandler(IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        public TeardownSystemHandler(IEntityComponentAccessor entityComponentAccessor, IComputedEntityGroupRegistry computedEntityGroupRegistry)
         {
+            EntityComponentAccessor = entityComponentAccessor;
             ComputedEntityGroupRegistry = computedEntityGroupRegistry;
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
@@ -39,7 +39,7 @@ namespace EcsR3.Systems.Handlers
             var observableGroup = ComputedEntityGroupRegistry.GetComputedGroup(castSystem.Group);
             
             observableGroup.OnRemoving
-                .Subscribe(castSystem.Teardown)
+                .Subscribe(x => castSystem.Teardown(EntityComponentAccessor, x))
                 .AddTo(entityChangeSubscriptions);        
         }
 

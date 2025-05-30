@@ -46,9 +46,9 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
             for (var i = 0; i < amount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(_availableComponents);
-                entity.RemoveComponents(_availableComponents);
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, _availableComponents);
+                EntityComponentAccessor.RemoveComponents(entityId, _availableComponents);
             }
 
             timer.Stop();

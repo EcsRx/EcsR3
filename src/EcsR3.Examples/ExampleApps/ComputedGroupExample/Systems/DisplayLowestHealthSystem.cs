@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsR3.Collections.Entities;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
@@ -14,9 +16,11 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Systems
         private readonly IList<IDisposable> _subscriptions = new List<IDisposable>();
 
         private readonly ILowestHealthComputedGroup _lowestHealthGroup;
-
-        public DisplayLowestHealthSystem(ILowestHealthComputedGroup lowestHealthGroup)
+        private readonly IEntityComponentAccessor _entityComponentAccessor;
+        
+        public DisplayLowestHealthSystem(IEntityComponentAccessor entityComponentAccessor, ILowestHealthComputedGroup lowestHealthGroup)
         {
+            _entityComponentAccessor = entityComponentAccessor;
             _lowestHealthGroup = lowestHealthGroup;
         }
 
@@ -33,16 +37,16 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Systems
 
             var allEntities = (_lowestHealthGroup as LowestHealthComputedGroup).DataSource;
             Console.WriteLine(" == All Characters HP == ");
-            foreach (var entity in allEntities.OrderBy(x => x.GetHealthPercentile()))
-            { Console.WriteLine($"{entity.GetName()} - {entity.GetHealthPercentile()}% hp ({entity.GetHealthString()})"); }
+            foreach (var entityId in allEntities.OrderBy(_entityComponentAccessor.GetHealthPercentile))
+            { Console.WriteLine($"{_entityComponentAccessor.GetName(entityId)} - {_entityComponentAccessor.GetHealthPercentile(entityId)}% hp ({_entityComponentAccessor.GetHealthString(entityId)})"); }
 
             Console.WriteLine();
             
             _lowestHealthGroup.Refresh();
             var position = 1;
             Console.WriteLine(" == Characters With HP < 50% == ");
-            foreach (var entity in _lowestHealthGroup.OrderBy(x => x.GetHealthPercentile()))
-            { Console.WriteLine($"{position++}) {entity.GetName()} - {entity.GetHealthPercentile()}% hp ({entity.GetHealthString()})"); }
+            foreach (var entityId in _lowestHealthGroup.OrderBy(_entityComponentAccessor.GetHealthPercentile))
+            { Console.WriteLine($"{position++}) {_entityComponentAccessor.GetName(entityId)} - {_entityComponentAccessor.GetHealthPercentile(entityId)}% hp ({_entityComponentAccessor.GetHealthString(entityId)})"); }
         }
     }
 }

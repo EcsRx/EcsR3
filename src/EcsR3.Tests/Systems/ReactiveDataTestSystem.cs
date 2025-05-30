@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -12,12 +13,12 @@ namespace EcsR3.Tests.Systems
     {
         public IGroup Group => new Group().WithComponent<TestComponentOne>();
 
-        public Observable<float> ReactToData(IEntity entity)
+        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
             return Observable.Timer(TimeSpan.FromSeconds(1)).Select(x => 0.1f);
         }
 
-        public void Process(IEntity entity, float reactionData)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, float reactionData)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -12,10 +13,10 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
         
-        public Observable<IEntity> ReactToEntity(IEntity entity)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity); }
+        public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber.Select(x => entityId); }
 
-        public void Process(IEntity entity)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
         { throw new Exception("Should Not Get Called"); }
     }
 }

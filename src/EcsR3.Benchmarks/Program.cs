@@ -36,8 +36,10 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark))*/
-                BenchmarkConverter.TypeToBenchmarks(typeof(MultiDimensionalArrayResizeBenchmarks))
+                BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(MultiDimensionalArrayResizeBenchmarks)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))*/
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark))
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);

@@ -9,7 +9,6 @@ namespace EcsR3.Groups
     {
         private List<Type> _withComponents;
         private List<Type> _withoutComponents;
-        private Predicate<IEntity> _predicate;
 
         public GroupBuilder()
         {
@@ -48,17 +47,8 @@ namespace EcsR3.Groups
             return this;
         }
 
-        public GroupBuilder WithPredicate(Predicate<IEntity> predicate)
-        {
-            _predicate = predicate;
-            return this;
-        }
 
         public IGroup Build()
-        {
-            return _predicate != null ? 
-                new GroupWithPredicate(_predicate, _withComponents, _withoutComponents) : 
-                new Group(_withComponents, _withoutComponents);
-        }
+        { return new Group(_withComponents, _withoutComponents); }
     }
 }

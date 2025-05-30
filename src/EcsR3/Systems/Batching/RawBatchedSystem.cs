@@ -3,6 +3,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems.Batching.Accessor;
 using SystemsR3.Threading;
@@ -18,7 +19,7 @@ namespace EcsR3.Systems.Batching
         protected readonly BatchPoolAccessor<T1, T2> BatchPoolAccessor;
         protected IComputedComponentGroup<T1, T2> CastComponentGroup => ComputedComponentGroup as IComputedComponentGroup<T1, T2>;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { BatchPoolAccessor = new BatchPoolAccessor<T1, T2>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
@@ -43,7 +44,7 @@ namespace EcsR3.Systems.Batching
         private readonly BatchPoolAccessor<T1, T2, T3> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2, T3> _computedComponentGroup;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
@@ -72,7 +73,7 @@ namespace EcsR3.Systems.Batching
         private readonly BatchPoolAccessor<T1, T2, T3, T4> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2, T3, T4> _computedComponentGroup;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
@@ -102,7 +103,7 @@ namespace EcsR3.Systems.Batching
         private readonly BatchPoolAccessor<T1, T2, T3, T4, T5> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2, T3, T4, T5> _computedComponentGroup;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
@@ -133,7 +134,7 @@ namespace EcsR3.Systems.Batching
         private readonly BatchPoolAccessor<T1, T2, T3, T4, T5, T6> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2, T3, T4, T5, T6> _computedComponentGroup;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5, T6>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()
@@ -165,7 +166,7 @@ namespace EcsR3.Systems.Batching
         private readonly BatchPoolAccessor<T1, T2, T3, T4, T5, T6, T7> _batchPoolAccessor;
         private IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> _computedComponentGroup;
 
-        protected RawBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         { _batchPoolAccessor = new BatchPoolAccessor<T1, T2, T3, T4, T5, T6, T7>(componentDatabase); }
 
         protected override IComputedComponentGroup GetComponentGroup()

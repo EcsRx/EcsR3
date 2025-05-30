@@ -4,6 +4,7 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching.Convention
@@ -14,9 +15,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
@@ -46,9 +48,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
@@ -82,9 +85,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3,T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
@@ -119,9 +123,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
@@ -159,9 +164,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
@@ -200,9 +206,10 @@ namespace EcsR3.Systems.Batching.Convention
     {
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6, ref T7 component7);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;

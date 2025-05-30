@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
@@ -17,10 +18,10 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
 
-        public void Process(IEntity entity)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            var readComponent = entity.GetComponent<SimpleReadComponent>();
-            var writeComponent = entity.GetComponent<SimpleWriteComponent>();
+            var readComponent = entityComponentAccessor.GetComponent<SimpleReadComponent>(entityId);
+            var writeComponent = entityComponentAccessor.GetComponent<SimpleWriteComponent>(entityId);
             writeComponent.WrittenValue = readComponent.StartingValue;
             Thread.Sleep(1); // Just to pretend there is something complex happening
         }

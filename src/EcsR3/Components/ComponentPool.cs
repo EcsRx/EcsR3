@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using R3;
 using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
@@ -16,7 +17,7 @@ namespace EcsR3.Components
         public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
         public T[] Components => InternalComponents;
-        
+
         public T[] InternalComponents;
         
         public int Count { get; private set; }
@@ -42,8 +43,17 @@ namespace EcsR3.Components
             {
                 if(IndexesRemaining == 0) 
                 { Expand(); }
-                return IndexPool.AllocateInstance();
+                return IndexPool.Allocate();
             }
+        }
+
+        public int[] Allocate(int count)
+        {
+            if(count > IndexesRemaining) 
+            { Expand(count); }
+            
+            lock (_lock)
+            { return IndexPool.AllocateMany(count); }
         }
 
         public void Release(int index)
@@ -58,7 +68,26 @@ namespace EcsR3.Components
                 if(instance is IDisposable disposable)
                 { disposable.Dispose(); }
             
-                IndexPool.ReleaseInstance(index);
+                IndexPool.Release(index);
+            }
+        }
+
+        public void Release(int[] indexes)
+        {
+            lock (_lock)
+            {
+                for (var i = 0; i < indexes.Length; i++)
+                {
+                    var index = indexes[i];
+                    var instance = InternalComponents[index];
+            
+                    if(!IsStructType)
+                    { InternalComponents[index] = default; }
+            
+                    if(instance is IDisposable disposable)
+                    { disposable.Dispose(); }
+                }
+                IndexPool.ReleaseMany(indexes);
             }
         }
 
@@ -76,10 +105,35 @@ namespace EcsR3.Components
             InternalComponents = new T[PoolConfig.InitialSize];
         }
 
-        public void Set(int index, object value)
+        public void Set(int index, IComponent value)
         {
             lock (_lock)
             { InternalComponents.SetValue(value, index); }
+        }
+        
+        public IComponent Get(int index)
+        {
+            lock (_lock)
+            { return InternalComponents[index]; }
+        }
+
+        
+        public void Set(int index, T value)
+        {
+            lock(_lock)
+            { InternalComponents[index] = value; }
+        }
+
+        public void Set(int[] indexes, IReadOnlyList<T> value)
+        {
+            lock (_lock)
+            {
+                for (var i = 0; i < indexes.Length; i++)
+                {
+                    var allocationIndex = indexes[i];
+                    InternalComponents[allocationIndex] = value[i];
+                }
+            }
         }
         
         public void Expand(int? amountToAdd = null)

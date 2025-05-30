@@ -1,5 +1,6 @@
 using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -13,7 +14,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
             .WithComponent<ComponentWithReactiveProperty>()
             .WithComponent<TestComponentTwo>();
 
-        public void Setup(IEntity entity)
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
         { throw new Exception("Should Not Get Called"); }
     }
 }

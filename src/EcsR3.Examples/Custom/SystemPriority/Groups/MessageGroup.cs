@@ -1,8 +1,8 @@
 ﻿using System;
-using EcsR3.Examples.Custom.Components;
+using EcsR3.Examples.Custom.SystemPriority.Components;
 using EcsR3.Groups;
 
-namespace EcsR3.Examples.Custom.Groups
+namespace EcsR3.Examples.Custom.SystemPriority.Groups
 {
     class MessageGroup : IGroup
     {

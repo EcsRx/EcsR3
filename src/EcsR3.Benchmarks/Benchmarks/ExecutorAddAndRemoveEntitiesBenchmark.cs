@@ -3,6 +3,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
@@ -19,10 +20,10 @@ namespace EcsR3.Benchmarks.Benchmarks
         public AddAndRemoveEntitySystem(IGroup group)
         { Group = group; }
 
-        public Observable<IEntity> ReactToEntity(IEntity entity)
-        { return Observable.Empty<IEntity>(); }
+        public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        { return Observable.Empty<int>(); }
 
-        public void Process(IEntity entity)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {}
     }
     
@@ -77,9 +78,9 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(_availableComponents);
-                entity.RemoveAllComponents();
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, _availableComponents);
+                EntityComponentAccessor.RemoveAllComponents(entityId);
             }
         }
     }

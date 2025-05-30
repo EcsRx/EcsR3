@@ -4,7 +4,7 @@ using EcsR3.Components;
 
 namespace EcsR3.Entities.Accessors
 {
-    public interface IEntityComponentAccessor : IEntityStructComponentAccessor
+    public interface IEntityComponentAccessor : IEntityStructComponentAccessor, IBatchEntityComponentAccessor
     {
         /// <summary>
         /// Adds all provided components to the entity
@@ -16,7 +16,7 @@ namespace EcsR3.Entities.Accessors
         /// Removes component types from the entity
         /// </summary>
         /// <param name="componentsTypes">The component types to remove</param>
-        void RemoveComponents(int entityId, params Type[] componentTypes);
+        void RemoveComponents(int entityId, IReadOnlyList<Type> components);
         
         /// <summary>
         /// Removes all the components from the entity
@@ -50,6 +50,27 @@ namespace EcsR3.Entities.Accessors
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(int entityId, Type componentType);
 
+        /// <summary>
+        /// Get all allocations for an entity
+        /// </summary>
+        /// <param name="entityId">The entity id to query on</param>
+        /// <returns></returns>
         int[] GetAllocations(int entityId);
+        
+        /// <summary>
+        /// Checks to see if the entity contains all the given component types
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="componentTypes"></param>
+        /// <returns></returns>
+        bool HasAllComponents(int entityId, IReadOnlyList<Type> componentTypes);
+        
+        /// <summary>
+        /// Checks to see if the entity contains any of the given component types
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="componentTypes"></param>
+        /// <returns></returns>
+        bool HasAnyComponents(int entityId, IReadOnlyList<Type> componentTypes);
     }
 }

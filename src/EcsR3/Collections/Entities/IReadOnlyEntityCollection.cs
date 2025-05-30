@@ -3,15 +3,8 @@ using SystemsR3.Computeds;
 
 namespace EcsR3.Collections.Entities
 {
-    public interface IReadOnlyEntityCollection : IComputedCollection<IEntity>
+    public interface IReadOnlyEntityCollection : IComputedCollection<int>
     {
-        /// <summary>
-        /// Gets the entity from the collection, this will return the IEntity or null
-        /// </summary>
-        /// <param name="id">The Id of the entity you want to locate</param>
-        /// <returns>The entity that has been located or null if one could not be found</returns>
-        IEntity Get(int id);
-        
         /// <summary>
         /// Checks if the collection contains a given entity
         /// </summary>

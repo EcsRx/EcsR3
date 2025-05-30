@@ -6,8 +6,7 @@ using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
 {
-    public abstract class ObjectPool<T> : IObjectPool<T>
-        where T : class
+    public abstract class GenericPool<T> : IGenericPool<T>
     {
         public PoolConfig PoolConfig { get; }
         public IndexPool IndexPool { get; }
@@ -25,7 +24,7 @@ namespace SystemsR3.Pools
 
         private readonly object _lock = new object();
 
-        public ObjectPool(PoolConfig poolConfig = null)
+        public GenericPool(PoolConfig poolConfig = null)
         {
             PoolConfig = poolConfig ?? new PoolConfig(100, 100);
             IndexPool = new IndexPool(PoolConfig);
@@ -51,7 +50,7 @@ namespace SystemsR3.Pools
             Expand(actualAllocation);
         }
 
-        public T AllocateInstance()
+        public T Allocate()
         {
             lock (_lock)
             {
@@ -62,9 +61,9 @@ namespace SystemsR3.Pools
                 { Expand(); }
                 
                 if(IndexesRemaining == 0)
-                { return null; }
+                { return default; }
                 
-                var index = IndexPool.AllocateInstance();
+                var index = IndexPool.Allocate();
                 var instance = Objects[index];
                 OnAllocated(instance);
                 return instance;
@@ -73,17 +72,17 @@ namespace SystemsR3.Pools
         
         public abstract T Create();
         public abstract void Destroy(T instance);
-        
+    
         public virtual void OnAllocated(T instance) {}
         public virtual void OnReleased(T instance) {}
 
-        public void ReleaseInstance(T instance)
+        public void Release(T instance)
         {
             lock (_lock)
             {
                 var indexOfInstance = Array.IndexOf(Objects, instance);
                 OnReleased(instance);
-                IndexPool.ReleaseInstance(indexOfInstance);
+                IndexPool.Release(indexOfInstance);
             }
         }
 

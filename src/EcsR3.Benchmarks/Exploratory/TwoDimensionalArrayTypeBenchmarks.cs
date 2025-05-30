@@ -47,7 +47,7 @@ public class TwoDimensionalArrayTypeBenchmarks
     {
         var yIndex = YSize / 2;
         var array = new int[XSize, YSize];
-        var arraySpan = new Span2D<int>(array);
+        var arraySpan = new ReadOnlySpan2D<int>(array);
         var results = arraySpan.GetColumn(yIndex).ToArray();
     }
     /*

@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 using SystemsR3.Tests.TestCode;
 using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3.Pools;
 
-public class ObjectPoolTests
+public class GenericPoolTests
 {
     [Fact]
     public void should_not_populate_pool_on_creation()
     {
         var expectedSize = 5;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, Assert.Null);
@@ -24,7 +23,7 @@ public class ObjectPoolTests
     {
         var expectedSize = 5;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         objectPool.PreAllocate();
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -39,7 +38,7 @@ public class ObjectPoolTests
     {
         var startingSize = 5;
         var poolConfig = new PoolConfig(startingSize, startingSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         objectPool.PreAllocate(preAllocationSize);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -55,7 +54,7 @@ public class ObjectPoolTests
     {
         var startingSize = 5;
         var poolConfig = new PoolConfig(startingSize, startingSize, maxSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         objectPool.PreAllocate(preAllocationSize);
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -67,8 +66,8 @@ public class ObjectPoolTests
     {
         var expectedSize = 5;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
-        objectPool.AllocateInstance();
+        var objectPool = new TestGenericPool(poolConfig);
+        objectPool.Allocate();
         
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -82,9 +81,9 @@ public class ObjectPoolTests
     public void should_expand_on_expansion_size_and_populate_when_allocating_over_existing_size(int expansionSize, int expectedSize, int numberToAllocate)
     {
         var poolConfig = new PoolConfig(expansionSize, expansionSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         for (var i = 0; i < numberToAllocate; i++)
-        { objectPool.AllocateInstance(); }
+        { objectPool.Allocate(); }
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -95,12 +94,12 @@ public class ObjectPoolTests
     {
         var expectedSize = 2;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
 
         for (var i = 0; i < 10; i++)
         {
-            var instance = objectPool.AllocateInstance();
-            objectPool.ReleaseInstance(instance);
+            var instance = objectPool.Allocate();
+            objectPool.Release(instance);
         }
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
@@ -112,13 +111,13 @@ public class ObjectPoolTests
     {
         var expectedSize = 2;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
 
-        var instance = objectPool.AllocateInstance();
-        objectPool.ReleaseInstance(instance);
-        objectPool.ReleaseInstance(instance);
-        objectPool.ReleaseInstance(instance);
-        objectPool.ReleaseInstance(instance);
+        var instance = objectPool.Allocate();
+        objectPool.Release(instance);
+        objectPool.Release(instance);
+        objectPool.Release(instance);
+        objectPool.Release(instance);
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -129,10 +128,10 @@ public class ObjectPoolTests
     {
         var expectedSize = 2;
         var poolConfig = new PoolConfig(expectedSize, expectedSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
 
-        var instance1 = objectPool.AllocateInstance();
-        var instance2 = objectPool.AllocateInstance();
+        var instance1 = objectPool.Allocate();
+        var instance2 = objectPool.Allocate();
         
         objectPool.Clear();
 
@@ -148,16 +147,16 @@ public class ObjectPoolTests
         var expansionSize = 2;
         var expectedSize = expansionSize * 2;
         var poolConfig = new PoolConfig(expansionSize, expansionSize);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
 
-        var instance1 = objectPool.AllocateInstance();
-        var instance2 = objectPool.AllocateInstance();
+        var instance1 = objectPool.Allocate();
+        var instance2 = objectPool.Allocate();
         
         objectPool.Clear();
         
-        var instance4 = objectPool.AllocateInstance();
-        var instance5 = objectPool.AllocateInstance();
-        var instance6 = objectPool.AllocateInstance();
+        var instance4 = objectPool.Allocate();
+        var instance5 = objectPool.Allocate();
+        var instance6 = objectPool.Allocate();
 
         Assert.Equal(expectedSize, objectPool.Objects.Length);
         Assert.All(objectPool, x => Assert.IsType<TestPooledObject>(x));
@@ -172,21 +171,21 @@ public class ObjectPoolTests
         var amountToFirstAllocate = 30;
         var amountToSecondAllocate = 40;
         var poolConfig = new PoolConfig(5, 10);
-        var objectPool = new TestObjectPool(poolConfig);
+        var objectPool = new TestGenericPool(poolConfig);
         var allocatedObjects = new List<TestPooledObject>();
         
         objectPool.Expand(15);
         
         for (var i = 0; i < amountToFirstAllocate; i++)
-        { allocatedObjects.Add(objectPool.AllocateInstance()); }
+        { allocatedObjects.Add(objectPool.Allocate()); }
         
         objectPool.Expand(15);
 
         for (var i = 0; i < amountToSecondAllocate; i++)
-        { allocatedObjects.Add(objectPool.AllocateInstance()); }
+        { allocatedObjects.Add(objectPool.Allocate()); }
         
         for(var i=0;i<allocatedObjects.Count;i++)
-        { objectPool.ReleaseInstance(allocatedObjects[i]); }
+        { objectPool.Release(allocatedObjects[i]); }
 
         Assert.Equal(70, allocatedObjects.Count);
         Assert.Equal(75, objectPool.Objects.Length);

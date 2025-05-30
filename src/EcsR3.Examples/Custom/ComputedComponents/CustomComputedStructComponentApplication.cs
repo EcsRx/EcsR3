@@ -12,7 +12,7 @@ public class CustomComputedStructComponentApplication : EcsR3ConsoleApplication
 {
     protected override void ApplicationStarted()
     {
-        var entities = EntityCollection.CreateMany<ComputedStructComponentBlueprint>(100000);
+        var entities = EntityCollection.CreateMany<ComputedStructComponentBlueprint>(EntityComponentAccessor, 100000);
 
         var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<StructNumberComponent, StructNumber2Component>();
         componentGroup.RefreshData();

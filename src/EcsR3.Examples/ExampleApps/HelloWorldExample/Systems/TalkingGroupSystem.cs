@@ -1,6 +1,7 @@
 ﻿using System;
 using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.HelloWorldExample.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
@@ -16,9 +17,9 @@ namespace EcsR3.Examples.ExampleApps.HelloWorldExample.Systems
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
-        public void Process(IEntity entity)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
         {
-            var canTalkComponent = entity.GetComponent<CanTalkComponent>();
+            var canTalkComponent = entityComponentAccessor.GetComponent<CanTalkComponent>(entityId);
             Console.WriteLine($"Entity says '{canTalkComponent.Message}' @ {DateTime.Now}");
         }
     }

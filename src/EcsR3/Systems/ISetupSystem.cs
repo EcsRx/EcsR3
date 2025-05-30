@@ -1,4 +1,5 @@
 ﻿using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 
 namespace EcsR3.Systems
 {
@@ -21,6 +22,6 @@ namespace EcsR3.Systems
         /// The logic run when the entity needs setting up
         /// </summary>
         /// <param name="entity">The entity to setup</param>
-        void Setup(IEntity entity);
+        void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId);
     }
 }

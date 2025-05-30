@@ -1,5 +1,5 @@
 ﻿using EcsR3.Collections.Entities;
-using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Pools;
 using SystemsR3.Pools.Config;
 
@@ -8,25 +8,28 @@ namespace EcsR3.Pools
     /// <summary>
     /// Allows you to create a pool of entities which can be reused without having to constantly re-create them
     /// </summary>
-    public abstract class EntityPool : ObjectPool<IEntity>
+    public abstract class EntityPool : GenericPool<int>
     {
         public IEntityCollection EntityCollection { get; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; }
 
-        protected EntityPool(IEntityCollection entityCollection, PoolConfig poolConfig = null) : base(poolConfig)
-        { EntityCollection = entityCollection; }
-
-        public abstract void SetupEntity(IEntity entity);
-
-        public override IEntity Create()
+        protected EntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor,
+            PoolConfig poolConfig = null) : base(poolConfig)
         {
-            var entity = EntityCollection.Create();
-            SetupEntity(entity);
-            return entity;
+            EntityCollection = entityCollection;
+            EntityComponentAccessor = entityComponentAccessor;
         }
 
-        public override void Destroy(IEntity instance)
+        public abstract void SetupEntity(int entityId);
+
+        public override int Create()
         {
-            instance.RemoveAllComponents();
+            var entityId = EntityCollection.Create();
+            SetupEntity(entityId);
+            return entityId;
         }
+
+        public override void Destroy(int entityId)
+        { EntityComponentAccessor.RemoveAllComponents(entityId); }
     }
 }

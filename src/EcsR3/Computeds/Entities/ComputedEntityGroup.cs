@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Collections.Entities;
-using EcsR3.Entities;
 using EcsR3.Groups;
 using EcsR3.Groups.Tracking.Trackers;
 using R3;
@@ -17,7 +16,7 @@ namespace EcsR3.Computeds.Entities
         public readonly HashSet<int> CachedEntityIds;
         public readonly CompositeDisposable Subscriptions;
 
-        public IReadOnlyCollection<IEntity> Value
+        public IReadOnlyCollection<int> Value
         {
             get
             {
@@ -26,18 +25,18 @@ namespace EcsR3.Computeds.Entities
             }
         }
         
-        public IEnumerable<IEntity> EnumerableEntities => CachedEntityIds.Select(Collection.Get);
+        public IEnumerable<int> EnumerableEntities => CachedEntityIds;
 
-        public Observable<IReadOnlyCollection<IEntity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<IReadOnlyCollection<int>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
-        public Observable<IEntity> OnAdded => _onEntityAdded;
-        public Observable<IEntity> OnRemoved => _onEntityRemoved;
-        public Observable<IEntity> OnRemoving => _onEntityRemoving;
+        public Observable<int> OnAdded => _onEntityAdded;
+        public Observable<int> OnRemoved => _onEntityRemoved;
+        public Observable<int> OnRemoving => _onEntityRemoving;
         
         public IComputedEntityGroupTracker GroupTracker { get; }
         public IReadOnlyEntityCollection Collection { get; }
 
-        private readonly Subject<IEntity> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
+        private readonly Subject<int> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
         
         private readonly object _lock = new object();
         
@@ -47,9 +46,9 @@ namespace EcsR3.Computeds.Entities
             Collection = collection;
             GroupTracker = tracker;
             
-            _onEntityAdded = new Subject<IEntity>();
-            _onEntityRemoved = new Subject<IEntity>();
-            _onEntityRemoving = new Subject<IEntity>();
+            _onEntityAdded = new Subject<int>();
+            _onEntityRemoved = new Subject<int>();
+            _onEntityRemoving = new Subject<int>();
 
             Subscriptions = new CompositeDisposable();
             CachedEntityIds = new HashSet<int>();
@@ -73,32 +72,24 @@ namespace EcsR3.Computeds.Entities
         public void OnEntityJoinedGroup(int entityId)
         {
             lock (_lock) { CachedEntityIds.Add(entityId); }
-            _onEntityAdded.OnNext(Collection.Get(entityId));
+            _onEntityAdded.OnNext(entityId);
         }
         
         public void OnEntityLeavingGroup(int entityId)
         {
-            var entity = Collection.Get(entityId);
-            _onEntityRemoving.OnNext(entity);
+            _onEntityRemoving.OnNext(entityId);
         }
         
         public void OnEntityLeftGroup(int entityId)
         {
-            var entity = Collection.Get(entityId);
             lock (_lock) { CachedEntityIds.Remove(entityId); }
-            _onEntityRemoved.OnNext(entity);
+            _onEntityRemoved.OnNext(entityId);
         }
 
         public bool Contains(int id)
         {
             lock(_lock)
             { return CachedEntityIds.Contains(id); }
-        }
-
-        public IEntity Get(int id)
-        {
-            lock (_lock)
-            { return CachedEntityIds.TryGetValue(id, out var entityId) ? Collection.Get(entityId) : null; }
         }
 
         public void Dispose()
@@ -121,7 +112,7 @@ namespace EcsR3.Computeds.Entities
             }
         }
 
-        public IEnumerator<IEntity> GetEnumerator()
+        public IEnumerator<int> GetEnumerator()
         { return EnumerableEntities.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
