@@ -196,7 +196,7 @@ namespace EcsR3.Collections.Entities
             Span<int> possibleComponents = stackalloc int[ComponentLength];
             var usedIndexes = 0;
             
-            var spanData = new Span2D<int>(ComponentAllocationData);
+            var spanData = new ReadOnlySpan2D<int>(ComponentAllocationData);
             var allComponentAllocations = spanData.GetColumn(entityId);
             for(var i=0; i<allComponentAllocations.Length; i++)
             {
@@ -209,8 +209,8 @@ namespace EcsR3.Collections.Entities
 
         public int[] GetEntitiesWithComponent(int componentTypeId)
         {
-            Span2D<int> spanData;
-            lock (_lock) { spanData = new Span2D<int>(ComponentAllocationData); }
+            ReadOnlySpan2D<int> spanData;
+            lock (_lock) { spanData = new ReadOnlySpan2D<int>(ComponentAllocationData); }
             var componentEntities = spanData.GetRow(componentTypeId);
             Span<int> potentialEntities = stackalloc int[EntityLength];
             
@@ -260,8 +260,8 @@ namespace EcsR3.Collections.Entities
 
         public int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds)
         {
-            Span2D<int> spanData;
-            lock (_lock) { spanData = new Span2D<int>(ComponentAllocationData); }
+            ReadOnlySpan2D<int> spanData;
+            lock (_lock) { spanData = new ReadOnlySpan2D<int>(ComponentAllocationData); }
             var componentColumn = spanData.GetRow(componentTypeId);
             var allocationIds = new int[entityIds.Length];
             for (var i = 0; i < entityIds.Length; i++)
