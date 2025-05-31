@@ -6,6 +6,7 @@ using EcsR3.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Systems

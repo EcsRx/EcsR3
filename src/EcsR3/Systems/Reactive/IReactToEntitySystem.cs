@@ -1,9 +1,7 @@
-using System;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
 
-namespace EcsR3.Systems
+namespace EcsR3.Systems.Reactive
 {
     /// <summary>
     /// React To Entity systems react as and when the entity needs to be processed,

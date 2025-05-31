@@ -1,9 +1,7 @@
-using System;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
 
-namespace EcsR3.Systems
+namespace EcsR3.Systems.Reactive
 {
     /// <summary>
     /// React to data systems are a more advanced version of React To Entity systems,

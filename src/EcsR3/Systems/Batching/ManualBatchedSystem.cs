@@ -4,6 +4,7 @@ using EcsR3.Computeds.Components.Registries;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
+using EcsR3.Systems.Augments;
 using R3;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
@@ -37,16 +38,6 @@ namespace EcsR3.Systems.Batching
         /// </summary>
         /// <returns>A trigger indicating that the process should run</returns>
         protected abstract Observable<Unit> ReactWhen();
-
-        /// <summary>
-        /// Do anything before the batch gets processed
-        /// </summary>
-        protected virtual void BeforeProcessing(){}
-        
-        /// <summary>
-        /// Do anything after the batch has been processed
-        /// </summary>
-        protected virtual void AfterProcessing(){}
         
         /// <summary>
         /// The wrapper for processing the underlying batch
@@ -70,9 +61,13 @@ namespace EcsR3.Systems.Batching
         
         private void RunBatch()
         {
-            BeforeProcessing();
+            if (this is ISystemPreProcessor preProcessor)
+            { preProcessor.BeforeProcessing(); }
+            
             ProcessBatch();
-            AfterProcessing();
+            
+            if (this is ISystemPostProcessor postProcessor)
+            { postProcessor.AfterProcessing(); }
         }
 
         public virtual void StopSystem()

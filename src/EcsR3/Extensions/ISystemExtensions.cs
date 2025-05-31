@@ -1,6 +1,7 @@
 ﻿using System;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using SystemsR3.Extensions;
 using SystemsR3.Systems;
 

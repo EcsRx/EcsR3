@@ -3,6 +3,7 @@ using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Plugins.Views.Systems;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using SystemsR3.Attributes;
 
 namespace EcsR3.Tests.Systems.PriorityScenarios

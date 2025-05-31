@@ -1,4 +1,3 @@
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using SystemsR3.Scheduling;
 

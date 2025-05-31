@@ -7,11 +7,12 @@ using EcsR3.Examples.ExampleApps.BatchedGroupExample.Lookups;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
 {
-    public class LoggingSystem : IReactToGroupExSystem
+    public class LoggingSystem : IReactToGroupSystem
     {
         public IGroup Group { get; } = new Group(typeof(NameComponent), typeof(PositionComponent));
 

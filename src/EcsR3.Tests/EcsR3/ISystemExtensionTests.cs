@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EcsR3.Extensions;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using NSubstitute;
 using SystemsR3.Extensions;
 using Xunit;

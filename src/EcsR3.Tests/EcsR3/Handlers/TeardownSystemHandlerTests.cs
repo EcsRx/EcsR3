@@ -9,6 +9,7 @@ using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
 using EcsR3.Systems.Handlers;
+using EcsR3.Systems.Reactive;
 using NSubstitute;
 using R3;
 using Xunit;

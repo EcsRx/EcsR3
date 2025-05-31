@@ -1,15 +1,12 @@
 using EcsR3.Computeds.Entities;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
 
-namespace EcsR3.Systems
+namespace EcsR3.Systems.Reactive
 {
     /// <summary>
-    /// React To LookupGroup systems are the more common ECS style system,
-    /// as they batch handle all applicable entities at once. This means
-    /// you do not react to individual entities and instead react at the
-    /// group level, be it every frame or time period.
+    /// React To Group systems are like React To Entity systems, but
+    /// they observe at the group level not the entity level
     /// </summary>
     /// <remarks>
     /// This is the most common use case system, as it aligns with common

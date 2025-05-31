@@ -9,7 +9,9 @@ using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Augments;
 using EcsR3.Systems.Handlers;
+using EcsR3.Systems.Reactive;
 using NSubstitute;
 using R3;
 using SystemsR3.Threading;
@@ -28,12 +30,10 @@ namespace EcsR3.Tests.EcsR3.Handlers
             var reactToEntitySystemHandler = new ReactToGroupSystemHandler(entityComponentAccessor, observableGroupManager, threadHandler);
             
             var fakeMatchingSystem = Substitute.For<IReactToGroupSystem>();
-            var fakeMatchingSystem2 = Substitute.For<IReactToGroupExSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<ISetupSystem>();
             var fakeNonMatchingSystem2 = Substitute.For<IGroupSystem>();
             
             Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem));
-            Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));
             Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1));
             Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2));
         }
@@ -72,7 +72,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         }
         
         [Fact]
-        public void should_execute_system_without_predicate_with_pre_post()
+        public void should_execute_system_without_predicate_with_pre_post_augments()
         {
             var id1 = 1;
             var id2 = 2;
@@ -90,9 +90,12 @@ namespace EcsR3.Tests.EcsR3.Handlers
             observableGroupManager.GetComputedGroup(Arg.Is(fakeGroup)).Returns(mockComputedEntityGroup);
 
             var observableSubject = new Subject<IComputedEntityGroup>();
-            var mockSystem = Substitute.For<IReactToGroupExSystem>();
+            var mockSystem = Substitute.For<IReactToGroupSystem, ISystemPreProcessor, ISystemPostProcessor>();
             mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockComputedEntityGroup)).Returns(observableSubject);
+
+            var mockPreProcessor = mockSystem as ISystemPreProcessor;
+            var mockPostProcessor = mockSystem as ISystemPostProcessor;
             
             var systemHandler = new ReactToGroupSystemHandler(entityComponentAccessor, observableGroupManager, threadHandler);
             systemHandler.SetupSystem(mockSystem);
@@ -100,8 +103,8 @@ namespace EcsR3.Tests.EcsR3.Handlers
             observableSubject.OnNext(mockComputedEntityGroup);
             
             mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<int>());
-            mockSystem.ReceivedWithAnyArgs(1).BeforeProcessing();
-            mockSystem.ReceivedWithAnyArgs(1).AfterProcessing();
+            mockPreProcessor.ReceivedWithAnyArgs(1).BeforeProcessing();
+            mockPostProcessor.ReceivedWithAnyArgs(1).AfterProcessing();
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }

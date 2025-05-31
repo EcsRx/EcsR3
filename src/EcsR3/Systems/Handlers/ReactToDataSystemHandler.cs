@@ -5,6 +5,7 @@ using System.Reflection;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
+using EcsR3.Systems.Reactive;
 using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Extensions;

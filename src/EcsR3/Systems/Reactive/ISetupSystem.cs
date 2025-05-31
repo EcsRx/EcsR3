@@ -1,7 +1,6 @@
-﻿using EcsR3.Entities;
-using EcsR3.Entities.Accessors;
+﻿using EcsR3.Entities.Accessors;
 
-namespace EcsR3.Systems
+namespace EcsR3.Systems.Reactive
 {
     /// <summary>
     /// Setup systems are run ONCE when an entity joins a given group,

@@ -7,6 +7,7 @@ using EcsR3.Groups;
 using EcsR3.Plugins.GroupBinding.Exceptions;
 using EcsR3.Plugins.GroupBinding.Systems.Handlers;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using EcsR3.Tests.Models;
 using EcsR3.Tests.Plugins.GroupBinding.Handlers.Helpers;
 using NSubstitute;

@@ -14,6 +14,7 @@ using SystemsR3.Scheduling;
 using SystemsR3.Systems;
 using SystemsR3.Threading;
 using EcsR3.Extensions;
+using EcsR3.Systems.Augments;
 using R3;
 
 namespace EcsR3.Systems.Handlers
@@ -58,6 +59,9 @@ namespace EcsR3.Systems.Handlers
 
         private void ExecuteForGroup(IReadOnlyList<int> entities, IBasicEntitySystem castSystem, bool runParallel = false)
         {
+            if(castSystem is ISystemPreProcessor preProcessor)
+            { preProcessor.BeforeProcessing(); }
+            
             var elapsedTime = UpdateScheduler.ElapsedTime;
             if (runParallel)
             {
@@ -68,6 +72,9 @@ namespace EcsR3.Systems.Handlers
             
             for (var i = entities.Count - 1; i >= 0; i--)
             { castSystem.Process(EntityComponentAccessor, entities[i], elapsedTime); }
+            
+            if(castSystem is ISystemPostProcessor postProcessor)
+            { postProcessor.AfterProcessing(); }
         }
 
         public void DestroySystem(ISystem system)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using SystemsR3.Extensions;
 using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Systems;

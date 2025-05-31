@@ -5,6 +5,7 @@ using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using EcsR3.Tests.Models;
 using R3;
 
