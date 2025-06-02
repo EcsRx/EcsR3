@@ -29,6 +29,6 @@ namespace EcsR3.Systems.Reactive
         /// The processor for the entity
         /// </summary>
         /// <param name="entityIds">The ids of all the entities in the group</param>
-        void Process(IEntityComponentAccessor entityComponentAccessor, IReadOnlyList<Entity> entities);
+        void Process(IEntityComponentAccessor entityComponentAccessor, Entity[] entities);
     }
 }

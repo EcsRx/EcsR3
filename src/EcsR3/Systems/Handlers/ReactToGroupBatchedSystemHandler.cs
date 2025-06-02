@@ -46,7 +46,7 @@ namespace EcsR3.Systems.Handlers
             { _systemSubscriptions.Add(system, noPredicateSub); }
         }
 
-        private void ExecuteForGroup(IReadOnlyList<Entity> entities, IReactToGroupBatchedSystem system)
+        private void ExecuteForGroup(Entity[] entities, IReactToGroupBatchedSystem system)
         {
             if(system is ISystemPreProcessor preProcessor)
             { preProcessor.BeforeProcessing(); }

@@ -62,7 +62,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             
             observableSubject.OnNext(mockComputedEntityGroup);
             
-            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<IReadOnlyList<Entity>>());
+            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<Entity[]>());
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -97,7 +97,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             
             observableSubject.OnNext(mockComputedEntityGroup);
             
-            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<IReadOnlyList<Entity>>());
+            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<Entity[]>());
             mockPreProcessor.ReceivedWithAnyArgs(1).BeforeProcessing();
             mockPostProcessor.ReceivedWithAnyArgs(1).AfterProcessing();
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);

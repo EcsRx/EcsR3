@@ -42,6 +42,7 @@ namespace EcsR3.Infrastructure.Modules
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
             registry.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToGroupBatchedSystemHandler>();
             registry.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
             registry.Bind<IConventionalSystemHandler, SetupSystemHandler>();
             registry.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
