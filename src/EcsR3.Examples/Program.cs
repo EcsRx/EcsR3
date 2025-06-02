@@ -45,8 +45,8 @@ namespace EcsR3.Examples
                 new Example("Performance: Entity Creation With Class Components", () => new MakingLotsOfClassEntitiesApplication().StartApplication()),
                 new Example("Performance: Entity Creation With Struct Components", () => new MakingLotsOfStructEntitiesApplication().StartApplication()),
                 
-                //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
-                //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
+                new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
+                new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
             };
 
             var exampleSelector = new SelectionPrompt<Example>()
@@ -56,10 +56,8 @@ namespace EcsR3.Examples
                     .UseConverter(x => x.Name)
                     .AddChoices(availableExamples);
             
-            //var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-            //exampleToRun.Executor();
-            
-            new EntityAddAndGetClassComponentScenarioApplication().StartApplication();
+            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
+            exampleToRun.Executor();
         }
     }
 }
