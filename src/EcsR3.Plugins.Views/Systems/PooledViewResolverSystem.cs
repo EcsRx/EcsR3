@@ -30,35 +30,35 @@ namespace EcsR3.Plugins.Views.Systems
         public abstract IViewHandler CreateViewHandler();
         
         protected virtual void OnPoolStarting(){}
-        protected abstract void OnViewRecycled(IEntityComponentAccessor entityComponentAccessor, object view, int entity);
-        protected abstract void OnViewAllocated(IEntityComponentAccessor entityComponentAccessor, object view, int entity);
+        protected abstract void OnViewRecycled(IEntityComponentAccessor entityComponentAccessor, object view, Entity entity);
+        protected abstract void OnViewAllocated(IEntityComponentAccessor entityComponentAccessor, object view, Entity entity);
 
-        protected virtual void RecycleView(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
+        protected virtual void RecycleView(IEntityComponentAccessor entityComponentAccessor, Entity entity, ViewComponent viewComponent)
         {
             var view = viewComponent.View;
             ViewPool.Release(view);
             viewComponent.View = null;
-            OnViewRecycled(entityComponentAccessor, view, entityId);
+            OnViewRecycled(entityComponentAccessor, view, entity);
         }
 
-        protected virtual object AllocateView(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
+        protected virtual object AllocateView(IEntityComponentAccessor entityComponentAccessor, Entity entity, ViewComponent viewComponent)
         {
             var viewToAllocate = ViewPool.Allocate();
             viewComponent.View = viewToAllocate;
-            OnViewAllocated(entityComponentAccessor, viewToAllocate, entityId);
+            OnViewAllocated(entityComponentAccessor, viewToAllocate, entity);
             return viewToAllocate;
         }
         
-        public void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
-            RecycleView(entityComponentAccessor, entityId, viewComponent);
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entity);
+            RecycleView(entityComponentAccessor, entity, viewComponent);
         }
 
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
-            AllocateView(entityComponentAccessor, entityId, viewComponent);
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entity);
+            AllocateView(entityComponentAccessor, entity, viewComponent);
         }
 
         public void StartSystem()

@@ -5,6 +5,7 @@ using EcsR3.Collections.Entities;
 using EcsR3.Collections.Entities.Pools;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
+using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using NSubstitute;
 using SystemsR3.Pools.Config;
@@ -62,7 +63,7 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var allocations = new List<int>();
+        var allocations = new List<Entity>();
         for (var i = 0; i < allocationSize; i++)
         {
             var allocation = entityAllocationDatabase.AllocateEntity();
@@ -92,19 +93,19 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entityId = 5;
+        var entity = new Entity(5, 0);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
         
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId] = 1;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId] = 1;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId] = 1;
-        entityAllocationDatabase.ReleaseEntity(entityId);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 1;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity.Id] = 1;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id] = 1;
+        entityAllocationDatabase.ReleaseEntity(entity);
 
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id]);
     }
     
     [Theory]
@@ -149,14 +150,14 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entityId = 3;
+        var entity = new Entity(3, 0);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
         
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId] = 23;
-        var componentTypes = entityAllocationDatabase.GetAllocatedComponentTypes(entityId);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id] = 23;
+        var componentTypes = entityAllocationDatabase.GetAllocatedComponentTypes(entity);
 
         Assert.Equal(2, componentTypes.Length);
         Assert.Contains(componentTypeId1, componentTypes);
@@ -182,14 +183,14 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entityId = 3;
+        var entity = new Entity(3, 0);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
         
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId] = 23;
-        var allocations = entityAllocationDatabase.GetEntityAllocations(entityId);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id] = 23;
+        var allocations = entityAllocationDatabase.GetEntityAllocations(entity);
 
         Assert.Equal(3, allocations.Length);
         Assert.Equal(22, allocations[componentTypeId1]);
@@ -215,11 +216,11 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
         
-        var entity1Id = 3;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id] = 22;
+        var entity = new Entity(3, 0);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
         
-        var allocation1 = entityAllocationDatabase.GetEntityComponentAllocation(componentTypeId1, entity1Id);
-        var allocation2 = entityAllocationDatabase.GetEntityComponentAllocation(componentTypeId2, entity1Id);
+        var allocation1 = entityAllocationDatabase.GetEntityComponentAllocation(componentTypeId1, entity);
+        var allocation2 = entityAllocationDatabase.GetEntityComponentAllocation(componentTypeId2, entity);
             
         Assert.Equal(22, allocation1);
         Assert.Equal(IEntityAllocationDatabase.NoAllocation, allocation2);
@@ -248,15 +249,15 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entityId = 3;
-        var allocation1 = entityAllocationDatabase.AllocateComponent(componentTypeId1, entityId);
-        var allocation2 = entityAllocationDatabase.AllocateComponent(componentTypeId3, entityId);
+        var entity = new Entity(3, 0);
+        var allocation1 = entityAllocationDatabase.AllocateComponent(componentTypeId1, entity);
+        var allocation2 = entityAllocationDatabase.AllocateComponent(componentTypeId3, entity);
 
         Assert.Equal(22, allocation1);
         Assert.Equal(74, allocation2);
-        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId]);
-        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity.Id]);
+        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id]);
     }
     
     [Fact]
@@ -285,9 +286,9 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entity1Id = 3;
-        var entity2Id = 6;
-        var entityIds = new[] { entity1Id, entity2Id };
+        var entity1 = new Entity(3, 0);
+        var entity2 = new Entity(6, 0);
+        var entityIds = new[] { entity1, entity2 };
         var component1Allocations = entityAllocationDatabase.AllocateComponent(componentTypeId1, entityIds);
         var component3Allocations = entityAllocationDatabase.AllocateComponent(componentTypeId3, entityIds);
 
@@ -297,12 +298,12 @@ public class EntityAllocationDatabaseTests
         Assert.Equal(entityIds.Length, component3Allocations.Length);
         Assert.Equal(expectedC3Allocations, component3Allocations);
         
-        Assert.Equal(expectedC1Allocations[0], entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id]);
-        Assert.Equal(expectedC1Allocations[1], entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity1Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2Id]);
-        Assert.Equal(expectedC3Allocations[0], entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1Id]);
-        Assert.Equal(expectedC3Allocations[1], entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity2Id]);
+        Assert.Equal(expectedC1Allocations[0], entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id]);
+        Assert.Equal(expectedC1Allocations[1], entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity1.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2.Id]);
+        Assert.Equal(expectedC3Allocations[0], entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id]);
+        Assert.Equal(expectedC3Allocations[1], entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity2.Id]);
     }
     
     [Fact]
@@ -328,14 +329,14 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
 
-        var entityId = 3;
-        var allocations = entityAllocationDatabase.AllocateComponents([componentTypeId1, componentTypeId3], entityId);
+        var entity = new Entity(3, 0);
+        var allocations = entityAllocationDatabase.AllocateComponents([componentTypeId1, componentTypeId3], entity);
 
         Assert.Equal(22, allocations[0]);
         Assert.Equal(74, allocations[1]);
-        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entityId]);
-        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+        Assert.Equal(22, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity.Id]);
+        Assert.Equal(74, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id]);
     }
     
     [Fact]
@@ -357,13 +358,13 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
         
-        var entityId = 3;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId] = 13;
+        var entity = new Entity(3, 0);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id] = 13;
         
-        var hasComponent1 = entityAllocationDatabase.HasComponent(componentTypeId1, entityId);
-        var hasComponent2 = entityAllocationDatabase.HasComponent(componentTypeId2, entityId);
-        var hasComponent3 = entityAllocationDatabase.HasComponent(componentTypeId3, entityId);
+        var hasComponent1 = entityAllocationDatabase.HasComponent(componentTypeId1, entity);
+        var hasComponent2 = entityAllocationDatabase.HasComponent(componentTypeId2, entity);
+        var hasComponent3 = entityAllocationDatabase.HasComponent(componentTypeId3, entity);
             
         Assert.True(hasComponent1);
         Assert.False(hasComponent2);
@@ -389,14 +390,14 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
         
-        var entityId = 3;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId] = 13;
+        var entity = new Entity(3, 0);
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id] = 13;
         
-        entityAllocationDatabase.ReleaseComponent(componentTypeId1, entityId);
+        entityAllocationDatabase.ReleaseComponent(componentTypeId1, entity);
             
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entityId]);
-        Assert.Equal(13, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entityId]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id]);
+        Assert.Equal(13, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id]);
     }
     
     [Fact]
@@ -418,23 +419,23 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
         
-        var entity1Id = 3;
-        var entity2Id = 6;
-        var entityIds = new[] { entity1Id, entity2Id };
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1Id] = 13;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2Id] = 25;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2Id] = 16;
+        var entity1 = new Entity(3, 0);
+        var entity2 = new Entity(6, 0);
+        var entities = new[] { entity1, entity2 };
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id] = 13;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2.Id] = 25;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2.Id] = 16;
         
-        entityAllocationDatabase.ReleaseComponent(componentTypeId1, entityIds);
-        entityAllocationDatabase.ReleaseComponent(componentTypeId3, entityIds);
+        entityAllocationDatabase.ReleaseComponent(componentTypeId1, entities);
+        entityAllocationDatabase.ReleaseComponent(componentTypeId3, entities);
             
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity2Id]);
-        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity1Id]);
-        Assert.Equal(16, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity2.Id]);
+        Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity1.Id]);
+        Assert.Equal(16, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2.Id]);
     }
     
     [Fact]
@@ -456,14 +457,14 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockEntityChangeRouter, mockComponentTypeLookup);
         
-        var entity1Id = 3;
-        var entity2Id = 6;
-        var entity3Id = 7;
-        var expectedEntities = new[] { entity1Id, entity2Id };
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id] = 22;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1Id] = 13;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2Id] = 25;
-        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2Id] = 16;
+        var entity1 = new Entity(3, 0);
+        var entity2 = new Entity(6, 0);
+        var entity3 = new Entity(7, 0);
+        var expectedEntities = new[] { entity1, entity2 };
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id] = 22;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id] = 13;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2.Id] = 25;
+        entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity2.Id] = 16;
         
         var actualEntities = entityAllocationDatabase.GetEntitiesWithComponent(componentTypeId1);
             

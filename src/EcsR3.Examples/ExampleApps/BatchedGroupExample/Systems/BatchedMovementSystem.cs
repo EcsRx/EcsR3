@@ -3,6 +3,7 @@ using System.Numerics;
 using SystemsR3.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsR3.Systems.Batching.Convention;
@@ -19,7 +20,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.Interval(TimeSpan.FromSeconds(0.5f)).Select(x => Unit.Default); }
 
-        protected override void Process(int entityId, ref PositionComponent positionComponent, MovementSpeedComponent movementSpeedComponent)
+        protected override void Process(Entity entity, ref PositionComponent positionComponent, MovementSpeedComponent movementSpeedComponent)
         {
             positionComponent.Position += Vector3.One * movementSpeedComponent.Speed;
         }

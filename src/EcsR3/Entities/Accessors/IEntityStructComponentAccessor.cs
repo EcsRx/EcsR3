@@ -10,7 +10,7 @@ namespace EcsR3.Entities.Accessors
         /// <typeparam name="T">The type of the component</typeparam>
         /// <returns>The ref of the component</returns>
         /// <remarks>This is meant for struct based components and is used instead of AddComponent</remarks>
-        ref T CreateComponent<T>(int entityId) where T : struct, IComponent;
+        ref T CreateComponent<T>(Entity entity) where T : struct, IComponent;
         
         /// <summary>
         /// Gets a component from its type id
@@ -19,7 +19,7 @@ namespace EcsR3.Entities.Accessors
         /// <typeparam name="T">The type of the component</typeparam>
         /// <returns>The ref of the component</returns>
         /// <remarks>This is meant for struct based components</remarks>
-        ref T GetComponentRef<T>(int entityId) where T : struct, IComponent;
+        ref T GetComponentRef<T>(Entity entity) where T : struct, IComponent;
         
         /// <summary>
         /// Updates a component from its type id with the new values
@@ -28,6 +28,6 @@ namespace EcsR3.Entities.Accessors
         /// <param name="newValue">The struct containing new values</param>
         /// <typeparam name="T">The type of the component</typeparam>
         /// <remarks>This is meant for struct based components</remarks>
-        void UpdateComponent<T>(int entityId, T newValue) where T : struct, IComponent;
+        void UpdateComponent<T>(Entity entity, T newValue) where T : struct, IComponent;
     }
 }

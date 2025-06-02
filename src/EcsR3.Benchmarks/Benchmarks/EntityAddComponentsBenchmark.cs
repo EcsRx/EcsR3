@@ -15,7 +15,7 @@ namespace EcsR3.Benchmarks.Benchmarks
     public class EntityAddComponentsBenchmark : EcsR3Benchmark
     {
         private Type[] _availableComponentTypes;
-        private List<int> _entities = new List<int>();
+        private List<Entity> _entities = new List<Entity>();
         private IComponent[] _components;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         
@@ -36,7 +36,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         public override void Setup()
         {
             for (var i = 0; i < EntityCount; i++)
-            { _entities.Add(i); }
+            { _entities.Add(new Entity(i, 0)); }
 
             _components = _availableComponentTypes
                 .Take(ComponentCount)

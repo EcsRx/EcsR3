@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Numerics;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Blueprints;
@@ -30,7 +31,7 @@ namespace EcsR3.Examples.Custom.BatchTests
 
             public void ForceRun() => ProcessBatch();
             
-            protected override void Process(int entityId, ref StructComponent component1, ref StructComponent2 component2)
+            protected override void Process(Entity entity, ref StructComponent component1, ref StructComponent2 component2)
             {
                 component1.Position += Vector3.One;
                 component1.Something += 10;

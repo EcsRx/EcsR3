@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Systems.Augments;
 using EcsR3.Systems.Reactive;
@@ -45,7 +46,7 @@ namespace EcsR3.Systems.Handlers
             { _systemSubscriptions.Add(system, noPredicateSub); }
         }
 
-        private void ExecuteForGroup(IReadOnlyList<int> entities, IReactToGroupBatchedSystem system)
+        private void ExecuteForGroup(IReadOnlyList<Entity> entities, IReactToGroupBatchedSystem system)
         {
             if(system is ISystemPreProcessor preProcessor)
             { preProcessor.BeforeProcessing(); }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsR3.Components;
+using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
 using EcsR3.Examples.ExampleApps.Performance.Helper;
 using EcsR3.Extensions;
@@ -14,7 +15,7 @@ namespace EcsR3.Benchmarks.Benchmarks
     {
         private IEnumerable<IComponent> _availableComponents;
         private Type[] _availableComponentTypes;
-        private int[] _entities;
+        private Entity[] _entities;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         
         [Params(1000, 10000, 100000)]

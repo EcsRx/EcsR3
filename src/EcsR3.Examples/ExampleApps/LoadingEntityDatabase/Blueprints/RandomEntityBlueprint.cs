@@ -15,7 +15,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Blueprints
 
         private Random _random = new Random();
         
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var component1 = new DummyComponent1
             {
@@ -30,7 +30,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Blueprints
                 SomeQuaternion = RandomQuaternion()
             };
             
-            entityComponentAccessor.AddComponents(entityId, component1, component2);
+            entityComponentAccessor.AddComponents(entity, component1, component2);
         }
         
         public string RandomString()

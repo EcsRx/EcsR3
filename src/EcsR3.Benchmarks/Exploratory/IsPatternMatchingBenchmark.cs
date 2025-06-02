@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using EcsR3.Computeds.Entities;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -21,14 +22,14 @@ public class IsPatternMatchingBenchmark
         public void BeforeProcessing(){}
         public void AfterProcessing(){}
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup) { return null; }
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId){}
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity){}
     }
     
     class SomeClassWithoutType : IReactToGroupSystem
     {
         public IGroup Group { get; }
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup) { return null; }
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId){}
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity){}
     }
     
     [Params(10000,100000,10000000)]
@@ -44,7 +45,7 @@ public class IsPatternMatchingBenchmark
         for (int i = 0; i < instances.Length; i++)
         {
             var instance = instances[i];
-            instance.Process(null, 0);
+            instance.Process(null, new Entity(0, 0));
         }
     }
     
@@ -59,7 +60,7 @@ public class IsPatternMatchingBenchmark
         {
             var instance = instances[i];
             
-            instance.Process(null, 0);
+            instance.Process(null, new Entity(0, 0));
             
             if(instance is ISystemPreProcessor preProcessor)
             { preProcessor.BeforeProcessing(); }
@@ -81,7 +82,7 @@ public class IsPatternMatchingBenchmark
         {
             var instance = instances[i];
             
-            instance.Process(null, 0);
+            instance.Process(null, new Entity(0, 0));
             
             if(instance is ISystemPreProcessor preProcessor)
             { preProcessor.BeforeProcessing(); }

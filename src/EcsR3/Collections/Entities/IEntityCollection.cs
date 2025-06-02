@@ -15,27 +15,27 @@ namespace EcsR3.Collections.Entities
         /// </summary>
         /// <param name="id">Id to use for the entity (defaults to null, meaning it'll automatically get the next available id)</param>
         /// <returns></returns>
-        int Create(int? id = null);
+        Entity Create(int? id = null);
 
         /// <summary>
         /// Creates many entities at once
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        int[] CreateMany(int count);
+        Entity[] CreateMany(int count);
         
         /// <summary>
         /// This will remove the entity from the collection and optionally destroy the entity.
         /// It is worth noting if you try to remove an entity id that does not exist you will get an exception
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
-        void Remove(int id);
+        void Remove(Entity id);
         
         /// <summary>
         /// Removes many entities at once
         /// </summary>
         /// <param name="ids"></param>
-        void Remove(IReadOnlyList<int> ids);
+        void Remove(IReadOnlyList<Entity> entities);
         
         /// <summary>
         /// Removes all entities from the collection

@@ -12,9 +12,9 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
     {
         public IGroup Group { get; } = new Group(typeof(PlayerStateComponent));
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, ElapsedTime elapsedTime)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
         {
-            var playerState = entityComponentAccessor.GetComponent<PlayerStateComponent>(entityId);
+            var playerState = entityComponentAccessor.GetComponent<PlayerStateComponent>(entity);
             playerState.PlayTime += elapsedTime.DeltaTime;
         }
     }

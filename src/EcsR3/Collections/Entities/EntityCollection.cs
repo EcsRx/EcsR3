@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
 
@@ -11,46 +11,38 @@ namespace EcsR3.Collections.Entities
         public IEntityAllocationDatabase EntityAllocationDatabase { get; }
         public IEntityComponentAccessor EntityComponentAccessor { get; }
         
-        public readonly HashSet<int> EntityLookup;
+        public readonly HashSet<Entity> EntityLookup;
 
-        public IReadOnlyCollection<int> Value => EntityLookup;
+        public IReadOnlyCollection<Entity> Value => EntityLookup;
         
-        public Observable<int> OnAdded => _onAdded;
-        public Observable<int> OnRemoved => _onRemoved;
-        public Observable<IReadOnlyCollection<int>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<Entity> OnAdded => _onAdded;
+        public Observable<Entity> OnRemoved => _onRemoved;
+        public Observable<IReadOnlyCollection<Entity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
-        private readonly Subject<int> _onAdded;
-        private readonly Subject<int> _onRemoved;
+        private readonly Subject<Entity> _onAdded;
+        private readonly Subject<Entity> _onRemoved;
         
         private readonly object _lock = new object();
         
         public EntityCollection(IEntityAllocationDatabase entityAllocationDatabase, IEntityComponentAccessor entityComponentAccessor)
         {
-            EntityLookup = new HashSet<int>();
+            EntityLookup = new HashSet<Entity>();
             EntityAllocationDatabase = entityAllocationDatabase;
             EntityComponentAccessor = entityComponentAccessor;
 
-            _onAdded = new Subject<int>();
-            _onRemoved = new Subject<int>();
+            _onAdded = new Subject<Entity>();
+            _onRemoved = new Subject<Entity>();
         }
         
-        public int Create(int? id = null)
+        public Entity Create(int? id = null)
         {
-            int entityId;
-            lock (_lock)
-            {
-                if (id.HasValue && EntityLookup.Contains(id.Value))
-                { throw new InvalidOperationException("id already exists"); }
-
-                entityId= EntityAllocationDatabase.AllocateEntity(id);
-                EntityLookup.Add(entityId);
-            }
-
-            _onAdded.OnNext(entityId);
-            return entityId;
+            var entity = EntityAllocationDatabase.AllocateEntity(id);
+            lock (_lock) { EntityLookup.Add(entity); }
+            _onAdded.OnNext(entity);
+            return entity;
         }
 
-        public int[] CreateMany(int count)
+        public Entity[] CreateMany(int count)
         {
             var entityIds = EntityAllocationDatabase.AllocateEntities(count);
             lock (_lock)
@@ -61,21 +53,21 @@ namespace EcsR3.Collections.Entities
             return entityIds;
         }
 
-        public void Remove(IReadOnlyList<int> ids)
+        public void Remove(IReadOnlyList<Entity> entities)
         {
-            for(var i=0;i<ids.Count;i++)
-            { Remove(ids[i]); }
+            for(var i=0;i<entities.Count;i++)
+            { Remove(entities[i]); }
         }
 
-        public void Remove(int entityId)
+        public void Remove(Entity entity)
         {
-            EntityComponentAccessor.RemoveAllComponents(entityId);
+            EntityComponentAccessor.RemoveAllComponents(entity);
             
             lock (_lock)
-            { EntityLookup.Remove(entityId); }
+            { EntityLookup.Remove(entity); }
             
-            EntityAllocationDatabase.ReleaseEntity(entityId);
-            _onRemoved.OnNext(entityId);
+            EntityAllocationDatabase.ReleaseEntity(entity);
+            _onRemoved.OnNext(entity);
         }
 
         public void RemoveAll()
@@ -89,13 +81,13 @@ namespace EcsR3.Collections.Entities
             }
         }
 
-        public bool Contains(int id)
+        public bool Contains(Entity entity)
         {
             lock (_lock)
-            { return EntityLookup.Contains(id); }
+            { return EntityLookup.Contains(entity); }
         }
 
-        public IEnumerator<int> GetEnumerator()
+        public IEnumerator<Entity> GetEnumerator()
         {
             lock (_lock)
             { return EntityLookup.GetEnumerator(); }

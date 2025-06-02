@@ -14,12 +14,12 @@ namespace EcsR3.Tests.Systems
     {
         public IGroup Group => new Group().WithComponent<TestComponentOne>();
 
-        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             return Observable.Timer(TimeSpan.FromSeconds(1)).Select(x => 0.1f);
         }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, float reactionData)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, float reactionData)
         {
             throw new NotImplementedException();
         }

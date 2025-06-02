@@ -1,17 +1,18 @@
 ﻿using System.Runtime.InteropServices;
+using EcsR3.Entities;
 
 namespace EcsR3.Computeds.Components
 {
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
         }
     }
@@ -19,14 +20,14 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
         }
@@ -35,15 +36,15 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
         public readonly int Component3Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation, int component3Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation, int component3Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
             Component3Allocation = component3Allocation;
@@ -53,16 +54,16 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
         public readonly int Component3Allocation;
         public readonly int Component4Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
             Component3Allocation = component3Allocation;
@@ -73,7 +74,7 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
@@ -81,9 +82,9 @@ namespace EcsR3.Computeds.Components
         public readonly int Component4Allocation;
         public readonly int Component5Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
             Component3Allocation = component3Allocation;
@@ -95,7 +96,7 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5, T6>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
@@ -104,9 +105,9 @@ namespace EcsR3.Computeds.Components
         public readonly int Component5Allocation;
         public readonly int Component6Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation, int component6Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation, int component6Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
             Component3Allocation = component3Allocation;
@@ -119,7 +120,7 @@ namespace EcsR3.Computeds.Components
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ComponentBatch<T1, T2, T3, T4, T5, T6, T7>
     {
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         public readonly int Component1Allocation;
         public readonly int Component2Allocation;
@@ -129,9 +130,9 @@ namespace EcsR3.Computeds.Components
         public readonly int Component6Allocation;
         public readonly int Component7Allocation;
 
-        public ComponentBatch(int entityId, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation, int component6Allocation, int component7Allocation)
+        public ComponentBatch(Entity entity, int component1Allocation, int component2Allocation, int component3Allocation, int component4Allocation, int component5Allocation, int component6Allocation, int component7Allocation)
         {
-            EntityId = entityId;
+            Entity = entity;
             Component1Allocation = component1Allocation;
             Component2Allocation = component2Allocation;
             Component3Allocation = component3Allocation;

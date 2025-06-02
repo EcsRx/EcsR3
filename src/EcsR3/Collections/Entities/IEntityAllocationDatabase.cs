@@ -1,27 +1,30 @@
-﻿namespace EcsR3.Collections.Entities
+﻿using EcsR3.Entities;
+
+namespace EcsR3.Collections.Entities
 {
     public interface IEntityAllocationDatabase : IBatchEntityAllocationDatabase
     {
         public const int NoAllocation = -1;
         
-        int AllocateEntity(int? id = null);
-        int[] AllocateEntities(int count);
-        void ReleaseEntity(int entityId);
-        int AllocateComponent(int componentTypeId, int entityId);
-        int[] AllocateComponents(int[] componentTypeId, int entityId);
-        bool HasComponent(int componentTypeId, int entityId);
-        int ReleaseComponent(int componentTypeId, int entityId);
-        int[] GetEntityAllocations(int entityId);
-        int[] GetAllocatedComponentTypes(int entityId);
-        int[] GetEntitiesWithComponent(int componentTypeId);
-        int GetEntityComponentAllocation(int componentTypeId, int entityId);
+        Entity? GetEntity(int entityId);
+        Entity AllocateEntity(int? id = null);
+        Entity[] AllocateEntities(int count);
+        void ReleaseEntity(Entity entity);
+        int AllocateComponent(int componentTypeId, Entity entity);
+        int[] AllocateComponents(int[] componentTypeId, Entity entity);
+        bool HasComponent(int componentTypeId, Entity entity);
+        int ReleaseComponent(int componentTypeId, Entity entity);
+        int[] GetEntityAllocations(Entity entity);
+        int[] GetAllocatedComponentTypes(Entity entity);
+        Entity[] GetEntitiesWithComponent(int componentTypeId);
+        int GetEntityComponentAllocation(int componentTypeId, Entity entity);
         void PreAllocate(int count);
     }
     
     public interface IBatchEntityAllocationDatabase
     {
-       int[] AllocateComponent(int componentTypeId, int[] entityIds);
-       int[] ReleaseComponent(int componentTypeId, int[] entityIds);
-       int[] GetEntityComponentAllocation(int componentTypeId, int[] entityIds);
+       int[] AllocateComponent(int componentTypeId, Entity[] entities);
+       int[] ReleaseComponent(int componentTypeId, Entity[] entities);
+       int[] GetEntityComponentAllocation(int componentTypeId, Entity[] entities);
     }
 }

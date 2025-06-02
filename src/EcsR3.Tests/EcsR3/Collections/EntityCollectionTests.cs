@@ -1,4 +1,5 @@
 ﻿using EcsR3.Collections.Entities;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using NSubstitute;
 using R3;
@@ -11,9 +12,10 @@ namespace EcsR3.Tests.EcsR3.Collections
         [Fact]
         public void should_create_new_entity_and_raise_event()
         {
+            var expectedEntity = new Entity(1, 0);
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
-            entityAllocationDatabase.AllocateEntity().Returns(1);
+            entityAllocationDatabase.AllocateEntity().Returns(expectedEntity);
 
             var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
             
@@ -22,8 +24,8 @@ namespace EcsR3.Tests.EcsR3.Collections
             
             var entity = entityCollection.Create();
             
-            Assert.Contains(1, entityCollection.EntityLookup);
-            Assert.Equal(1, entity);
+            Assert.Contains(entity, entityCollection.EntityLookup);
+            Assert.Equal(expectedEntity, entity);
             Assert.True(wasCalled);
         }
 
@@ -32,9 +34,9 @@ namespace EcsR3.Tests.EcsR3.Collections
         {
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
-            var id1 = 1;
+            var entity = new Entity(1, 0);
             
-            entityAllocationDatabase.AllocateEntity().Returns(id1);
+            entityAllocationDatabase.AllocateEntity().Returns(entity);
            
             var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
             
@@ -42,10 +44,10 @@ namespace EcsR3.Tests.EcsR3.Collections
             entityCollection.OnRemoved.Subscribe(x => wasCalled = true);
             
             entityCollection.Create();
-            entityCollection.Remove(id1);
+            entityCollection.Remove(entity);
 
             Assert.True(wasCalled);
-            Assert.DoesNotContain(id1, entityCollection);
+            Assert.DoesNotContain(entity, entityCollection);
         }
         
         [Fact]
@@ -53,15 +55,15 @@ namespace EcsR3.Tests.EcsR3.Collections
         {
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
-            var id1 = 1;
+            var entity = new Entity(1, 0);
             
             var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
-            entityCollection.EntityLookup.Add(id1);
+            entityCollection.EntityLookup.Add(entity);
             
-            entityCollection.Remove(id1);
+            entityCollection.Remove(entity);
 
-            entityComponentAccessor.Received(1).RemoveAllComponents(id1);
-            Assert.DoesNotContain(id1, entityCollection);
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity);
+            Assert.DoesNotContain(entity, entityCollection);
         }
         
         [Fact]
@@ -69,20 +71,20 @@ namespace EcsR3.Tests.EcsR3.Collections
         {
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
-            var id1 = 1;
-            var id2 = 2;
-            var id3 = 3;
-           
+            var entity1 = new Entity(1, 0);
+            var entity2 = new Entity(2, 0);
+            var entity3 = new Entity(3, 0);
+            
             var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
-            entityCollection.EntityLookup.Add(id1);
-            entityCollection.EntityLookup.Add(id2);
-            entityCollection.EntityLookup.Add(id3);
+            entityCollection.EntityLookup.Add(entity1);
+            entityCollection.EntityLookup.Add(entity2);
+            entityCollection.EntityLookup.Add(entity3);
             
             entityCollection.RemoveAll();
 
-            entityComponentAccessor.Received(1).RemoveAllComponents(id1);
-            entityComponentAccessor.Received(1).RemoveAllComponents(id2);
-            entityComponentAccessor.Received(1).RemoveAllComponents(id3);
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity1);
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity2);
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity3);
             Assert.Empty(entityCollection);
         }
     }

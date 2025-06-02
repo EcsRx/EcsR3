@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
@@ -42,7 +39,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_execute_system_without_predicate()
         {
-            var fakeEntities = new List<int> { 1,2 };
+            var fakeEntities = new List<Entity> { new(1,0), new(2,0) };
             
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
@@ -66,7 +63,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             
             observableSubject.OnNext(new ElapsedTime());
             
-            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<int>(), default);
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<Entity>(), default);
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }

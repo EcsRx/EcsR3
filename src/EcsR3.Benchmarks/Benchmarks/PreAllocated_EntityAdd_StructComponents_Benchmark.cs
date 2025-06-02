@@ -17,7 +17,7 @@ namespace EcsR3.Benchmarks.Benchmarks;
 public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
 {
     private Type[] _availableComponentTypes;
-    private List<int> _entities = new List<int>();
+    private List<Entity> _entities = new List<Entity>();
     private IComponent[] _components;
     private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
 
@@ -45,7 +45,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
     public override void Setup()
     {
         for (var i = 0; i < EntityCount; i++)
-        { _entities.Add(i); }
+        { _entities.Add(new Entity(i, 0)); }
 
         _components = new []{ typeof(StructComponent1), typeof(StructComponent2), typeof(StructComponent3) }
             .Take(ComponentCount)

@@ -10,7 +10,7 @@ namespace EcsR3.Entities.Routing
         /// <summary>
         /// The id of the entity that has changed
         /// </summary>
-        public readonly int EntityId;
+        public readonly Entity Entity;
         
         /// <summary>
         /// The component ids that have changed
@@ -18,9 +18,9 @@ namespace EcsR3.Entities.Routing
         /// <remarks>This is a memory to reduce allocations</remarks>
         public readonly ReadOnlyMemory<int> ComponentIds;
 
-        public EntityChanges(int entityId, ReadOnlyMemory<int> componentIds)
+        public EntityChanges(Entity entity, ReadOnlyMemory<int> componentIds)
         {
-            EntityId = entityId;
+            Entity = entity;
             ComponentIds = componentIds;
         }
     }

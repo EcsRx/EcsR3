@@ -17,11 +17,11 @@ public class BatchedProcessTestSystem : BatchedSystem<TestComponentOne, TestComp
 {
     public class BatchedProcessTestBlueprint : IBlueprint, IBatchedBlueprint
     {
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { entityComponentAccessor.CreateComponents<TestComponentOne, TestComponentTwo>(entityId); }
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { entityComponentAccessor.CreateComponents<TestComponentOne, TestComponentTwo>(entity); }
 
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
-        { entityComponentAccessor.CreateComponents<TestComponentOne, TestComponentTwo>(entityIds); }
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity[] entities)
+        { entityComponentAccessor.CreateComponents<TestComponentOne, TestComponentTwo>(entities); }
     }
 
     public BatchedProcessTestSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
@@ -33,7 +33,7 @@ public class BatchedProcessTestSystem : BatchedSystem<TestComponentOne, TestComp
 
     protected override Observable<Unit> ReactWhen() => Observable.Never<Unit>();
 
-    protected override void Process(int entityId, TestComponentOne component1, TestComponentTwo component2)
+    protected override void Process(Entity entity, TestComponentOne component1, TestComponentTwo component2)
     {
         Interlocked.Add(ref TimesCalled, 1);
     }

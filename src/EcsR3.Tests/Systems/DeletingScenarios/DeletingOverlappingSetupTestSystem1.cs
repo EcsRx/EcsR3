@@ -20,7 +20,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingOverlappingSetupTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { EntityCollection.Remove(entityId); }
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { EntityCollection.Remove(entity); }
     }
 }

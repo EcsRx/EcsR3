@@ -19,11 +19,11 @@ public class ComputedComponentGroupTests
     [Fact]
     public void should_create_batch_with_correct_values()
     {
-        var id1 = 1;
-        var id2 = 2;
-        var fakeEntities = new List<int>{ id1, id2 };
+        var entity1 = new Entity(1, 0);
+        var entity2 = new Entity(2, 0);
+        var fakeEntities = new List<Entity> { entity1, entity2 };
         
-        var onChangedHandler = new Subject<IReadOnlyCollection<int>>();
+        var onChangedHandler = new Subject<IReadOnlyCollection<Entity>>();
         var dummyGroup = new LookupGroup([0,1], []);
         var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
         mockComputedEntityGroup.Count.Returns(fakeEntities.Count);
@@ -36,18 +36,18 @@ public class ComputedComponentGroupTests
         mockTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
 
         var mockEntityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
-        mockEntityAllocationDatabase.GetEntityComponentAllocation(0, id1).Returns(22);
-        mockEntityAllocationDatabase.GetEntityComponentAllocation(1, id1).Returns(23);
-        mockEntityAllocationDatabase.GetEntityComponentAllocation(0, id2).Returns(1);
-        mockEntityAllocationDatabase.GetEntityComponentAllocation(1, id2).Returns(2);
+        mockEntityAllocationDatabase.GetEntityComponentAllocation(0, entity1).Returns(22);
+        mockEntityAllocationDatabase.GetEntityComponentAllocation(1, entity1).Returns(23);
+        mockEntityAllocationDatabase.GetEntityComponentAllocation(0, entity2).Returns(1);
+        mockEntityAllocationDatabase.GetEntityComponentAllocation(1, entity2).Returns(2);
         
         var computedComponentGroup = new ComputedComponentGroup<TestComponentOne, TestComponentTwo>(mockTypeLookup, mockEntityAllocationDatabase, mockComputedEntityGroup);
         var batches = computedComponentGroup.Value.Span;
         Assert.Equal(fakeEntities.Count, batches.Length);
-        Assert.Equal(fakeEntities[0], batches[0].EntityId);
+        Assert.Equal(fakeEntities[0], batches[0].Entity);
         Assert.Equal(22, batches[0].Component1Allocation);
         Assert.Equal(23, batches[0].Component2Allocation);
-        Assert.Equal(fakeEntities[1], batches[1].EntityId);
+        Assert.Equal(fakeEntities[1], batches[1].Entity);
         Assert.Equal(1, batches[1].Component1Allocation);
         Assert.Equal(2, batches[1].Component2Allocation);
     }

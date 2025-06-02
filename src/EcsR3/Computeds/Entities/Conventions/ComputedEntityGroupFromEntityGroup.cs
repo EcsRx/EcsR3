@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using R3;
@@ -12,12 +13,12 @@ namespace EcsR3.Computeds.Entities.Conventions
     {
         public LookupGroup Group { get; }
         
-        public readonly HashSet<int> CachedEntityIds;
+        public readonly HashSet<Entity> CachedEntityIds;
         public readonly CompositeDisposable Subscriptions;
         public readonly IComputedEntityGroup DataSource;
         public readonly IEntityComponentAccessor EntityComponentAccessor;
 
-        public IReadOnlyCollection<int> Value
+        public IReadOnlyCollection<Entity> Value
         {
             get
             {
@@ -26,13 +27,13 @@ namespace EcsR3.Computeds.Entities.Conventions
             }
         }
 
-        public Observable<IReadOnlyCollection<int>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<IReadOnlyCollection<Entity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         
-        public Observable<int> OnAdded => _onEntityAdded;
-        public Observable<int> OnRemoved => _onEntityRemoved;
-        public Observable<int> OnRemoving => _onEntityRemoving;
+        public Observable<Entity> OnAdded => _onEntityAdded;
+        public Observable<Entity> OnRemoved => _onEntityRemoved;
+        public Observable<Entity> OnRemoving => _onEntityRemoving;
         
-        private readonly Subject<int> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
+        private readonly Subject<Entity> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
         private readonly object _lock = new object();
         
         public ComputedEntityGroupFromEntityGroup(IEntityComponentAccessor entityComponentAccessor, IComputedEntityGroup dataSource)
@@ -41,12 +42,12 @@ namespace EcsR3.Computeds.Entities.Conventions
             DataSource = dataSource;
             EntityComponentAccessor = entityComponentAccessor;
 
-            _onEntityAdded = new Subject<int>();
-            _onEntityRemoved = new Subject<int>();
-            _onEntityRemoving = new Subject<int>();
+            _onEntityAdded = new Subject<Entity>();
+            _onEntityRemoved = new Subject<Entity>();
+            _onEntityRemoving = new Subject<Entity>();
 
             Subscriptions = new CompositeDisposable();
-            CachedEntityIds = new HashSet<int>(dataSource.Where(IsEntityValid));
+            CachedEntityIds = new HashSet<Entity>(dataSource.Where(IsEntityValid));
 
             ListenForChanges();
         }
@@ -60,49 +61,49 @@ namespace EcsR3.Computeds.Entities.Conventions
             RefreshWhen().Subscribe(_ => Refresh()).AddTo(Subscriptions);
         }
 
-        public abstract bool IsEntityValid(int entity);
+        public abstract bool IsEntityValid(Entity entity);
         public virtual Observable<Unit> RefreshWhen() => Observable.Never<Unit>();
         
         public virtual void Refresh()
         {
-            foreach (var entityId in DataSource)
+            foreach (var entity in DataSource)
             {
-                var isValid = IsEntityValid(entityId);
-                var containsEntity = Contains(entityId);
+                var isValid = IsEntityValid(entity);
+                var containsEntity = Contains(entity);
 
                 if (isValid)
                 {
                     if(containsEntity) { continue; }
 
                     lock (_lock)
-                    { CachedEntityIds.Add(entityId); }
+                    { CachedEntityIds.Add(entity); }
 
-                    _onEntityAdded.OnNext(entityId);
+                    _onEntityAdded.OnNext(entity);
                     continue;
                 }
 
                 if (!containsEntity) { continue; }
                 
                 lock (_lock)
-                { CachedEntityIds.Remove(entityId); }
+                { CachedEntityIds.Remove(entity); }
                 
-                _onEntityRemoving.OnNext(entityId);
-                _onEntityRemoved.OnNext(entityId);
+                _onEntityRemoving.OnNext(entity);
+                _onEntityRemoved.OnNext(entity);
             }
             
         }
 
-        public void OnEntityAddedToGroup(int entityId)
+        public void OnEntityAddedToGroup(Entity entity)
         {
-            if(!IsEntityValid(entityId)) { return; }
-            lock (_lock) { CachedEntityIds.Add(entityId); }
-            _onEntityAdded.OnNext(entityId);
+            if(!IsEntityValid(entity)) { return; }
+            lock (_lock) { CachedEntityIds.Add(entity); }
+            _onEntityAdded.OnNext(entity);
         }
 
-        public bool Contains(int id)
+        public bool Contains(Entity entity)
         {
             lock(_lock)
-            { return CachedEntityIds.Contains(id); }
+            { return CachedEntityIds.Contains(entity); }
         }
         
         public void Dispose()
@@ -125,7 +126,7 @@ namespace EcsR3.Computeds.Entities.Conventions
             }
         }
 
-        public IEnumerator<int> GetEnumerator()
+        public IEnumerator<Entity> GetEnumerator()
         { return CachedEntityIds.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()

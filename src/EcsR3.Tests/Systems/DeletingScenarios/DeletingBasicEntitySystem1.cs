@@ -18,7 +18,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingBasicEntitySystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, ElapsedTime elapsedTime)
-        { EntityCollection.Remove(entityId); }
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
+        { EntityCollection.Remove(entity); }
     }
 }

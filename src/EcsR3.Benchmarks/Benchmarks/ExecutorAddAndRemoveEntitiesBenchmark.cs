@@ -21,10 +21,10 @@ namespace EcsR3.Benchmarks.Benchmarks
         public AddAndRemoveEntitySystem(IGroup group)
         { Group = group; }
 
-        public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { return Observable.Empty<int>(); }
+        public Observable<Entity> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { return Observable.Empty<Entity>(); }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {}
     }
     

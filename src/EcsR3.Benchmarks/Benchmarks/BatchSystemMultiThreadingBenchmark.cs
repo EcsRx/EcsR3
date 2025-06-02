@@ -18,11 +18,11 @@ public class BatchSystemMultiThreadingBenchmark : EcsR3Benchmark
 {
     public class ClassBatchSystemBlueprint : IBlueprint, IBatchedBlueprint
     {
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { entityComponentAccessor.AddComponents(entityId, new ClassComponent(), new ClassComponent2()); }
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { entityComponentAccessor.AddComponents(entity, new ClassComponent(), new ClassComponent2()); }
 
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
-        { entityComponentAccessor.CreateComponents<ClassComponent, ClassComponent2>(entityIds); }
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity[] entities)
+        { entityComponentAccessor.CreateComponents<ClassComponent, ClassComponent2>(entities); }
     }
     
     public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
@@ -37,7 +37,7 @@ public class BatchSystemMultiThreadingBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
             
-        protected override void Process(int entityId, ClassComponent component1, ClassComponent2 component2)
+        protected override void Process(Entity entity, ClassComponent component1, ClassComponent2 component2)
         {
             component1.Position += Vector3.One;
             component1.Something += 10;

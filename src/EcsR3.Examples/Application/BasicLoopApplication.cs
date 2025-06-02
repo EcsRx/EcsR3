@@ -39,7 +39,7 @@ namespace EcsR3.Examples.Application
         }
 
         protected abstract string Description { get; }
-        protected abstract void SetupEntity(IEntityComponentAccessor entityComponentAccessor, int entityId);
+        protected abstract void SetupEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity);
         protected abstract void RunProcess();
     }
 }

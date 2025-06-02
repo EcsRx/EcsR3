@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Systems.Reactive;
 using R3;
@@ -58,8 +59,8 @@ namespace EcsR3.Systems.Handlers
             observableGroup.OnRemoved
                 .Subscribe(x =>
                 {
-                    if (entitySubscriptions.ContainsKey(x))
-                    { entitySubscriptions.RemoveAndDispose(x); }
+                    if (entitySubscriptions.ContainsKey(x.Id))
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
 
@@ -67,10 +68,10 @@ namespace EcsR3.Systems.Handlers
             { SetupEntity(castSystem, entity, entitySubscriptions); }
         }
         
-        public void SetupEntity(ISetupSystem system, int entity, Dictionary<int, IDisposable> subs)
+        public void SetupEntity(ISetupSystem system, Entity entity, Dictionary<int, IDisposable> subs)
         {
             lock (_lock)
-            { subs.Add(entity, null); }
+            { subs.Add(entity.Id, null); }
                 
             ProcessEntity(system, entity);
         }
@@ -81,7 +82,7 @@ namespace EcsR3.Systems.Handlers
             { _systemSubscriptions.RemoveAndDispose(system); }
         }
 
-        public void ProcessEntity(ISetupSystem system, int entity)
+        public void ProcessEntity(ISetupSystem system, Entity entity)
         {
             system.Setup(EntityComponentAccessor, entity);
         }

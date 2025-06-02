@@ -21,24 +21,24 @@ namespace EcsR3.Plugins.Views.Systems
 
         public abstract IViewHandler CreateViewHandler();
         
-        protected virtual void OnViewRemoved(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
+        protected virtual void OnViewRemoved(IEntityComponentAccessor entityComponentAccessor, Entity entity, ViewComponent viewComponent)
         { ViewHandler.DestroyView(viewComponent.View); }
 
-        protected abstract void OnViewCreated(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent);
+        protected abstract void OnViewCreated(IEntityComponentAccessor entityComponentAccessor, Entity entity, ViewComponent viewComponent);
         
-        public virtual void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public virtual void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
-            OnViewRemoved(entityComponentAccessor, entityId, viewComponent);
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entity);
+            OnViewRemoved(entityComponentAccessor, entity, viewComponent);
         }
 
-        public virtual void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public virtual void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entityId);
+            var viewComponent = entityComponentAccessor.GetComponent<ViewComponent>(entity);
             if (viewComponent.View != null) { return; }
 
             viewComponent.View = ViewHandler.CreateView();
-            OnViewCreated(entityComponentAccessor, entityId, viewComponent);
+            OnViewCreated(entityComponentAccessor, entity, viewComponent);
         }
 
         public void StartSystem()

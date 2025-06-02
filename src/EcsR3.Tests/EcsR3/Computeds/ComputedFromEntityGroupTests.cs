@@ -17,25 +17,24 @@ namespace EcsR3.Tests.EcsR3.Computeds
         [Fact]
         public void should_refresh_when_data_changed()
         {
-            var id1 = 1;
-            var id2 = 2;
-            var id3 = 3;
+            var entity1 = new Entity(1, 0);
+            var entity2 = new Entity(2, 0);
+            var entity3 = new Entity(3, 0);
+            var fakeEntities = new List<Entity> {entity1, entity2, entity3};
             
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
-            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(id1)).Returns(false);
-            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(id2)).Returns(true);
-            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(id3)).Returns(true);
+            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(entity1)).Returns(false);
+            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(entity2)).Returns(true);
+            entityComponentAccessor.HasComponent<TestComponentThree>(Arg.Is(entity3)).Returns(true);
 
-            var expectedData = id3.GetHashCode();
-
-            var fakeEntities = new List<int> {id1, id2, id3};
+            var expectedData = entity3.GetHashCode();
             
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
             mockComputedEntityGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
 
             var computedGroupData = new TestComputedFromEntityGroup(entityComponentAccessor, mockComputedEntityGroup);
 
-            fakeEntities.Remove(id2);
+            fakeEntities.Remove(entity2);
             computedGroupData.ManuallyRefresh.OnNext(Unit.Default);
             
             var actualData = computedGroupData.Value;

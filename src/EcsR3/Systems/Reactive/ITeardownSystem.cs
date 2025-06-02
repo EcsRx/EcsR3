@@ -1,4 +1,5 @@
-﻿using EcsR3.Entities.Accessors;
+﻿using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 
 namespace EcsR3.Systems.Reactive
 {
@@ -18,6 +19,6 @@ namespace EcsR3.Systems.Reactive
         /// The teardown method to be run when the entity is leaving the group
         /// </summary>
         /// <param name="entity">The entity to teardown</param>
-        void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId);
+        void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity);
     }
 }

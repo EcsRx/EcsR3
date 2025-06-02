@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
@@ -41,9 +38,9 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_execute_system_without_predicate()
         {
-            var id1 = 1;
-            var id2 = 2;
-            var fakeEntities = new List<int> { id1, id2 };
+            var entity1 = new Entity(1,0);
+            var entity2 = new Entity(2, 0);
+            var fakeEntities = new List<Entity> { entity1 ,entity2 };
             
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
@@ -66,7 +63,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             
             observableSubject.OnNext(mockComputedEntityGroup);
             
-            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<int>());
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<Entity>());
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -74,9 +71,9 @@ namespace EcsR3.Tests.EcsR3.Handlers
         [Fact]
         public void should_execute_system_without_predicate_with_pre_post_augments()
         {
-            var id1 = 1;
-            var id2 = 2;
-            var fakeEntities = new List<int> { id1, id2 };
+            var entity1 = new Entity(1,0);
+            var entity2 = new Entity(2, 0);
+            var fakeEntities = new List<Entity> { entity1 ,entity2 };
             
             var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
             var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
@@ -102,7 +99,7 @@ namespace EcsR3.Tests.EcsR3.Handlers
             
             observableSubject.OnNext(mockComputedEntityGroup);
             
-            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<int>());
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntityComponentAccessor>(), Arg.Any<Entity>());
             mockPreProcessor.ReceivedWithAnyArgs(1).BeforeProcessing();
             mockPostProcessor.ReceivedWithAnyArgs(1).AfterProcessing();
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);

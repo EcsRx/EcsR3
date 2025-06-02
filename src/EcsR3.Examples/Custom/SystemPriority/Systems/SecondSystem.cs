@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Custom.SystemPriority.Groups;
 using EcsR3.Groups;
@@ -13,7 +14,7 @@ namespace EcsR3.Examples.Custom.SystemPriority.Systems
     {
         public IGroup Group => new MessageGroup();
 
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             Console.WriteLine("SYSTEM 2");
         }

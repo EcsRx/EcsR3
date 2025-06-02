@@ -19,33 +19,33 @@ namespace EcsR3.Groups.Tracking
             EntityAllocationDatabase = entityAllocationDatabase;
         }
 
-        public int MatchingComponentCount(int entityId, int[] componentTypeIds)
+        public int MatchingComponentCount(Entity entity, int[] componentTypeIds)
         {
             var count = 0;
             for(var i=0;i<componentTypeIds.Length;i++)
             {
-                if(EntityAllocationDatabase.HasComponent(componentTypeIds[i], entityId))
+                if(EntityAllocationDatabase.HasComponent(componentTypeIds[i], entity))
                 { count++; }
             }
             return count;
         }
         
-        public IComputedEntityGroupTracker TrackGroup(LookupGroup group, IEnumerable<int> initialEntityIds = null)
+        public IComputedEntityGroupTracker TrackGroup(LookupGroup group, IEnumerable<Entity> initialEntities = null)
         {
             var entityRouterComputedentityGroupTracker = new ComputedEntityGroupTracker(EntityChangeRouter, group);
 
-            if(initialEntityIds is null)
+            if(initialEntities is null)
             { return entityRouterComputedentityGroupTracker; }
 
-            foreach (var entityId in initialEntityIds)
+            foreach (var entity in initialEntities)
             {
-                var matchingRequiredComponents = MatchingComponentCount(entityId, group.RequiredComponents);
-                var matchingExcludedComponents = MatchingComponentCount(entityId, group.ExcludedComponents);
+                var matchingRequiredComponents = MatchingComponentCount(entity, group.RequiredComponents);
+                var matchingExcludedComponents = MatchingComponentCount(entity, group.ExcludedComponents);
                 if(matchingExcludedComponents == 0 && matchingRequiredComponents == 0) { continue; }
                 
                 var requiredComponentsNeeded = group.RequiredComponents.Length - matchingRequiredComponents;
                 var state = new GroupMatchingState(requiredComponentsNeeded, matchingExcludedComponents);
-                entityRouterComputedentityGroupTracker.StartTracking(entityId, state);
+                entityRouterComputedentityGroupTracker.StartTracking(entity, state);
             }
             
             return entityRouterComputedentityGroupTracker;

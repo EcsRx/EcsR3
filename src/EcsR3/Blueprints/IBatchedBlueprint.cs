@@ -1,4 +1,5 @@
-﻿using EcsR3.Entities.Accessors;
+﻿using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 
 namespace EcsR3.Blueprints
 {
@@ -8,6 +9,6 @@ namespace EcsR3.Blueprints
         /// Applies the given blueprint to the entity
         /// </summary>
         /// <param name="entity">The entity to be configured</param>
-        void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds);
+        void Apply(IEntityComponentAccessor entityComponentAccessor, Entity[] entities);
     }
 }

@@ -19,14 +19,14 @@ namespace EcsR3.Tests.Systems.PriorityScenarios
     {
         public IGroup Group => null;
         
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId) {}
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity) {}
     }
     
     [Priority(-102)]
     public class LowestPriorityViewResolverSystem : IViewResolverSystem
     {
         public IGroup Group => null;
-        public void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId){}
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId){}
+        public void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity){}
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity){}
     }
 }

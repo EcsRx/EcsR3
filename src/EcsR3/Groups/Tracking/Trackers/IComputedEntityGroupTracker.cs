@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EcsR3.Entities;
 using R3;
 
 namespace EcsR3.Groups.Tracking.Trackers
@@ -17,22 +18,22 @@ namespace EcsR3.Groups.Tracking.Trackers
         /// <summary>
         /// Provides the entity Id that has been added to the group
         /// </summary>
-        Observable<int> OnEntityJoinedGroup { get; }
+        Observable<Entity> OnEntityJoinedGroup { get; }
         
         /// <summary>
         /// Provides the entity Id that is leaving the group
         /// </summary>
-        Observable<int> OnEntityLeavingGroup { get; }
+        Observable<Entity> OnEntityLeavingGroup { get; }
         
         /// <summary>
         /// Provides the entity if that has left the group
         /// </summary>
-        Observable<int> OnEntityLeftGroup { get; }
+        Observable<Entity> OnEntityLeftGroup { get; }
         
         /// <summary>
         /// Gets all entity ids that are currently in the group
         /// </summary>
         /// <returns></returns>
-        IEnumerable<int> GetMatchedEntityIds();
+        IEnumerable<Entity> GetMatchedEntities();
     }
 }

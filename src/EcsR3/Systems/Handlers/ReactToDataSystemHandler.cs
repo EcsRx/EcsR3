@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Systems.Reactive;
@@ -35,19 +36,20 @@ namespace EcsR3.Systems.Handlers
         }
 
         // TODO: This is REALLY bad but currently no other way around the dynamic invocation lookup stuff
-        public IEnumerable<Func<int, IDisposable>> CreateProcessorFunctions(ISystem system)
+        public IEnumerable<Func<Entity, IDisposable>> CreateProcessorFunctions(ISystem system)
         {
-            var genericMethods = system.GetGenericDataTypes(typeof(IReactToDataSystem<>))
+            var genericMethods = system
+                .GetGenericDataTypes(typeof(IReactToDataSystem<>))
                 .Select(x => _processEntityMethod.MakeGenericMethod(x));
 
             foreach (var genericMethod in genericMethods)
             { yield return entity => (IDisposable) genericMethod.Invoke(this, new object[] {system, entity}); }
         }
         
-        public IDisposable ProcessEntity<T>(IReactToDataSystem<T> system, int entityId)
+        public IDisposable ProcessEntity<T>(IReactToDataSystem<T> system, Entity entity)
         {
-            var reactObservable = system.ReactToData(EntityComponentAccessor, entityId);
-            return reactObservable.Subscribe(x => system.Process(EntityComponentAccessor, entityId, x));
+            var reactObservable = system.ReactToData(EntityComponentAccessor, entity);
+            return reactObservable.Subscribe(x => system.Process(EntityComponentAccessor, entity, x));
         }
         
         public bool CanHandleSystem(ISystem system)
@@ -81,8 +83,8 @@ namespace EcsR3.Systems.Handlers
             observableGroup.OnRemoved
                 .Subscribe(x =>
                 {
-                    if (entitySubscriptions.ContainsKey(x)) 
-                    { entitySubscriptions.RemoveAndDispose(x); }
+                    if (entitySubscriptions.ContainsKey(x.Id)) 
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
 
@@ -90,19 +92,19 @@ namespace EcsR3.Systems.Handlers
             { SetupEntity(processEntityFunctions, entity, entitySubscriptions); }
         }
         
-        public void SetupEntity(IEnumerable<Func<int, IDisposable>> systemProcessors, int entityId, Dictionary<int, IDisposable> subs)
+        public void SetupEntity(IEnumerable<Func<Entity, IDisposable>> systemProcessors, Entity entity, Dictionary<int, IDisposable> subs)
         {
             lock(_lock)
-            { subs.Add(entityId, null); }
+            { subs.Add(entity.Id, null); }
                 
             foreach (var processFunction in systemProcessors)
             {
-                var subscription = processFunction(entityId);
+                var subscription = processFunction(entity);
 
                 lock (_lock)
                 {
-                    if (subs.ContainsKey(entityId))
-                    { subs[entityId] = subscription; }
+                    if (subs.ContainsKey(entity.Id))
+                    { subs[entity.Id] = subscription; }
                     else
                     { subscription.Dispose(); }
                 }

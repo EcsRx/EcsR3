@@ -13,7 +13,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, ElapsedTime elapsedTime)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
         { throw new Exception("Should Not Be Called"); }
     }
 }

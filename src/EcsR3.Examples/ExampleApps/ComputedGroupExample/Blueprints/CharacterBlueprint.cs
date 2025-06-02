@@ -17,7 +17,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Blueprints
             Health = health;
         }
 
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var healthComponent = new HasHealthComponent
             {
@@ -30,7 +30,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Blueprints
                 Name = Name
             };
 
-            entityComponentAccessor.AddComponents(entityId, nameComponent, healthComponent);
+            entityComponentAccessor.AddComponents(entity, nameComponent, healthComponent);
         }
     }
 }

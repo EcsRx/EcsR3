@@ -20,12 +20,12 @@ public class HybridSetupSystem : ISetupSystem, ITeardownSystem, IManualSystem
         OnMethodCalled = onMethodCalled;
     }
 
-    public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+    public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
     {
         OnMethodCalled("setup");
     }
     
-    public void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
+    public void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity)
     {
         OnMethodCalled("teardown");
     }

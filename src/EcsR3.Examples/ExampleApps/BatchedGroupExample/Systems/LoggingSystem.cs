@@ -3,10 +3,8 @@ using EcsR3.Computeds.Entities;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample.Components;
-using EcsR3.Examples.ExampleApps.BatchedGroupExample.Lookups;
 using EcsR3.Extensions;
 using EcsR3.Groups;
-using EcsR3.Systems;
 using EcsR3.Systems.Reactive;
 using R3;
 
@@ -19,10 +17,10 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
         
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var nameComponent = entityComponentAccessor.GetComponent<NameComponent>(entityId);
-            var positionComponent = entityComponentAccessor.GetComponent<PositionComponent>(entityId);
+            var nameComponent = entityComponentAccessor.GetComponent<NameComponent>(entity);
+            var positionComponent = entityComponentAccessor.GetComponent<PositionComponent>(entity);
             Console.WriteLine($"{nameComponent.Name} - {positionComponent.Position}");
         }
 

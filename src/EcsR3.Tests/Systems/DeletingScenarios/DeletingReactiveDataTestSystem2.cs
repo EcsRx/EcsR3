@@ -14,10 +14,10 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public Observable<int> ReactToData(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber; }
+        public Observable<int> ReactToData(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entity).SomeNumber; }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, int reactionData)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, int reactionData)
         { throw new Exception("Should Not Get Called"); }
     }
 }

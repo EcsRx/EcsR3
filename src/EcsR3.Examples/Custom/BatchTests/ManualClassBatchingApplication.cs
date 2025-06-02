@@ -31,10 +31,10 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";
 
-        protected override void SetupEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        protected override void SetupEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            entityComponentAccessor.CreateComponent<ClassComponent>(entityId);
-            entityComponentAccessor.CreateComponent<ClassComponent2>(entityId);
+            entityComponentAccessor.CreateComponent<ClassComponent>(entity);
+            entityComponentAccessor.CreateComponent<ClassComponent2>(entity);
         }
 
         protected override void RunProcess()

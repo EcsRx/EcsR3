@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using EcsR3.Blueprints;
 using EcsR3.Components.Database;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
@@ -14,9 +15,9 @@ namespace EcsR3.Examples.ExampleApps.Performance
     {
         class LotsOfClassEntitiesBlueprint : IBatchedBlueprint
         {
-            public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
+            public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity[] entities)
             {
-                entityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entityIds);
+                entityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entities);
             }
         }
         

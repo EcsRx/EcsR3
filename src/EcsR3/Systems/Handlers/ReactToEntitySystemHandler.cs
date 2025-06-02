@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Systems.Reactive;
 using R3;
@@ -58,8 +59,8 @@ namespace EcsR3.Systems.Handlers
                 .Subscribe(x =>
                 {
                     // This is if the add elsewhere removes the entity, which triggers this before the add is
-                    if (entitySubscriptions.ContainsKey(x))
-                    { entitySubscriptions.RemoveAndDispose(x); }
+                    if (entitySubscriptions.ContainsKey(x.Id))
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
 
@@ -67,17 +68,17 @@ namespace EcsR3.Systems.Handlers
             { SetupEntity(castSystem, entity, entitySubscriptions); }
         }
 
-        public void SetupEntity(IReactToEntitySystem system, int entityId, Dictionary<int, IDisposable> subs)
+        public void SetupEntity(IReactToEntitySystem system, Entity entity, Dictionary<int, IDisposable> subs)
         {
             lock (_lock)
-            { subs.Add(entityId, null); }
+            { subs.Add(entity.Id, null); }
                 
-            var subscription = ProcessEntity(system, entityId);
+            var subscription = ProcessEntity(system, entity);
 
             lock (_lock)
             {
-                if (subs.ContainsKey(entityId))
-                { subs[entityId] = subscription; }
+                if (subs.ContainsKey(entity.Id))
+                { subs[entity.Id] = subscription; }
                 else
                 { subscription.Dispose(); }
             }
@@ -96,9 +97,9 @@ namespace EcsR3.Systems.Handlers
             }
         }
         
-        public IDisposable ProcessEntity(IReactToEntitySystem system, int entityId)
+        public IDisposable ProcessEntity(IReactToEntitySystem system, Entity entity)
         {
-            var reactObservable = system.ReactToEntity(EntityComponentAccessor, entityId);
+            var reactObservable = system.ReactToEntity(EntityComponentAccessor, entity);
             return reactObservable.Subscribe(x => system.Process(EntityComponentAccessor, x));
         }
 

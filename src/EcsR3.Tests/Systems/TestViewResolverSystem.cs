@@ -13,8 +13,8 @@ namespace EcsR3.Tests.Systems
     {
         public override IGroup Group { get; }
 
-        public Action<int> OnSetup { get; set; }
-        public Action<int> OnTeardown { get; set; }
+        public Action<Entity> OnSetup { get; set; }
+        public Action<Entity> OnTeardown { get; set; }
         
         public TestViewResolverSystem(IEventSystem eventSystem, IGroup group) : base(eventSystem)
         {
@@ -23,17 +23,17 @@ namespace EcsR3.Tests.Systems
 
         public override IViewHandler CreateViewHandler() { return null; }
 
-        protected override void OnViewCreated(IEntityComponentAccessor entityComponentAccessor, int entityId, ViewComponent viewComponent)
+        protected override void OnViewCreated(IEntityComponentAccessor entityComponentAccessor, Entity entity, ViewComponent viewComponent)
         { }
 
-        public override void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public override void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            OnSetup?.Invoke(entityId);
+            OnSetup?.Invoke(entity);
         }
         
-        public override void Teardown(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public override void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            OnTeardown?.Invoke(entityId);
+            OnTeardown?.Invoke(entity);
         }
     }
 }

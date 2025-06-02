@@ -22,10 +22,10 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingOverlappingReactiveEntityTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public Observable<int> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entityId).SomeNumber.Select(x => entityId);  }
+        public Observable<Entity> ReactToEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { return entityComponentAccessor.GetComponent<ComponentWithReactiveProperty>(entity).SomeNumber.Select(x => entity);  }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
-        { EntityCollection.Remove(entityId); }
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { EntityCollection.Remove(entity); }
     }
 }

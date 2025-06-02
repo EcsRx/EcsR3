@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
-using EcsR3.Groups;
 using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Extensions;
 using SystemsR3.Scheduling;
 using SystemsR3.Systems;
 using SystemsR3.Threading;
-using EcsR3.Extensions;
 using EcsR3.Systems.Augments;
 using R3;
 
@@ -57,7 +53,7 @@ namespace EcsR3.Systems.Handlers
             { _systemSubscriptions.Add(system, subscription); }
         }
 
-        private void ExecuteForGroup(IReadOnlyList<int> entities, IBasicEntitySystem castSystem, bool runParallel = false)
+        private void ExecuteForGroup(IReadOnlyList<Entity> entities, IBasicEntitySystem castSystem, bool runParallel = false)
         {
             if(castSystem is ISystemPreProcessor preProcessor)
             { preProcessor.BeforeProcessing(); }

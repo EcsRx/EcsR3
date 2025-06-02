@@ -16,14 +16,14 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Blueprints
             Health = health;
         }
 
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var healthComponent = new HealthComponent
             {
                 Health = new ReactiveProperty<float>(Health),
                 MaxHealth = Health
             };
-            entityComponentAccessor.AddComponents(entityId, healthComponent);
+            entityComponentAccessor.AddComponents(entity, healthComponent);
         }
     }
 }

@@ -19,10 +19,10 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var readComponent = entityComponentAccessor.GetComponent<SimpleReadComponent>(entityId);
-            var writeComponent = entityComponentAccessor.GetComponent<SimpleWriteComponent>(entityId);
+            var readComponent = entityComponentAccessor.GetComponent<SimpleReadComponent>(entity);
+            var writeComponent = entityComponentAccessor.GetComponent<SimpleWriteComponent>(entity);
             writeComponent.WrittenValue = readComponent.StartingValue;
             Thread.Sleep(1); // Just to pretend there is something complex happening
         }

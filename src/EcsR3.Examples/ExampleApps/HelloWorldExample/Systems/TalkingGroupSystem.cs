@@ -18,9 +18,9 @@ namespace EcsR3.Examples.ExampleApps.HelloWorldExample.Systems
         public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var canTalkComponent = entityComponentAccessor.GetComponent<CanTalkComponent>(entityId);
+            var canTalkComponent = entityComponentAccessor.GetComponent<CanTalkComponent>(entity);
             Console.WriteLine($"Entity says '{canTalkComponent.Message}' @ {DateTime.Now}");
         }
     }

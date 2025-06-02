@@ -13,7 +13,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public void Setup(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         { throw new Exception("Should Not Get Called"); }
     }
 }

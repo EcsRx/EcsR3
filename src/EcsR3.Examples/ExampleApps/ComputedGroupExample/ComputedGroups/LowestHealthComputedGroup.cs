@@ -1,5 +1,6 @@
 ﻿using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Extensions;
 
@@ -15,9 +16,9 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.ComputedGroups
             EntityComponentAccessor = entityComponentAccessor;
         }
 
-        public override bool IsEntityValid(int entityId)
+        public override bool IsEntityValid(Entity entity)
         {
-            var healthPercentage = EntityComponentAccessor.GetHealthPercentile(entityId);
+            var healthPercentage = EntityComponentAccessor.GetHealthPercentile(entity);
             return healthPercentage < 50;
         }
     }

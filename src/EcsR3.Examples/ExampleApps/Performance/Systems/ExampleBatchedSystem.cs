@@ -1,6 +1,7 @@
 using SystemsR3.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Systems.Batching;
@@ -18,7 +19,7 @@ namespace EcsR3.Examples.ExampleApps.Performance.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.Never<Unit>(); }
         
-        protected override void Process(int entityId, SimpleReadComponent component1, SimpleWriteComponent component2)
+        protected override void Process(Entity entity, SimpleReadComponent component1, SimpleWriteComponent component2)
         {}
     }
 }

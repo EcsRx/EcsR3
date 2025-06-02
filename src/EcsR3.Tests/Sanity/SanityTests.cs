@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
-using System.Threading.Tasks;
 using EcsR3.Collections.Entities;
 using EcsR3.Collections.Entities.Pools;
 using SystemsR3.Events;
 using SystemsR3.Executor;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Executor.Handlers.Conventional;
-using SystemsR3.Pools;
 using SystemsR3.Threading;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
@@ -26,7 +22,6 @@ using EcsR3.Groups;
 using EcsR3.Groups.Tracking;
 using EcsR3.Plugins.Views.Components;
 using EcsR3.Plugins.Views.Systems;
-using EcsR3.Systems.Batching.Convention;
 using EcsR3.Systems.Handlers;
 using EcsR3.Tests.Helpers;
 using EcsR3.Tests.Models;
@@ -36,7 +31,6 @@ using NSubstitute;
 using R3;
 using SystemsR3.Events.Messages;
 using SystemsR3.Scheduling;
-using SystemsR3.Systems;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -132,18 +126,18 @@ namespace EcsR3.Tests.Sanity
             var testComponentOneTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne));
             var testComponentTwoTypeId = componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo));
             
-            var componentOneInvocations = new List<int>();
+            var componentOneInvocations = new List<Entity>();
             entityChangeRouter
                 .OnEntityRemovedComponents(new []{testComponentOneTypeId})
                 .Subscribe(x => {
                     entityComponentAccessor.RemoveComponent<TestComponentTwo>(entityOne);
-                    componentOneInvocations.Add(x.EntityId);
+                    componentOneInvocations.Add(x.Entity);
                 });
             
-            var componentTwoInvocations = new List<int>();
+            var componentTwoInvocations = new List<Entity>();
             entityChangeRouter
                 .OnEntityRemovedComponents(new []{testComponentTwoTypeId})
-                .Subscribe(x => componentTwoInvocations.Add(x.EntityId));
+                .Subscribe(x => componentTwoInvocations.Add(x.Entity));
 
             entityComponentAccessor.AddComponents(entityOne, new TestComponentOne(), new TestComponentTwo());
             entityComponentAccessor.RemoveComponent<TestComponentOne>(entityOne);

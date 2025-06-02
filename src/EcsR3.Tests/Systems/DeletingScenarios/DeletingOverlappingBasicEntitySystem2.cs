@@ -15,7 +15,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
             .WithComponent<ComponentWithReactiveProperty>()
             .WithComponent<TestComponentThree>();
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, ElapsedTime elapsedTime)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
         { throw new Exception("Should Not Be Called"); }
     }
 }

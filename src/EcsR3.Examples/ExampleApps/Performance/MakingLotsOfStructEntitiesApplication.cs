@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using EcsR3.Blueprints;
 using EcsR3.Components.Database;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components.Struct;
@@ -17,9 +18,9 @@ public class MakingLotsOfStructEntitiesApplication : EcsR3ConsoleApplication
 {
     class LotsOfStructEntitiesBlueprint : IBatchedBlueprint
     {
-        public void Apply(IEntityComponentAccessor entityComponentAccessor, int[] entityIds)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity[] entities)
         {
-            entityComponentAccessor.CreateComponents<StructComponent1, StructComponent2>(entityIds);
+            entityComponentAccessor.CreateComponents<StructComponent1, StructComponent2>(entities);
         }
     }
         

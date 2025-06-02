@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsR3.Entities;
 using EcsR3.Entities.Routing;
 using EcsR3.Groups;
 using EcsR3.Groups.Tracking.Trackers;
@@ -49,23 +50,26 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             entityChangeRouter.OnEntityRemovedComponents(Arg.Any<int[]>()).Returns(removedRequiredComponentsSubject);
             var groupTracker = new ComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
 
-            var joinedInvocations = new List<int>();
+            var joinedInvocations = new List<Entity>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
-            var leavingInvocations = new List<int>();
+            var leavingInvocations = new List<Entity>();
             groupTracker.OnEntityLeavingGroup.Subscribe(leavingInvocations.Add);
-            var leftInvocations = new List<int>();
+            var leftInvocations = new List<Entity>();
             groupTracker.OnEntityLeftGroup.Subscribe(leftInvocations.Add);
+
+            var entity = new Entity(50, 0);
+            var entity2 = new Entity(15, 0);
             
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1,2}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(12, new[]{1}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(16, new[]{2}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{2}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{1}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1,2}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(new Entity(12, 0), new[]{1}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(new Entity(16, 0), new[]{2}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity2, new[]{2}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity2, new[]{1}));
             
             Assert.NotEmpty(joinedInvocations);
             Assert.Equal(2, joinedInvocations.Count);
-            Assert.Contains(50, joinedInvocations);
-            Assert.Contains(15, joinedInvocations);
+            Assert.Contains(entity, joinedInvocations);
+            Assert.Contains(entity2, joinedInvocations);
             
             Assert.Empty(leavingInvocations);
             Assert.Empty(leftInvocations);
@@ -93,43 +97,48 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
 
             var groupTracker = new ComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
 
-            var joinedInvocations = new List<int>();
+            var joinedInvocations = new List<Entity>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
             
-            var leavingInvocations = new List<int>();
+            var leavingInvocations = new List<Entity>();
             groupTracker.OnEntityLeavingGroup.Subscribe(leavingInvocations.Add);
             
-            var leftInvocations = new List<int>();
+            var leftInvocations = new List<Entity>();
             groupTracker.OnEntityLeftGroup.Subscribe(leftInvocations.Add);
             
-            // 50 and 15 are presumed added, 12, 16 not yet
-            groupTracker.EntityIdMatchState.Add(50, new GroupMatchingState(0, 0));
-            groupTracker.EntityIdMatchState.Add(12, new GroupMatchingState(1, 0));
-            groupTracker.EntityIdMatchState.Add(16, new GroupMatchingState(1, 0));
-            groupTracker.EntityIdMatchState.Add(15, new GroupMatchingState(0, 0));
+            var entity1 = new Entity(50, 0);
+            var entity2 = new Entity(12, 0);
+            var entity3 = new Entity(16, 0);
+            var entity4 = new Entity(15, 0);
             
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1,2}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1,2}));
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(12, new[]{1}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(12, new[]{1}));
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(16, new[]{2}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(16, new[]{2}));
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{2}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{2}));
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{1}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(15, new[]{1}));
+            // 50 and 15 are presumed added, 12, 16 not yet
+            groupTracker.EntityIdMatchState.Add(entity1, new GroupMatchingState(0, 0));
+            groupTracker.EntityIdMatchState.Add(entity2, new GroupMatchingState(1, 0));
+            groupTracker.EntityIdMatchState.Add(entity3, new GroupMatchingState(1, 0));
+            groupTracker.EntityIdMatchState.Add(entity4, new GroupMatchingState(0, 0));
+            
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity1, new[]{1,2}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity1, new[]{1,2}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity2, new[]{1}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity2, new[]{1}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity3, new[]{2}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity3, new[]{2}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity4, new[]{2}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity4, new[]{2}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity4, new[]{1}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity4, new[]{1}));
             
             Assert.Empty(joinedInvocations);
             
             Assert.NotEmpty(leavingInvocations);
             Assert.Equal(2, leavingInvocations.Count);
-            Assert.Contains(50, leavingInvocations);
-            Assert.Contains(15, leavingInvocations);      
+            Assert.Contains(entity1, leavingInvocations);
+            Assert.Contains(entity4, leavingInvocations);      
             
             Assert.NotEmpty(leftInvocations);
             Assert.Equal(2, leftInvocations.Count);
-            Assert.Contains(50, leftInvocations);
-            Assert.Contains(15, leftInvocations);
+            Assert.Contains(entity1, leftInvocations);
+            Assert.Contains(entity4, leftInvocations);
         }
 
         [Fact]
@@ -146,39 +155,40 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             entityChangeRouter.OnEntityRemovedComponents(Arg.Any<int[]>()).Returns(removedRequiredComponentsSubject);
             var groupTracker = new ComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
             
-            var joinedInvocations = new List<int>();
+            var joinedInvocations = new List<Entity>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
             
-            var leavingInvocations = new List<int>();
+            var leavingInvocations = new List<Entity>();
             groupTracker.OnEntityLeavingGroup.Subscribe(leavingInvocations.Add);
             
-            var leftInvocations = new List<int>();
+            var leftInvocations = new List<Entity>();
             groupTracker.OnEntityLeftGroup.Subscribe(leftInvocations.Add);
             
+            var entity = new Entity(50, 0);
             // 50 and 15 are presumed added, 12, 16 not yet
-            groupTracker.EntityIdMatchState.Add(50, new GroupMatchingState(0, 0));
+            groupTracker.EntityIdMatchState.Add(entity, new GroupMatchingState(0, 0));
             
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
-            removingRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
-            removedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
+            removingRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
+            removedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
             
             Assert.NotEmpty(joinedInvocations);
             Assert.Equal(2, joinedInvocations.Count);
-            Assert.Contains(50, joinedInvocations);
-            Assert.Contains(50, joinedInvocations);      
+            Assert.Contains(entity, joinedInvocations);
+            Assert.Contains(entity, joinedInvocations);      
             
             Assert.NotEmpty(leavingInvocations);
             Assert.Equal(2, leavingInvocations.Count);
-            Assert.Contains(50, leavingInvocations);
-            Assert.Contains(50, leavingInvocations);      
+            Assert.Contains(entity, leavingInvocations);
+            Assert.Contains(entity, leavingInvocations);      
             
             Assert.NotEmpty(leftInvocations);
             Assert.Equal(2, leftInvocations.Count);
-            Assert.Contains(50, leftInvocations);
-            Assert.Contains(50, leftInvocations);
+            Assert.Contains(entity, leftInvocations);
+            Assert.Contains(entity, leftInvocations);
         }
         
         [Fact]
@@ -215,37 +225,38 @@ namespace EcsR3.Tests.EcsR3.Observables.Trackers
             
             var groupTracker = new ComputedEntityGroupTracker(entityChangeRouter, lookupGroup);
             
-            var joinedInvocations = new List<int>();
+            var joinedInvocations = new List<Entity>();
             groupTracker.OnEntityJoinedGroup.Subscribe(joinedInvocations.Add);
             
-            var leavingInvocations = new List<int>();
+            var leavingInvocations = new List<Entity>();
             groupTracker.OnEntityLeavingGroup.Subscribe(leavingInvocations.Add);
             
-            var leftInvocations = new List<int>();
+            var leftInvocations = new List<Entity>();
             groupTracker.OnEntityLeftGroup.Subscribe(leftInvocations.Add);
-            
-            addedExcludedComponentsSubject.OnNext(new EntityChanges(50, new[]{2}));
-            addedRequiredComponentsSubject.OnNext(new EntityChanges(50, new[]{1}));
+
+            var entity = new Entity(50, 0);
+            addedExcludedComponentsSubject.OnNext(new EntityChanges(entity, new[]{2}));
+            addedRequiredComponentsSubject.OnNext(new EntityChanges(entity, new[]{1}));
             
             Assert.Empty(joinedInvocations);
             Assert.Empty(leavingInvocations);
             Assert.Empty(leftInvocations);
             
-            removedExcludedComponentsSubject.OnNext(new EntityChanges(50, new[]{2}));
+            removedExcludedComponentsSubject.OnNext(new EntityChanges(entity, new[]{2}));
             
             Assert.NotEmpty(joinedInvocations);
-            Assert.Single(joinedInvocations, 50);      
+            Assert.Single(joinedInvocations, entity);      
             
             Assert.Empty(leavingInvocations);      
             Assert.Empty(leftInvocations);
             
-            addedExcludedComponentsSubject.OnNext(new EntityChanges(50, new[]{2}));
+            addedExcludedComponentsSubject.OnNext(new EntityChanges(entity, new[]{2}));
             
             Assert.NotEmpty(leavingInvocations);
-            Assert.Single(leavingInvocations, 50);    
+            Assert.Single(leavingInvocations, entity);    
             
             Assert.NotEmpty(leftInvocations);
-            Assert.Single(leftInvocations, 50);   
+            Assert.Single(leftInvocations, entity);   
         }
     }
 }

@@ -17,15 +17,15 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Systems
         public IGroup Group => new Group(typeof(HealthComponent));
         private const int HealthSegments = 10;
 
-        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, int entityId)
+        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entityId);
+            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entity);
             return healthComponent.Health.WithValueChange().Select(CalculateDamageTaken);
         }
 
-        public void Process(IEntityComponentAccessor entityComponentAccessor, int entityId, float damageDone)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, float damageDone)
         {
-            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entityId);
+            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entity);
 
             Console.Clear();
             DisplayHealth(healthComponent, damageDone);
@@ -36,7 +36,7 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Systems
             {
                 Console.WriteLine("Enemy Is Dead! Hooray etc");
                 Console.WriteLine(" - Press Escape To Quit -");
-                entityComponentAccessor.RemoveComponent(entityId, healthComponent);
+                entityComponentAccessor.RemoveComponent(entity, healthComponent);
             }
         }
 

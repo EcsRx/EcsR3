@@ -1,5 +1,6 @@
 ﻿using EcsR3.Blueprints;
 using EcsR3.Collections.Entities;
+using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using SystemsR3.Pools.Config;
 
@@ -18,7 +19,7 @@ namespace EcsR3.Pools
         public BlueprintedEntityPool(IEntityCollection entityCollection, IEntityComponentAccessor entityComponentAccessor, PoolConfig poolConfig = null) : base(entityCollection, entityComponentAccessor, poolConfig)
         {}
         
-        public override void SetupEntity(int entityId)
-        { Blueprint.Apply(EntityComponentAccessor, entityId); }
+        public override void SetupEntity(Entity entity)
+        { Blueprint.Apply(EntityComponentAccessor, entity); }
     }
 }

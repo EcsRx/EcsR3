@@ -5,7 +5,6 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities.Routing;
-using EcsR3.Extensions;
 using SystemsR3.Utility;
 
 namespace EcsR3.Entities.Accessors
@@ -25,171 +24,171 @@ namespace EcsR3.Entities.Accessors
             EntityChangeRouter = entityChangeRouter;
         }
         
-        public void AddComponents(int entityId, IReadOnlyList<IComponent> components)
+        public void AddComponents(Entity entity, IReadOnlyList<IComponent> components)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(components);
-            var allocationIds = EntityAllocationDatabase.AllocateComponents(componentTypeIds, entityId);
+            var allocationIds = EntityAllocationDatabase.AllocateComponents(componentTypeIds, entity);
             ComponentDatabase.SetMany(componentTypeIds, allocationIds, components);
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityId, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entity, componentTypeIds);
         }
         
-        public ref T CreateComponent<T>(int entityId) where T : struct, IComponent
+        public ref T CreateComponent<T>(Entity entity) where T : struct, IComponent
         {
             var defaultComponent = new T();
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationId = EntityAllocationDatabase.AllocateComponent(componentTypeId, entityId);
+            var allocationId = EntityAllocationDatabase.AllocateComponent(componentTypeId, entity);
             ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
 
-        protected int CreateComponentBatch<T>(int[] entityIds) where T : IComponent, new()
+        protected int CreateComponentBatch<T>(Entity[] entities) where T : IComponent, new()
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationIds = EntityAllocationDatabase.AllocateComponent(componentTypeId, entityIds);
+            var allocationIds = EntityAllocationDatabase.AllocateComponent(componentTypeId, entities);
             
             var isReferenceType = !typeof(T).IsValueType;
-            var newComponents = new T[entityIds.Length];
+            var newComponents = new T[entities.Length];
             if (isReferenceType)
             {
-                for (var i = 0; i < entityIds.Length; i++)
+                for (var i = 0; i < entities.Length; i++)
                 { newComponents[i] = new T(); }
             }
             ComponentDatabase.Set(componentTypeId, allocationIds, newComponents);
             return componentTypeId;
         }
 
-        public void CreateComponent<T>(int[] entityIds) where T : IComponent, new()
+        public void CreateComponent<T>(Entity[] entities) where T : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T>(entityIds)
+                CreateComponentBatch<T>(entities)
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
         
-        public void CreateComponents<T1, T2>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new()
+        public void CreateComponents<T1, T2>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds)
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities)
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
 
-        public void CreateComponents<T1, T2, T3>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new()
+        public void CreateComponents<T1, T2, T3>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds),
-                CreateComponentBatch<T3>(entityIds)
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities),
+                CreateComponentBatch<T3>(entities)
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
 
-        public void CreateComponents<T1, T2, T3, T4>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new()
+        public void CreateComponents<T1, T2, T3, T4>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds),
-                CreateComponentBatch<T3>(entityIds),
-                CreateComponentBatch<T4>(entityIds)
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities),
+                CreateComponentBatch<T3>(entities),
+                CreateComponentBatch<T4>(entities)
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
 
-        public void CreateComponents<T1, T2, T3, T4, T5>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new()
+        public void CreateComponents<T1, T2, T3, T4, T5>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds),
-                CreateComponentBatch<T3>(entityIds),
-                CreateComponentBatch<T4>(entityIds),
-                CreateComponentBatch<T5>(entityIds)
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities),
+                CreateComponentBatch<T3>(entities),
+                CreateComponentBatch<T4>(entities),
+                CreateComponentBatch<T5>(entities)
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
 
-        public void CreateComponents<T1, T2, T3, T4, T5, T6>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new()
+        public void CreateComponents<T1, T2, T3, T4, T5, T6>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds),
-                CreateComponentBatch<T3>(entityIds),
-                CreateComponentBatch<T4>(entityIds),
-                CreateComponentBatch<T5>(entityIds),
-                CreateComponentBatch<T6>(entityIds),
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities),
+                CreateComponentBatch<T3>(entities),
+                CreateComponentBatch<T4>(entities),
+                CreateComponentBatch<T5>(entities),
+                CreateComponentBatch<T6>(entities),
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
         
-        public void CreateComponents<T1, T2, T3, T4, T5, T6, T7>(int[] entityIds) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new() where T7 : IComponent, new()
+        public void CreateComponents<T1, T2, T3, T4, T5, T6, T7>(Entity[] entities) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new() where T7 : IComponent, new()
         {
             var componentTypeIds = new[]
             {
-                CreateComponentBatch<T1>(entityIds),
-                CreateComponentBatch<T2>(entityIds),
-                CreateComponentBatch<T3>(entityIds),
-                CreateComponentBatch<T4>(entityIds),
-                CreateComponentBatch<T5>(entityIds),
-                CreateComponentBatch<T6>(entityIds),
-                CreateComponentBatch<T7>(entityIds),
+                CreateComponentBatch<T1>(entities),
+                CreateComponentBatch<T2>(entities),
+                CreateComponentBatch<T3>(entities),
+                CreateComponentBatch<T4>(entities),
+                CreateComponentBatch<T5>(entities),
+                CreateComponentBatch<T6>(entities),
+                CreateComponentBatch<T7>(entities),
             };
             
-            EntityChangeRouter.PublishEntityAddedComponents(entityIds, componentTypeIds);
+            EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
         
-        public void RemoveComponents(int entityId, IReadOnlyList<int> componentsTypeIds)
+        public void RemoveComponents(Entity entity, IReadOnlyList<int> componentsTypeIds)
         {
             var lastIndex = 0;
             Span<int> temporaryComponentIds = stackalloc int[componentsTypeIds.Count];
             for (var i = 0; i < componentsTypeIds.Count; i++)
             {
                 var componentTypeId = componentsTypeIds[i];
-                if(EntityAllocationDatabase.HasComponent(componentTypeId, entityId))
+                if(EntityAllocationDatabase.HasComponent(componentTypeId, entity))
                 { temporaryComponentIds[lastIndex++] = componentsTypeIds[i]; }
             }
             if(temporaryComponentIds.Length == 0) { return; }
             var sanitisedComponentsIds = temporaryComponentIds[..lastIndex].ToArray();
             
-            EntityChangeRouter.PublishEntityRemovingComponents(entityId, sanitisedComponentsIds);
+            EntityChangeRouter.PublishEntityRemovingComponents(entity, sanitisedComponentsIds);
  
             for (var i = 0; i < sanitisedComponentsIds.Length; i++)
             {
                 var componentId = sanitisedComponentsIds[i];
-                var allocationIndex = EntityAllocationDatabase.ReleaseComponent(componentId, entityId);
+                var allocationIndex = EntityAllocationDatabase.ReleaseComponent(componentId, entity);
                 ComponentDatabase.Remove(componentId, allocationIndex);
             }
             
-            EntityChangeRouter.PublishEntityRemovedComponents(entityId, sanitisedComponentsIds);
+            EntityChangeRouter.PublishEntityRemovedComponents(entity, sanitisedComponentsIds);
         }
 
-        public void RemoveComponents(int entityId, IReadOnlyList<Type> componentTypes)
+        public void RemoveComponents(Entity entity, IReadOnlyList<Type> componentTypes)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(componentTypes);
-            RemoveComponents(entityId, componentTypeIds);
+            RemoveComponents(entity, componentTypeIds);
         }
 
-        public void RemoveAllComponents(int entityId)
+        public void RemoveAllComponents(Entity entity)
         {
-            var allComponentIds = EntityAllocationDatabase.GetAllocatedComponentTypes(entityId);
-            RemoveComponents(entityId, allComponentIds);
+            var allComponentIds = EntityAllocationDatabase.GetAllocatedComponentTypes(entity);
+            RemoveComponents(entity, allComponentIds);
         }
         
-        public IEnumerable<IComponent> GetComponents(int entityId)
+        public IEnumerable<IComponent> GetComponents(Entity entity)
         {
-            var componentAllocations = EntityAllocationDatabase.GetEntityAllocations(entityId);
+            var componentAllocations = EntityAllocationDatabase.GetEntityAllocations(entity);
             for (var i = 0; i < componentAllocations.Length; i++)
             {
                 if(componentAllocations[i] == IEntityAllocationDatabase.NoAllocation) { continue; }
@@ -199,79 +198,79 @@ namespace EcsR3.Entities.Accessors
             }
         }
 
-        public IComponent GetComponent(int entityId, Type componentType)
+        public IComponent GetComponent(Entity entity, Type componentType)
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
-            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
+            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entity);
             if(allocationId == IEntityAllocationDatabase.NoAllocation) 
-            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityId}]"); }
+            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entity.Id}]"); }
             
             return ComponentDatabase.Get(componentTypeId, allocationId);
         }
         
-        public T[] GetComponent<T>(int[] entityIds) where T : IComponent, new()
+        public T[] GetComponent<T>(Entity[] entities) where T : IComponent, new()
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityIds);
+            var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entities);
 
             for (var i = 0; i < allocationIds.Length; i++)
             {
                 if(allocationIds[i] == IEntityAllocationDatabase.NoAllocation) 
-                { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityIds[i]}]"); }
+                { throw new Exception($"Component [{componentTypeId}] not found for entity [{entities[i]}]"); }
             }
             
             return ComponentDatabase.Get<T>(componentTypeId, allocationIds);
         }
         
-        public ref T GetComponentRef<T>(int entityId) where T : struct, IComponent
+        public ref T GetComponentRef<T>(Entity entity) where T : struct, IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);
+            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entity);
             if(allocationId == IEntityAllocationDatabase.NoAllocation) 
-            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entityId}]"); }
+            { throw new Exception($"Component [{componentTypeId}] not found for entity [{entity}]"); }
             
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
-        public RefBuffer<T> GetComponentRef<T>(int[] entityIds) where T : struct, IComponent
+        public RefBuffer<T> GetComponentRef<T>(Entity[] entities) where T : struct, IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityIds);
+            var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entities);
             return ComponentDatabase.GetRef<T>(componentTypeId, allocationIds);
         }
         
-        public void UpdateComponent<T>(int entityId, T newValue) where T : struct, IComponent
+        public void UpdateComponent<T>(Entity entity, T newValue) where T : struct, IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));
-            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entityId);;
+            var allocationId = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entity);;
             ComponentDatabase.Set(componentTypeId, allocationId, newValue);
         }
 
-        public bool HasComponent(int entityId, Type componentType)
+        public bool HasComponent(Entity entity, Type componentType)
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
-            return EntityAllocationDatabase.HasComponent(componentTypeId, entityId);
+            return EntityAllocationDatabase.HasComponent(componentTypeId, entity);
         }
         
-        public int[] GetAllocations(int entityId)
-        { return EntityAllocationDatabase.GetEntityAllocations(entityId); }
+        public int[] GetAllocations(Entity entity)
+        { return EntityAllocationDatabase.GetEntityAllocations(entity); }
 
-        public bool HasAllComponents(int entityId, IReadOnlyList<Type> componentTypes)
+        public bool HasAllComponents(Entity entity, IReadOnlyList<Type> componentTypes)
         {
             for(var i=0;i<componentTypes.Count;i++)
             {
                 var componentType = componentTypes[i];
-                if(!HasComponent(entityId, componentType)) { return false; }
+                if(!HasComponent(entity, componentType)) { return false; }
             }
             return true;
         }
 
-        public bool HasAnyComponents(int entityId, IReadOnlyList<Type> componentTypes)
+        public bool HasAnyComponents(Entity entity, IReadOnlyList<Type> componentTypes)
         {
             for(var i=0;i<componentTypes.Count;i++)
             {
                 var componentType = componentTypes[i];
-                if(HasComponent(entityId, componentType)) { return true; }
+                if(HasComponent(entity, componentType)) { return true; }
             }
             return false;
         }
