@@ -48,7 +48,7 @@ namespace SystemsR3.Executor.Handlers.Conventional
         }
 
         public IDisposable SetupSystemGeneric<T>(IReactToEventSystem<T> system)
-        { return EventSystem.Receive<T>().Subscribe(x => system.Process(x)); }
+        { return system.ObserveOn(EventSystem.Receive<T>()).Subscribe(x => system.Process(x)); }
         
         public void DestroySystem(ISystem system)
         { _systemSubscriptions.RemoveAndDispose(system); }

@@ -1,4 +1,6 @@
-﻿namespace SystemsR3.Systems.Conventional
+﻿using R3;
+
+namespace SystemsR3.Systems.Conventional
 {
     /// <summary>
     /// IReactToEventSystem are specifically made to act as event handlers,
@@ -7,6 +9,7 @@
     /// <typeparam name="T">The type of event to handle</typeparam>
     public interface IReactToEventSystem<T> : ISystem
     {
+        Observable<T> ObserveOn(Observable<T> observable);
         void Process(T eventData);
     }
 }

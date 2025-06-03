@@ -17,6 +17,7 @@ using EcsR3.Extensions;
 using EcsR3.Groups;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using R3;
 
 namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
 {
@@ -48,7 +49,10 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
 
         public IComputedEntityGroup GetPlayerGroup(IComputedEntityGroupRegistry computedEntityGroupRegistry)
         { return computedEntityGroupRegistry.GetComputedGroup(new Group(typeof(PlayerStateComponent))); }
-        
+
+        public Observable<SavePipelineEvent> ObserveOn(Observable<SavePipelineEvent> observable)
+        { return observable; }
+
         public void Process(SavePipelineEvent eventData)
         {
             var playerState = EntityComponentAccessor.GetComponent<PlayerStateComponent>(PlayerGroup.Value.Single());

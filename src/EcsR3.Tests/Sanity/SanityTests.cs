@@ -450,5 +450,31 @@ namespace EcsR3.Tests.Sanity
             var expectedCalls = entityCount * timesToProcess;
             Assert.Equal(expectedCalls, batchedTestSystem.TimesCalled);
         }
+
+        [Fact]
+        public void should_remove_systems_with_multiple_implementations()
+        {
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, _, computedComponentGroupRegistry, entityComponentAccessor) = CreateFramework();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, entityComponentAccessor, updateScheduler);
+            var eventSystem = new EventSystem(new MessageBroker(), new DefaultThreadHandler());
+            
+            var batchSystem = new ManyBatchSystemImplementations(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, new DefaultThreadHandler());
+            var viewSystem = new TestViewResolverSystem(eventSystem, new Group());
+            executor.AddSystem(batchSystem);
+            executor.AddSystem(viewSystem);
+
+            try
+            {
+                executor.RemoveSystem(batchSystem);
+                executor.RemoveSystem(viewSystem);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+            
+        }
     }
 }

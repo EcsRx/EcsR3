@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using R3;
@@ -72,13 +73,15 @@ namespace EcsR3.Collections.Entities
 
         public void RemoveAll()
         {
+            Entity[] entities;
             lock (_lock)
-            {
-                foreach (var entityId in EntityLookup)
-                { Remove(entityId); }
+            { entities = EntityLookup.ToArray(); }
 
-                EntityLookup.Clear();
-            }
+            foreach (var entity in entities)
+            { Remove(entity); }
+
+            lock (_lock)
+            { EntityLookup.Clear(); }
         }
 
         public bool Contains(Entity entity)
