@@ -87,5 +87,36 @@ namespace EcsR3.Tests.EcsR3.Collections
             entityComponentAccessor.Received(1).RemoveAllComponents(entity3);
             Assert.Empty(entityCollection);
         }
+        
+        [Fact]
+        public void should_return_true_for_contains_with_valid_entity()
+        {
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
+            var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
+            var entity1 = new Entity(1, 0);
+            
+            var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
+            entityCollection.EntityLookup.Add(entity1);
+            
+            var contains = entityCollection.Contains(entity1);
+            
+            Assert.True(contains);
+        }
+        
+        [Fact]
+        public void should_return_false_for_contains_with_stale_entity()
+        {
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
+            var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
+            var staleEntity1 = new Entity(1, 0);
+            var currentEntity1 = new Entity(1, 22);
+            
+            var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
+            entityCollection.EntityLookup.Add(currentEntity1);
+            
+            var contains = entityCollection.Contains(staleEntity1);
+            
+            Assert.False(contains);
+        }
     }
 }

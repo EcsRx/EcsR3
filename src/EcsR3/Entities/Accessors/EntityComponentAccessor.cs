@@ -274,5 +274,15 @@ namespace EcsR3.Entities.Accessors
             }
             return false;
         }
+
+        public bool IsEntityValid(Entity entity)
+        {
+            if(entity.Id < 0) { return false; }
+
+            var possibleEntity = EntityAllocationDatabase.GetEntity(entity.Id);
+            if(possibleEntity == null) { return false; }
+
+            return entity.CreationHash == possibleEntity.Value.CreationHash;
+        }
     }
 }

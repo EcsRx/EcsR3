@@ -3,13 +3,11 @@ using EcsR3.Collections.Entities.Pools;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Infrastructure.Dependencies;
 using SystemsR3.Infrastructure.Extensions;
-using SystemsR3.Pools;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Computeds.Entities.Registries;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Entities.Routing;
 using EcsR3.Groups.Tracking;
@@ -25,6 +23,7 @@ namespace EcsR3.Infrastructure.Modules
         {
             // Register ECS specific infrastructure
             registry.Bind<IEntityIdPool>(x => x.ToInstance(new EntityIdPool()));
+            registry.Bind<ICreationHasher, CreationHasher>();
             registry.Bind<ComponentDatabaseConfig>(x => x.ToInstance(ComponentDatabaseConfig));
             registry.Bind<IEntityCollection, EntityCollection>();
             registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();

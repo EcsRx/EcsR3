@@ -72,5 +72,12 @@ namespace EcsR3.Entities.Accessors
         /// <param name="componentTypes"></param>
         /// <returns></returns>
         bool HasAnyComponents(Entity entity, IReadOnlyList<Type> componentTypes);
+        
+        /// <summary>
+        /// Verifies the entity is valid, as you may have an entity which has been released elsewhere
+        /// </summary>
+        /// <param name="entity">The entity to check</param>
+        /// <returns>true if the entity is currently active, false if its not</returns>
+        bool IsEntityValid(Entity entity);
     }
 }

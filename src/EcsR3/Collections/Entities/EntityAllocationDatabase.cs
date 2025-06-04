@@ -4,7 +4,6 @@ using EcsR3.Collections.Entities.Pools;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Entities;
-using EcsR3.Entities.Routing;
 using EcsR3.Helpers;
 using R3;
 
@@ -16,8 +15,8 @@ namespace EcsR3.Collections.Entities
         
         public IEntityIdPool EntityIdPool { get; }
         public IComponentDatabase ComponentDatabase { get; }
-        public IEntityChangeRouter EntityChangeRouter { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
+        public ICreationHasher CreationHasher { get; }
         
         public int ComponentLength { get; protected set; }
         public int EntityLength { get; protected set; }
@@ -36,12 +35,12 @@ namespace EcsR3.Collections.Entities
         /// <remarks>First dimension is component type id, second dimension is entity id</remarks>
         public int[,] ComponentAllocationData;
 
-        public EntityAllocationDatabase(IEntityIdPool entityIdPool, IComponentDatabase componentDatabase, IEntityChangeRouter entityChangeRouter, IComponentTypeLookup componentTypeLookup)
+        public EntityAllocationDatabase(IEntityIdPool entityIdPool, IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, ICreationHasher creationHasher)
         {
             EntityIdPool = entityIdPool;
             ComponentDatabase = componentDatabase;
-            EntityChangeRouter = entityChangeRouter;
             ComponentTypeLookup = componentTypeLookup;
+            CreationHasher = creationHasher;
             EntityLength = EntityIdPool.Size+1;
 
             EntityIdPool.OnSizeChanged
@@ -79,7 +78,7 @@ namespace EcsR3.Collections.Entities
 
             EntityIdPool.AllocateSpecificId(entityId);
 
-            var creationHash = EntityCreationHashes.GetHashCode();
+            var creationHash = CreationHasher.GenerateHash();
             EntityCreationHashes[entityId] = creationHash;
             return new Entity(entityId, creationHash);
         }
@@ -87,11 +86,15 @@ namespace EcsR3.Collections.Entities
         public Entity[] AllocateEntities(int count)
         {
             var ids = EntityIdPool.AllocateMany(count);
-            var creationHash = EntityCreationHashes.GetHashCode();
+            var creationHash = CreationHasher.GenerateHash();
             
             var entities = new Entity[count];
             for (var i = 0; i < ids.Length; i++)
-            { entities[i] = new Entity(ids[i], creationHash); }
+            {
+                var entityId = ids[i];
+                entities[i] = new Entity(entityId, creationHash); 
+                EntityCreationHashes[entityId] = creationHash;
+            }
             return entities;
         }
 

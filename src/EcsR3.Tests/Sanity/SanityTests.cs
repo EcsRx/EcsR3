@@ -63,7 +63,8 @@ namespace EcsR3.Tests.Sanity
             var componentDatabase = new ComponentDatabase(componentLookupType, componentDatabaseConfig);
             var entityChangeRouter = new EntityChangeRouter(componentLookupType);
             var entityIdPool = new EntityIdPool();
-            var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, componentDatabase, entityChangeRouter, componentLookupType);;
+            var creationHasher = new CreationHasher();
+            var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, componentDatabase, componentLookupType, creationHasher);
             var entityComponentAccessor = new EntityComponentAccessor(componentLookupType, entityAllocationDatabase, componentDatabase, entityChangeRouter);
             var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
             var groupTrackerFactory = new GroupTrackerFactory(entityChangeRouter, entityAllocationDatabase);

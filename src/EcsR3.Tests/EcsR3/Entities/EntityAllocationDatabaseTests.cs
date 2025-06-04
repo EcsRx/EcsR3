@@ -27,12 +27,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds =Enumerable.Range(0, startingComponentCount).ToArray();
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         entityAllocationDatabase.ResizeAllEntityAllocations(resizeEntityCount);
 
@@ -57,11 +57,11 @@ public class EntityAllocationDatabaseTests
         var entityIdPool = new EntityIdPool();
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var allocations = new List<Entity>();
         for (var i = 0; i < allocationSize; i++)
@@ -86,12 +86,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity = new Entity(5, 0);
         
@@ -119,11 +119,11 @@ public class EntityAllocationDatabaseTests
         var entityIdPool = new EntityIdPool();
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var allocations = entityAllocationDatabase.AllocateEntities(allocationSize);
 
@@ -143,12 +143,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity = new Entity(3, 0);
         
@@ -176,12 +176,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity = new Entity(3, 0);
         
@@ -209,12 +209,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity = new Entity(3, 0);
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
@@ -238,8 +238,8 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
 
         mockComponentDatabase.Allocate(componentTypeId1).Returns(22);
@@ -247,7 +247,7 @@ public class EntityAllocationDatabaseTests
         mockComponentDatabase.Allocate(componentTypeId3).Returns(74);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity = new Entity(3, 0);
         var allocation1 = entityAllocationDatabase.AllocateComponent(componentTypeId1, entity);
@@ -272,8 +272,8 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
 
         var expectedC1Allocations = new[]{ 22, 24 };
@@ -284,7 +284,7 @@ public class EntityAllocationDatabaseTests
         mockComponentDatabase.Allocate(componentTypeId3, 2).Returns(expectedC3Allocations);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity1 = new Entity(3, 0);
         var entity2 = new Entity(6, 0);
@@ -318,8 +318,8 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
 
         mockComponentDatabase.Allocate(componentTypeId1).Returns(22);
@@ -327,7 +327,7 @@ public class EntityAllocationDatabaseTests
         mockComponentDatabase.Allocate(componentTypeId3).Returns(74);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
 
         var entity = new Entity(3, 0);
         var allocations = entityAllocationDatabase.AllocateComponents([componentTypeId1, componentTypeId3], entity);
@@ -351,12 +351,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity = new Entity(3, 0);
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
@@ -383,12 +383,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity = new Entity(3, 0);
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id] = 22;
@@ -412,12 +412,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity1 = new Entity(3, 0);
         var entity2 = new Entity(6, 0);
@@ -450,12 +450,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity1 = new Entity(3, 0);
         var entity2 = new Entity(6, 0);
@@ -483,12 +483,12 @@ public class EntityAllocationDatabaseTests
         var componentTypeIds = new[] { componentTypeId1, componentTypeId2, componentTypeId3 };
         
         var mockComponentDatabase = Substitute.For<IComponentDatabase>();
-        var mockEntityChangeRouter = Substitute.For<IEntityChangeRouter>();
         var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
         mockComponentTypeLookup.AllComponentTypeIds.Returns(componentTypeIds);
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
-            mockEntityChangeRouter, mockComponentTypeLookup);
+            mockComponentTypeLookup, mockCreationHasher);
         
         var entity1Id = 3;
         var entity2Id = 6;
