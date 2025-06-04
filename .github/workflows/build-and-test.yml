@@ -2,7 +2,7 @@ name: Build And Test
 on: [push]
 
 env:
-  BuildVersion: '10.0.${{github.run_number}}'
+  BuildVersion: '11.0.${{github.run_number}}'
   SolutionFile: 'src/EcsR3.sln'
 
 jobs:
