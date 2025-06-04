@@ -1,8 +1,10 @@
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using EcsR3.Tests.Models;
 
 namespace EcsR3.Tests.Systems.DeletingScenarios
@@ -18,7 +20,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingOverlappingSetupTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public void Setup(IEntity entity)
-        { EntityCollection.Remove(entity.Id); }
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
+        { EntityCollection.Remove(entity); }
     }
 }

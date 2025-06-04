@@ -4,6 +4,8 @@ using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
+using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching.Convention
@@ -12,11 +14,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T1 : struct, IComponent
         where T2 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
@@ -25,7 +28,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
                 });
                 return;
             }
@@ -34,7 +37,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation]);
             }
         }
     }
@@ -44,11 +47,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T2 : struct, IComponent
         where T3 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
@@ -58,7 +62,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                         ref components3[batch.Component3Allocation]);
                 });
                 return;
@@ -68,7 +72,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                     ref components3[batch.Component3Allocation]);
             }
         }
@@ -80,11 +84,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T3 : struct, IComponent
         where T4 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3,T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
@@ -94,7 +99,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                         ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation]);
                 });
                 return;
@@ -104,7 +109,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                     ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation]);
             }
         }
@@ -117,11 +122,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T4 : struct, IComponent
         where T5 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
@@ -131,7 +137,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                         ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                         ref components5[batch.Component5Allocation]);
                 });
@@ -142,7 +148,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                     ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                     ref components5[batch.Component5Allocation]);
             }
@@ -157,11 +163,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T5 : struct, IComponent
         where T6 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
@@ -171,7 +178,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                         ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                         ref components5[batch.Component5Allocation], ref components6[batch.Component6Allocation]);;
                 });
@@ -182,7 +189,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                     ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                     ref components5[batch.Component5Allocation], ref components6[batch.Component6Allocation]);;;
             }
@@ -198,11 +205,12 @@ namespace EcsR3.Systems.Batching.Convention
         where T6 : struct, IComponent
         where T7 : struct, IComponent
     {
-        protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6, ref T7 component7);
+        protected abstract void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6, ref T7 component7);
 
-        protected BatchedRefSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, computedComponentGroupRegistry, threadHandler)
-        { }
-        
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;
@@ -212,7 +220,7 @@ namespace EcsR3.Systems.Batching.Convention
                 ThreadHandler.For(0, componentBatches.Length, i =>
                 {
                     var batch = componentBatches.Span[i];
-                    Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                    Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                         ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                         ref components5[batch.Component5Allocation], ref components6[batch.Component6Allocation],
                         ref components7[batch.Component7Allocation]);
@@ -224,7 +232,7 @@ namespace EcsR3.Systems.Batching.Convention
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                Process(batch.EntityId, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
+                Process(batch.Entity, ref components1[batch.Component1Allocation], ref components2[batch.Component2Allocation],
                     ref components3[batch.Component3Allocation], ref components4[batch.Component4Allocation],
                     ref components5[batch.Component5Allocation], ref components6[batch.Component6Allocation],
                     ref components7[batch.Component7Allocation]);

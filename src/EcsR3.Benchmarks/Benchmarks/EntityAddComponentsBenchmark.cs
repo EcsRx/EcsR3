@@ -15,7 +15,7 @@ namespace EcsR3.Benchmarks.Benchmarks
     public class EntityAddComponentsBenchmark : EcsR3Benchmark
     {
         private Type[] _availableComponentTypes;
-        private List<IEntity> _entities = new List<IEntity>();
+        private List<Entity> _entities = new List<Entity>();
         private IComponent[] _components;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         
@@ -32,14 +32,11 @@ namespace EcsR3.Benchmarks.Benchmarks
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
         }
-
+        
         public override void Setup()
         {
             for (var i = 0; i < EntityCount; i++)
-            {
-                var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
-                _entities.Add(entity);
-            }
+            { _entities.Add(new Entity(i, 0)); }
 
             _components = _availableComponentTypes
                 .Take(ComponentCount)
@@ -49,20 +46,20 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            _entities.ForEach(x => x.RemoveAllComponents());
+            _entities.ForEach(x => EntityComponentAccessor.RemoveAllComponents(x));
             _entities.Clear();
         }
 
         [Benchmark]
         public void EntitiesBatchAddComponents()
         {
-            _entities.ForEach(x => x.AddComponents(_components));
+            _entities.ForEach(x => EntityComponentAccessor.AddComponents(x, _components));
         }
         
         [Benchmark]
         public void EntitiesAddIndividualComponents()
         {
-            _entities.ForEach(x => _components.ForEachRun(y => x.AddComponents(y)));
+            _entities.ForEach(x => _components.ForEachRun(y => EntityComponentAccessor.AddComponents(x, y)));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using R3;
 
 namespace EcsR3.Entities.Routing
@@ -9,8 +10,12 @@ namespace EcsR3.Entities.Routing
         Observable<EntityChanges> OnEntityRemovingComponents(int[] componentType);
         Observable<EntityChanges> OnEntityRemovedComponents(int[] componentType);
         
-        void PublishEntityAddedComponents(int entityId, int[] componentIds);
-        void PublishEntityRemovingComponents(int entityId, int[] componentId);
-        void PublishEntityRemovedComponents(int entityId, int[] componentId);
+        void PublishEntityAddedComponents(Entity entity, int[] componentIds);
+        void PublishEntityRemovingComponents(Entity entity, int[] componentId);
+        void PublishEntityRemovedComponents(Entity entity, int[] componentId);
+        
+        void PublishEntityAddedComponents(Entity[] entities, int[] componentIds);
+        void PublishEntityRemovingComponents(Entity[] entities, int[] componentId);
+        void PublishEntityRemovedComponents(Entity[] entities, int[] componentId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Conventions;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Custom.ComputedComponents.Components;
 using EcsR3.Extensions;
 
@@ -7,16 +8,21 @@ namespace EcsR3.Examples.Custom.ComputedComponents.Computeds;
 
 public class ComputedEntityProcessor : ComputedFromEntityGroup<int>
 {
-    public ComputedEntityProcessor(IComputedEntityGroup dataSource) : base(dataSource)
-    {}
+    public IEntityComponentAccessor EntityComponentAccessor { get; }
+
+    public ComputedEntityProcessor(IEntityComponentAccessor entityComponentAccessor, IComputedEntityGroup dataSource) :
+        base(dataSource)
+    {
+        EntityComponentAccessor = entityComponentAccessor;
+    }
 
     protected override void UpdateComputedData()
     {
         ComputedData = 0;
-        foreach (var entity in DataSource)
+        foreach (var entityId in DataSource)
         { 
-            ComputedData +=  entity.GetComponent<NumberComponent>().Value 
-                           + entity.GetComponent<Number2Component>().Value; 
+            ComputedData +=  EntityComponentAccessor.GetComponent<NumberComponent>(entityId).Value 
+                             + EntityComponentAccessor.GetComponent<Number2Component>(entityId).Value; 
         }
     }
 }

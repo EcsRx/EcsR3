@@ -51,10 +51,26 @@ namespace SystemsR3.Tests.SystemsR3.Pools
         {
             var poolConfig = new PoolConfig(10, 10);
             var idPool = new IdPool(poolConfig);
-            var id = idPool.AllocateInstance();
+            var id = idPool.Allocate();
             
             Assert.InRange(id, 1, 10);
             Assert.DoesNotContain(id, idPool.AvailableIds);
+        }
+        
+        [Fact]
+        public void should_batch_allocate_and_remove_next_available_id()
+        {
+            var allocationSize = 10;
+            var poolConfig = new PoolConfig(10, 10);
+            var idPool = new IdPool(poolConfig);
+            
+            var expectedIds = Enumerable.Range(1, allocationSize).ToArray();
+            var ids = idPool.AllocateMany(allocationSize);
+            
+            Assert.Equal(expectedIds, ids);
+            Assert.Equal(expectedIds.Length, ids.Distinct().Count());
+            for (var i = 0; i < ids.Length; i++)
+            { Assert.DoesNotContain(ids[i], idPool.AvailableIds); }
         }
         
         [Fact]
@@ -66,7 +82,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             var poolConfig = new PoolConfig(originalSize, defaultExpansionAmount);
             var idPool = new IdPool(poolConfig);
             idPool.AvailableIds.Clear();
-            var id = idPool.AllocateInstance();
+            var id = idPool.Allocate();
 
             var expectedIdEntries = Enumerable.Range(1, expectedSize-1).ToList();
 
@@ -99,7 +115,7 @@ namespace SystemsR3.Tests.SystemsR3.Pools
             
             for (var i = 0; i < expectedSize; i++)
             {
-                var allocation = idPool.AllocateInstance(); 
+                var allocation = idPool.Allocate(); 
                 actualAllocations.Add(allocation);
             }
 

@@ -19,13 +19,13 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample
 
         protected override void ApplicationStarted()
         {
-            EntityCollection.Create(new CharacterBlueprint("Bob", 200));
-            EntityCollection.Create(new CharacterBlueprint("Tom", 150));
-            EntityCollection.Create(new CharacterBlueprint("Rolf", 150));
-            EntityCollection.Create(new CharacterBlueprint("Mez", 100));
-            EntityCollection.Create(new CharacterBlueprint("TP", 1000));
-            EntityCollection.Create(new CharacterBlueprint("MasterChief", 100));
-            EntityCollection.Create(new CharacterBlueprint("Weakling", 20));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("Bob", 200));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("Tom", 150));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("Rolf", 150));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("Mez", 100));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("TP", 1000));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("MasterChief", 100));
+            EntityCollection.Create(EntityComponentAccessor, new CharacterBlueprint("Weakling", 20));
 
             HandleInput();
         }

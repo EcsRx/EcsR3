@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using EcsR3.Blueprints;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Components;
 using EcsR3.Extensions;
 
@@ -14,7 +15,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Blueprints
 
         private Random _random = new Random();
         
-        public void Apply(IEntity entity)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var component1 = new DummyComponent1
             {
@@ -29,7 +30,7 @@ namespace EcsR3.Examples.ExampleApps.LoadingEntityDatabase.Blueprints
                 SomeQuaternion = RandomQuaternion()
             };
             
-            entity.AddComponents(component1, component2);
+            entityComponentAccessor.AddComponents(entity, component1, component2);
         }
         
         public string RandomString()

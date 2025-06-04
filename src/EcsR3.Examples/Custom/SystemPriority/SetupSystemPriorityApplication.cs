@@ -1,9 +1,9 @@
 ﻿using System;
 using EcsR3.Examples.Application;
-using EcsR3.Examples.Custom.Components;
+using EcsR3.Examples.Custom.SystemPriority.Components;
 using EcsR3.Extensions;
 
-namespace EcsR3.Examples.Custom
+namespace EcsR3.Examples.Custom.SystemPriority
 {
     public class SetupSystemPriorityApplication : EcsR3ConsoleApplication
     {
@@ -11,9 +11,9 @@ namespace EcsR3.Examples.Custom
 
         protected override void ApplicationStarted()
         {
-            var entity = EntityCollection.Create();
+            var entityId = EntityCollection.Create();
             
-            entity.AddComponents(new FirstComponent());
+            EntityComponentAccessor.AddComponents(entityId, new FirstComponent());
 
             HandleInput();
         }

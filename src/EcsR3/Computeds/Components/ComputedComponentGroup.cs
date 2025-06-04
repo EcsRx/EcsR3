@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsR3.Collections.Entities;
 using EcsR3.Components;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds.Entities;
@@ -11,14 +12,17 @@ namespace EcsR3.Computeds.Components
 {
     public class ComputedComponentGroup<T1> : ComputedFromEntityGroup<ReadOnlyMemory<ComponentBatch<T1>>>, IComputedComponentGroup<T1> where T1 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         
         public LookupGroup Group { get; }
         
         private ComponentBatch<T1>[] _internalCache = Array.Empty<ComponentBatch<T1>>();
         
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             
             if(!DataSource.Group.Matches(_t1ComponentId))
@@ -34,8 +38,8 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
-            { _internalCache[indexesUsed++] = new ComponentBatch<T1>(entity.Id, entity.ComponentAllocations[_t1ComponentId]); }
+            foreach (var entityId in DataSource)
+            { _internalCache[indexesUsed++] = new ComponentBatch<T1>(entityId, AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId)); }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1>>(_internalCache, 0, indexesUsed);
         }
@@ -46,15 +50,18 @@ namespace EcsR3.Computeds.Components
         where T1 : IComponent
         where T2 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private ComponentBatch<T1, T2>[] _internalCache = Array.Empty<ComponentBatch<T1, T2>>();
 
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup,
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, 
             IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
 
@@ -74,11 +81,11 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2>>(_internalCache, 0, indexesUsed);
@@ -91,6 +98,8 @@ namespace EcsR3.Computeds.Components
         where T2 : IComponent
         where T3 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
@@ -98,9 +107,10 @@ namespace EcsR3.Computeds.Components
 
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
             _t3ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T3));
@@ -120,12 +130,12 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2, T3>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId],
-                    entity.ComponentAllocations[_t3ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2, T3>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t3ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2, T3>>(_internalCache, 0, indexesUsed);
@@ -139,6 +149,8 @@ namespace EcsR3.Computeds.Components
         where T3 : IComponent
         where T4 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
@@ -147,9 +159,10 @@ namespace EcsR3.Computeds.Components
 
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
             _t3ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T3));
@@ -170,13 +183,13 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2, T3, T4>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId],
-                    entity.ComponentAllocations[_t3ComponentId],
-                    entity.ComponentAllocations[_t4ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2, T3, T4>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t3ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t4ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4>>(_internalCache, 0, indexesUsed);
@@ -191,6 +204,8 @@ namespace EcsR3.Computeds.Components
         where T4 : IComponent
         where T5 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
@@ -200,9 +215,10 @@ namespace EcsR3.Computeds.Components
         
         public LookupGroup Group { get; }
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
             _t3ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T3));
@@ -224,14 +240,14 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId],
-                    entity.ComponentAllocations[_t3ComponentId],
-                    entity.ComponentAllocations[_t4ComponentId],
-                    entity.ComponentAllocations[_t5ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t3ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t4ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t5ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5>>(_internalCache, 0, indexesUsed);
@@ -247,6 +263,8 @@ namespace EcsR3.Computeds.Components
         where T5 : IComponent
         where T6 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
@@ -258,9 +276,10 @@ namespace EcsR3.Computeds.Components
         public LookupGroup Group { get; }
         public Observable<Unit> OnRefreshed => OnChanged.Select(x => Unit.Default);
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
             _t3ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T3));
@@ -283,15 +302,15 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5,T6>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId],
-                    entity.ComponentAllocations[_t3ComponentId],
-                    entity.ComponentAllocations[_t4ComponentId],
-                    entity.ComponentAllocations[_t5ComponentId],
-                    entity.ComponentAllocations[_t6ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5,T6>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t3ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t4ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t5ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t6ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6>>(_internalCache, 0, indexesUsed);
@@ -308,6 +327,8 @@ namespace EcsR3.Computeds.Components
         where T6 : IComponent
         where T7 : IComponent
     {
+        protected IEntityAllocationDatabase AllocationDatabase { get; }
+        
         private readonly int _t1ComponentId;
         private readonly int _t2ComponentId;
         private readonly int _t3ComponentId;
@@ -320,9 +341,10 @@ namespace EcsR3.Computeds.Components
         public LookupGroup Group { get; }
         public Observable<Unit> OnRefreshed => OnChanged.Select(x => Unit.Default);
 
-        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IComputedEntityGroup computedEntityGroup) : base(
+        public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
         {
+            AllocationDatabase = allocationDatabase;
             _t1ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T1));
             _t2ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T2));
             _t3ComponentId = componentTypeLookup.GetComponentTypeId(typeof(T3));
@@ -346,16 +368,16 @@ namespace EcsR3.Computeds.Components
             { Array.Resize(ref _internalCache, DataSource.Count); }
             
             var indexesUsed = 0;
-            foreach (var entity in DataSource)
+            foreach (var entityId in DataSource)
             {
-                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5,T6,T7>(entity.Id,
-                    entity.ComponentAllocations[_t1ComponentId],
-                    entity.ComponentAllocations[_t2ComponentId],
-                    entity.ComponentAllocations[_t3ComponentId],
-                    entity.ComponentAllocations[_t4ComponentId],
-                    entity.ComponentAllocations[_t5ComponentId],
-                    entity.ComponentAllocations[_t6ComponentId],
-                    entity.ComponentAllocations[_t7ComponentId]);
+                _internalCache[indexesUsed++] = new ComponentBatch<T1, T2,T3,T4,T5,T6,T7>(entityId,
+                    AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t2ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t3ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t4ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t5ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t6ComponentId, entityId),
+                    AllocationDatabase.GetEntityComponentAllocation(_t7ComponentId, entityId));
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6,T7>>(_internalCache, 0, indexesUsed);

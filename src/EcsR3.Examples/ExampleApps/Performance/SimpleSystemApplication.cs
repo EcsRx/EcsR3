@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using EcsR3.Collections.Entity;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.Performance.Components;
 using EcsR3.Examples.ExampleApps.Performance.Systems;
@@ -20,8 +19,8 @@ namespace EcsR3.Examples.ExampleApps.Performance
             
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(new SimpleReadComponent(), new SimpleWriteComponent());
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, new SimpleReadComponent(), new SimpleWriteComponent());
             }
 
             RunSingleThread();
@@ -32,7 +31,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         {
             var timer = Stopwatch.StartNew();
             foreach(var entity in EntityCollection)
-            { _groupSystem.Process(entity); }
+            { _groupSystem.Process(EntityComponentAccessor, entity); }
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
@@ -42,7 +41,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
         private void RunMultiThreaded()
         {
             var timer = Stopwatch.StartNew();
-            Parallel.ForEach(EntityCollection, _groupSystem.Process);
+            Parallel.ForEach(EntityCollection, x => _groupSystem.Process(EntityComponentAccessor, x));
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);

@@ -1,5 +1,6 @@
 ﻿using EcsR3.Blueprints;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.HealthExample.Components;
 using EcsR3.Extensions;
 using R3;
@@ -15,14 +16,14 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Blueprints
             Health = health;
         }
 
-        public void Apply(IEntity entity)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var healthComponent = new HealthComponent
             {
                 Health = new ReactiveProperty<float>(Health),
                 MaxHealth = Health
             };
-            entity.AddComponents(healthComponent);
+            entityComponentAccessor.AddComponents(entity, healthComponent);
         }
     }
 }

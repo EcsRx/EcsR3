@@ -20,7 +20,7 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample
 
         protected override void ApplicationStarted()
         {
-            var entity = EntityCollection.Create();
+            var entityId = EntityCollection.Create();
 
             var component = new PlayerStateComponent
             {
@@ -28,7 +28,7 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample
                 Level = 10, 
                 SomeFieldThatWontBePersisted = "Wont Be Persisted"
             };
-            entity.AddComponent(component);
+            EntityComponentAccessor.AddComponent(entityId, component);
 
             Console.WriteLine("This app posts your player state over HTTP which gets echoed back to you.");
             Console.WriteLine("This is a very useful thing if you use online apis like playfab etc");

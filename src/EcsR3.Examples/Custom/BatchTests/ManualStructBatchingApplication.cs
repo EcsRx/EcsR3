@@ -2,6 +2,7 @@ using System.Numerics;
 using EcsR3.Components;
 using EcsR3.Computeds.Components;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.Application;
 using EcsR3.Examples.Custom.BatchTests.Components;
 using EcsR3.Systems.Batching.Accessor;
@@ -33,10 +34,10 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override string Description { get; } = "Uses auto batching to group components for cached lookups and quicker reads/writes";
 
-        protected override void SetupEntity(IEntity entity)
+        protected override void SetupEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            entity.CreateComponent<StructComponent>();
-            entity.CreateComponent<StructComponent2>();
+            entityComponentAccessor.CreateComponent<StructComponent>(entity);
+            entityComponentAccessor.CreateComponent<StructComponent2>(entity);
         }
 
         protected override void RunProcess()

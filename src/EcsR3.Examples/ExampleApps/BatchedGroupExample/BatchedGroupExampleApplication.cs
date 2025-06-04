@@ -20,8 +20,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample
 
         protected override void ApplicationStarted()
         {
-            var blueprint = new MoveableBlueprint();
-            EntityCollection.CreateMany(_entityCount, blueprint);
+            EntityCollection.CreateMany<MoveableBlueprint>(EntityComponentAccessor, _entityCount);
             HandleInput();
         }
 

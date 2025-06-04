@@ -1,18 +1,20 @@
 ﻿using System;
-using SystemsR3.Attributes;
 using EcsR3.Entities;
-using EcsR3.Examples.Custom.Groups;
+using EcsR3.Entities.Accessors;
+using EcsR3.Examples.Custom.SystemPriority.Groups;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
+using SystemsR3.Attributes;
 
-namespace EcsR3.Examples.Custom.Systems
+namespace EcsR3.Examples.Custom.SystemPriority.Systems
 {
     [Priority(100)]
     public class SecondSystem : ISetupSystem
     {
         public IGroup Group => new MessageGroup();
 
-        public void Setup(IEntity entity)
+        public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             Console.WriteLine("SYSTEM 2");
         }

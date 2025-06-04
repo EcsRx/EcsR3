@@ -1,5 +1,6 @@
 using SystemsR3.Scheduling;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsR3.Extensions;
 using EcsR3.Groups;
@@ -11,9 +12,9 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
     {
         public IGroup Group { get; } = new Group(typeof(PlayerStateComponent));
 
-        public void Process(IEntity entity, ElapsedTime elapsedTime)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
         {
-            var playerState = entity.GetComponent<PlayerStateComponent>();
+            var playerState = entityComponentAccessor.GetComponent<PlayerStateComponent>(entity);
             playerState.PlayTime += elapsedTime.DeltaTime;
         }
     }

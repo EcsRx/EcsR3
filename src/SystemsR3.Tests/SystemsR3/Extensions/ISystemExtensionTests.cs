@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using R3;
 using SystemsR3.Extensions;
 using SystemsR3.Scheduling;
 using SystemsR3.Systems;
@@ -27,7 +28,17 @@ public class ISystemExtensionTests
                         throw new System.NotImplementedException();
                 }
 
+                public Observable<object> ObserveOn(Observable<object> observable)
+                {
+                        throw new System.NotImplementedException();
+                }
+
                 public void Process(object eventData)
+                {
+                        throw new System.NotImplementedException();
+                }
+
+                public Observable<int> ObserveOn(Observable<int> observable)
                 {
                         throw new System.NotImplementedException();
                 }

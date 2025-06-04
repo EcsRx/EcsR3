@@ -38,9 +38,9 @@ public class ComputedEntityGroupWithNoisePerformanceApplication : EcsR3ConsoleAp
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(availableComponents);
-                entity.RemoveAllComponents();
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, availableComponents);
+                EntityComponentAccessor.RemoveAllComponents(entityId);
             }
         }
     }

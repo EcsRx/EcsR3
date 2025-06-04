@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using EcsR3.Tests.Systems.Handlers;
 using NSubstitute;
 using SystemsR3.Exceptions;

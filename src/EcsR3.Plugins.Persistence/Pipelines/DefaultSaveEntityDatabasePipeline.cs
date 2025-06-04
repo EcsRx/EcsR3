@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Plugins.Persistence.Builders;
 using EcsR3.Plugins.Persistence.Transformers;
 using Persistity.Core.Serialization;

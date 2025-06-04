@@ -1,7 +1,9 @@
 ﻿using System;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using SystemsR3.Systems.Conventional;
 
 namespace EcsR3.Tests.Systems;
@@ -18,12 +20,12 @@ public class HybridSetupSystem : ISetupSystem, ITeardownSystem, IManualSystem
         OnMethodCalled = onMethodCalled;
     }
 
-    public void Setup(IEntity entity)
+    public void Setup(IEntityComponentAccessor entityComponentAccessor, Entity entity)
     {
         OnMethodCalled("setup");
     }
     
-    public void Teardown(IEntity entity)
+    public void Teardown(IEntityComponentAccessor entityComponentAccessor, Entity entity)
     {
         OnMethodCalled("teardown");
     }

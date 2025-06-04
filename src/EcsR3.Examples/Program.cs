@@ -1,7 +1,7 @@
 ﻿using System;
-using EcsR3.Examples.Custom;
 using EcsR3.Examples.Custom.BatchTests;
-using EcsR3.Examples.Custom.ComputedComponents;
+using EcsR3.Examples.Custom.Specific;
+using EcsR3.Examples.Custom.SystemPriority;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample;
@@ -40,14 +40,13 @@ namespace EcsR3.Examples
                 new Example("Scenario: System Priorities", () => new SetupSystemPriorityApplication().StartApplication()),
                 
                 new Example("Performance: Systems", () => new SimpleSystemApplication().StartApplication()),
-                new Example("Performance: Default Entity", () => new EntityPerformanceApplication().StartApplication()),
-                new Example("Performance: Optimised Entity", () => new OptimizedEntityPerformanceApplication().StartApplication()),
                 new Example("Performance: Default Group", () => new GroupPerformanceApplication().StartApplication()),
                 new Example("Performance: Optimised Group", () => new OptimizedGroupPerformanceApplication().StartApplication()),
-                new Example("Performance: Entity Creation", () => new MakingLotsOfEntitiesApplication().StartApplication()),
+                new Example("Performance: Entity Creation With Class Components", () => new MakingLotsOfClassEntitiesApplication().StartApplication()),
+                new Example("Performance: Entity Creation With Struct Components", () => new MakingLotsOfStructEntitiesApplication().StartApplication()),
                 
-                //new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
-                //new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
+                new Example("Dev: Manual Class Batching", () => new ManualClassBatchingApplication().StartApplication()),
+                new Example("Dev: Manual Struct Batching", () => new ManualStructBatchingApplication().StartApplication())
             };
 
             var exampleSelector = new SelectionPrompt<Example>()

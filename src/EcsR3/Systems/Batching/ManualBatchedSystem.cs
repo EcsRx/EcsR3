@@ -2,7 +2,9 @@ using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
+using EcsR3.Systems.Augments;
 using R3;
 using SystemsR3.Extensions;
 using SystemsR3.Systems.Conventional;
@@ -16,17 +18,19 @@ namespace EcsR3.Systems.Batching
         
         public IComponentDatabase ComponentDatabase { get; }
         public IComputedComponentGroupRegistry ComputedComponentGroupRegistry { get; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; }
         public IThreadHandler ThreadHandler { get; }
         
         protected IComputedComponentGroup ComputedComponentGroup { get; private set; }
         protected bool ShouldMultithread { get; set; }
         protected CompositeDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler)
         {
             ComponentDatabase = componentDatabase;
             ComputedComponentGroupRegistry = computedComponentGroupRegistry;
             ThreadHandler = threadHandler;
+            EntityComponentAccessor = entityComponentAccessor;
         }
         
         /// <summary>
@@ -34,16 +38,6 @@ namespace EcsR3.Systems.Batching
         /// </summary>
         /// <returns>A trigger indicating that the process should run</returns>
         protected abstract Observable<Unit> ReactWhen();
-
-        /// <summary>
-        /// Do anything before the batch gets processed
-        /// </summary>
-        protected virtual void BeforeProcessing(){}
-        
-        /// <summary>
-        /// Do anything after the batch has been processed
-        /// </summary>
-        protected virtual void AfterProcessing(){}
         
         /// <summary>
         /// The wrapper for processing the underlying batch
@@ -55,14 +49,6 @@ namespace EcsR3.Systems.Batching
         /// </summary>
         /// <returns></returns>
         protected abstract IComputedComponentGroup GetComponentGroup();
-
-        /// <summary>
-        /// Gets the entity from its provided id
-        /// </summary>
-        /// <param name="entityId">The entity id to lookup</param>
-        /// <returns>The entity instance associated with this id</returns>
-        public IEntity GetEntity(int entityId)
-        { return ComputedComponentGroup.DataSource.Get(entityId); }
         
         public virtual void StartSystem()
         {
@@ -75,9 +61,13 @@ namespace EcsR3.Systems.Batching
         
         private void RunBatch()
         {
-            BeforeProcessing();
+            if (this is ISystemPreProcessor preProcessor)
+            { preProcessor.BeforeProcessing(); }
+            
             ProcessBatch();
-            AfterProcessing();
+            
+            if (this is ISystemPostProcessor postProcessor)
+            { postProcessor.AfterProcessing(); }
         }
 
         public virtual void StopSystem()

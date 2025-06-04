@@ -39,8 +39,32 @@ namespace EcsR3.Components.Lookups
             }
         }
 
+        public int[] GetComponentTypeIds(IReadOnlyList<Type> type)
+        {
+            var ids = new int[type.Count];
+            for (var i = 0; i < type.Count; i++)
+            { ids[i] = ComponentsByType[type[i]]; }
+            return ids;
+        }
+        
+        public int[] GetComponentTypeIds(IReadOnlyList<IComponent> components)
+        {
+            var ids = new int[components.Count];
+            for (var i = 0; i < components.Count; i++)
+            { ids[i] = ComponentsByType[components[i].GetType()]; }
+            return ids;
+        }
+
         public Type GetComponentType(int typeId)
         { return ComponentsById[typeId]; }
+
+        public Type[] GetComponentTypes(IReadOnlyList<int> typeIds)
+        {
+            var types = new Type[typeIds.Count];
+            for (var i = 0; i < typeIds.Count; i++)
+            { types[i] = ComponentsById[typeIds[i]]; }
+            return types;
+        }
 
         public bool IsComponentStruct(int componentTypeId)
         { return ComponentStructLookups[componentTypeId]; }

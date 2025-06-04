@@ -1,6 +1,6 @@
 using System.Linq;
+using EcsR3.Collections.Entities;
 using EcsR3.Plugins.Persistence.Data;
-using EcsR3.Collections.Entity;
 
 namespace EcsR3.Plugins.Persistence.Transformers
 {
@@ -18,7 +18,7 @@ namespace EcsR3.Plugins.Persistence.Transformers
             var collection = (IEntityCollection)original;
 
             var entityData = collection
-                .Select(EntityDataTransformer.Transform)
+                .Select(x => EntityDataTransformer.Transform(x))
                 .Cast<EntityData>()
                 .ToList();
 

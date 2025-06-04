@@ -1,5 +1,6 @@
 ﻿using EcsR3.Blueprints;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsR3.Extensions;
 
@@ -16,7 +17,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Blueprints
             Health = health;
         }
 
-        public void Apply(IEntity entity)
+        public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
             var healthComponent = new HasHealthComponent
             {
@@ -29,7 +30,7 @@ namespace EcsR3.Examples.ExampleApps.ComputedGroupExample.Blueprints
                 Name = Name
             };
 
-            entity.AddComponents(nameComponent, healthComponent);
+            entityComponentAccessor.AddComponents(entity, nameComponent, healthComponent);
         }
     }
 }

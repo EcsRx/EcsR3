@@ -65,10 +65,10 @@ namespace EcsR3.Benchmarks.Benchmarks
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponents(_availableComponents);
-                entity.AddComponents(_noiseComponents);
-                entity.RemoveAllComponents();
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.AddComponents(entityId, _availableComponents);
+                EntityComponentAccessor.AddComponents(entityId, _noiseComponents);
+                EntityComponentAccessor.RemoveAllComponents(entityId);
             }
         }
     }

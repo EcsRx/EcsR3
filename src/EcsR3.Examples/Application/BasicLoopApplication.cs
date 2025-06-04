@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 
 namespace EcsR3.Examples.Application
 {
@@ -33,12 +34,12 @@ namespace EcsR3.Examples.Application
             for (var i = 0; i < EntityCount; i++)
             {
                 var entity = EntityCollection.Create();
-                SetupEntity(entity);              
+                SetupEntity(EntityComponentAccessor, entity);              
             }
         }
 
         protected abstract string Description { get; }
-        protected abstract void SetupEntity(IEntity entity);
+        protected abstract void SetupEntity(IEntityComponentAccessor entityComponentAccessor, Entity entity);
         protected abstract void RunProcess();
     }
 }

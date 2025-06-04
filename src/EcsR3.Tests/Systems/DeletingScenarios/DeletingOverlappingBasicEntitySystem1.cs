@@ -1,5 +1,6 @@
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
@@ -19,7 +20,7 @@ namespace EcsR3.Tests.Systems.DeletingScenarios
         public DeletingOverlappingBasicEntitySystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public void Process(IEntity entity, ElapsedTime elapsedTime)
-        { EntityCollection.Remove(entity.Id); }
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, ElapsedTime elapsedTime)
+        { EntityCollection.Remove(entity); }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using R3;
 using SystemsR3.Pools.Config;
 
 namespace SystemsR3.Pools
@@ -9,19 +10,25 @@ namespace SystemsR3.Pools
     {
         public PoolConfig PoolConfig { get; }
         
+        public int Size => _lastMax;
+        
         private int _lastMax;
         private readonly object _lock = new object();
         
         public readonly List<int> AvailableIds;
+        
+        public Observable<int> OnSizeChanged => _onSizeChanged;
+        private Subject<int> _onSizeChanged;
 
         public IdPool(PoolConfig poolConfig = null)
         {
-            PoolConfig = poolConfig ?? new PoolConfig(10000, 10000);
+            PoolConfig = poolConfig ?? new PoolConfig(1000, 3000);
             _lastMax = PoolConfig.InitialSize;
             AvailableIds = Enumerable.Range(1, _lastMax).ToList();
+            _onSizeChanged = new Subject<int>();
         }
 
-        public int AllocateInstance()
+        public int Allocate()
         {
             lock (_lock)
             {
@@ -52,7 +59,7 @@ namespace SystemsR3.Pools
             }
         }
 
-        public void ReleaseInstance(int id)
+        public void Release(int id)
         {
             if(id <= 0)
             { throw new ArgumentException("id has to be >= 1"); }
@@ -73,7 +80,45 @@ namespace SystemsR3.Pools
                 var increaseBy = newId -_lastMax ?? PoolConfig.ExpansionSize;
                 AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
                 _lastMax += increaseBy + 1;
+                _onSizeChanged.OnNext(Size);
             }
+        }
+
+        public void Dispose()
+        { _onSizeChanged?.Dispose(); }
+
+        public int[] AllocateMany(int count)
+        {
+            lock (_lock)
+            {
+                if(AvailableIds.Count < count)
+                { Expand(_lastMax + count); }
+
+                var ids = AvailableIds.Take(count).ToArray();
+                AvailableIds.RemoveRange(0, count);
+                
+                return ids;
+            }
+        }
+
+        public void ReleaseMany(int[] instances)
+        {
+            var maxId = 0;
+            for (var i = 0; i < instances.Length; i++)
+            {
+                var id = instances[i];
+                
+                if(id <= 0)
+                { throw new ArgumentException("id has to be >= 1"); }
+                
+                if(id > maxId){ maxId = id; }
+            }
+            
+            if (maxId > _lastMax)
+            { Expand(maxId); }
+
+            lock (_lock)
+            { AvailableIds.AddRange(instances); }
         }
     }
 }

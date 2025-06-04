@@ -1,11 +1,12 @@
 using SystemsR3.Infrastructure;
 using SystemsR3.Infrastructure.Extensions;
 using EcsR3.Collections;
-using EcsR3.Collections.Entity;
+using EcsR3.Collections.Entities;
 using EcsR3.Components.Database;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities.Accessors;
 using EcsR3.Infrastructure.Modules;
 
 namespace EcsR3.Infrastructure
@@ -16,6 +17,7 @@ namespace EcsR3.Infrastructure
         public IComponentDatabase ComponentDatabase { get; private set; }
         public IComputedEntityGroupRegistry ComputedEntityGroupRegistry { get; private set; }
         public IComputedComponentGroupRegistry ComputedComponentGroupRegistry { get; private set; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; private set; }
         
         /// <summary>
         /// Load any modules that your application needs
@@ -49,6 +51,7 @@ namespace EcsR3.Infrastructure
             ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
             ComputedEntityGroupRegistry = DependencyResolver.Resolve<IComputedEntityGroupRegistry>();
             ComputedComponentGroupRegistry = DependencyResolver.Resolve<IComputedComponentGroupRegistry>();
+            EntityComponentAccessor = DependencyResolver.Resolve<IEntityComponentAccessor>();
         }
     }
 }

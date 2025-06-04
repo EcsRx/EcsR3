@@ -1,6 +1,7 @@
 using System;
 using EcsR3.Components;
 using EcsR3.Components.Database;
+using EcsR3.Entities;
 using R3;
 using SystemsR3.Computeds.Conventions;
 
@@ -9,7 +10,7 @@ namespace EcsR3.Computeds.Components.Conventions
     public abstract class ComputedFromComponentGroup<TOutput, T1> : ComputedFromData<TOutput, IComputedComponentGroup<T1>> where T1 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
-        protected (int, T1)[] BatchCache = Array.Empty<(int, T1)>();
+        protected (Entity, T1)[] BatchCache = Array.Empty<(Entity, T1)>();
 
         protected readonly IComponentPool<T1> ComponentPool1;
         
@@ -22,7 +23,7 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(int, T1)> componentData);
+        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1)> componentData);
         
         protected override void UpdateComputedData()
         {
@@ -36,10 +37,10 @@ namespace EcsR3.Computeds.Components.Conventions
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                BatchCache[usedIndexes++] = (batch.EntityId, components1[batch.Component1Allocation]);
+                BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(int, T1)>(BatchCache, 0, usedIndexes));
+            UpdateComputedData(new ReadOnlyMemory<(Entity, T1)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -47,7 +48,7 @@ namespace EcsR3.Computeds.Components.Conventions
         where T1 : IComponent where T2 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
-        protected (int, T1, T2)[] BatchCache = Array.Empty<(int, T1, T2)>();
+        protected (Entity, T1, T2)[] BatchCache = Array.Empty<(Entity, T1, T2)>();
 
         protected readonly IComponentPool<T1> ComponentPool1;
         protected readonly IComponentPool<T2> ComponentPool2;
@@ -62,7 +63,7 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(int, T1, T2)> componentData);
+        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2)> componentData);
         
         protected override void UpdateComputedData()
         {
@@ -77,10 +78,10 @@ namespace EcsR3.Computeds.Components.Conventions
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                BatchCache[usedIndexes++] = (batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
+                BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(int, T1, T2)>(BatchCache, 0, usedIndexes));
+            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -92,7 +93,7 @@ namespace EcsR3.Computeds.Components.Conventions
         protected readonly IComponentPool<T1> ComponentPool1;
         protected readonly IComponentPool<T2> ComponentPool2;
         protected readonly IComponentPool<T3> ComponentPool3;
-        protected (int, T1, T2,T3)[] BatchCache = Array.Empty<(int, T1, T2,T3)>();
+        protected (Entity, T1, T2,T3)[] BatchCache = Array.Empty<(Entity, T1, T2,T3)>();
         
         protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1, T2, T3> dataSource) : base(dataSource)
@@ -105,7 +106,7 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(int, T1, T2, T3)> componentData);
+        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3)> componentData);
         
         protected override void UpdateComputedData()
         {
@@ -121,11 +122,11 @@ namespace EcsR3.Computeds.Components.Conventions
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                BatchCache[usedIndexes++] = (batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation],
+                BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation], components2[batch.Component2Allocation],
                         components3[batch.Component3Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(int, T1, T2, T3)>(BatchCache, 0, usedIndexes));
+            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -138,7 +139,7 @@ namespace EcsR3.Computeds.Components.Conventions
         protected readonly IComponentPool<T2> ComponentPool2;
         protected readonly IComponentPool<T3> ComponentPool3;
         protected readonly IComponentPool<T4> ComponentPool4;
-        protected (int, T1, T2,T3,T4)[] BatchCache = Array.Empty<(int, T1, T2,T3,T4)>();
+        protected (Entity, T1, T2,T3,T4)[] BatchCache = Array.Empty<(Entity, T1, T2,T3,T4)>();
         
         protected ComputedFromComponentGroup(IComponentDatabase componentDatabase,
             IComputedComponentGroup<T1, T2, T3, T4> dataSource) : base(dataSource)
@@ -152,7 +153,7 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(int, T1, T2, T3, T4)> componentData);
+        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3, T4)> componentData);
         
         protected override void UpdateComputedData()
         {
@@ -169,11 +170,11 @@ namespace EcsR3.Computeds.Components.Conventions
             for (var i = 0; i < batches.Length; i++)
             {
                 var batch = batches[i];
-                BatchCache[usedIndexes++] = (batch.EntityId, components1[batch.Component1Allocation], components2[batch.Component2Allocation],
+                BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation], components2[batch.Component2Allocation],
                         components3[batch.Component3Allocation], components4[batch.Component4Allocation]);;
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(int, T1, T2, T3, T4)>(BatchCache, 0, usedIndexes));
+            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3, T4)>(BatchCache, 0, usedIndexes));
         }
     }
 }

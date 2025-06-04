@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Text;
 using EcsR3.Entities;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.HealthExample.Components;
 using EcsR3.Examples.Extensions;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Systems;
+using EcsR3.Systems.Reactive;
 using R3;
 
 namespace EcsR3.Examples.ExampleApps.HealthExample.Systems
@@ -15,15 +17,15 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Systems
         public IGroup Group => new Group(typeof(HealthComponent));
         private const int HealthSegments = 10;
 
-        public Observable<float> ReactToData(IEntity entity)
+        public Observable<float> ReactToData(IEntityComponentAccessor entityComponentAccessor, Entity entity)
         {
-            var healthComponent = entity.GetComponent<HealthComponent>();
+            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entity);
             return healthComponent.Health.WithValueChange().Select(CalculateDamageTaken);
         }
 
-        public void Process(IEntity entity, float damageDone)
+        public void Process(IEntityComponentAccessor entityComponentAccessor, Entity entity, float damageDone)
         {
-            var healthComponent = entity.GetComponent<HealthComponent>();
+            var healthComponent = entityComponentAccessor.GetComponent<HealthComponent>(entity);
 
             Console.Clear();
             DisplayHealth(healthComponent, damageDone);
@@ -34,7 +36,7 @@ namespace EcsR3.Examples.ExampleApps.HealthExample.Systems
             {
                 Console.WriteLine("Enemy Is Dead! Hooray etc");
                 Console.WriteLine(" - Press Escape To Quit -");
-                entity.RemoveComponents(healthComponent);
+                entityComponentAccessor.RemoveComponent(entity, healthComponent);
             }
         }
 

@@ -85,6 +85,9 @@ namespace SystemsR3.Tests.SystemsR3.Handlers
             var mockSystem = Substitute.For<ITestMultiReactToEvent>();
             var dummyObject = new ComplexObject(10, "Bob");
             var dummyInt = 100;
+
+            mockSystem.ObserveOn(Arg.Any<Observable<ComplexObject>>()).Returns(dummyObjectSubject);
+            mockSystem.ObserveOn(Arg.Any<Observable<int>>()).Returns(dummyIntSubject);
             
             var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
             systemHandler.SetupSystem(mockSystem);

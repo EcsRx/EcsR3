@@ -9,6 +9,7 @@ using EcsR3.Collections;
 using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
+using EcsR3.Entities.Accessors;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Events;
 using EcsR3.Examples.ExampleApps.DataPipelinesExample.Pipelines;
@@ -16,6 +17,7 @@ using EcsR3.Extensions;
 using EcsR3.Groups;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using R3;
 
 namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
 {
@@ -24,10 +26,12 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
     {
         public PostJsonHttpPipeline SaveJsonPipeline { get; }
         public IComputedEntityGroup PlayerGroup { get; }
+        public IEntityComponentAccessor EntityComponentAccessor { get; }
         
-        public TriggerPipelineSystem(PostJsonHttpPipeline saveJsonPipeline, IComputedEntityGroupRegistry computedEntityGroupRegistry)
+        public TriggerPipelineSystem(PostJsonHttpPipeline saveJsonPipeline, IComputedEntityGroupRegistry computedEntityGroupRegistry, IEntityComponentAccessor entityComponentAccessor)
         {
             SaveJsonPipeline = saveJsonPipeline;
+            EntityComponentAccessor = entityComponentAccessor;
             PlayerGroup = GetPlayerGroup(computedEntityGroupRegistry);
         }
 
@@ -45,10 +49,13 @@ namespace EcsR3.Examples.ExampleApps.DataPipelinesExample.Systems
 
         public IComputedEntityGroup GetPlayerGroup(IComputedEntityGroupRegistry computedEntityGroupRegistry)
         { return computedEntityGroupRegistry.GetComputedGroup(new Group(typeof(PlayerStateComponent))); }
-        
+
+        public Observable<SavePipelineEvent> ObserveOn(Observable<SavePipelineEvent> observable)
+        { return observable; }
+
         public void Process(SavePipelineEvent eventData)
         {
-            var playerState = PlayerGroup.Value.Single().GetComponent<PlayerStateComponent>();
+            var playerState = EntityComponentAccessor.GetComponent<PlayerStateComponent>(PlayerGroup.Value.Single());
             Task.Run(() => TriggerPipeline(playerState));
         }
     }

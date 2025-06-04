@@ -17,7 +17,7 @@ namespace EcsR3.Benchmarks.Benchmarks;
 public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
 {
     private Type[] _availableComponentTypes;
-    private List<IEntity> _entities = new List<IEntity>();
+    private List<Entity> _entities = new List<Entity>();
     private IComponent[] _components;
     private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
 
@@ -45,10 +45,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
     public override void Setup()
     {
         for (var i = 0; i < EntityCount; i++)
-        {
-            var entity = new Entity(i, ComponentDatabase, ComponentTypeLookup, EntityChangeRouter);
-            _entities.Add(entity);
-        }
+        { _entities.Add(new Entity(i, 0)); }
 
         _components = new []{ typeof(StructComponent1), typeof(StructComponent2), typeof(StructComponent3) }
             .Take(ComponentCount)
@@ -58,7 +55,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
 
     public override void Cleanup()
     {
-        _entities.ForEach(x => x.RemoveAllComponents());
+        _entities.ForEach(x => EntityComponentAccessor.RemoveAllComponents(x));
         _entities.Clear();
     }
 
@@ -66,7 +63,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
     public void PreAllocated_EntitiesBatchAdd_StructComponents()
     {
         for (var i = 0; i < _components.Length; i++)
-        { _entities[i].AddComponents(_components); }
+        { EntityComponentAccessor.AddComponents(_entities[i], _components); }
     }
         
     [Benchmark]
@@ -75,7 +72,7 @@ public class PreAllocated_EntityAdd_StructComponents_Benchmark : EcsR3Benchmark
         for (var i = 0; i < _components.Length; i++)
         {
             for (var j = 0; j < _components.Length; j++)
-            { _entities[i].AddComponent(_components[j]); }
+            { EntityComponentAccessor.AddComponent(_entities[i], _components[j]); }
         }
     }
 }

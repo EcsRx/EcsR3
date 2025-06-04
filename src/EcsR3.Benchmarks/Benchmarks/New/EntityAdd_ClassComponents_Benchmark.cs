@@ -41,12 +41,12 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
+                var entityId = EntityCollection.Create();
                 switch (ComponentCount)
                 {
-                    case 1: entity.AddComponents(new ClassComponent1()); break;
-                    case 2: entity.AddComponents(new ClassComponent1(), new ClassComponent2()); break;
-                    case 3: entity.AddComponents(new ClassComponent1(), new ClassComponent2(), new ClassComponent3()); break;
+                    case 1: EntityComponentAccessor.CreateComponent<ClassComponent1>(entityId); break;
+                    case 2: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entityId); break;
+                    case 3: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3>(entityId); break;
                 }
             }
         }
@@ -56,10 +56,10 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         {
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = EntityCollection.Create();
-                entity.AddComponent<ClassComponent1>();
-                if(ComponentCount >= 2) { entity.AddComponent<ClassComponent2>(); }
-                if(ComponentCount >= 3) { entity.AddComponent<ClassComponent3>(); }
+                var entityId = EntityCollection.Create();
+                EntityComponentAccessor.CreateComponent<ClassComponent1>(entityId);
+                if(ComponentCount >= 2) { EntityComponentAccessor.CreateComponent<ClassComponent2>(entityId); }
+                if(ComponentCount >= 3) { EntityComponentAccessor.CreateComponent<ClassComponent3>(entityId); }
             }
         }
     }
