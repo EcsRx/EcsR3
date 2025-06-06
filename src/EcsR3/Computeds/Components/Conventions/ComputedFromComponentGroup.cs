@@ -23,9 +23,9 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1)> componentData);
+        protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1)> componentData);
         
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             var components1 = ComponentPool1.Components;
             var batches = DataSource.Value.Span;
@@ -40,7 +40,7 @@ namespace EcsR3.Computeds.Components.Conventions
                 BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(Entity, T1)>(BatchCache, 0, usedIndexes));
+            return UpdateComputedData(new ReadOnlyMemory<(Entity, T1)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -63,9 +63,9 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2)> componentData);
+        protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2)> componentData);
         
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             var components1 = ComponentPool1.Components;
             var components2 = ComponentPool2.Components;
@@ -81,7 +81,7 @@ namespace EcsR3.Computeds.Components.Conventions
                 BatchCache[usedIndexes++] = (batch.Entity, components1[batch.Component1Allocation], components2[batch.Component2Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2)>(BatchCache, 0, usedIndexes));
+            return UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -106,9 +106,9 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3)> componentData);
+        protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3)> componentData);
         
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             var components1 = ComponentPool1.Components;
             var components2 = ComponentPool2.Components;
@@ -126,7 +126,7 @@ namespace EcsR3.Computeds.Components.Conventions
                         components3[batch.Component3Allocation]);
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3)>(BatchCache, 0, usedIndexes));
+            return UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3)>(BatchCache, 0, usedIndexes));
         }
     }
     
@@ -153,9 +153,9 @@ namespace EcsR3.Computeds.Components.Conventions
 
         protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
 
-        protected abstract void UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3, T4)> componentData);
+        protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3, T4)> componentData);
         
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             var components1 = ComponentPool1.Components;
             var components2 = ComponentPool2.Components;
@@ -174,7 +174,7 @@ namespace EcsR3.Computeds.Components.Conventions
                         components3[batch.Component3Allocation], components4[batch.Component4Allocation]);;
             }
             
-            UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3, T4)>(BatchCache, 0, usedIndexes));
+            return UpdateComputedData(new ReadOnlyMemory<(Entity, T1, T2, T3, T4)>(BatchCache, 0, usedIndexes));
         }
     }
 }

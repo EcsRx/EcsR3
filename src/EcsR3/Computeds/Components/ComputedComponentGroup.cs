@@ -32,7 +32,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -42,6 +42,7 @@ namespace EcsR3.Computeds.Components
             { _internalCache[indexesUsed++] = new ComponentBatch<T1>(entityId, AllocationDatabase.GetEntityComponentAllocation(_t1ComponentId, entityId)); }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
 
@@ -75,7 +76,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -89,6 +90,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
 
@@ -124,7 +126,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -139,6 +141,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2, T3>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
     
@@ -177,7 +180,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -193,6 +196,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
     
@@ -234,7 +238,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -251,6 +255,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
     
@@ -296,7 +301,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -314,6 +319,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
     
@@ -362,7 +368,7 @@ namespace EcsR3.Computeds.Components
             RefreshData();
         }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             if(DataSource.Count > _internalCache.Length)
             { Array.Resize(ref _internalCache, DataSource.Count); }
@@ -381,6 +387,7 @@ namespace EcsR3.Computeds.Components
             }
             
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6,T7>>(_internalCache, 0, indexesUsed);
+            return true;
         }
     }
 }

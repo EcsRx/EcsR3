@@ -10,6 +10,10 @@ public class TestComputedFromObservable : ComputedFromObservable<int, int>
 
     public void ForceDataRefresh(int value) => RefreshData(value);
 
-    protected override void UpdateComputedData(int data)
-    { ComputedData = data; }
+    protected override bool UpdateComputedData(int data)
+    {
+        var willChange = ComputedData != data;
+        ComputedData = data;
+        return willChange;
+    }
 }

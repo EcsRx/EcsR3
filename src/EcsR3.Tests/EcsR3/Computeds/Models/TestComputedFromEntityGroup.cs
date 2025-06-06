@@ -22,11 +22,13 @@ namespace EcsR3.Tests.EcsR3.Computeds.Models
         protected override Observable<Unit> RefreshWhen()
         { return ManuallyRefresh; }
 
-        protected override void UpdateComputedData()
+        protected override bool UpdateComputedData()
         {
             ComputedData = DataSource
                 .Where(EntityComponentAccessor.HasComponent<TestComponentThree>)
                 .Average(x => x.GetHashCode());
+
+            return true;
         }
     }
 }
