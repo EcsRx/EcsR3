@@ -10,21 +10,18 @@ namespace SystemsR3.Computeds.Conventions
         
         protected void RefreshData(TInput data)
         {
+            var hasChanged = false;
             lock (Lock)
-            {
-                var previousHash = ComputedData.GetHashCode();
-                UpdateComputedData(data);
-                var newHash = ComputedData.GetHashCode();
-                if (previousHash == newHash) { return; }
-            }
+            { hasChanged = UpdateComputedData(data); }
             
-            OnDataChanged.OnNext(ComputedData);
+            if(hasChanged)
+            { OnDataChanged.OnNext(ComputedData); }
         }
         
         /// <summary>
         /// The method to update the ComputedData from the DataSource
         /// </summary>
-        /// <returns>The transformed data</returns>
-        protected abstract void UpdateComputedData(TInput data);
+        /// <returns>True if the data has changed, false if it has not</returns>
+        protected abstract bool UpdateComputedData(TInput data);
     }
 }

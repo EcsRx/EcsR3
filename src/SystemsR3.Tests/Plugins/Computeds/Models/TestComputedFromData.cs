@@ -13,7 +13,11 @@ namespace SystemsR3.Tests.Plugins.Computeds.Models
         protected override Observable<Unit> RefreshWhen()
         { return ManuallyRefresh; }
 
-        protected override void UpdateComputedData()
-        { ComputedData = DataSource.Data; }
+        protected override bool UpdateComputedData()
+        {
+            var willChange = ComputedData != DataSource.Data;
+            ComputedData = DataSource.Data;
+            return willChange;
+        }
     }
 }

@@ -13,11 +13,13 @@ public class ComputedStructComponentProcessor : ComputedFromComponentGroup<int, 
     {
     }
 
-    protected override void UpdateComputedData(ReadOnlyMemory<(Entity, StructNumberComponent, StructNumber2Component)> componentData)
+    protected override bool UpdateComputedData(ReadOnlyMemory<(Entity, StructNumberComponent, StructNumber2Component)> componentData)
     {
         ComputedData = 0;
         var span = componentData.Span;
         for(var i=0;i<componentData.Length;i++)
         { ComputedData += span[i].Item2.Value + span[i].Item3.Value; }
+
+        return true;
     }
 }

@@ -12,15 +12,12 @@ namespace SystemsR3.Computeds.Conventions
         
         public void RefreshData()
         {
+            var hasChanged = false;
             lock (Lock)
-            {
-                var previousHash = ComputedData?.GetHashCode() ?? -1;
-                UpdateComputedData();
-                var newHash = ComputedData?.GetHashCode() ?? -1;
-                if (previousHash == newHash) { return; }
-            }
+            { hasChanged = UpdateComputedData(); }
             
-            OnDataChanged.OnNext(ComputedData);
+            if(hasChanged)
+            { OnDataChanged.OnNext(ComputedData); }
         }
         
         /// <summary>
@@ -37,7 +34,7 @@ namespace SystemsR3.Computeds.Conventions
         /// <summary>
         /// The method to update the ComputedData from the DataSource
         /// </summary>
-        /// <returns>The transformed data</returns>
-        protected abstract void UpdateComputedData();
+        /// <returns>True if the data has changed, false if it has not</returns>
+        protected abstract bool UpdateComputedData();
     }
 }

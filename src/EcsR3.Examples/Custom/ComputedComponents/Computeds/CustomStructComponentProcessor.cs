@@ -22,7 +22,7 @@ public class CustomComputedStructComponentProcessor : ComputedFromData<int, ICom
     protected override Observable<Unit> RefreshWhen()
     { return Observable.Never<Unit>(); }
 
-    protected override void UpdateComputedData()
+    protected override bool UpdateComputedData()
     {
         var components1 = ComponentPool1.Components;
         var components2 = ComponentPool2.Components;
@@ -34,5 +34,7 @@ public class CustomComputedStructComponentProcessor : ComputedFromData<int, ICom
             var batch = batches[i];
             ComputedData += components1[batch.Component1Allocation].Value + components2[batch.Component2Allocation].Value;
         }
+
+        return true;
     }
 }

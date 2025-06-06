@@ -16,7 +16,7 @@ public class ComputedEntityProcessor : ComputedFromEntityGroup<int>
         EntityComponentAccessor = entityComponentAccessor;
     }
 
-    protected override void UpdateComputedData()
+    protected override bool UpdateComputedData()
     {
         ComputedData = 0;
         foreach (var entityId in DataSource)
@@ -24,5 +24,7 @@ public class ComputedEntityProcessor : ComputedFromEntityGroup<int>
             ComputedData +=  EntityComponentAccessor.GetComponent<NumberComponent>(entityId).Value 
                              + EntityComponentAccessor.GetComponent<Number2Component>(entityId).Value; 
         }
+
+        return true;
     }
 }
