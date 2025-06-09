@@ -16,8 +16,7 @@ namespace EcsR3.Systems.Batching.Convention
         protected abstract void Process(Entity entity, ref T1 component1, T2 component2);
 
         protected BatchedMixedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
-        {
-        }
+        {}
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {

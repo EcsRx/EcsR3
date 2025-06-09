@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using EcsR3.Components;
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
@@ -10,6 +9,36 @@ using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching.Convention
 {
+    public abstract class BatchedRefSystem<T1> : RawBatchedSystem<T1>
+        where T1 : struct, IComponent
+    {
+        protected abstract void Process(Entity entity, ref T1 component1);
+
+        protected BatchedRefSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        {
+        }
+
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools)
+        {
+            if (ShouldMultithread)
+            {
+                ThreadHandler.For(0, componentBatches.Length, i =>
+                {
+                    var batch = componentBatches.Span[i];
+                    Process(batch.Entity, ref componentPools[batch.Component1Allocation]);
+                });
+                return;
+            }
+
+            var batches = componentBatches.Span;
+            for (var i = 0; i < batches.Length; i++)
+            {
+                var batch = batches[i];
+                Process(batch.Entity, ref componentPools[batch.Component1Allocation]);
+            }
+        }
+    }
+    
     public abstract class BatchedRefSystem<T1, T2> : RawBatchedSystem<T1, T2>
         where T1 : struct, IComponent
         where T2 : struct, IComponent
