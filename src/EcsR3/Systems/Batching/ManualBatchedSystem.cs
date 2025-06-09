@@ -1,7 +1,6 @@
 using EcsR3.Components.Database;
 using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
-using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
 using EcsR3.Groups;
 using EcsR3.Systems.Augments;

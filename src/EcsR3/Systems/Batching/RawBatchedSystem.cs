@@ -10,6 +10,29 @@ using SystemsR3.Threading;
 
 namespace EcsR3.Systems.Batching
 {
+    public abstract class RawBatchedSystem<T1> : ManualBatchedSystem
+        where T1 : IComponent
+    {
+        public override IGroup Group { get; } = new Group(typeof(T1));
+
+        protected readonly BatchPoolAccessor<T1> BatchPoolAccessor;
+        protected IComputedComponentGroup<T1> CastComponentGroup => ComputedComponentGroup as IComputedComponentGroup<T1>;
+
+        protected RawBatchedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+        { BatchPoolAccessor = new BatchPoolAccessor<T1>(componentDatabase); }
+
+        protected override IComputedComponentGroup GetComponentGroup()
+        { return ComputedComponentGroupRegistry.GetComputedGroup<T1>(); }
+
+        protected override void ProcessBatch()
+        {
+            var componentArrays = BatchPoolAccessor.GetPoolArrays();
+            ProcessGroup(CastComponentGroup.Value, componentArrays);
+        }
+        
+        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools);
+    }
+    
     public abstract class RawBatchedSystem<T1, T2> : ManualBatchedSystem
         where T1 : IComponent
         where T2 : IComponent
