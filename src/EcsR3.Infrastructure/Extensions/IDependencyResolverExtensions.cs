@@ -10,7 +10,7 @@ using EcsR3.Groups;
 
 namespace EcsR3.Infrastructure.Extensions
 {
-    public static class IDependencyContainerExtensions
+    public static class IDependencyResolverExtensions
     {
         /// <summary>
         /// Resolves an observable group
@@ -53,6 +53,30 @@ namespace EcsR3.Infrastructure.Extensions
         {
             var computedComponentGroupRegistry = resolver.Resolve<IComputedComponentGroupRegistry>();
             return computedComponentGroupRegistry.GetComputedGroup<T1, T2, T3>();
+        }
+        
+        public static IComputedComponentGroup<T1, T2, T3, T4> ResolveComputedComponentGroup<T1, T2, T3, T4>(this IDependencyResolver resolver) where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
+        {
+            var computedComponentGroupRegistry = resolver.Resolve<IComputedComponentGroupRegistry>();
+            return computedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4>();
+        }
+                
+        public static IComputedComponentGroup<T1, T2, T3, T4, T5> ResolveComputedComponentGroup<T1, T2, T3, T4, T5>(this IDependencyResolver resolver) where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent
+        {
+            var computedComponentGroupRegistry = resolver.Resolve<IComputedComponentGroupRegistry>();
+            return computedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4, T5>();
+        }
+                        
+        public static IComputedComponentGroup<T1, T2, T3, T4, T5, T6> ResolveComputedComponentGroup<T1, T2, T3, T4, T5, T6>(this IDependencyResolver resolver) where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent
+        {
+            var computedComponentGroupRegistry = resolver.Resolve<IComputedComponentGroupRegistry>();
+            return computedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4, T5, T6>();
+        }
+        
+        public static IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> ResolveComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7>(this IDependencyResolver resolver) where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent where T7 : IComponent
+        {
+            var computedComponentGroupRegistry = resolver.Resolve<IComputedComponentGroupRegistry>();
+            return computedComponentGroupRegistry.GetComputedGroup<T1, T2, T3, T4, T5, T6, T7>();
         }
     }
 }
