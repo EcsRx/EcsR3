@@ -10,12 +10,11 @@ using Xunit;
 
 namespace SystemsR3.Tests.SystemsR3
 {
-    public class IApplicationExtensionsTests
+    public class IDependencyResolverExtensionsTests
     {
         [Fact]
         public void should_correctly_order_default_systems()
         {
-
             var lowerThanDefaultPrioritySystem = new LowerThanDefaultPrioritySystem();
             var highPrioritySystem = new HighPrioritySystem();
             var highestPrioritySetupSystem = new HighestPrioritySystem();
@@ -27,12 +26,10 @@ namespace SystemsR3.Tests.SystemsR3
                 highestPrioritySetupSystem,
             };
 
-            var mockContainer = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<ISystemsR3Application>();
-            mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.DependencyResolver.Returns(mockContainer);
+            var mockResolver = Substitute.For<IDependencyResolver>();
+            mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
 
-            var orderedSystems = ISystemsRxApplicationExtensions.GetAllBoundSystems(mockApplication).ToList();
+            var orderedSystems = IDependencyResolverSystemExtensions.GetAllBoundSystems(mockResolver).ToList();
 
             Assert.Equal(3, orderedSystems.Count);
             Assert.Equal(highestPrioritySetupSystem, orderedSystems[0]);

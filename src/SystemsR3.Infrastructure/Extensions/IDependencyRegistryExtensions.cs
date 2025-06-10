@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using SystemsR3.Infrastructure.Dependencies;
+using SystemsR3.Systems;
 
 namespace SystemsR3.Infrastructure.Extensions
 {
-    public static class IDependencyRegistryExtensions
+    public static class DependencyResolverExtensions
     {
         /// <summary>
         /// Binds from one type to another, generally from an interface to a concrete class

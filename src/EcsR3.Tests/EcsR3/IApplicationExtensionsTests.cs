@@ -16,48 +16,6 @@ namespace EcsR3.Tests.EcsR3
     public class IApplicationExtensionsTests
     {
         [Fact]
-        public void should_correctly_order_default_systems()
-        {
-            var defaultPrioritySystem = new DefaultPriorityGroupSystem();
-            var defaultPrioritySetupSystem = new DefaultPrioritySetupSystem();
-            var higherThanDefaultPrioritySystem = new HigherThanDefaultPriorityGroupSystem();
-            var lowerThanDefaultPrioritySystem = new LowerThanDefaultPriorityGroupSystem();
-            var lowPrioritySystem = new LowestPriorityGroupSystem();
-            var lowPrioritySetupSystem = new LowestPrioritySetupSystem();
-            var highPrioritySystem = new HighestPriorityGroupSystem();
-            var highPrioritySetupSystem = new HighestPrioritySetupSystem();
-
-            var systemList = new List<ISystem>
-            {
-                defaultPrioritySystem,
-                higherThanDefaultPrioritySystem,
-                lowerThanDefaultPrioritySystem,
-                lowPrioritySystem,
-                highPrioritySystem,
-                defaultPrioritySetupSystem,
-                lowPrioritySetupSystem,
-                highPrioritySetupSystem
-            };
-
-            var mockResolver = Substitute.For<IDependencyResolver>();
-            var mockApplication = Substitute.For<IEcsR3Application>();
-            mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.DependencyResolver.Returns(mockResolver);
-
-            var orderedSystems = ISystemsRxApplicationExtensions.GetAllBoundSystems(mockApplication).ToList();
-
-            Assert.Equal(8, orderedSystems.Count);
-            Assert.Equal(highPrioritySetupSystem, orderedSystems[0]);
-            Assert.Equal(highPrioritySystem, orderedSystems[1]);
-            Assert.Equal(higherThanDefaultPrioritySystem, orderedSystems[2]);
-            Assert.True(orderedSystems[3] == defaultPrioritySetupSystem || orderedSystems[3] == defaultPrioritySystem);
-            Assert.True(orderedSystems[4] == defaultPrioritySetupSystem || orderedSystems[4] == defaultPrioritySystem);
-            Assert.Equal(lowerThanDefaultPrioritySystem, orderedSystems[5]);
-            Assert.Equal(lowPrioritySystem, orderedSystems[6]);
-            Assert.Equal(lowPrioritySetupSystem, orderedSystems[7]);
-        }
-        
-        [Fact]
         public void should_correctly_order_reactive_systems()
         {
             var defaultPrioritySystem = new DefaultPriorityGroupSystem();
