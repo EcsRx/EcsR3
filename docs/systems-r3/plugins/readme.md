@@ -30,7 +30,7 @@ Once they are registered there the application will setup any dependencies for t
 
 Plugins are pretty simple, they just require you to implement the `ISystemsR3Plugin` interface and that's it.
 
-Here is an example of the reactive systems plugin, which binds some conventional system handlers for the `SystemExecutor` to make use of, then we output any systems we need to register (in this case none).
+Here is an example of the old reactive systems plugin (which is now part of the core lib), which binds some conventional system handlers for the `SystemExecutor` to make use of, then we output any systems we need to register (in this case none).
 
 ```csharp
 public class ReactiveSystemsPlugin : ISystemsR3Plugin
