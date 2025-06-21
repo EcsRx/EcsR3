@@ -1,6 +1,6 @@
 # FAQ/Blurbs
 
-This project was inspired by [Entitas](https://github.com/sschmid/Entitas-CSharp) and [uFrame ECS](https://github.com/micahosborne/uFrame) and was an attempt to have some of the simplicity and separation of Entitas while having some of the nicer reactive elements of uFrame ECS, so a huge thanks to the creators of those 2 libraries.
+This project is an evolution of [EcsRx](https://github.com/EcsRx/ecsrx) which was in turn inspired by [uFrame ECS](https://github.com/micahosborne/uFrame) and [Entitas](https://github.com/sschmid/Entitas-CSharp), it was an attempt to have some of the simplicity and separation of Entitas while having some of the nicer reactive elements of uFrame ECS, so a huge thanks to the creators of those 2 libraries.
 
 It started off as a unity specific framework but has been separated to be used in both .net with rx, and in unity with unirx, however with the advent of R3 it was decided that we should move to that but as that introduced breaking changes at low levels with EcsRx it was made into its own repo.
 
@@ -10,7 +10,7 @@ Now some common things you will probably want to ask/know:
 
 ### How performant is it?
 
-It's pretty good, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
+It's pretty good assuming you use the right systems (usually a `BatchedSystem`, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
 
 Although performance is not the primary focus efforts have been made to make the framework peformant without sacrificing functionality or ease of use, such as adding the ability to batch your components together and use `structs` and optimized type lookups.
 
@@ -30,7 +30,7 @@ However you look at it, it's whatever you are used to. Believe it or not before 
 
 ### How is this any better than uFrame ECS, Entitas, Some other ECS system?
 
-Chances are it is not, its just different. 
+Chances are it is not, it's just different. 
 
 Like Entitas is great and is very similar to this project, however it doesn't really have a complex reaction system, so anything you want to do reactively is a bit of a pain. Other than that this is pretty much the same sort of thing as Entitas. 
 
