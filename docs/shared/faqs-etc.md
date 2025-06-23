@@ -41,3 +41,15 @@ There will be a lot of comparisons with UnityECS (which never existed when this 
 So ultimately this is not marketed as the one ECS system to rule them all, its just got what I would deem the nice bits of a few existing ones.
 
 It is also pretty succinct as all you need to do is implement a couple of interfaces, the framework setup is trivial (and done for you if you use the unity layer package) and it also can work nicely with DI allowing you to have more config driven aspects to your game without passing random garbage around or having horrible statics/singletons to do this.
+
+### How do I do <some not very ECS thing> in an ECS way?
+
+Who knows, but stop for a moment and think "Do I need to use ECS for this?".
+
+I know this is an ECS framework, and we are talking a lot about ECS, but its not a silver bullet to solve all scenarios.
+
+There is a reason why `SystemR3` exists as a layer agnostic of `EcsR3`, in some cases you just want to do things in a non ECS way and thats fine.
+
+For example you may end up having UI systems which do not care about your ECS world, they just want data and this can be given to them without `Systems` or `Components` etc, just give them POCOs. There is nothing to say those same POCOs can't be also housed within `components`, but ultimately you can go outside of the ECS paradigm, this is one reason why `Events` are important as they are one piece of the puzzle in helping to communicate across boundries if needed.
+
+> In some projects I don't even use `EcsR3`, I just use `SystemsR3` with some POCOs, although if you are new to ECS it can be a difficult thing knowing when something should/shouldn't be ECS-ified. 

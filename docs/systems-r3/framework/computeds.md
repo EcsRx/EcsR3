@@ -9,17 +9,14 @@ Computed values are basically read only values which are proxy a data source and
 There are 3 default computed types available within the system:
 
 ### `IComputed` (For computed single values)
-
 Simplest computed and provides a current value and allows subscription to when the value changes, this can be very useful for precomputing things based off other data, i.e calculating MaxHp once all buffs have been taken into account.
 
 ### `IComputedCollection` (For computed collections of data)
-
 A reactive collection which provides an up to date collection of values and allows you to subscribe to when it changes, this could be useful for tracking all beneficial buffs on a player where the source data is just ALL buffs/debuffs on the entity.
 
 > EcsR3 adds on top of this and provides `IComputedGroup` and other related functionality
 
 ### `IComputedList<T>` (For computed collections with indexing support)
-
 Same as reactive collection but provides `IReadOnlyList` style methods and conventions.
 
 ## How do I use them
