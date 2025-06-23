@@ -37,9 +37,7 @@
   * [Entity Collections](ecs-r3/architecture/entity-collections.md)
 * Plugins
   * [Overview](ecs-r3/plugins/readme.md)
-  * [Reactive Systems Plugin](ecs-r3/plugins/reactive-systems-plugin.md)
   * [View Plugin](ecs-r3/plugins/view-plugin.md)
-  * [Batching Systems Plugin](ecs-r3/plugins/batched-plugin.md)
   * [Group Binding Plugin](ecs-r3/plugins/group-binding-plugin.md)
 * Performance
   * [Performance Checklist](ecs-r3/performance/readme.md)

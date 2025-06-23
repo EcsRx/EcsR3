@@ -14,14 +14,11 @@ This is where it gets interesting, so we have multiple flavours of systems depen
 
 ### `IManualSystem`
 
-This is a niche/base system for when you want to carry out some logic outside the scope of entities/reactions, or want to have 
-more fine-grained control over how you deal with the entities matched.
+This is a niche/base system for when you want to carry out some logic outside the scope of entities/reactions, or want to have more fine-grained control over how you deal with the entities matched.
 
-Rather than the `SystemExecutor` doing most of the work for you and managing the subscriptions it leaves it up to you
-to manage everything how you want once the system has been started.
+Rather than the `SystemExecutor` doing most of the work for you and managing the subscriptions it leaves it up to you to manage everything how you want once the system has been started.
 
-The `StartSystem` method will be triggered when the system has been added to the executor, and the `StopSystem` 
-will be triggered when the system is removed.
+The `StartSystem` method will be triggered when the system has been added to the executor, and the `StopSystem` will be triggered when the system is removed.
 
 ```csharp
 public class SomeManualSystem : IManualSystem
