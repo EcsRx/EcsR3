@@ -1,35 +1,74 @@
 # `SystemsR3` Computeds
 
-Computed values are basically read only values which are updated on changes, much like `IObservable` instances which notify you on data changing, computed objects also let you see what the value of the object is as well.
+Computed values are basically read only values which are proxy a data source and update on changes, much like `Observable` instances which notify you on data changing, computed objects also let you see what the value of the object is as well.
+
+> It is easiest to think of `computed` types as simple transformers for a datasource, data comes in/is update, it's processed in some way, the results are stored internally for accessing
 
 ## Computed Types
 
-There are 2 computed types available within the system:
+There are 3 default computed types available within the system:
 
-### `IComputed<T>` (For computed single values)
-
+### `IComputed` (For computed single values)
 Simplest computed and provides a current value and allows subscription to when the value changes, this can be very useful for precomputing things based off other data, i.e calculating MaxHp once all buffs have been taken into account.
 
-### `IComputedCollection<T>` (For computed collections of data)
-
+### `IComputedCollection` (For computed collections of data)
 A reactive collection which provides an up to date collection of values and allows you to subscribe to when it changes, this could be useful for tracking all beneficial buffs on a player where the source data is just ALL buffs/debuffs on the entity.
 
 > EcsR3 adds on top of this and provides `IComputedGroup` and other related functionality
+
+### `IComputedList<T>` (For computed collections with indexing support)
+Same as reactive collection but provides `IReadOnlyList` style methods and conventions.
 
 ## How do I use them
 
 So there are a few different ways to use them and most of that is based upon your use cases, and you can make your own implementations if you want to wrap up your own scenarios.
 
+They all share a lot of commonality in how their internals work, for the most part the 2 main things to highlight are:
+- `ComputedData` - This is the internal settable state of the computed, which `Value` proxies via a getter
+- `DataSource` - This is the source of data you should process to update state for `ComputedData`
+
 All of these classes are provided as `abstract` classes so you should inherit from them if you wish to build off them.
 
-### `ComputedFromData`
+### `ComputedFromData<TOutput, TInput>`
+
+The `ComputedFromData` class lets you pass in anything you want and output anything you want, it also lets you mix auto updating via the `RefreshWhen` or explicitly via `RefreshData` method.
+
+Here is an example using the `ComputedFromData` to keep track of who is in first place at all times:
 
 ```csharp
-var firstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
-RacerHud.CurrentWinner.Text = firstPlaceRacer.Value.Name;
+// Create a computed from the racing collection data
+public class ComputedFirstPlace : ComputedFromData<Racer, IReadOnlyCollection<Racer>>
+{    
+    // We pass in all the racers as the DataSource
+    public ComputedFirstPlace(IReadOnlyCollection racers) : base(racers) {}
+
+    // Lets automatically refresh every update
+    protected override Observable<Unit> RefreshWhen()
+    { return Observable.EveryUpdate(); }
+
+    // When updating we use the Racers via the DataSource and return a true/false if the data has changed
+    protected override bool UpdateComputedData()
+    {
+        // Calculate the first place racer
+        var topRacer = DataSource.OrderBy(x => x.RacePosition).First();
+        // Check if its different to the current computed state in ComputedData
+        var hasChanged = topRacer == ComputedData;
+        // If its changed we update the internal state
+        if(hasChanged) { ComputedData = DataSource.Data; }
+        // Return true/false based on if the internal state has changed (which will trigger observables)
+        return hasChanged;
+    }
+}
+
+var computedFirstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
+RacerHud.CurrentWinner.Text = computedFirstPlaceRacer.Value.Name;
 ```
 
-This is a versatile computed generator where you can basically create a pre computed variable based upon anything. So you pass in any object you require which represents the state, then you calculate what the output value should be internally.
+### `ComputedFromObservable<TOutput, TInput>`
+
+Much like the above `ComputedFromData` but the `DataSource` needs to be an `Observable<TInput>`, and will listen for changes on the observable and update its internal state accordingly, these are often known as **Pure Computeds** as they just proxy the underlying Observable.
+
+> One major difference worth noting is that you cannot explicitly update with the observable as the state changes are driven by the observable change triggers, there is no "state" as such to access arbitrarily on an `Observable`
 
 ## Sounds good, but why?
 

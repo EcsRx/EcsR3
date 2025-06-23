@@ -4,11 +4,11 @@ EcsR3 is a framework built on top of `R3` which provides an ECS paradigm for man
 
 ## Setup
 
-If you are using Monogame or Unity you can just go and get the platform specific helpers which will out the box provide you most of the infrastructure and setup required to get going, so go look there.
+If you are using `Monogame`, `Unity` or `Godot` you can just go and get the platform specific helpers which will out the box provide you most of the infrastructure and setup required to get going, so go look there.
 
 ---
 
-If you are not using Unity or Monogame and want to pioneer into a new territory then its just a case of setting up the bits that are needed for the core parts of the system to run.
+If you are not using an existing engine/framework and want to pioneer into a new territory then it's just a case of setting up the bits that are needed for the core parts of the system to run.
 
 ## Pre build infrastructure or not?
 
@@ -22,20 +22,19 @@ A wise choice so to start with its advised that you take:
 
 - `EcsR3`
 - `EcsR3.Infrastructure`
-- `EcsR3.Plugins.ReactiveSystems`
 - `EcsR3.Plugins.Views`
 
 This will provide the basic classes for you to extend, however one fundamental problem is that the infrastructure expects you to be using a DI framework. It doesn't really care which DI framework as it provides an interface for you to implement and then consume that in your own `EcsR3Application` implementation.
 
 So here are the main bits you need:
 
-- Implement `IDependencyContainer` for your DI framework of choice. [Here is a Ninject one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Dependencies/NinjectDependencyContainer.cs)
+- Implement `IDependencyRegistry` and `IDependencyResolver` for your DI framework of choice. [Here is a Ninject one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Dependencies/NinjectDependencyContainer.cs)
 
-- Implement your own `EcsR3Application` class, giving it an `IDependencyContainer` implementation to use. [Here is one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Application/EcsR3ConsoleApplication.cs)
+- Implement your own `EcsR3Application` class, giving it an `IDependencyRegistry` implementation to use. [Here is one from examples](https://github.com/EcsRx/ecsr3/blob/master/src/EcsR3.Examples/Application/EcsR3ConsoleApplication.cs)
 
 - Extend your custom `EcsR3Application` implementation for each logical app you need to make, as shown in the EcsR3 console examples
 
-There are pre-made DI implementations for **Ninject** and **Zenject** so if you can use one of those on your platform GREAT! if not then just pick a DI framework of choice and implement your own handler for it (using the ninject one as an example to base it off).
+There are pre-made DI implementations for **Ninject**, **Microsoft**, **DryIoc**, **AutoFac** and finally **Zenject** so if you can use one of those on your platform GREAT! if not then just pick a DI framework of choice and implement your own handler for it (using the ninject one as an example to base it off).
 
 > So if you dont know what DI (Dependency Injection) is I recommend you go [read this](https://grofit.gitbooks.io/development-for-winners/content/development/dependency-patterns/dependency-injection.html) and [this](https://grofit.gitbooks.io/development-for-winners/content/development/dependency-patterns/inversion-of-control.html) which will give you a quick overview on what IoC (Inversion of Control) and DI is and how you use it.
 
@@ -103,8 +102,7 @@ public class HelloWorldExampleApplication : EcsR3Application
 	{
 		SystemExecutor.AddSystem(new TalkingSystem());
 
-		var defaultCollection = EntityCollectionManager.GetCollection();
-		var entity = defaultCollection.Create();
+		var entity = EntityCollection.Create();
 
 		var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
 		entity.AddComponent(canTalkComponent);

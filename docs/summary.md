@@ -27,7 +27,7 @@
   * [Systems](ecs-r3/framework/systems.md)
   * [Blueprints](ecs-r3/framework/blueprints.md)
   * [Groups](ecs-r3/framework/groups.md)
-  * [Observable Groups](ecs-r3/framework/observable-groups.md)
+  * [Computeds](ecs-r3/framework/computeds.md)
 * Framework Infrastructure
   * [Application Infrastructure](ecs-r3/infrastructure/application-infrastructure.md)
   * [Application Lifecycle](ecs-r3/infrastructure/application-lifecycle.md)
@@ -37,16 +37,10 @@
   * [Entity Collections](ecs-r3/architecture/entity-collections.md)
 * Plugins
   * [Overview](ecs-r3/plugins/readme.md)
-  * [Reactive Systems Plugin](ecs-r3/plugins/reactive-systems-plugin.md)
-  * [Computeds Plugin](ecs-r3/plugins/computed-plugin.md)
   * [View Plugin](ecs-r3/plugins/view-plugin.md)
-  * [Batching Systems Plugin](ecs-r3/plugins/batched-plugin.md)
   * [Group Binding Plugin](ecs-r3/plugins/group-binding-plugin.md)
 * Performance
-  * [Overview](ecs-r3/performance/readme.md)
-  * [Component Type Lookups](ecs-r3/performance/component-type-lookups.md)
-  * [System Affinities](ecs-r3/performance/system-affinity.md)
-  * [Struct Components](ecs-r3/performance/struct-components.md)
+  * [Performance Checklist](ecs-r3/performance/readme.md)
   
 ## Other
 * [Breaking Changes](shared/breaking-changes.md)

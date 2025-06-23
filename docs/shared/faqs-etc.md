@@ -1,6 +1,6 @@
 # FAQ/Blurbs
 
-This project was inspired by [Entitas](https://github.com/sschmid/Entitas-CSharp) and [uFrame ECS](https://github.com/micahosborne/uFrame) and was an attempt to have some of the simplicity and separation of Entitas while having some of the nicer reactive elements of uFrame ECS, so a huge thanks to the creators of those 2 libraries.
+This project is an evolution of [EcsRx](https://github.com/EcsRx/ecsrx) which was in turn inspired by [uFrame ECS](https://github.com/micahosborne/uFrame) and [Entitas](https://github.com/sschmid/Entitas-CSharp), it was an attempt to have some of the simplicity and separation of Entitas while having some of the nicer reactive elements of uFrame ECS, so a huge thanks to the creators of those 2 libraries.
 
 It started off as a unity specific framework but has been separated to be used in both .net with rx, and in unity with unirx, however with the advent of R3 it was decided that we should move to that but as that introduced breaking changes at low levels with EcsRx it was made into its own repo.
 
@@ -10,7 +10,7 @@ Now some common things you will probably want to ask/know:
 
 ### How performant is it?
 
-It's pretty good, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
+It's pretty good assuming you use the right systems (usually a `BatchedSystem`, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
 
 Although performance is not the primary focus efforts have been made to make the framework peformant without sacrificing functionality or ease of use, such as adding the ability to batch your components together and use `structs` and optimized type lookups.
 
@@ -30,7 +30,7 @@ However you look at it, it's whatever you are used to. Believe it or not before 
 
 ### How is this any better than uFrame ECS, Entitas, Some other ECS system?
 
-Chances are it is not, its just different. 
+Chances are it is not, it's just different. 
 
 Like Entitas is great and is very similar to this project, however it doesn't really have a complex reaction system, so anything you want to do reactively is a bit of a pain. Other than that this is pretty much the same sort of thing as Entitas. 
 
@@ -41,3 +41,15 @@ There will be a lot of comparisons with UnityECS (which never existed when this 
 So ultimately this is not marketed as the one ECS system to rule them all, its just got what I would deem the nice bits of a few existing ones.
 
 It is also pretty succinct as all you need to do is implement a couple of interfaces, the framework setup is trivial (and done for you if you use the unity layer package) and it also can work nicely with DI allowing you to have more config driven aspects to your game without passing random garbage around or having horrible statics/singletons to do this.
+
+### How do I do <some not very ECS thing> in an ECS way?
+
+Who knows, but stop for a moment and think "Do I need to use ECS for this?".
+
+I know this is an ECS framework, and we are talking a lot about ECS, but its not a silver bullet to solve all scenarios.
+
+There is a reason why `SystemR3` exists as a layer agnostic of `EcsR3`, in some cases you just want to do things in a non ECS way and thats fine.
+
+For example you may end up having UI systems which do not care about your ECS world, they just want data and this can be given to them without `Systems` or `Components` etc, just give them POCOs. There is nothing to say those same POCOs can't be also housed within `components`, but ultimately you can go outside of the ECS paradigm, this is one reason why `Events` are important as they are one piece of the puzzle in helping to communicate across boundries if needed.
+
+> In some projects I don't even use `EcsR3`, I just use `SystemsR3` with some POCOs, although if you are new to ECS it can be a difficult thing knowing when something should/shouldn't be ECS-ified. 

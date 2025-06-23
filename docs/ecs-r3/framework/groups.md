@@ -8,7 +8,7 @@ So for example lets say that I wanted the notion of a `Player`, that may actuall
 
 So groups are pretty simple, they are just POCOs which describe the component types that you wish to match from within the collection of entities. So if you have hundreds of entities all with different components you can use a group as a way of expressing a high level intent for a system. 
 
-So *Entity Collections* expose a way to pass a group in and get entities matching that group back, as mentioned the primary matching mechanism is via component but there is also the notion of entity matching, which is more experimental, and you can find out more about these further down this page.
+> Under the hood component `Type` instances are converted into `int` component Ids, then there are multiple internal components which deal with tracking/resolving entities into groups, which are known as `Computed Entity Groups` which are what `Systems` use to know what `Entities` need to be processed.
 
 ## Creating Groups
 
@@ -60,17 +60,12 @@ public class MyGroup : IGroup
 
 As you can see, you can now just instantiate `new MyGroup();` and everyone is happy.
 
-## Required/Excluded Components and TargettedEntities
+## Required vs Excluded components?
 
-So as mentioned most entities and constrained by their component types, this is the `RequiredComponents` and `ExcludedComponents` parts, however there is also a `TargettedEntities` notion, which basically takes the constraining a step further and allows you to constrain further on the entities matching the components.
+In most cases you probably only care about `RequiredComponents` but in some cases you may have multiple groups with the same required components but you don't want to process certain `Entities` and you can gate this by having `ExcludedComponents` to indicate entities with those components should be ignored from the group.
 
-When a group also implements `IHasPredicate` an additional method `CanProcessEntity` can determine if an entity should be matched or not.
-For ease of use just use the `GroupWithPredicate` class instead of `Group` and specify an additional `entityPredicate`. Currently these are checked before subscriptions are passed to the system to execute, so you can express some complex constraints without having to be specific in each system.
+## What is a `LookupGroup`?
 
-So for example lets say you wanted a system which would only react to characters with `health == 0`, you could have the component based grouping and then in your system reaction or execution phase check to see if the health == 0 and if not return, however if you had 2 systems wanting to react to the notion of a character death you would end up duplicating your code a lot.
+If you have looked in the lower level APIs you will probably see `LookupGroup` all over the place, and internally an `IGroup` is resolved into a `LookupGroup` which resolves the component `Type` instances into the component type id `ints`.
 
-So this is where this functionality pays dividends as you can express this collation at a group level, so you can then make sure your systems will not even execute on the entities unless the predicate is matched.
-
-### Warning
-
-Currently this was implemented as it gives a nicer way to express high level grouping logic, however there may be some niche use-cases where this causes more confusion than it should, so this feature may be removed or changed slightly going forward as there is computed groups which has some overlap with this sort of functionality.
+> You will find that a lot of this framework has a sort of higher level nicer user facing functionality, and lower level more performant functionality, so while its interesting to know some of this, it isn't needed knowledge to use the framework.

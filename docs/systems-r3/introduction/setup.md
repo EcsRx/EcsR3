@@ -28,7 +28,7 @@ So here are the main bits you need:
 - [Download a premade provider](https://github.com/EcsRx/SystemsRx/tree/main/src/SystemsRx.Infrastructure.Ninject) or implement `IDependencyContainer` for your DI framework of choice.
 - Extend `SystemsRxApplication` implementation, providing it the DI container provider you wish to use 
 
-There are pre-made DI implementations for **Ninject** and **Zenject** so if you can use one of those on your platform GREAT! if not then just pick a DI framework of choice and implement your own handler for it (using the ninject one as an example to base it off).
+There are pre-made DI implementations for **Ninject**, **Microsoft**, **DryIoc**, **AutoFac** and finally **Zenject** for Unity use cases so if you can use one of those on your platform GREAT! if not then just pick a DI framework of choice and implement your own handler for it (using the ninject one as an example to base it off).
 
 > So if you dont know what DI (Dependency Injection) is I recommend you go [read this](https://grofit.gitbooks.io/development-for-winners/content/development/dependency-patterns/dependency-injection.html) and [this](https://grofit.gitbooks.io/development-for-winners/content/development/dependency-patterns/inversion-of-control.html) which will give you a quick overview on what IoC (Inversion of Control) and DI is and how you use it.
 
@@ -88,3 +88,5 @@ public class HelloWorldExampleApplication : EcsR3Application
 ```
 
 HUZZAH! you are now up and running and you can make your own conventions or design patterns around this.
+
+> Worth mentioning that one of the main selling points of EcsR3/Rx is that it is trying to provide high level design patterns for more experienced developers, if you are not wanting to use these then you don't need to, but you are missing out on a huge amount of what this framework does differently to most other ECS frameworks.

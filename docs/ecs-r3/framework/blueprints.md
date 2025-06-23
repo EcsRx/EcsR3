@@ -13,22 +13,21 @@ public class PlayerBlueprint : IBlueprint
 	public string Class {get;set;}
 	public int Health {get;set;}
 	
-	public void Apply(IEntity entity)
+	public void Apply(IEntityComponentAccessor entityComponentAccessor, IEntity entity)
 	{
-		entity.AddComponent(new HasNameComponent{ Name = Name });
-		entity.AddComponent(new HasClassComponent{ Class = Class });
-		entity.AddComponent(new HasHealthComponent{ MaxHealth = Health, CurrentHealth = Health });
+		entityComponentAccessor.AddComponent(entity, new HasNameComponent{ Name = Name });
+		entityComponentAccessor.AddComponent(entity, new HasClassComponent{ Class = Class });
+		entityComponentAccessor.AddComponent(entity, new HasHealthComponent{ MaxHealth = Health, CurrentHealth = Health });
 	}
 }
 ```
 
 ## Creating via blueprints
 
-Pools are aware of blueprints and you can create an entity with a blueprint to save you the time of having to create the entity 
-then manually applying all the components, which would look like:
+You can create entities via blueprints using extension methods on the `IEntityCollection`, this will allow you to do things like:
 
 ```csharp
-var hanSoloEntity = somePool.createEntity(new PlayerBlueprint{ 
+var hanSoloEntity = entityCollection.Create(new PlayerBlueprint{ 
 	Name = "Han Solo", 
 	Class = "Smuggler", 
 	Health = 100});
@@ -46,7 +45,6 @@ entity.ApplyBlueprint(new DefaultActorBlueprint())
 	.ApplyBlueprint(new SetupNetworkingBlueprint());
 ```
 
-
 ## How much should a blueprint do?
 
 This is ultimately up to you, but it was conceived as a way to do bulk component assignments to entities with a small 
@@ -57,7 +55,11 @@ like setting up a sprite or texture, or some other data payload from a 3rd party
 add the component to the entity, then have some system that catches that entity once its got the component added and then
 have the system provide the 3rd party dependency data and set it up (i.e a `SetupSystem`).
 
-## Blurb
+## Batching
 
-Generally you would just use a single blueprint to setup an object, and currently this can only be done in code, however 
-now there is the notion of views it should be possible to expose blueprints to the editor in some meaningful way.
+You can also use `IBatchedBlueprint` if you want to create multiple entities at once with a single blueprint, this can be 
+far quicker at setting up multiple entities at once, as it will attempt to batch as many of the creation/update operations
+as possible.
+
+This is also exposed on the `IEntityCollection` as extension methods so you can provide an amount of entities you wish to 
+create for the batch, then it will return a collection of the entites that have been created rather than a single one.

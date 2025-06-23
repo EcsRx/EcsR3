@@ -4,7 +4,9 @@ Most ECS systems have *something* that contains entities, be it `world`, `contex
 
 ## Why do we need them?
 
-All the entities need to live somewhere, so where better than a form of collection. There is also some other benefits to this, as you can have entities split out over different collections, so for example if you had a schmup game where you had a few long living items and a LOT of bullets you may want to partition your bullet related entities separately to your long lived entities so you can access them easier and also constrain the chatter between groups.
+All the entities need to live somewhere, so where better than a collection that houses them all.
+
+From here you are able to
 
 ### Partitioning?
 
