@@ -5,8 +5,6 @@ using SystemsR3.Attributes;
 using SystemsR3.Executor.Handlers;
 using SystemsR3.Systems;
 using SystemsR3.Types;
-using EcsR3.Collections;
-using EcsR3.Computeds;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Registries;
 using EcsR3.Plugins.GroupBinding.Attributes;
