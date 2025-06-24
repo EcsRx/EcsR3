@@ -3,6 +3,7 @@ using System.Linq;
 using EcsR3.Components;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
+using EcsR3.Groups;
 
 namespace EcsR3.Extensions
 {
@@ -12,7 +13,7 @@ namespace EcsR3.Extensions
         /// Checks to see if the entity contains the given component based on its type id
         /// </summary>
         /// <param name="accessor">The entity accessor</param>
-        /// <param name="entityId">The entity Id to check on</param>
+        /// <param name="entity">The entity to check on</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         public static bool HasComponent<T>(this IEntityComponentAccessor accessor, Entity entity) where T : IComponent
         { return accessor.HasComponent(entity, typeof(T)); }
@@ -59,5 +60,13 @@ namespace EcsR3.Extensions
         
         public static void CreateComponents<T1, T2, T3, T4, T5, T6, T7>(this IEntityComponentAccessor accessor, Entity entity) where T1 : IComponent, new() where T2 : IComponent, new() where T3 : IComponent, new() where T4 : IComponent, new() where T5 : IComponent, new() where T6 : IComponent, new() where T7 : IComponent, new()
         { accessor.CreateComponents<T1, T2, T3, T4, T5, T6, T7>(new[] { entity }); }
+
+        public static bool MatchesGroup(this IEntityComponentAccessor accessor, Entity entity, IGroup group)
+        {
+            if(!accessor.HasAllComponents(entity, group.RequiredComponents))
+            { return false; }
+
+            return group.ExcludedComponents.Length == 0 || !accessor.HasAnyComponents(entity, group.ExcludedComponents);
+        }
     }
 }

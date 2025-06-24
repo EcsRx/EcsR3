@@ -10,13 +10,13 @@ Now some common things you will probably want to ask/know:
 
 ### How performant is it?
 
-It's pretty good assuming you use the right systems (usually a `BatchedSystem`, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
+It's pretty good assuming you use the right systems (usually a `BatchedSystem`), it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
 
 Although performance is not the primary focus efforts have been made to make the framework peformant without sacrificing functionality or ease of use, such as adding the ability to batch your components together and use `structs` and optimized type lookups.
 
 As everything adheres to IoC and is easily changed with custom implementations you can performance tweak the code how you see fit for your specific scenarios.
 
-If you want to make some performance tests I would love to see them, we have some as part of the library to check on critical parts but it takes a lot of time to generate worthwhile scenarios, so feel free to write your own or provide us scenarios you want to see profiled.
+If you want to make some performance tests I would love to see them, we have some as part of the library to check on critical parts, but it takes a lot of time to generate worthwhile scenarios, so feel free to write your own or provide us scenarios you want to see profiled.
 
 ### Why should I use it?
 
@@ -46,10 +46,10 @@ It is also pretty succinct as all you need to do is implement a couple of interf
 
 Who knows, but stop for a moment and think "Do I need to use ECS for this?".
 
-I know this is an ECS framework, and we are talking a lot about ECS, but its not a silver bullet to solve all scenarios.
+I know this is an ECS framework, and we are talking a lot about ECS, but it's not a silver bullet to solve all scenarios.
 
 There is a reason why `SystemR3` exists as a layer agnostic of `EcsR3`, in some cases you just want to do things in a non ECS way and thats fine.
 
-For example you may end up having UI systems which do not care about your ECS world, they just want data and this can be given to them without `Systems` or `Components` etc, just give them POCOs. There is nothing to say those same POCOs can't be also housed within `components`, but ultimately you can go outside of the ECS paradigm, this is one reason why `Events` are important as they are one piece of the puzzle in helping to communicate across boundries if needed.
+For example, you may end up having UI systems which do not care about your ECS world, they just want data and this can be given to them without `Systems` or `Components` etc, just give them POCOs. There is nothing to say those same POCOs can't be also housed within `components`, but ultimately you can go outside of the ECS paradigm, this is one reason why `Events` are important as they are one piece of the puzzle in helping to communicate across boundries if needed.
 
 > In some projects I don't even use `EcsR3`, I just use `SystemsR3` with some POCOs, although if you are new to ECS it can be a difficult thing knowing when something should/shouldn't be ECS-ified. 
