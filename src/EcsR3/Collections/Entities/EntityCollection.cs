@@ -103,9 +103,9 @@ namespace EcsR3.Collections.Entities
         {
             lock (_lock)
             {
+                RemoveAll();
                 _onAdded.Dispose();
                 _onRemoved.Dispose();
-                RemoveAll();
             }
         }
 
