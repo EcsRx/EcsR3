@@ -19,7 +19,6 @@ namespace EcsR3.Benchmarks
         {
             var benchmarks = new []
             {
-                /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
@@ -36,8 +35,7 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ParallelReadOnlyBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultiDimensionalArrayResizeBenchmarks)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))*/
-                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))
             };
             
             var summaries = BenchmarkRunner.Run(benchmarks);
