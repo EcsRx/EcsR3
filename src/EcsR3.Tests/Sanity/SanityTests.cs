@@ -477,5 +477,19 @@ namespace EcsR3.Tests.Sanity
             }
             
         }
+
+        [Fact]
+        public void should_cope_with_entity_router_source_alterations_during_processing()
+        {
+            var (observableGroupManager, entityCollection, componentDatabase, componentLookup, entityChangeRouter, computedComponentGroupRegistry, entityComponentAccessor) = CreateFramework();
+            
+            entityChangeRouter.OnEntityAddedComponents([componentLookup.GetComponentTypeId(typeof(TestComponentOne))]).Subscribe(x =>
+            {
+                observableGroupManager.GetComputedGroup(new Group(typeof(TestComponentTwo)));
+            });
+            
+            var entity1 = entityCollection.Create();
+            entityComponentAccessor.AddComponents(entity1, new TestComponentOne());
+        }
     }
 }
