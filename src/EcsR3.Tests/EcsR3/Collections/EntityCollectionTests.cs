@@ -118,5 +118,26 @@ namespace EcsR3.Tests.EcsR3.Collections
             
             Assert.False(contains);
         }
+        
+                
+        [Fact]
+        public void should_dispose_correctly_and_remove_all_entities()
+        {
+            var entityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
+            var entityAllocationDatabase = Substitute.For<IEntityAllocationDatabase>();
+            var entity1 = new Entity(1, 0);
+            var entity2 = new Entity(2, 0);
+            
+            var entityCollection = new EntityCollection(entityAllocationDatabase, entityComponentAccessor);
+            entityCollection.EntityLookup.Add(entity1);
+            entityCollection.EntityLookup.Add(entity2);
+
+            entityCollection.Dispose();
+            
+            Assert.Empty(entityCollection);
+            
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity1);
+            entityComponentAccessor.Received(1).RemoveAllComponents(entity2);
+        }
     }
 }
