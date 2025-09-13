@@ -32,5 +32,11 @@ namespace SystemsR3.Pools
         /// </summary>
         /// <param name="instance">The instance to put back in the pool</param>
         void Release(T instance);
+
+        /// <summary>
+        /// Expand the pool ahead of time
+        /// </summary>
+        /// <param name="amountToAdd">The amount to explicitly expand by if needed</param>
+        void Expand(int? amountToAdd = null);
     }
 }

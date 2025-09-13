@@ -60,14 +60,15 @@ namespace EcsR3.Collections.Entities
 
             if (id.HasValue)
             {
-                if (id.Value > EntityCreationHashes.Length)
+                if (id.Value > EntityIdPool.Size)
                 {
-                    ResizeAllEntityAllocations(id.Value);
+                    var newEntityLength = id.Value + EntityIdPool.PoolConfig.ExpansionSize;
+                    EntityIdPool.Expand(newEntityLength);
                     entityId = id.Value;
                 }
                 else
                 {
-                    if (EntityCreationHashes[id.Value] == NoAllocation)
+                    if (EntityCreationHashes[id.Value] == 0)
                     { entityId = id.Value; }
                     else
                     { throw new Exception($"Cannot allocate entity, Id [{id.Value}] is already in use"); }
@@ -112,7 +113,7 @@ namespace EcsR3.Collections.Entities
                 ReleaseComponent(componentTypeId, entity);
             }
             
-            EntityCreationHashes[entity.Id] = NoAllocation;
+            EntityCreationHashes[entity.Id] = 0;
         }
 
         public Entity? GetEntity(int entityId)
@@ -121,7 +122,7 @@ namespace EcsR3.Collections.Entities
             { return null; }
             
             var creationHash = EntityCreationHashes[entityId];
-            if(creationHash == NoAllocation) { return null; }
+            if(creationHash == 0) { return null; }
             
             return new Entity(entityId, EntityCreationHashes[entityId]);
         }
