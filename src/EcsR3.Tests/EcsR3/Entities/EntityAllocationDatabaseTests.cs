@@ -44,6 +44,8 @@ public class EntityAllocationDatabaseTests
             for (var j = 0; j < entityAllocationDatabase.ComponentAllocationData.GetLength(1); j++)
             { Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[i, j]); }
         }
+        
+        Assert.True(entityAllocationDatabase.EntityCreationHashes.All(x => x == 0));
     }
     
     [Theory]
@@ -75,6 +77,33 @@ public class EntityAllocationDatabaseTests
     }
 
     [Fact]
+    public void should_allocate_entities_with_specific_ids_regardless_of_pool_size()
+    {
+        // Easier to just have a real one of these
+        var entityIdPool = new EntityIdPool(new PoolConfig(2, 10));
+        
+        var mockComponentDatabase = Substitute.For<IComponentDatabase>();
+        var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
+        mockCreationHasher.GenerateHash().Returns(123);
+        
+        var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
+            mockComponentTypeLookup, mockCreationHasher);
+        
+        var entityIdInsidePool = entityAllocationDatabase.AllocateEntity(1);
+        var entityIdOutsidePool = entityAllocationDatabase.AllocateEntity(10000);
+
+        Assert.Equal(1, entityIdInsidePool.Id);
+        Assert.Equal(123, entityIdInsidePool.CreationHash);
+        Assert.Equal(10000, entityIdOutsidePool.Id);
+        Assert.Equal(123, entityIdOutsidePool.CreationHash);
+        
+        var expectedExpansionSize = 10000 + entityIdPool.PoolConfig.ExpansionSize + 1;
+        Assert.Equal(expectedExpansionSize, entityIdPool.Size);
+        Assert.Equal(expectedExpansionSize + 1, entityAllocationDatabase.EntityLength);
+    }
+
+    [Fact]
     public void should_release_entity_correctly()
     {
         // Easier to just have a real one of these
@@ -94,7 +123,7 @@ public class EntityAllocationDatabaseTests
             mockComponentTypeLookup, mockCreationHasher);
 
         // Ignore NoAllocation we are bypassing normal entity creation route
-        var entity = new Entity(5, EntityAllocationDatabase.NoAllocation);
+        var entity = new Entity(5, 0);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
@@ -477,11 +506,10 @@ public class EntityAllocationDatabaseTests
         
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockComponentTypeLookup, mockCreationHasher);
-        
-        // Ignore NoAllocation its because we are explicitly bypassing the normal entity provisioning route
-        var entity1 = new Entity(3, EntityAllocationDatabase.NoAllocation);
-        var entity2 = new Entity(6, EntityAllocationDatabase.NoAllocation);
-        var entity3 = new Entity(7, EntityAllocationDatabase.NoAllocation);
+
+        var entity1 = new Entity(3, 0);
+        var entity2 = new Entity(6, 0);
+        var entity3 = new Entity(7, 0);
         var expectedEntities = new[] { entity1, entity2 };
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id] = 22;
         entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id] = 13;

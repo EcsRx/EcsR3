@@ -9,6 +9,7 @@ using EcsR3.Collections.Entities.Pools;
 using EcsR3.Components.Database;
 using EcsR3.Components.Lookups;
 using EcsR3.Computeds;
+using EcsR3.Computeds.Components.Registries;
 using EcsR3.Computeds.Entities;
 using EcsR3.Computeds.Entities.Factories;
 using EcsR3.Computeds.Entities.Registries;
@@ -27,8 +28,10 @@ namespace EcsR3.Examples.ExampleApps.Performance.Modules
         {
             registry.Bind<IEntityIdPool>(x => x.ToInstance(new EntityIdPool()));
             registry.Bind<IEntityCollection, EntityCollection>();
+            registry.Bind<ICreationHasher, CreationHasher>();
             registry.Bind<IComputedEntityGroupFactory, ComputedEntityGroupFactory>();
             registry.Bind<IComputedEntityGroupRegistry, ComputedEntityGroupRegistry>();
+            registry.Bind<IComputedComponentGroupRegistry, ComputedComponentGroupRegistry>();
             registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
