@@ -33,6 +33,6 @@ public class CreationHasherTests
         var newHash = new CreationHasher { RollingHashValue = int.MaxValue };
         var hash1 = newHash.GenerateHash();
         var newValue = newHash.RollingHashValue;
-        Assert.Equal(0, newValue);
+        Assert.Equal(CreationHasher.StartingValue, newValue);
     }
 }

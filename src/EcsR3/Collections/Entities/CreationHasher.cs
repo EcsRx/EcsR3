@@ -2,13 +2,15 @@
 {
     public class CreationHasher : ICreationHasher
     {
-        public int RollingHashValue { get; set; }
+        public const int StartingValue = 1;
+        
+        public int RollingHashValue { get; set; } = StartingValue;
         
         public int GenerateHash()
         {
             var hash = RollingHashValue.GetHashCode();
             if(RollingHashValue == int.MaxValue)
-            { RollingHashValue = 0; }
+            { RollingHashValue = StartingValue; }
             else
             { RollingHashValue++; }
             return hash;
