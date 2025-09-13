@@ -119,7 +119,7 @@ namespace EcsR3.Collections.Entities
 
         public Entity? GetEntity(int entityId)
         {
-            if (entityId > EntityCreationHashes.Length)
+            if (entityId >= EntityCreationHashes.Length)
             { return null; }
             
             var creationHash = EntityCreationHashes[entityId];

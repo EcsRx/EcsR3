@@ -504,5 +504,18 @@ namespace EcsR3.Tests.Sanity
             
             Assert.Equal(entity1, sameEntity1);
         }
+        
+        
+        [Fact]
+        public void should_get_null_entity_when_getting_on_last_index_of_initial_pool()
+        {
+            var (_, entityCollection, _, _, _, _, _) = CreateFramework();
+            var castEntityCollection = (EntityCollection)entityCollection;
+            var eca = castEntityCollection.EntityAllocationDatabase;
+            
+            var nullEntity = eca.GetEntity(1001);
+            
+            Assert.False(nullEntity.HasValue);
+        }
     }
 }

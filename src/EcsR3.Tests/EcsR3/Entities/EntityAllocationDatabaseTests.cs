@@ -197,7 +197,7 @@ public class EntityAllocationDatabaseTests
     }
     
     [Fact]
-    public void should_return_null_when_entity_doesnt_exist()
+    public void should_return_null_for_get_entity_that_doesnt_exist()
     {
         // Make our starting pool 2
         var entityIdPool = new EntityIdPool(new PoolConfig(2,10));
