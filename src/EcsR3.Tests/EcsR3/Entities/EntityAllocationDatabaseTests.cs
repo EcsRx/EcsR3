@@ -122,8 +122,9 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockComponentTypeLookup, mockCreationHasher);
 
-        // Ignore NoAllocation we are bypassing normal entity creation route
-        var entity = new Entity(5, 0);
+        var entityId = 5;
+        var entity = new Entity(entityId, 0);
+        entityIdPool.AllocateSpecificId(entityId);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
@@ -136,6 +137,7 @@ public class EntityAllocationDatabaseTests
         Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity.Id]);
         Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId2, entity.Id]);
         Assert.Equal(IEntityAllocationDatabase.NoAllocation, entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity.Id]);
+        Assert.True(entityIdPool.AvailableIds.Contains(entity.Id));
     }
     
     [Theory]

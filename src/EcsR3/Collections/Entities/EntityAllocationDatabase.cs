@@ -114,6 +114,7 @@ namespace EcsR3.Collections.Entities
             }
             
             EntityCreationHashes[entity.Id] = 0;
+            EntityIdPool.Release(entity.Id);
         }
 
         public Entity? GetEntity(int entityId)
