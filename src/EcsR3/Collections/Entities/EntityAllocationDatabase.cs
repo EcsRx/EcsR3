@@ -50,6 +50,7 @@ namespace EcsR3.Collections.Entities
             ComponentLength = componentTypeLookup.AllComponentTypeIds.Length;
             ComponentAllocationData = new int[ComponentLength, EntityLength];
             EntityCreationHashes = new int[EntityLength];
+            Array.Fill(EntityCreationHashes, NoAllocation);
             new Span2D<int>(ComponentAllocationData).Fill(NoAllocation);
             ResizeAllEntityAllocations(EntityLength);
         }

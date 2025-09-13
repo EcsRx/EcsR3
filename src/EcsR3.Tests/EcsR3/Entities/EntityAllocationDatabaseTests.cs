@@ -93,7 +93,8 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockComponentTypeLookup, mockCreationHasher);
 
-        var entity = new Entity(5, 0);
+        // Ignore NoAllocation we are bypassing normal entity creation route
+        var entity = new Entity(5, EntityAllocationDatabase.NoAllocation);
         
         entityAllocationDatabase.ComponentAllocationData = new int[componentTypeIds.Length, 10];
         new Span2D<int>(entityAllocationDatabase.ComponentAllocationData).Fill(IEntityAllocationDatabase.NoAllocation);
@@ -162,6 +163,26 @@ public class EntityAllocationDatabaseTests
         Assert.Equal(2, componentTypes.Length);
         Assert.Contains(componentTypeId1, componentTypes);
         Assert.Contains(componentTypeId3, componentTypes);
+    }
+    
+    [Fact]
+    public void should_return_null_when_entity_doesnt_exist()
+    {
+        // Make our starting pool 2
+        var entityIdPool = new EntityIdPool(new PoolConfig(2,10));
+        
+        var mockComponentDatabase = Substitute.For<IComponentDatabase>();
+        var mockComponentTypeLookup = Substitute.For<IComponentTypeLookup>();
+        var mockCreationHasher = Substitute.For<ICreationHasher>();
+        
+        var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
+            mockComponentTypeLookup, mockCreationHasher);
+
+        var entityInsidePoolRange = entityAllocationDatabase.GetEntity(1);
+        var entityOutsidePoolRange = entityAllocationDatabase.GetEntity(10000);
+
+        Assert.False(entityInsidePoolRange.HasValue);
+        Assert.False(entityOutsidePoolRange.HasValue);
     }
     
     [Fact]
@@ -457,9 +478,10 @@ public class EntityAllocationDatabaseTests
         var entityAllocationDatabase = new EntityAllocationDatabase(entityIdPool, mockComponentDatabase,
             mockComponentTypeLookup, mockCreationHasher);
         
-        var entity1 = new Entity(3, 0);
-        var entity2 = new Entity(6, 0);
-        var entity3 = new Entity(7, 0);
+        // Ignore NoAllocation its because we are explicitly bypassing the normal entity provisioning route
+        var entity1 = new Entity(3, EntityAllocationDatabase.NoAllocation);
+        var entity2 = new Entity(6, EntityAllocationDatabase.NoAllocation);
+        var entity3 = new Entity(7, EntityAllocationDatabase.NoAllocation);
         var expectedEntities = new[] { entity1, entity2 };
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1.Id] = 22;
         entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1.Id] = 13;
