@@ -55,7 +55,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            EntityCollection.RemoveAll();
+            EntityCollection.Clear();
             var manager = (ComputedEntityGroupRegistry as ComputedEntityGroupRegistry);
             var allComputedEntityGroups = manager._computedGroups;
             allComputedEntityGroups.Values.DisposeAll();

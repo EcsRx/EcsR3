@@ -80,7 +80,7 @@ namespace EcsR3.Tests.EcsR3.Collections
             entityCollection.EntityLookup.Add(entity2);
             entityCollection.EntityLookup.Add(entity3);
             
-            entityCollection.RemoveAll();
+            entityCollection.Clear();
 
             entityComponentAccessor.Received(1).RemoveAllComponents(entity1);
             entityComponentAccessor.Received(1).RemoveAllComponents(entity2);

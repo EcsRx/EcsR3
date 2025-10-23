@@ -19,6 +19,7 @@ namespace EcsR3.Collections.Entities
         Entity[] GetEntitiesWithComponent(int componentTypeId);
         int GetEntityComponentAllocation(int componentTypeId, Entity entity);
         void PreAllocate(int count);
+        void Clear();
     }
     
     public interface IBatchEntityAllocationDatabase

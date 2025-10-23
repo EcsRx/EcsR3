@@ -5,7 +5,7 @@ using EcsR3.Extensions;
 namespace EcsR3.Benchmarks.Benchmarks.New
 {
     [BenchmarkCategory("Entities")]
-    public class EntityAdd_ClassComponents_Benchmark : EcsR3Benchmark
+    public class EntityAdd_ClassComponents_PreAllocatedBenchmark : EcsR3Benchmark
     {
         [Params(10000)]
         public int EntityCount;
@@ -14,7 +14,7 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         public int ComponentCount;
         
         [IterationSetup]
-        public override void Setup()
+        public override void Cleanup()
         {
             EntityCollection.Clear();
             GetPoolFor<ClassComponent1>().Clear();
@@ -25,6 +25,11 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         [Benchmark]
         public void EntitiesBatchAdd_ClassComponents()
         {
+            EntityAllocationDatabase.PreAllocate(EntityCount);
+            GetPoolFor<ClassComponent1>().Expand(EntityCount);
+            if(ComponentCount >= 2) { GetPoolFor<ClassComponent2>().Expand(EntityCount); }
+            if(ComponentCount == 3) { GetPoolFor<ClassComponent3>().Expand(EntityCount); }
+            
             for (var i = 0; i < EntityCount; i++)
             {
                 var entityId = EntityCollection.Create();
@@ -40,6 +45,11 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         [Benchmark]
         public void EntitiesAddIndividual_ClassComponents()
         {
+            EntityAllocationDatabase.PreAllocate(EntityCount);
+            GetPoolFor<ClassComponent1>().Expand(EntityCount);
+            if(ComponentCount >= 2) { GetPoolFor<ClassComponent2>().Expand(EntityCount); }
+            if(ComponentCount == 3) { GetPoolFor<ClassComponent3>().Expand(EntityCount); }
+            
             for (var i = 0; i < EntityCount; i++)
             {
                 var entityId = EntityCollection.Create();

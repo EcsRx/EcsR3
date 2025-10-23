@@ -71,7 +71,7 @@ namespace EcsR3.Collections.Entities
             _onRemoved.OnNext(entity);
         }
 
-        public void RemoveAll()
+        public void Clear()
         {
             Entity[] entities;
             lock (_lock)
@@ -103,7 +103,7 @@ namespace EcsR3.Collections.Entities
         {
             lock (_lock)
             {
-                RemoveAll();
+                Clear();
                 _onAdded.Dispose();
                 _onRemoved.Dispose();
             }

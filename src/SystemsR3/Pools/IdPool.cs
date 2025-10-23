@@ -27,7 +27,7 @@ namespace SystemsR3.Pools
             AvailableIds = Enumerable.Range(1, _lastMax).ToList();
             _onSizeChanged = new Subject<int>();
         }
-
+        
         public int Allocate()
         {
             lock (_lock)
@@ -81,6 +81,15 @@ namespace SystemsR3.Pools
                 AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
                 _lastMax += increaseBy + 1;
                 _onSizeChanged.OnNext(Size);
+            }
+        }
+        
+        public void Clear()
+        {
+            lock (_lock)
+            {
+                _lastMax = 0;
+                AvailableIds.Clear();
             }
         }
 

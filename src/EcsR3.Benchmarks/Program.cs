@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using EcsR3.Benchmarks.Benchmarks;
+using EcsR3.Benchmarks.Benchmarks.New;
 using EcsR3.Benchmarks.Exploratory;
 using SystemsR3.Extensions;
 
@@ -17,7 +18,7 @@ namespace EcsR3.Benchmarks
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            var benchmarks = new []
+            var generalBenchmarks = new []
             {
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
@@ -37,8 +38,14 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultiDimensionalArrayResizeBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))
             };
+
+            var newBenchmarks = new[]
+            {
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_PreAllocatedBenchmark)),
+            };
             
-            var summaries = BenchmarkRunner.Run(benchmarks);
+            var summaries = BenchmarkRunner.Run(newBenchmarks);
             var consoleLogger = ConsoleLogger.Default;
             consoleLogger.Flush();
             summaries.ForEachRun(x =>

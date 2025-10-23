@@ -1,3 +1,4 @@
+using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using EcsR3.Collections.Entities;
@@ -41,9 +42,10 @@ namespace EcsR3.Benchmarks
         public virtual ComponentDatabaseConfig OverrideComponentDatabaseConfig() => new() { OnlyPreAllocatePoolsWithConfig = true };
         
         public IComponentPool<T> GetPoolFor<T>() where T : IComponent
-        {
-            return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T)));
-        }
+        { return ComponentDatabase.GetPoolFor<T>(ComponentTypeLookup.GetComponentTypeId(typeof(T))); }
+        
+        public IComponentPool GetPoolFor(Type componentType) 
+        { return ComponentDatabase.GetPoolFor(ComponentTypeLookup.GetComponentTypeId(componentType)); }
 
         protected EcsR3Benchmark()
         {

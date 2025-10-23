@@ -48,10 +48,15 @@ namespace EcsR3.Collections.Entities
                 .AddTo(_subs);
             
             ComponentLength = componentTypeLookup.AllComponentTypeIds.Length;
-            ComponentAllocationData = new int[ComponentLength, EntityLength];
-            EntityCreationHashes = new int[EntityLength];
-            new Span2D<int>(ComponentAllocationData).Fill(NoAllocation);
+            ResetSize();
             ResizeAllEntityAllocations(EntityLength);
+        }
+
+        public void ResetSize()
+        {
+            EntityCreationHashes = new int[EntityLength];
+            ComponentAllocationData = new int[ComponentLength, EntityLength];
+            new Span2D<int>(ComponentAllocationData).Fill(NoAllocation);
         }
 
         public Entity AllocateEntity(int? id = null)
@@ -322,6 +327,12 @@ namespace EcsR3.Collections.Entities
 
         public void PreAllocate(int count)
         { ResizeAllEntityAllocations(count); }
+
+        public void Clear()
+        {
+            EntityIdPool.Clear();
+            ResetSize();
+        }
 
         public int[] GetEntityComponentAllocation(int componentTypeId, Entity[] entities)
         {
