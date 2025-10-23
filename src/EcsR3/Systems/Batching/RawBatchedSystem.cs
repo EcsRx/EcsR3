@@ -27,10 +27,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = BatchPoolAccessor.GetPoolArrays();
-            ProcessGroup(CastComponentGroup.Value, componentArrays);
+            ProcessGroup(ref CastComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2> : ManualBatchedSystem
@@ -51,10 +51,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = BatchPoolAccessor.GetPoolArrays();
-            ProcessGroup(CastComponentGroup.Value, componentArrays);
+            ProcessGroup(ref CastComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2, T3> : ManualBatchedSystem
@@ -79,10 +79,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            ProcessGroup(ref _computedComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2, T3, T4> : ManualBatchedSystem
@@ -108,10 +108,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            ProcessGroup(ref _computedComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2, T3, T4, T5> : ManualBatchedSystem
@@ -138,10 +138,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            ProcessGroup(ref _computedComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2, T3, T4, T5, T6> : ManualBatchedSystem
@@ -169,10 +169,10 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            ProcessGroup(ref _computedComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools);
     }
     
     public abstract class RawBatchedSystem<T1, T2, T3, T4, T5, T6, T7> : ManualBatchedSystem
@@ -201,9 +201,9 @@ namespace EcsR3.Systems.Batching
         protected override void ProcessBatch()
         {
             var componentArrays = _batchPoolAccessor.GetPoolArrays();
-            ProcessGroup(_computedComponentGroup.Value, componentArrays);
+            ProcessGroup(ref _computedComponentGroup.Batches, componentArrays);
         }
         
-        protected abstract void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools);
+        protected abstract void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools);
     }
 }
