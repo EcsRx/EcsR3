@@ -18,6 +18,7 @@ namespace EcsR3.Benchmarks
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            // General all purpose benchmarks
             var generalBenchmarks = new []
             {
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
@@ -30,7 +31,12 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),
-                
+                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedComponentGroupsAddAndRemoveBenchmark)),
+            };
+
+            // Specific benchmarks to test theories on performance of non internal lib things
+            var exploratoryBenchmarks = new[]
+            {
                 BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
@@ -39,6 +45,7 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))
             };
 
+            // Potentially newer more sane specific tests
             var newBenchmarks = new[]
             {
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
