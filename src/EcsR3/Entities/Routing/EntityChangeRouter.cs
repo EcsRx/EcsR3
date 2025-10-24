@@ -103,8 +103,9 @@ namespace EcsR3.Entities.Routing
                  need to convert it to an array in that scenario, if they didnt they would just have garbage data.
                  */
                 ReadOnlyMemory<int> bufferAsMemory = buffer;
+                var sourceContract = source[currentContract];
                 for (var j = 0; j < entities.Length; j++)
-                { source[currentContract].OnNext(new EntityChanges(entities[j], bufferAsMemory[..(lastUsedIndexInBuffer+1)])); }
+                { sourceContract.OnNext(new EntityChanges(entities[j], bufferAsMemory[..(lastUsedIndexInBuffer+1)])); }
             }
         }
     }

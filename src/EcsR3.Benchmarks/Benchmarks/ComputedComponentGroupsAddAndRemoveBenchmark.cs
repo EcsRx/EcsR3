@@ -33,6 +33,7 @@ public class ComputedComponentGroupsAddAndRemoveBenchmark : EcsR3Benchmark
             var entities = EntityCollection.CreateMany(EntityCount);
             EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3, ClassComponent4>(entities);
             EntityComponentAccessor.RemoveAllComponents(entities);
+            EntityCollection.Clear();
         }
     }
 }
