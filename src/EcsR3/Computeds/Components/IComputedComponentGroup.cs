@@ -8,36 +8,35 @@ namespace EcsR3.Computeds.Components
     public interface IComputedComponentGroup : IComputedGroup
     {
         IComputedEntityGroup DataSource { get; }
-        void RefreshData();
     }
 
-    public interface IComputedComponentGroup<T1> : IComputed<ReadOnlyMemory<ComponentBatch<T1>>>,
+    public interface IComputedComponentGroup<T1> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1>>>,
         IComputedComponentGroup where T1 : IComponent
     {
         ref ReadOnlyMemory<ComponentBatch<T1>> Batches { get; }
     }
 
-    public interface IComputedComponentGroup<T1, T2> : IComputed<ReadOnlyMemory<ComponentBatch<T1, T2>>>,
+    public interface IComputedComponentGroup<T1, T2> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent
     {
         ref ReadOnlyMemory<ComponentBatch<T1, T2>> Batches { get; }
     }
 
-    public interface IComputedComponentGroup<T1, T2, T3> : IComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3>>>,
+    public interface IComputedComponentGroup<T1, T2, T3> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent where T3 : IComponent
     {
         ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> Batches { get; }
     }
 
     public interface
-        IComputedComponentGroup<T1, T2, T3, T4> : IComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>>>,
+        IComputedComponentGroup<T1, T2, T3, T4> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
     {
         ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> Batches { get; }
     }
 
     public interface
-        IComputedComponentGroup<T1, T2, T3, T4, T5> : IComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>>>,
+        IComputedComponentGroup<T1, T2, T3, T4, T5> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>>>,
         IComputedComponentGroup where T1 : IComponent
         where T2 : IComponent
         where T3 : IComponent
@@ -49,7 +48,7 @@ namespace EcsR3.Computeds.Components
 
     public interface
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6> :
-        IComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>>>, IComputedComponentGroup where T1 : IComponent
+        ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>>>, IComputedComponentGroup where T1 : IComponent
         where T2 : IComponent
         where T3 : IComponent
         where T4 : IComponent
@@ -61,7 +60,7 @@ namespace EcsR3.Computeds.Components
 
     public interface
         IComputedComponentGroup<T1, T2, T3, T4, T5, T6, T7> :
-        IComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>>>,
+        ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>>>,
         IComputedComponentGroup where T1 : IComponent
         where T2 : IComponent
         where T3 : IComponent

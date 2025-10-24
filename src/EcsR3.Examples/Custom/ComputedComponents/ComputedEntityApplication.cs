@@ -23,7 +23,7 @@ public class ComputedEntityApplication : EcsR3ConsoleApplication
         stopwatch.Start();
         for (var i = 0; i < 100; i++)
         {
-            computed.RefreshData();
+            computed.ForceRefresh();
             Console.WriteLine($"Computed Value: {computed.ComputedData}");
         }
         stopwatch.Stop();

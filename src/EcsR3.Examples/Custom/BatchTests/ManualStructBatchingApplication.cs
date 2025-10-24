@@ -29,7 +29,7 @@ namespace EcsR3.Examples.Custom.BatchTests
             base.SetupEntities();
             
             _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<StructComponent, StructComponent2>();
-            _computedComponentGroup.RefreshData();
+            _computedComponentGroup.ForceRefresh();
         }
 
         protected override string Description { get; } = "Uses auto batching to group components for cached lookups and quicker reads/writes";

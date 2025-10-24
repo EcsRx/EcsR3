@@ -28,7 +28,7 @@ namespace EcsR3.Computeds.Components
             { throw new ArgumentException("ComputedEntityGroup must match component types"); }
             
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -73,7 +73,7 @@ namespace EcsR3.Computeds.Components
 
             Group = DataSource.Group;
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2>>(_internalCache);
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -124,7 +124,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -179,7 +179,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -238,7 +238,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -301,7 +301,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -368,7 +368,7 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            RefreshData();
+            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()

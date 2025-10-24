@@ -3,7 +3,7 @@ using SystemsR3.Computeds.Conventions;
 
 namespace EcsR3.Computeds.Entities.Conventions
 {
-    public abstract class ComputedFromEntityGroup<T> : ComputedFromData<T, IComputedEntityGroup>
+    public abstract class ComputedFromEntityGroup<T> : LazyComputedFromData<T, IComputedEntityGroup>
     {
         protected ComputedFromEntityGroup(IComputedEntityGroup dataSource) : base(dataSource)
         {}

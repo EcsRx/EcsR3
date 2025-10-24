@@ -15,7 +15,7 @@ namespace SystemsR3.Computeds.Conventions
         {
             get
             {
-                if (IsDirty) { ForceUpdate(); }
+                if (IsDirty) { ForceRefresh(); }
                 return ComputedData;
             }
         }
@@ -37,7 +37,7 @@ namespace SystemsR3.Computeds.Conventions
             OnDataHasChanged = new Subject<Unit>();
         }
 
-        public void ForceUpdate()
+        public void ForceRefresh()
         {
             bool hasChanged;
             lock (Lock)

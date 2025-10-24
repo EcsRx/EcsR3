@@ -14,13 +14,13 @@ public class ComputedComponentGroupTestApplication : EcsR3ConsoleApplication
         var entities = EntityCollection.CreateMany<ComputedComponentBlueprint>(EntityComponentAccessor, 100000);
 
         var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<NumberComponent, Number2Component>();
-        componentGroup.RefreshData();
+        componentGroup.ForceRefresh();
         
         Console.WriteLine("Starting");
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         for (var i = 0; i < 1000; i++)
-        { componentGroup.RefreshData(); }
+        { componentGroup.ForceRefresh(); }
         stopwatch.Stop();
         Console.WriteLine($"Time Taken: {stopwatch.ElapsedMilliseconds}ms");
     }

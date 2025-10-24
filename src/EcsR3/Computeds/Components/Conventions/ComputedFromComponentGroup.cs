@@ -7,7 +7,7 @@ using SystemsR3.Computeds.Conventions;
 
 namespace EcsR3.Computeds.Components.Conventions
 {
-    public abstract class ComputedFromComponentGroup<TOutput, T1> : ComputedFromData<TOutput, IComputedComponentGroup<T1>> where T1 : IComponent
+    public abstract class ComputedFromComponentGroup<TOutput, T1> : LazyComputedFromData<TOutput, IComputedComponentGroup<T1>> where T1 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
         protected (Entity, T1)[] BatchCache = Array.Empty<(Entity, T1)>();
@@ -44,7 +44,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-    public abstract class ComputedFromComponentGroup<TOutput, T1, T2> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2>> 
+    public abstract class ComputedFromComponentGroup<TOutput, T1, T2> : LazyComputedFromData<TOutput, IComputedComponentGroup<T1, T2>> 
         where T1 : IComponent where T2 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
@@ -85,7 +85,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-    public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3>> 
+    public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3> : LazyComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3>> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
@@ -130,7 +130,7 @@ namespace EcsR3.Computeds.Components.Conventions
         }
     }
     
-        public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3, T4> : ComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3, T4>> 
+        public abstract class ComputedFromComponentGroup<TOutput, T1, T2, T3, T4> : LazyComputedFromData<TOutput, IComputedComponentGroup<T1, T2, T3, T4>> 
             where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
         {
         public IComponentDatabase ComponentDatabase { get; }
