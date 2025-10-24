@@ -77,6 +77,63 @@ public class BatchedExampleSystem : BatchedMixedSystem<SomeStructComponentA, Som
 
 > Due to the MANY permutations of this that you can have its recommended that if you have very specific scenarios you just copy the code for the current `BatchedMixedSystem` and alter the signatures however you need.
 
+### `MultiplexingSystem` + `IMultiplexedJob`
+
+This is very much like a batched system, but it acts as a sort of multiplexer to allow you to run multiple `jobs` within one update, a `job` is basically the same as a batched systems `Process` method but standalone.
+
+> This is really useful if you have multiple systems which all require same components and execute at same time, this ensures that it only needs to lookup the batches once and then runs all jobs back to back with the batch data, this can allow for better utilisation of CPU/Memory.
+
+```csharp
+// Make as many jobs as you want, you can also use ISystemPreProcessor/PostProcessor with it
+public class Job1 : IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>
+{
+    // Notice we dont give it a schedule, it is handled by the systems schedule
+    public void Process(Entity entity, ClassComponent component1, ClassComponent2 component2, ClassComponent3 component3)
+    {
+        component1.Position += Vector3.One;
+        component1.Something += 10;
+        component2.IsTrue = true;
+        component2.Value += 10;
+    }
+}
+
+// Notice that even though we don't use Component2 here, and the previous didnt use Component1 it doesnt matter too much as we 
+// still get a performance bonus due to it scheduling both things in same block
+public class Job2 : IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>
+{
+    public void Process(Entity entity, ClassComponent component1, ClassComponent2 component2, ClassComponent3 component3)
+    {
+        component1.Position += Vector3.One;
+        component1.Something += 10;
+        component3.IsTrue = true;
+        component3.Value += 10;
+    }
+}
+    
+
+// This acts like a normal batched system, but it just expects you to provide it the jobs you want to run
+public class ExampleMultiplexedSystem : MultiplexingBatchedSystem<ClassComponent, ClassComponent2, ClassComponent3>
+{
+    public ExampleMultiplexedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+    {}
+
+    // This is scheduling when all jobs should be run
+    protected override Observable<Unit> ReactWhen() => Observable.EveryUpdate();
+    
+    // This is a simple example, but you can always DI in the jobs and pass them into here for more complex use cases
+    protected override IEnumerable<IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>> ResolveJobs()
+    { return [new Job1(), new Job2()]; }
+}
+```
+On one hand this may seem slightly more complex but in a way it also makes things a bit simpler as your Jobs are lightweight objects that can just be scheduled together and you have a smaller logic footprint.
+
+> Remember you dont need to have 100% overlap on required components etc, there will be a tipping point but if you have several systems which all use 75% of the same components you can possibly get a decent performance bonus making them into jobs and giving them all the same components, even if a few of the jobs ignore a component or two it may still end up being more efficient than running them as fully fledged systems.
+
+### `MultiplexingBatchedRefSystem` + `IMultiplexedRefJob`
+Same as above but it lets you pass the components to jobs with `ref` keyword, mainly meant for struct scenarios.
+
+> There is currently no mixed one but it may be added in the future, there is so many varieties of approaches to mix `ref` it is currently left to you to implement your own variants if you need them.
+
 ### `IBasicEntitySystem`
 
 This system is like a `IBasicSystem` allowing you to process each entity within the group on every update cycle.

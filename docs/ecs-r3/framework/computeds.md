@@ -28,12 +28,18 @@ Now we can all laugh at the name here, but this is basically the same as the pre
 
 This provides you with an `IComputedEntityGroup` as the `DataSource` then you translate them into whatever you want `T` to be.
 
+> This inherits from the lazy computed line, so it will only refresh its value when you read its `Value`(and it has awaiting changes) or you explicitly call `ForceRefresh`.
+
 ## `IComputedComponentGroup`
 
 While this is listed as a high level `Computed` and not a convention, in reality it is a `ComputedFromEntityGroup<ReadOnlyMemory<ComponentBatch<...>>>` which is a bit of a mouthful, but it provides a really performant way to access components for `Entities`.
 
 > For example if you have a group that requires `ComponentA`, `ComponentB` then this computed will provide `ComponentBatch<ComponentA, ComponentB>` for each entity, allowing quick lookup and processing, this is what `BatchedSystems` use under the hood to resolve components.
 
+> This inherits from the lazy computed line, so it will only refresh its value when you read its `Value`(and it has awaiting changes) or you explicitly call `ForceRefresh`.
+
 ### `ComputedFromComponentGroup<T>`
 
 This provides you a `IComputedComponentGroup` as the `DataSource` and lets you process it however you want into `T`.
+
+> This inherits from the lazy computed line, so it will only refresh its value when you read its `Value`(and it has awaiting changes) or you explicitly call `ForceRefresh`.

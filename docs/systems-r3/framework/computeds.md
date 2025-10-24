@@ -6,10 +6,13 @@ Computed values are basically read only values which are proxy a data source and
 
 ## Computed Types
 
-There are 3 default computed types available within the system:
+There are 4 default computed types available within the system:
 
 ### `IComputed` (For computed single values)
 Simplest computed and provides a current value and allows subscription to when the value changes, this can be very useful for precomputing things based off other data, i.e calculating MaxHp once all buffs have been taken into account.
+
+### `ILazyComputed` (Same as above)
+Same as normal Computed but only updates when value is read or `ForceRefresh` is called, triggering `OnChange` exposes `OnHasChange` as well to indicate the dependent data has changed but not been refreshed.
 
 ### `IComputedCollection` (For computed collections of data)
 A reactive collection which provides an up to date collection of values and allows you to subscribe to when it changes, this could be useful for tracking all beneficial buffs on a player where the source data is just ALL buffs/debuffs on the entity.
@@ -63,6 +66,9 @@ public class ComputedFirstPlace : ComputedFromData<Racer, IReadOnlyCollection<Ra
 var computedFirstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
 RacerHud.CurrentWinner.Text = computedFirstPlaceRacer.Value.Name;
 ```
+
+### `LazyComputedFromData<TOutput, TInput>`
+Same as previous `ComputedFromData` but a lazily evaluated variant.
 
 ### `ComputedFromObservable<TOutput, TInput>`
 
