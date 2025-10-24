@@ -15,7 +15,7 @@ namespace EcsR3.Entities.Accessors
         public IEntityAllocationDatabase EntityAllocationDatabase { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IEntityChangeRouter EntityChangeRouter { get; }
-
+        
         public EntityComponentAccessor(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase entityAllocationDatabase, IComponentDatabase componentDatabase, IEntityChangeRouter entityChangeRouter)
         {
             ComponentTypeLookup = componentTypeLookup;
@@ -57,7 +57,7 @@ namespace EcsR3.Entities.Accessors
             ComponentDatabase.Set(componentTypeId, allocationIds, newComponents);
             return componentTypeId;
         }
-
+        
         public void CreateComponent<T>(Entity[] entities) where T : IComponent, new()
         {
             var componentTypeIds = new[]
@@ -238,7 +238,7 @@ namespace EcsR3.Entities.Accessors
             var allocationIds = EntityAllocationDatabase.GetEntityComponentAllocation(componentTypeId, entities);
             return ComponentDatabase.GetRef<T>(componentTypeId, allocationIds);
         }
-        
+
         public void UpdateComponent<T>(Entity entity, T newValue) where T : struct, IComponent
         {
             var componentTypeId = ComponentTypeLookup.GetComponentTypeId(typeof(T));

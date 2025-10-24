@@ -20,6 +20,7 @@ namespace EcsR3.Collections.Entities
         
         public int ComponentLength { get; protected set; }
         public int EntityLength { get; protected set; }
+        public int EntityCount => EntityLength;
 
         private CompositeDisposable _subs = new CompositeDisposable();
         private object _lock = new object();

@@ -6,6 +6,11 @@ namespace EcsR3.Collections.Entities
     {
         public const int NoAllocation = -1;
         
+        /// <summary>
+        /// The amount of entities it currently tracks
+        /// </summary>
+        int EntityCount { get; }
+        
         Entity? GetEntity(int entityId);
         Entity AllocateEntity(int? id = null);
         Entity[] AllocateEntities(int count);

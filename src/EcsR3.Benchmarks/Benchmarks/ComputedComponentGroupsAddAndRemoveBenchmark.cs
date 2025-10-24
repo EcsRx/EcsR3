@@ -1,5 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
+using EcsR3.Entities;
 using EcsR3.Examples.ExampleApps.Performance.Components.Class;
+using EcsR3.Extensions;
 using ClassComponent2 = EcsR3.Examples.Custom.BatchTests.Components.ClassComponent2;
 
 namespace EcsR3.Benchmarks.Benchmarks;
@@ -28,12 +30,9 @@ public class ComputedComponentGroupsAddAndRemoveBenchmark : EcsR3Benchmark
     {
         for (var j = 0; j < Iterations; j++)
         {
-            for (var i = 0; i < EntityCount; i++)
-            {
-                var entityId = EntityCollection.Create();
-                EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3, ClassComponent4>([entityId]);
-                EntityComponentAccessor.RemoveAllComponents(entityId);
-            }
+            var entities = EntityCollection.CreateMany(EntityCount);
+            EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3, ClassComponent4>(entities);
+            EntityComponentAccessor.RemoveAllComponents(entities);
         }
     }
 }

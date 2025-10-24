@@ -30,11 +30,13 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleComputedEntityGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
+                */
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedComponentGroupsAddAndRemoveBenchmark)),
+                /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),*/
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedClassComponentBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedStructComponentBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedStructComponentBenchmark)),*/
             };
 
             // Specific benchmarks to test theories on performance of non-internal lib things
