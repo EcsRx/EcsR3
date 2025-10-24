@@ -1,7 +1,7 @@
 ﻿using EcsR3.Components;
 using EcsR3.Entities;
 
-namespace EcsR3.Systems.Batching.Handlers
+namespace EcsR3.Systems.Batching.Convention.Multiplexing.Handlers
 {
     public interface IMultiplexedJob<in T> where T : IComponent
     {

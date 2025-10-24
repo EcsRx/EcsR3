@@ -7,10 +7,10 @@ using EcsR3.Computeds.Components;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Entities.Accessors;
 using EcsR3.Systems.Augments;
-using EcsR3.Systems.Batching.Handlers;
+using EcsR3.Systems.Batching.Convention.Multiplexing.Handlers;
 using SystemsR3.Threading;
 
-namespace EcsR3.Systems.Batching.Convention
+namespace EcsR3.Systems.Batching.Convention.Multiplexing
 {
     public abstract class MultiplexingBatchedSystem<T> : RawBatchedSystem<T> 
         where T : IComponent
@@ -345,7 +345,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = scopedComponentBatches.Span[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation]);
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation]);
                 });
             }
         }
@@ -362,7 +362,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = batchesSpan[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation]);
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation]);
                 }
             }
         }
@@ -419,7 +419,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = scopedComponentBatches.Span[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation], 
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation], 
                         components6[batch.Component6Allocation]);
                 });
             }
@@ -436,7 +436,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = batchesSpan[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation], 
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation], 
                         components6[batch.Component6Allocation]);
                 }
             }
@@ -494,7 +494,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = scopedComponentBatches.Span[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation], 
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation], 
                         components6[batch.Component6Allocation], components7[batch.Component7Allocation]);
                 });
             }
@@ -511,7 +511,7 @@ namespace EcsR3.Systems.Batching.Convention
                     var batch = batchesSpan[i];
                     job.Process(batch.Entity, components1[batch.Component1Allocation],
                         components2[batch.Component2Allocation], components3[batch.Component3Allocation],  
-                        components4[batch.Component4Allocation],  components5[batch.Component5Allocation], 
+                        components4[batch.Component4Allocation], components5[batch.Component5Allocation], 
                         components6[batch.Component6Allocation], components7[batch.Component7Allocation]);
                 }
             }
