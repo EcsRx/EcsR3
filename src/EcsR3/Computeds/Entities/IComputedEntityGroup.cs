@@ -21,5 +21,10 @@ namespace EcsR3.Computeds.Entities
         /// Event stream for when an entity is about to be removed from this group
         /// </summary>
         Observable<Entity> OnRemoving { get; }
+        
+        /// <summary>
+        /// Event stream for when data has changed but you dont care about what the data is
+        /// </summary>
+        Observable<Unit> OnHasChanged { get; }
     }
 }

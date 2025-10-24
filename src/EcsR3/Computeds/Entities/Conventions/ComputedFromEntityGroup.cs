@@ -8,6 +8,6 @@ namespace EcsR3.Computeds.Entities.Conventions
         protected ComputedFromEntityGroup(IComputedEntityGroup dataSource) : base(dataSource)
         {}
 
-        protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
+        protected override Observable<Unit> RefreshWhen() => DataSource.OnHasChanged;
     }
 }

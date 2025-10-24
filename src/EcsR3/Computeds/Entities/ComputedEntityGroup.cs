@@ -29,7 +29,7 @@ namespace EcsR3.Computeds.Entities
         public IEnumerable<Entity> EnumerableEntities => CachedEntityIds;
 
         public Observable<IReadOnlyCollection<Entity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
-        
+        public Observable<Unit> OnHasChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Unit.Default);
         public Observable<Entity> OnAdded => _onEntityAdded;
         public Observable<Entity> OnRemoved => _onEntityRemoved;
         public Observable<Entity> OnRemoving => _onEntityRemoving;
@@ -67,7 +67,6 @@ namespace EcsR3.Computeds.Entities
                 .AddTo(Subscriptions);
 
             CachedEntityIds = new HashSet<Entity>(GroupTracker.GetMatchedEntities());
-            
         }
 
         public void OnEntityJoinedGroup(Entity entity)

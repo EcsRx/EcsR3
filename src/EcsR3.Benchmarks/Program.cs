@@ -31,7 +31,9 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
                 */
-                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedComponentGroupsAddAndRemoveBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedClassComponentBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedStructComponentBenchmark))
+//                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedComponentGroupsAddAndRemoveBenchmark)),
                 /*
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),

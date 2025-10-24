@@ -8,7 +8,10 @@ namespace SystemsR3.Computeds.Conventions
         { Initialize(); }
 
         public void Initialize()
-        { RefreshWhen().Subscribe(_ => { lock (Lock) { IsDirty = true; } }).AddTo(Subscriptions); }
+        { 
+            RefreshWhen()
+                .Subscribe(_ => IsDirty = true)
+                .AddTo(Subscriptions); }
         
         /// <summary>
         /// The method to indicate when the listings should be updated

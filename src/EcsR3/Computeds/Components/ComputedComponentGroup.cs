@@ -17,8 +17,15 @@ namespace EcsR3.Computeds.Components
         
         public LookupGroup Group { get; }
         private ComponentBatch<T1>[] _internalCache = Array.Empty<ComponentBatch<T1>>();
-        public ref ReadOnlyMemory<ComponentBatch<T1>> Batches => ref ComputedData;
-        
+        public ref ReadOnlyMemory<ComponentBatch<T1>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
+
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
             AllocationDatabase = allocationDatabase;
@@ -28,7 +35,6 @@ namespace EcsR3.Computeds.Components
             { throw new ArgumentException("ComputedEntityGroup must match component types"); }
             
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -57,8 +63,15 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2>[] _internalCache = Array.Empty<ComponentBatch<T1, T2>>();
 
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1, T2>> Batches => ref ComputedData;
-
+        public ref ReadOnlyMemory<ComponentBatch<T1, T2>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
+        
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, 
             IComputedEntityGroup computedEntityGroup) : base(computedEntityGroup)
         {
@@ -73,7 +86,6 @@ namespace EcsR3.Computeds.Components
 
             Group = DataSource.Group;
             ComputedData = new ReadOnlyMemory<ComponentBatch<T1,T2>>(_internalCache);
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -108,7 +120,14 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2, T3>[] _internalCache = Array.Empty<ComponentBatch<T1, T2, T3>>();
 
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> Batches => ref ComputedData;
+        public ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -124,7 +143,6 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -162,7 +180,14 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2, T3, T4>[] _internalCache = Array.Empty<ComponentBatch<T1, T2, T3, T4>>();
 
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4>> Batches => ref ComputedData;
+        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -179,7 +204,6 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -220,7 +244,14 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2, T3, T4, T5>[] _internalCache = Array.Empty<ComponentBatch<T1, T2, T3, T4, T5>>();
         
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5>> Batches => ref ComputedData;
+        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -238,7 +269,6 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -282,7 +312,14 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2, T3, T4,T5,T6>[] _internalCache = Array.Empty<ComponentBatch<T1, T2, T3,T4,T5,T6>>();
 
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6>> Batches => ref ComputedData;
+        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -301,7 +338,6 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()
@@ -348,7 +384,14 @@ namespace EcsR3.Computeds.Components
         private ComponentBatch<T1, T2, T3, T4,T5,T6,T7>[] _internalCache = Array.Empty<ComponentBatch<T1, T2, T3,T4,T5,T6,T7>>();
 
         public LookupGroup Group { get; }
-        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6,T7>> Batches => ref ComputedData;
+        public ref ReadOnlyMemory<ComponentBatch<T1,T2,T3,T4,T5,T6,T7>> Batches
+        {
+            get
+            {
+                if (IsDirty) { ForceRefresh(); }
+                return ref ComputedData;
+            }
+        }
 
         public ComputedComponentGroup(IComponentTypeLookup componentTypeLookup, IEntityAllocationDatabase allocationDatabase, IComputedEntityGroup computedEntityGroup) : base(
             computedEntityGroup)
@@ -368,7 +411,6 @@ namespace EcsR3.Computeds.Components
             }
 
             Group = DataSource.Group;
-            ForceRefresh();
         }
 
         protected override bool UpdateComputedData()

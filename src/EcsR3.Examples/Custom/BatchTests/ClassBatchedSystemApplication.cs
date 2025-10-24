@@ -22,7 +22,6 @@ namespace EcsR3.Examples.Custom.BatchTests
     {
         public IThreadHandler ThreadHandler { get; private set; }
         
-        [MultiThread]
         public class ClassBatchSystem : BatchedSystem<ClassComponent, ClassComponent2>
         {
             public ClassBatchSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
@@ -51,10 +50,9 @@ namespace EcsR3.Examples.Custom.BatchTests
 
         protected override void ApplicationStarted()
         {
-            var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(EntityComponentAccessor, 100000);
             var batchSystem = new ClassBatchSystem(ComponentDatabase, EntityComponentAccessor, ComputedComponentGroupRegistry, ThreadHandler);
             batchSystem.StartSystem();
-            GC.Collect();
+            var entities = EntityCollection.CreateMany<BatchClassComponentBlueprint>(EntityComponentAccessor, 100000);
             
             Console.WriteLine("Starting");
             var stopwatch = new Stopwatch();

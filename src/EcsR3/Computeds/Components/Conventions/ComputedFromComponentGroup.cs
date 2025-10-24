@@ -21,7 +21,7 @@ namespace EcsR3.Computeds.Components.Conventions
             ComponentPool1 = componentDatabase.GetPoolFor<T1>();
         }
 
-        protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
+        protected override Observable<Unit> RefreshWhen() => DataSource.OnHasChange.Select(x => Unit.Default);
 
         protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1)> componentData);
         
@@ -61,7 +61,7 @@ namespace EcsR3.Computeds.Components.Conventions
             ComponentPool2 = componentDatabase.GetPoolFor<T2>();
         }
 
-        protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
+        protected override Observable<Unit> RefreshWhen() => DataSource.OnHasChange.Select(x => Unit.Default);
 
         protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2)> componentData);
         
@@ -104,7 +104,7 @@ namespace EcsR3.Computeds.Components.Conventions
             ComponentPool3 = componentDatabase.GetPoolFor<T3>();
         }
 
-        protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
+        protected override Observable<Unit> RefreshWhen() => DataSource.OnHasChange.Select(x => Unit.Default);
 
         protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3)> componentData);
         
@@ -151,7 +151,7 @@ namespace EcsR3.Computeds.Components.Conventions
             ComponentPool4 = componentDatabase.GetPoolFor<T4>();
         }
 
-        protected override Observable<Unit> RefreshWhen() => DataSource.OnChanged.Select(x => Unit.Default);
+        protected override Observable<Unit> RefreshWhen() => DataSource.OnHasChange.Select(x => Unit.Default);
 
         protected abstract bool UpdateComputedData(ReadOnlyMemory<(Entity, T1, T2, T3, T4)> componentData);
         
