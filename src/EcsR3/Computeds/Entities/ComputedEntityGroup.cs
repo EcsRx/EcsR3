@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using EcsR3.Collections.Entities;
 using EcsR3.Entities;
 using EcsR3.Groups;
@@ -14,22 +13,14 @@ namespace EcsR3.Computeds.Entities
     {
         public LookupGroup Group { get; }
         
-        public readonly HashSet<Entity> CachedEntityIds;
+        public readonly HashSet<Entity> CachedEntities;
         public readonly CompositeDisposable Subscriptions;
 
-        public IReadOnlyCollection<Entity> Value
-        {
-            get
-            {
-                lock (_lock)
-                { return EnumerableEntities.ToArray(); }
-            }
-        }
-        
-        public IEnumerable<Entity> EnumerableEntities => CachedEntityIds;
+        public IReadOnlyCollection<Entity> Value => CachedEntities;
 
         public Observable<IReadOnlyCollection<Entity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
         public Observable<Unit> OnHasChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Unit.Default);
+        
         public Observable<Entity> OnAdded => _onEntityAdded;
         public Observable<Entity> OnRemoved => _onEntityRemoved;
         public Observable<Entity> OnRemoving => _onEntityRemoving;
@@ -52,7 +43,7 @@ namespace EcsR3.Computeds.Entities
             _onEntityRemoving = new Subject<Entity>();
 
             Subscriptions = new CompositeDisposable();
-            CachedEntityIds = new HashSet<Entity>();
+            CachedEntities = new HashSet<Entity>();
 
             GroupTracker.OnEntityJoinedGroup
                 .Subscribe(OnEntityJoinedGroup)
@@ -66,12 +57,12 @@ namespace EcsR3.Computeds.Entities
                 .Subscribe(OnEntityLeftGroup)
                 .AddTo(Subscriptions);
 
-            CachedEntityIds = new HashSet<Entity>(GroupTracker.GetMatchedEntities());
+            CachedEntities = new HashSet<Entity>(GroupTracker.GetMatchedEntities());
         }
 
         public void OnEntityJoinedGroup(Entity entity)
         {
-            lock (_lock) { CachedEntityIds.Add(entity); }
+            lock (_lock) { CachedEntities.Add(entity); }
             _onEntityAdded.OnNext(entity);
         }
         
@@ -82,14 +73,14 @@ namespace EcsR3.Computeds.Entities
         
         public void OnEntityLeftGroup(Entity entity)
         {
-            lock (_lock) { CachedEntityIds.Remove(entity); }
+            lock (_lock) { CachedEntities.Remove(entity); }
             _onEntityRemoved.OnNext(entity);
         }
 
         public bool Contains(Entity entity)
         {
             lock(_lock)
-            { return CachedEntityIds.Contains(entity); }
+            { return CachedEntities.Contains(entity); }
         }
 
         public void Dispose()
@@ -108,12 +99,12 @@ namespace EcsR3.Computeds.Entities
             get
             {
                 lock (_lock)
-                { return CachedEntityIds.Count; }
+                { return CachedEntities.Count; }
             }
         }
 
         public IEnumerator<Entity> GetEnumerator()
-        { return EnumerableEntities.GetEnumerator(); }
+        { return CachedEntities.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }

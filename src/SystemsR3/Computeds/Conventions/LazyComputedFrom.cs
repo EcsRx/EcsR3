@@ -26,7 +26,7 @@ namespace SystemsR3.Computeds.Conventions
         protected readonly CompositeDisposable Subscriptions;
         protected readonly Subject<TOutput> OnDataChanged;
         protected readonly Subject<Unit> OnDataHasChanged;
-        protected bool IsDirty;
+        protected bool IsDirty = true;
         protected readonly object Lock = new object();
         
         public LazyComputedFrom(TInput dataSource)

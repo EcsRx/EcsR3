@@ -21,7 +21,6 @@ namespace EcsR3.Benchmarks
             // General all purpose benchmarks for library internals
             var generalBenchmarks = new []
             {
-                
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(OptimizedIdPoolBenchmarks)),
@@ -55,7 +54,7 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_PreAllocatedBenchmark)),
             };
             
-            var summaries = BenchmarkRunner.Run(newBenchmarks);
+            var summaries = BenchmarkRunner.Run(generalBenchmarks);
             var consoleLogger = ConsoleLogger.Default;
             consoleLogger.Flush();
             summaries.ForEachRun(x =>

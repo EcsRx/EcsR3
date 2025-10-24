@@ -35,9 +35,9 @@ namespace EcsR3.Tests.EcsR3.Observables
     
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
             
-            Assert.Equal(2, observableGroup.CachedEntityIds.Count);
-            Assert.Contains(entity1, observableGroup.CachedEntityIds);
-            Assert.Contains(entity2, observableGroup.CachedEntityIds);
+            Assert.Equal(2, observableGroup.CachedEntities.Count);
+            Assert.Contains(entity1, observableGroup.CachedEntities);
+            Assert.Contains(entity2, observableGroup.CachedEntities);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             onJoinedSubject.OnNext(entity1);
 
             Assert.NotEmpty(invocations);
-            Assert.Single(observableGroup.CachedEntityIds, entity1);
+            Assert.Single(observableGroup.CachedEntities, entity1);
             Assert.Single(invocations, entity1);
         }
         
@@ -88,7 +88,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             mockEntityCollection.GetEnumerator().Returns(entities.GetEnumerator());
 
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
-            observableGroup.CachedEntityIds.Add(entity1);
+            observableGroup.CachedEntities.Add(entity1);
             
             var removingInvocations = new List<Entity>();
             observableGroup.OnRemoving.Subscribe(removingInvocations.Add);
@@ -103,7 +103,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             Assert.Single(removingInvocations, entity1);
             Assert.NotEmpty(removedInvocations);
             Assert.Single(removedInvocations, entity1);
-            Assert.Empty(observableGroup.CachedEntityIds);
+            Assert.Empty(observableGroup.CachedEntities);
         }
         
         [Fact]
@@ -125,7 +125,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             mockEntityCollection.GetEnumerator().Returns(entities.GetEnumerator());
 
             var observableGroup = new ComputedEntityGroup(accessorToken, mockGroupTracker, mockEntityCollection);
-            observableGroup.CachedEntityIds.Add(entity1);
+            observableGroup.CachedEntities.Add(entity1);
             
             var removingInvocations = new List<Entity>();
             observableGroup.OnRemoving.Subscribe(removingInvocations.Add);
@@ -138,7 +138,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             Assert.NotEmpty(removingInvocations);
             Assert.Single(removingInvocations, entity1);
             Assert.Empty(removedInvocations);
-            Assert.Single(observableGroup.CachedEntityIds, entity1);
+            Assert.Single(observableGroup.CachedEntities, entity1);
         }
         
         [Fact]
@@ -169,7 +169,7 @@ namespace EcsR3.Tests.EcsR3.Observables
             Assert.Equal(2, changeInvocations.Count);
             Assert.Equal(1, changeInvocations[0].Length);
             Assert.Equal(0, changeInvocations[1].Length);
-            Assert.Empty(observableGroup.CachedEntityIds);
+            Assert.Empty(observableGroup.CachedEntities);
         }
     }
 }
