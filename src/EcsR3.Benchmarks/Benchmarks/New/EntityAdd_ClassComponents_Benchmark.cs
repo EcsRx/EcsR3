@@ -25,15 +25,12 @@ namespace EcsR3.Benchmarks.Benchmarks.New
         [Benchmark]
         public void EntitiesBatchAdd_ClassComponents()
         {
-            for (var i = 0; i < EntityCount; i++)
+            var entities = EntityCollection.CreateMany(EntityCount);
+            switch (ComponentCount)
             {
-                var entityId = EntityCollection.Create();
-                switch (ComponentCount)
-                {
-                    case 1: EntityComponentAccessor.CreateComponent<ClassComponent1>(entityId); break;
-                    case 2: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entityId); break;
-                    case 3: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3>(entityId); break;
-                }
+                case 1: EntityComponentAccessor.CreateComponent<ClassComponent1>(entities); break;
+                case 2: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2>(entities); break;
+                case 3: EntityComponentAccessor.CreateComponents<ClassComponent1, ClassComponent2, ClassComponent3>(entities); break;
             }
         }
         
