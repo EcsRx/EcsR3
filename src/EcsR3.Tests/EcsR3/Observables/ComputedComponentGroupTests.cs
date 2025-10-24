@@ -23,12 +23,12 @@ public class ComputedComponentGroupTests
         var entity2 = new Entity(2, 0);
         var fakeEntities = new List<Entity> { entity1, entity2 };
         
-        var onChangedHandler = new Subject<IReadOnlyCollection<Entity>>();
+        var onHasChanged = new Subject<Unit>();
         var dummyGroup = new LookupGroup([0,1], []);
         var mockComputedEntityGroup = Substitute.For<IComputedEntityGroup>();
         mockComputedEntityGroup.Count.Returns(fakeEntities.Count);
         mockComputedEntityGroup.Group.Returns(dummyGroup);
-        mockComputedEntityGroup.OnChanged.Returns(onChangedHandler);
+        mockComputedEntityGroup.OnHasChanged.Returns(onHasChanged);
         mockComputedEntityGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
 
         var mockTypeLookup = Substitute.For<IComponentTypeLookup>();

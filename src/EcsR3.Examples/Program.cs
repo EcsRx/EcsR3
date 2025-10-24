@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsR3.Examples.Custom.BatchTests;
+using EcsR3.Examples.Custom.ComputedComponents;
 using EcsR3.Examples.Custom.Specific;
 using EcsR3.Examples.Custom.SystemPriority;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;

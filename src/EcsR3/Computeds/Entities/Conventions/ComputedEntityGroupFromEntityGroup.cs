@@ -28,11 +28,12 @@ namespace EcsR3.Computeds.Entities.Conventions
         }
 
         public Observable<IReadOnlyCollection<Entity>> OnChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Value);
+        public Observable<Unit> OnHasChanged => Observable.Merge(OnAdded, OnRemoved).Select(x => Unit.Default);
         
         public Observable<Entity> OnAdded => _onEntityAdded;
         public Observable<Entity> OnRemoved => _onEntityRemoved;
         public Observable<Entity> OnRemoving => _onEntityRemoving;
-        
+
         private readonly Subject<Entity> _onEntityAdded, _onEntityRemoved, _onEntityRemoving;
         private readonly object _lock = new object();
         

@@ -26,7 +26,7 @@ namespace EcsR3.Examples.Custom.BatchTests
             base.SetupEntities();
             
             _computedComponentGroup = ComputedComponentGroupRegistry.GetComputedGroup<ClassComponent, ClassComponent2>();
-            _computedComponentGroup.RefreshData();
+            _computedComponentGroup.ForceRefresh();
         }
 
         protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";

@@ -15,7 +15,7 @@ public class CustomComputedStructComponentApplication : EcsR3ConsoleApplication
         var entities = EntityCollection.CreateMany<ComputedStructComponentBlueprint>(EntityComponentAccessor, 100000);
 
         var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<StructNumberComponent, StructNumber2Component>();
-        componentGroup.RefreshData();
+        componentGroup.ForceRefresh();
             
         var computed = new CustomComputedStructComponentProcessor(ComponentDatabase, componentGroup);
         

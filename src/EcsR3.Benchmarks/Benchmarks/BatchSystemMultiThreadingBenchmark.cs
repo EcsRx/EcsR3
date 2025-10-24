@@ -63,7 +63,7 @@ public class BatchSystemMultiThreadingBenchmark : EcsR3Benchmark
 
     public override void Cleanup()
     {
-        EntityCollection.RemoveAll();
+        EntityCollection.Clear();
         BatchingSystem.StopSystem();
     }
 

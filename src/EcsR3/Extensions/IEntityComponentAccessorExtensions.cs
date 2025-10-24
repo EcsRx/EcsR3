@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components;
 using EcsR3.Entities;
@@ -67,6 +68,12 @@ namespace EcsR3.Extensions
             { return false; }
 
             return group.ExcludedComponents.Length == 0 || !accessor.HasAnyComponents(entity, group.ExcludedComponents);
+        }
+        
+        public static void RemoveAllComponents(this IEntityComponentAccessor accessor, IReadOnlyList<Entity> entities)
+        {
+            for (var i = 0; i < entities.Count; i++)
+            { accessor.RemoveAllComponents(entities[i]); }
         }
     }
 }

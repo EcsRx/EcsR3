@@ -26,6 +26,11 @@ namespace SystemsR3.Pools
         /// </summary>
         /// <returns>An instance to use</returns>
         T Allocate();
+
+        /// <summary>
+        /// Clears and empties the pool
+        /// </summary>
+        void Clear();
         
         /// <summary>
         /// Frees up the pooled item for re-allocation

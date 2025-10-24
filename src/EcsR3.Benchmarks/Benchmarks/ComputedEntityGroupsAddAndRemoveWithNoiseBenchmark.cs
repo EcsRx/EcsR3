@@ -57,7 +57,7 @@ namespace EcsR3.Benchmarks.Benchmarks
 
         public override void Cleanup()
         {
-            EntityCollection.RemoveAll();
+            EntityCollection.Clear();
         }
 
         [Benchmark]

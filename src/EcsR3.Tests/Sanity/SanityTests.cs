@@ -497,10 +497,10 @@ namespace EcsR3.Tests.Sanity
         {
             var (_, entityCollection, _, _, _, _, _) = CreateFramework();
             var castEntityCollection = (EntityCollection)entityCollection;
-            var eca = castEntityCollection.EntityAllocationDatabase;
+            var ead = castEntityCollection.EntityAllocationDatabase;
             
             var entity1 = entityCollection.Create();
-            var sameEntity1 = eca.GetEntity(entity1.Id);
+            var sameEntity1 = ead.GetEntity(entity1.Id);
             
             Assert.Equal(entity1, sameEntity1);
         }

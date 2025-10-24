@@ -40,6 +40,6 @@ namespace EcsR3.Collections.Entities
         /// <summary>
         /// Removes all entities from the collection
         /// </summary>
-        void RemoveAll();
+        void Clear();
     }
 }

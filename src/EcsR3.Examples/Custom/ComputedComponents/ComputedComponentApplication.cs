@@ -15,7 +15,7 @@ public class ComputedComponentApplication : EcsR3ConsoleApplication
         var entities = EntityCollection.CreateMany<ComputedComponentBlueprint>(EntityComponentAccessor, 100000);
 
         var componentGroup = ComputedComponentGroupRegistry.GetComputedGroup<NumberComponent, Number2Component>();
-        componentGroup.RefreshData();
+        componentGroup.ForceRefresh();
             
         var computed = new ComputedComponentProcessor(ComponentDatabase, componentGroup);
         
@@ -24,7 +24,7 @@ public class ComputedComponentApplication : EcsR3ConsoleApplication
         stopwatch.Start();
         for (var i = 0; i < 100; i++)
         {
-            computed.RefreshData();
+            computed.ForceRefresh();
             Console.WriteLine($"Computed Value: {computed.ComputedData}");
         }
         stopwatch.Stop();

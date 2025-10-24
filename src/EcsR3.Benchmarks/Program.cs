@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using EcsR3.Benchmarks.Benchmarks;
+using EcsR3.Benchmarks.Benchmarks.New;
 using EcsR3.Benchmarks.Exploratory;
 using SystemsR3.Extensions;
 
@@ -17,7 +18,8 @@ namespace EcsR3.Benchmarks
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            var benchmarks = new []
+            // General all purpose benchmarks for library internals
+            var generalBenchmarks = new []
             {
                 BenchmarkConverter.TypeToBenchmarks(typeof(IdPoolBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultithreadedIdPoolBenchmarks)),
@@ -27,9 +29,16 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleComputedEntityGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ComputedEntityGroupsAddAndRemoveWithNoiseBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(ComputedComponentGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ExecutorAddAndRemoveEntitySystemBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(BatchSystemMultiThreadingBenchmark)),
-                
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedClassComponentBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(BatchVsMultiplexedStructComponentBenchmark)),
+            };
+
+            // Specific benchmarks to test theories on performance of non-internal lib things
+            var exploratoryBenchmarks = new[]
+            {
                 BenchmarkConverter.TypeToBenchmarks(typeof(StackBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ArrayResizeBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(KeyedCollectionVsDictionaryBenchmarks)),
@@ -37,8 +46,15 @@ namespace EcsR3.Benchmarks
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultiDimensionalArrayResizeBenchmarks)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(IntValueLookupBenchmarks))
             };
+
+            // Potentially newer more sane specific tests
+            var newBenchmarks = new[]
+            {
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_PreAllocatedBenchmark)),
+            };
             
-            var summaries = BenchmarkRunner.Run(benchmarks);
+            var summaries = BenchmarkRunner.Run(generalBenchmarks);
             var consoleLogger = ConsoleLogger.Default;
             consoleLogger.Flush();
             summaries.ForEachRun(x =>

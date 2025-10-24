@@ -39,7 +39,7 @@ namespace EcsR3.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            EntityCollection.RemoveAll();
+            EntityCollection.Clear();
             GC.Collect();
             
             var timer = Stopwatch.StartNew();
