@@ -18,11 +18,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1);
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1>> componentBatches, T1[] componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
 
@@ -34,7 +34,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
 
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1>> componentBatches,
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1>> componentBatches,
             T1[] componentPools)
         {
             var closureBatches = componentBatches;
@@ -55,11 +55,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2);
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches,
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches,
             (T1[], T2[]) componentPools)
         {
             
@@ -110,11 +110,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2, T3 component3);
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches,
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches,
             (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
@@ -152,11 +152,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4);
         
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
             
@@ -170,7 +170,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
             var closureBatches = componentBatches;
@@ -196,11 +196,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
             
@@ -215,7 +215,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
             var closureBatches = componentBatches;
@@ -243,11 +243,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
         
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
 
@@ -262,7 +262,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
             var closureBatches = componentBatches;
@@ -291,11 +291,11 @@ namespace EcsR3.Systems.Batching.Convention
 
         protected abstract void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6, T7 component7);
         
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             if (ShouldMultithread)
             {
-                ProcessGroupWithMultithreading(ref componentBatches, componentPools);
+                ProcessGroupWithMultithreading(componentBatches, componentPools);
                 return;
             }
 
@@ -311,7 +311,7 @@ namespace EcsR3.Systems.Batching.Convention
             }
         }
         
-        protected void ProcessGroupWithMultithreading(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, 
+        protected void ProcessGroupWithMultithreading(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, 
             (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;

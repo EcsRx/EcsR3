@@ -38,21 +38,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
         {
             for(var i = 0; i < PreProcessorJobs.Length; i++)
             { PreProcessorJobs[i].BeforeProcessing(); }
 
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref  componentBatches, componentPools); }
+            { ProcessJobsMultithreaded( componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
             
             for(var i = 0; i < PostProcessorJobs.Length; i++)
             { PostProcessorJobs[i].AfterProcessing(); }
         }
 
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
         {
             var closureBatches = componentBatches;
             foreach (var job in Jobs)
@@ -65,7 +65,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
         {
             var batchesSpan = componentBatches.Span;
             foreach (var job in Jobs)
@@ -105,21 +105,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             foreach (var preProcessor in PreProcessorJobs)
             { preProcessor.BeforeProcessing(); }
             
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
                         
             foreach (var postProcessor in PostProcessorJobs)
             { postProcessor.AfterProcessing(); }
         }
         
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches,
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches,
             (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
@@ -135,7 +135,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
         {
             var (components1, components2) = componentPools;
             var batchesSpan = componentBatches.Span;
@@ -176,21 +176,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             foreach (var preProcessor in PreProcessorJobs)
             { preProcessor.BeforeProcessing(); }
 
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
             
             foreach (var postProcessor in PostProcessorJobs)
             { postProcessor.AfterProcessing(); }
         }
 
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches,
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches,
             (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
@@ -206,7 +206,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
         {
             var (components1, components2, components3) = componentPools;
             var batchesSpan = componentBatches.Span;
@@ -247,21 +247,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             for(var i = 0; i < PreProcessorJobs.Length; i++)
             { PreProcessorJobs[i].BeforeProcessing(); }
             
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
                         
             for(var i = 0; i < PostProcessorJobs.Length; i++)
             { PostProcessorJobs[i].AfterProcessing(); }
         }
 
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
             var scopedComponentBatches = componentBatches;
@@ -277,7 +277,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
         {
             var (components1, components2, components3, components4) = componentPools;
             var batchesSpan = componentBatches.Span;
@@ -320,21 +320,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             for(var i = 0; i < PreProcessorJobs.Length; i++)
             { PreProcessorJobs[i].BeforeProcessing(); }
             
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
                         
             for(var i = 0; i < PostProcessorJobs.Length; i++)
             { PostProcessorJobs[i].AfterProcessing(); }
         }
        
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
             var scopedComponentBatches = componentBatches;
@@ -350,7 +350,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
         {
             var (components1, components2, components3, components4, components5) = componentPools;
 
@@ -394,21 +394,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             for(var i = 0; i < PreProcessorJobs.Length; i++)
             { PreProcessorJobs[i].BeforeProcessing(); }
             
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches,  componentPools); }
+            { ProcessJobsMultithreaded(componentBatches,  componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
                         
             for(var i = 0; i < PostProcessorJobs.Length; i++)
             { PostProcessorJobs[i].AfterProcessing(); }
         }
         
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
             var scopedComponentBatches = componentBatches;
@@ -425,7 +425,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6) = componentPools;
             var batchesSpan = componentBatches.Span;
@@ -469,21 +469,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
                 .ToArray();
         }
 
-        protected override void ProcessGroup(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
+        protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             for(var i = 0; i < PreProcessorJobs.Length; i++)
             { PreProcessorJobs[i].BeforeProcessing(); }
             
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded(ref componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
-            { ProcessJobs(ref componentBatches, componentPools); }
+            { ProcessJobs(componentBatches, componentPools); }
                         
             for(var i = 0; i < PostProcessorJobs.Length; i++)
             { PostProcessorJobs[i].AfterProcessing(); }
         }
         
-        protected void ProcessJobsMultithreaded(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
+        protected void ProcessJobsMultithreaded(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;
             var scopedComponentBatches = componentBatches;
@@ -500,7 +500,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             }
         }
         
-        protected void ProcessJobs(ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
+        protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
         {
             var (components1, components2, components3, components4, components5, components6, components7) = componentPools;
             var batchesSpan = componentBatches.Span;
