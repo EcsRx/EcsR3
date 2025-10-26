@@ -13,26 +13,22 @@ namespace EcsR3.Computeds.Components
     public interface IComputedComponentGroup<T1> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1>>>,
         IComputedComponentGroup where T1 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1>> Batches { get; }
     }
 
     public interface IComputedComponentGroup<T1, T2> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2>> Batches { get; }
     }
 
     public interface IComputedComponentGroup<T1, T2, T3> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent where T3 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2, T3>> Batches { get; }
     }
 
     public interface
         IComputedComponentGroup<T1, T2, T3, T4> : ILazyComputed<ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>>>,
         IComputedComponentGroup where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> Batches { get; }
     }
 
     public interface
@@ -43,7 +39,6 @@ namespace EcsR3.Computeds.Components
         where T4 : IComponent
         where T5 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> Batches { get; }
     }
 
     public interface
@@ -55,7 +50,6 @@ namespace EcsR3.Computeds.Components
         where T5 : IComponent
         where T6 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> Batches { get; }
     }
 
     public interface
@@ -69,6 +63,5 @@ namespace EcsR3.Computeds.Components
         where T6 : IComponent
         where T7 : IComponent
     {
-        ref ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> Batches { get; }
     }
 }
