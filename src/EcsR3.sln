@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemsR3.Plugins.Transform
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemsR3.Tests", "SystemsR3.Tests\SystemsR3.Tests.csproj", "{81816B97-7BCC-421A-9D6A-F5314BAF371D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsR3.Plugins.UtilityAI", "EcsR3.Plugins.UtilityAI\EcsR3.Plugins.UtilityAI.csproj", "{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{81816B97-7BCC-421A-9D6A-F5314BAF371D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81816B97-7BCC-421A-9D6A-F5314BAF371D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81816B97-7BCC-421A-9D6A-F5314BAF371D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{7C2EC2B8-8D8C-425A-9F14-3371B0DAC15D} = {4197CF20-C162-449D-A3A5-D50BF9476796}
 		{8573B277-2037-43C0-88B1-18B1CE9EE0A5} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{81816B97-7BCC-421A-9D6A-F5314BAF371D} = {DDDDD3FE-5FB1-465B-9A8E-F77047B23A6E}
+		{CECD09DF-4F4D-40F0-B5F6-FB5CB7B7B023} = {48050703-1E4C-4179-9539-90212854B3F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}
