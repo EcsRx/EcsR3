@@ -50,12 +50,12 @@ namespace EcsR3.Benchmarks
             // Potentially newer more sane specific tests
             var newBenchmarks = new[]
             {
-                //BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_PreAllocatedBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_StructComponents_PreAllocatedBenchmark)),
             };
             
-            var summaries = BenchmarkRunner.Run(newBenchmarks);
+            var summaries = BenchmarkRunner.Run(generalBenchmarks);
             var consoleLogger = ConsoleLogger.Default;
             consoleLogger.Flush();
             summaries.ForEachRun(x =>
