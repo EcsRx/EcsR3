@@ -39,18 +39,18 @@ namespace EcsR3.Components.Lookups
             }
         }
 
-        public int[] GetComponentTypeIds(IReadOnlyList<Type> type)
+        public int[] GetComponentTypeIds(Type[] type)
         {
-            var ids = new int[type.Count];
-            for (var i = 0; i < type.Count; i++)
+            var ids = new int[type.Length];
+            for (var i = 0; i < type.Length; i++)
             { ids[i] = ComponentsByType[type[i]]; }
             return ids;
         }
         
-        public int[] GetComponentTypeIds(IReadOnlyList<IComponent> components)
+        public int[] GetComponentTypeIds(IComponent[] components)
         {
-            var ids = new int[components.Count];
-            for (var i = 0; i < components.Count; i++)
+            var ids = new int[components.Length];
+            for (var i = 0; i < components.Length; i++)
             { ids[i] = ComponentsByType[components[i].GetType()]; }
             return ids;
         }
@@ -58,10 +58,10 @@ namespace EcsR3.Components.Lookups
         public Type GetComponentType(int typeId)
         { return ComponentsById[typeId]; }
 
-        public Type[] GetComponentTypes(IReadOnlyList<int> typeIds)
+        public Type[] GetComponentTypes(int[] typeIds)
         {
-            var types = new Type[typeIds.Count];
-            for (var i = 0; i < typeIds.Count; i++)
+            var types = new Type[typeIds.Length];
+            for (var i = 0; i < typeIds.Length; i++)
             { types[i] = ComponentsById[typeIds[i]]; }
             return types;
         }

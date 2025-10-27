@@ -9,7 +9,7 @@ namespace EcsR3.Components.Database
         T[] Get<T>(int componentTypeId, int[] allocationIndex) where T : IComponent;
         RefBuffer<T> GetRef<T>(int componentTypeId, int[] allocationIndexes) where T : struct, IComponent;
         void Remove(int componentTypeId, int[] allocationIndexes);
-        void Set<T>(int componentTypeId, int[] allocationIndexes, IReadOnlyList<T> components) where T : IComponent;
-        void SetMany(int[] componentTypeIds, int[] allocationIndexes, IReadOnlyList<IComponent> components);
+        void Set<T>(int componentTypeId, int[] allocationIndexes, T[] components) where T : IComponent;
+        void SetMany(int[] componentTypeIds, int[] allocationIndexes, IComponent[] components);
     }
 }

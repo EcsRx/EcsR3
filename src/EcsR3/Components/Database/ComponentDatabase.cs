@@ -135,21 +135,21 @@ namespace EcsR3.Components.Database
             { componentPool.Components[allocationIndex] = component; }
         }
 
-        public void Set<T>(int componentTypeId, int[] allocationIndexes, IReadOnlyList<T> components) where T : IComponent
+        public void Set<T>(int componentTypeId, int[] allocationIndexes, T[] components) where T : IComponent
         {
             var componentPool = GetPoolFor<T>(componentTypeId);
             lock (_lock)
             { componentPool.Set(allocationIndexes, components); }
         }
 
-        public void SetMany(int[] componentTypeIds, int[] allocationIndexes, IReadOnlyList<IComponent> components)
+        public void SetMany(int[] componentTypeIds, int[] allocationIndexes, IComponent[] components)
         {
-            if (componentTypeIds.Length != allocationIndexes.Length || componentTypeIds.Length != components.Count)
+            if (componentTypeIds.Length != allocationIndexes.Length || componentTypeIds.Length != components.Length)
             { throw new ArgumentException("Component type ids, allocation indexs and components must all be the same length"); }
             
             lock (_lock)
             {
-                for (var i = 0; i < components.Count; i++)
+                for (var i = 0; i < components.Length; i++)
                 {
                     var componentTypeId = componentTypeIds[i];
                     var allocationIndex = allocationIndexes[i];
