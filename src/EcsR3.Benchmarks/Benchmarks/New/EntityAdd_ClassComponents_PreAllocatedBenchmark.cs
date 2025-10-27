@@ -7,7 +7,7 @@ namespace EcsR3.Benchmarks.Benchmarks.New
     [BenchmarkCategory("Entities")]
     public class EntityAdd_ClassComponents_PreAllocatedBenchmark : EcsR3Benchmark
     {
-        [Params(10000)]
+        [Params(100000)]
         public int EntityCount;
 
         [Params(1, 2, 3)]
