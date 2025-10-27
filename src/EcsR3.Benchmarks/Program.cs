@@ -52,6 +52,7 @@ namespace EcsR3.Benchmarks
             {
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_Benchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_ClassComponents_PreAllocatedBenchmark)),
+                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAdd_StructComponents_PreAllocatedBenchmark)),
             };
             
             var summaries = BenchmarkRunner.Run(generalBenchmarks);

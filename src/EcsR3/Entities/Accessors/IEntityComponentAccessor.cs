@@ -10,13 +10,13 @@ namespace EcsR3.Entities.Accessors
         /// Adds all provided components to the entity
         /// </summary>
         /// <param name="components">The components to add</param>
-        void AddComponents(Entity entity, IReadOnlyList<IComponent> components);
+        void AddComponents(Entity entity, IComponent[] components);
  
         /// <summary>
         /// Removes component types from the entity
         /// </summary>
         /// <param name="componentsTypes">The component types to remove</param>
-        void RemoveComponents(Entity entity, IReadOnlyList<Type> components);
+        void RemoveComponents(Entity entity, Type[] components);
         
         /// <summary>
         /// Removes all the components from the entity
@@ -41,7 +41,7 @@ namespace EcsR3.Entities.Accessors
         /// Removes all components with matching type ids
         /// </summary>
         /// <param name="componentsTypeIds">The component type ids</param>
-        void RemoveComponents(Entity entity, IReadOnlyList<int> componentTypeIds);
+        void RemoveComponents(Entity entity, int[] componentTypeIds);
         
         /// <summary>
         /// Checks to see if the entity contains the given component type
@@ -63,7 +63,7 @@ namespace EcsR3.Entities.Accessors
         /// <param name="entityId"></param>
         /// <param name="componentTypes"></param>
         /// <returns></returns>
-        bool HasAllComponents(Entity entity, IReadOnlyList<Type> componentTypes);
+        bool HasAllComponents(Entity entity, Type[] componentTypes);
         
         /// <summary>
         /// Checks to see if the entity contains any of the given component types
@@ -71,7 +71,7 @@ namespace EcsR3.Entities.Accessors
         /// <param name="entityId"></param>
         /// <param name="componentTypes"></param>
         /// <returns></returns>
-        bool HasAnyComponents(Entity entity, IReadOnlyList<Type> componentTypes);
+        bool HasAnyComponents(Entity entity, Type[] componentTypes);
         
         /// <summary>
         /// Verifies the entity is valid, as you may have an entity which has been released elsewhere

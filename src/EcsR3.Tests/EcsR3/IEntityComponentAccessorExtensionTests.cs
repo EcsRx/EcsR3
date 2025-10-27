@@ -22,16 +22,16 @@ public class IEntityComponentAccessorExtensionTests
             
         var mockEntityComponentAccessor = Substitute.For<IEntityComponentAccessor>();
         // Has all required, no excluded ones
-        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldMatch), Arg.Any<IReadOnlyList<Type>>()).Returns(true);
-        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldMatch), Arg.Any<IReadOnlyList<Type>>()).Returns(false);
+        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldMatch), Arg.Any<Type[]>()).Returns(true);
+        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldMatch), Arg.Any<Type[]>()).Returns(false);
         
         // Has all required, has excluded ones
-        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldNotMatchDueToExcluded), Arg.Any<IReadOnlyList<Type>>()).Returns(true);
-        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldNotMatchDueToExcluded), Arg.Any<IReadOnlyList<Type>>()).Returns(true);
+        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldNotMatchDueToExcluded), Arg.Any<Type[]>()).Returns(true);
+        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldNotMatchDueToExcluded), Arg.Any<Type[]>()).Returns(true);
         
         // Missing required, has no excluded ones
-        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldNotMatchDueToRequired), Arg.Any<IReadOnlyList<Type>>()).Returns(false);
-        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldNotMatchDueToRequired), Arg.Any<IReadOnlyList<Type>>()).Returns(false);
+        mockEntityComponentAccessor.HasAllComponents(Arg.Is(entityShouldNotMatchDueToRequired), Arg.Any<Type[]>()).Returns(false);
+        mockEntityComponentAccessor.HasAnyComponents(Arg.Is(entityShouldNotMatchDueToRequired), Arg.Any<Type[]>()).Returns(false);
         
         var does1Match = IEntityComponentAccessorExtensions.MatchesGroup(mockEntityComponentAccessor, entityShouldMatch, dummyGroup);
         var does2Match = IEntityComponentAccessorExtensions.MatchesGroup(mockEntityComponentAccessor, entityShouldNotMatchDueToRequired, dummyGroup);

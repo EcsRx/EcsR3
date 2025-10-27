@@ -24,7 +24,7 @@ namespace EcsR3.Entities.Accessors
             EntityChangeRouter = entityChangeRouter;
         }
         
-        public void AddComponents(Entity entity, IReadOnlyList<IComponent> components)
+        public void AddComponents(Entity entity, IComponent[] components)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(components);
             var allocationIds = EntityAllocationDatabase.AllocateComponents(componentTypeIds, entity);
@@ -149,11 +149,11 @@ namespace EcsR3.Entities.Accessors
             EntityChangeRouter.PublishEntityAddedComponents(entities, componentTypeIds);
         }
         
-        public void RemoveComponents(Entity entity, IReadOnlyList<int> componentsTypeIds)
+        public void RemoveComponents(Entity entity, int[] componentsTypeIds)
         {
             var lastIndex = 0;
-            Span<int> temporaryComponentIds = stackalloc int[componentsTypeIds.Count];
-            for (var i = 0; i < componentsTypeIds.Count; i++)
+            Span<int> temporaryComponentIds = stackalloc int[componentsTypeIds.Length];
+            for (var i = 0; i < componentsTypeIds.Length; i++)
             {
                 var componentTypeId = componentsTypeIds[i];
                 if(EntityAllocationDatabase.HasComponent(componentTypeId, entity))
@@ -174,7 +174,7 @@ namespace EcsR3.Entities.Accessors
             EntityChangeRouter.PublishEntityRemovedComponents(entity, sanitisedComponentsIds);
         }
 
-        public void RemoveComponents(Entity entity, IReadOnlyList<Type> componentTypes)
+        public void RemoveComponents(Entity entity, Type[] componentTypes)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(componentTypes);
             RemoveComponents(entity, componentTypeIds);
@@ -255,9 +255,9 @@ namespace EcsR3.Entities.Accessors
         public int[] GetAllocations(Entity entity)
         { return EntityAllocationDatabase.GetEntityAllocations(entity); }
 
-        public bool HasAllComponents(Entity entity, IReadOnlyList<Type> componentTypes)
+        public bool HasAllComponents(Entity entity, Type[] componentTypes)
         {
-            for(var i=0;i<componentTypes.Count;i++)
+            for(var i=0;i<componentTypes.Length;i++)
             {
                 var componentType = componentTypes[i];
                 if(!HasComponent(entity, componentType)) { return false; }
@@ -265,9 +265,9 @@ namespace EcsR3.Entities.Accessors
             return true;
         }
 
-        public bool HasAnyComponents(Entity entity, IReadOnlyList<Type> componentTypes)
+        public bool HasAnyComponents(Entity entity, Type[] componentTypes)
         {
-            for(var i=0;i<componentTypes.Count;i++)
+            for(var i=0;i<componentTypes.Length;i++)
             {
                 var componentType = componentTypes[i];
                 if(HasComponent(entity, componentType)) { return true; }

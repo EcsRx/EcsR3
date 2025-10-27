@@ -22,6 +22,7 @@ namespace EcsR3.Collections.Entities
         int[] GetEntityAllocations(Entity entity);
         int[] GetAllocatedComponentTypes(Entity entity);
         Entity[] GetEntitiesWithComponent(int componentTypeId);
+        Entity[] GetEntitiesWithComponents(int[] componentTypeId);
         int GetEntityComponentAllocation(int componentTypeId, Entity entity);
         void PreAllocate(int count);
         void Clear();

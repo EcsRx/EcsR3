@@ -30,7 +30,7 @@ namespace EcsR3.Components
         /// </summary>
         /// <param name="index">the indexes to set</param>
         /// <param name="value">the components to use</param>
-        void Set(int[] index, IReadOnlyList<T> value);
+        void Set(int[] index, T[] value);
     }
     
     /// <summary>

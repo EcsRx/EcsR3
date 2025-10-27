@@ -294,9 +294,9 @@ namespace EcsR3.Collections.Entities
             return entities;
         }
         
-        public int[] GetEntitiesWithComponents(int[] componentTypeIds)
+        public Entity[] GetEntitiesWithComponents(int[] componentTypeIds)
         {
-            if(componentTypeIds.Length == 0) { return Array.Empty<int>(); }
+            if(componentTypeIds.Length == 0) { return Array.Empty<Entity>(); }
             var seedingEntities = GetEntitiesWithComponent(componentTypeIds[0]);
 
             Span<int> potentialEntities = stackalloc int[seedingEntities.Length];
@@ -317,7 +317,15 @@ namespace EcsR3.Collections.Entities
                     potentialEntities[usedIndexes++] = entityId;
                 }
             }
-            return potentialEntities[..usedIndexes].ToArray();
+            
+            var actualEntityIds = potentialEntities[..usedIndexes];
+            var entities = new Entity[actualEntityIds.Length];
+            for (var i = 0; i < actualEntityIds.Length; i++)
+            {
+                var entityId = actualEntityIds[i];
+                entities[i] = new Entity(entityId, EntityCreationHashes[entityId]);
+            }
+            return entities;
         }
 
         public int GetEntityComponentAllocation(int componentTypeId, Entity entity)
