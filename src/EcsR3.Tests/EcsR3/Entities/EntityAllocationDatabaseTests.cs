@@ -546,7 +546,7 @@ public class EntityAllocationDatabaseTests
         var entity2Id = 6;
         var entity3Id = 7;
         var entity4Id = 8;
-        var expectedEntities = new[] { entity1Id, entity4Id };
+        var expectedEntities = new Entity[] { new (entity1Id, 0), new (entity4Id, 0) };
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity1Id] = 22;
         entityAllocationDatabase.ComponentAllocationData[componentTypeId3, entity1Id] = 13;
         entityAllocationDatabase.ComponentAllocationData[componentTypeId1, entity2Id] = 25;
