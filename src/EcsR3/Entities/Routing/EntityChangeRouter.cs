@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using EcsR3.Components.Lookups;
@@ -65,7 +66,7 @@ namespace EcsR3.Entities.Routing
 
         public void PublishEntityComponentEvent(Entity entity, int[] componentIds, Dictionary<ComponentContract, Subject<EntityChanges>> source)
         {
-            var buffer = new int[componentIds.Length];
+            var buffer = ArrayPool<int>.Shared.Rent(componentIds.Length);
             var allContracts = source.Keys.ToArray();
             for (var i = 0; i < allContracts.Length; i++)
             {
@@ -81,13 +82,15 @@ namespace EcsR3.Entities.Routing
                  need to convert it to an array in that scenario, if they didnt they would just have garbage data.
                  */
                 ReadOnlyMemory<int> bufferAsMemory = buffer;
+                
                 source[currentContract].OnNext(new EntityChanges(entity, bufferAsMemory[..(lastUsedIndexInBuffer + 1)]));
             }
+            ArrayPool<int>.Shared.Return(buffer);
         }
         
         public void PublishEntityComponentEvent(Entity[] entities, int[] componentIds, Dictionary<ComponentContract, Subject<EntityChanges>> source)
         {
-            var buffer = new int[componentIds.Length];
+            var buffer = ArrayPool<int>.Shared.Rent(componentIds.Length);
             var allContracts = source.Keys.ToArray();
             for (var i = 0; i < allContracts.Length; i++)
             {
@@ -103,10 +106,12 @@ namespace EcsR3.Entities.Routing
                  need to convert it to an array in that scenario, if they didnt they would just have garbage data.
                  */
                 ReadOnlyMemory<int> bufferAsMemory = buffer;
+                var slicedBuffer = bufferAsMemory[..(lastUsedIndexInBuffer + 1)];
                 var sourceContract = source[currentContract];
                 for (var j = 0; j < entities.Length; j++)
-                { sourceContract.OnNext(new EntityChanges(entities[j], bufferAsMemory[..(lastUsedIndexInBuffer+1)])); }
+                { sourceContract.OnNext(new EntityChanges(entities[j], slicedBuffer)); }
             }
+            ArrayPool<int>.Shared.Return(buffer);
         }
     }
 }

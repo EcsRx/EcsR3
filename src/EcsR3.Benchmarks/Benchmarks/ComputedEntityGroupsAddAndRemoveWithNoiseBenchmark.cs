@@ -17,7 +17,7 @@ namespace EcsR3.Benchmarks.Benchmarks
         private Type[] _availableComponentTypes;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
 
-        [Params(1000)]
+        [Params(10000)]
         public int EntityCount;
         
         [Params(10, 20, 50)]
