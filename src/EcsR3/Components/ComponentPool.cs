@@ -124,7 +124,7 @@ namespace EcsR3.Components
             { InternalComponents[index] = value; }
         }
 
-        public void Set(int[] indexes, IReadOnlyList<T> value)
+        public void Set(int[] indexes, T[] value)
         {
             lock (_lock)
             {
