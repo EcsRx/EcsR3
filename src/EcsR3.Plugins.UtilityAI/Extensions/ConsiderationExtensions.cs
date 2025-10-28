@@ -6,7 +6,7 @@ using EcsR3.Plugins.UtilityAI.Variables;
 
 namespace EcsR3.Plugins.UtilityAI.Extensions
 {
-    public static class UtilityExtensions
+    public static class ConsiderationExtensions
     {
         public static float CalculateScore(this ReadOnlySpan<float> considerationScores)
         {

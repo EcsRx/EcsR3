@@ -17,9 +17,14 @@
   <ItemGroup>
     <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj" />
     <ProjectReference Include="..\EcsR3.Plugins.Persistence\EcsR3.Plugins.Persistence.csproj" />
+    <ProjectReference Include="..\EcsR3.Plugins.UtilityAI\EcsR3.Plugins.UtilityAI.csproj" />
     <ProjectReference Include="..\EcsR3.Plugins.Views\EcsR3.Plugins.Views.csproj" />
     <ProjectReference Include="..\EcsR3\EcsR3.csproj" />
     <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj" />
     <ProjectReference Include="..\SystemsR3.Infrastructure.Ninject\SystemsR3.Infrastructure.Ninject.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ExampleApps\UtilityAIExample\Systems\AI\Actions\" />
+    <Folder Include="ExampleApps\UtilityAIExample\Systems\AI\Advice\" />
   </ItemGroup>
 </Project>
