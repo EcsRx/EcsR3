@@ -25,6 +25,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ExampleApps\UtilityAIExample\Systems\AI\Actions\" />
-    <Folder Include="ExampleApps\UtilityAIExample\Systems\AI\Advice\" />
   </ItemGroup>
 </Project>

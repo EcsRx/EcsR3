@@ -3,6 +3,7 @@ using EcsR3.Examples.Application;
 using EcsR3.Examples.ExampleApps.UtilityAIExample.Blueprints;
 using EcsR3.Examples.ExampleApps.UtilityAIExample.Modules;
 using EcsR3.Extensions;
+using EcsR3.Plugins.UtilityAI.Modules;
 using SystemsR3.Infrastructure.Extensions;
 
 namespace EcsR3.Examples.ExampleApps.UtilityAIExample
@@ -15,6 +16,7 @@ namespace EcsR3.Examples.ExampleApps.UtilityAIExample
         protected override void LoadModules()
         {
             base.LoadModules();
+            DependencyRegistry.LoadModule<UtilityAIModule>();
             DependencyRegistry.LoadModule<AIExampleModule>();
         }
 

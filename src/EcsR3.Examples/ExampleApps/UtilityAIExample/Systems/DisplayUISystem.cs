@@ -7,6 +7,7 @@ using EcsR3.Examples.ExampleApps.UtilityAIExample.Types;
 using EcsR3.Extensions;
 using EcsR3.Groups;
 using EcsR3.Plugins.UtilityAI.Components;
+using EcsR3.Plugins.UtilityAI.Extensions;
 using EcsR3.Systems.Reactive;
 using R3;
 using Spectre.Console;
@@ -31,7 +32,7 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
         {
             var characterDataComponent = entityComponentAccessor.GetComponent<CharacterDataComponent>(entity);
             var agentComponent = entityComponentAccessor.GetComponent<AgentComponent>(entity);
-            var healthDisplay = $"[red]HP: {characterDataComponent.Health} / {characterDataComponent.MaxHealth}[/] \nATK: [blue]{characterDataComponent.DamagePower}[/] \nHEAL: [green]{characterDataComponent.HealPower}[/]";
+            var healthDisplay = $"HP: [red]{characterDataComponent.Health} / {characterDataComponent.MaxHealth}[/] \nATK: [blue]{characterDataComponent.DamagePower}[/] \nHEAL: [green]{characterDataComponent.HealPower}[/]";
             table.AddRow(new Text(characterDataComponent.Name), new Markup(healthDisplay), GetConsiderationTable(agentComponent), GetAdviceTable(agentComponent));
         }
 
@@ -55,12 +56,16 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
     
     public Table GetAdviceTable(AgentComponent agentComponent)
     {
+        var bestAdviceId = agentComponent.GetBestAdviceId();
         var table = new Table().AddColumn("Advice").AddColumn("Score");
         foreach (var adviceId in agentComponent.ActiveAdvice)
         {
             var adviceName = GetAdviceName(adviceId);
             var adviceScore = agentComponent.AdviceVariables[adviceId];
-            table.AddRow(adviceName, adviceScore.ToString("F2"));
+            if (adviceId == bestAdviceId)
+            { table.AddRow(new Markup($"[yellow]{adviceName}[/]"), new Markup($"[yellow]{adviceScore:f2}[/]")); }
+            else
+            { table.AddRow(adviceName, adviceScore.ToString("F2")); }
         }
         
         table.ShowHeaders = false;
@@ -69,6 +74,7 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
 
     public string GetConsiderationName(int considerationId)
     {
+        if(considerationId == ConsiderationTypes.Health) { return "Health"; }
         if(considerationId == ConsiderationTypes.LowHealth) { return "Low Health"; }
         if(considerationId == ConsiderationTypes.Power) { return "Power"; }
         if(considerationId == ConsiderationTypes.Healing) { return "Healing"; }
@@ -77,8 +83,9 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
 
     public string GetAdviceName(int adviceId)
     {
-        if(adviceId == 1) { return "Heal Yourself"; }
-
+        if(adviceId == AdviceTypes.ShouldAttack) { return "Should Attack"; }
+        if(adviceId == AdviceTypes.ShouldFindHealer) { return "Should Find Healer"; }
+        if(adviceId == AdviceTypes.ShouldHeal) { return "Should Heal"; }
         return "Unknown";
     }
 }
