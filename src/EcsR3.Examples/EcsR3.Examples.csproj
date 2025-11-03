@@ -23,7 +23,4 @@
     <ProjectReference Include="..\EcsR3.Infrastructure\EcsR3.Infrastructure.csproj" />
     <ProjectReference Include="..\SystemsR3.Infrastructure.Ninject\SystemsR3.Infrastructure.Ninject.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ExampleApps\UtilityAIExample\Systems\AI\Actions\" />
-  </ItemGroup>
 </Project>

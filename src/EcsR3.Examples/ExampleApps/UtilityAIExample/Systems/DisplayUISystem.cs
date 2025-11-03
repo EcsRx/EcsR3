@@ -16,7 +16,7 @@ namespace EcsR3.Examples.ExampleApps.UtilityAIExample.Systems;
 
 public class DisplayUISystem : IReactToGroupBatchedSystem
 {
-    public IGroup Group => new Group(typeof(AgentComponent), typeof(CharacterDataComponent));
+    public IGroup Group => new Group(typeof(AgentComponent), typeof(CharacterDataComponent), typeof(CharacterActionComponent));
     
     public Observable<IComputedEntityGroup> ReactToGroup(IComputedEntityGroup observableGroup)
     { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(_ => observableGroup); }
@@ -26,14 +26,15 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
         AnsiConsole.Clear();
 
         var table = new Table();
-        table.AddColumn("Player").AddColumn("Health").AddColumn("Considerations").AddColumn("Advice");
+        table.AddColumn("Player").AddColumn("Health").AddColumn("Considerations").AddColumn("Advice").AddColumn("Action");
 
         foreach (var entity in entities)
         {
             var characterDataComponent = entityComponentAccessor.GetComponent<CharacterDataComponent>(entity);
             var agentComponent = entityComponentAccessor.GetComponent<AgentComponent>(entity);
+            var characterActionComponent = entityComponentAccessor.GetComponent<CharacterActionComponent>(entity);
             var healthDisplay = $"HP: [red]{characterDataComponent.Health} / {characterDataComponent.MaxHealth}[/] \nATK: [blue]{characterDataComponent.DamagePower}[/] \nHEAL: [green]{characterDataComponent.HealPower}[/]";
-            table.AddRow(new Text(characterDataComponent.Name), new Markup(healthDisplay), GetConsiderationTable(agentComponent), GetAdviceTable(agentComponent));
+            table.AddRow(new Text(characterDataComponent.Name), new Markup(healthDisplay), GetConsiderationTable(agentComponent), GetAdviceTable(agentComponent), new Markup(characterActionComponent.CurrentAction));
         }
 
         table.ShowRowSeparators = true;

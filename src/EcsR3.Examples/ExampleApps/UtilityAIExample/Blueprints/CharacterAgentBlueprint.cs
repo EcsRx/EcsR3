@@ -23,7 +23,7 @@ public class CharacterAgentBlueprint : IBlueprint
 
     public void Apply(IEntityComponentAccessor entityComponentAccessor, Entity entity)
     {
-        entityComponentAccessor.AddComponents(entity, [new AgentComponent(), new CharacterDataComponent()
+        entityComponentAccessor.AddComponents(entity, [new AgentComponent(), new CharacterActionComponent(), new CharacterDataComponent()
         {
             Name = Name,
             MaxHealth = MaxHealth,
