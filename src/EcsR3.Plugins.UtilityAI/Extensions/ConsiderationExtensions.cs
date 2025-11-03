@@ -10,21 +10,22 @@ namespace EcsR3.Plugins.UtilityAI.Extensions
     {
         public static float CalculateScore(this ReadOnlySpan<float> considerationScores)
         {
-            var score = 1.0f;
+            var combinedScore = 1.0f;
             var compensationFactor = (float)(1.0 - 1.0 / considerationScores.Length);
-            foreach (var utility in considerationScores)
+            foreach (var score in considerationScores)
             {
-                var modification = (float)((1.0 - utility) * compensationFactor);
-                var scaledUtility = utility + (modification * utility);
-                score *= scaledUtility;
+                if(score == 0) { return 0; }
+                var modification = (float)((1.0 - score) * compensationFactor);
+                var scaledUtility = score + (modification * score);
+                combinedScore *= scaledUtility;
             }
-            return score;
+            return combinedScore;
         }
         
         public static float CalculateScore(this float[] utilityScores)
         { return CalculateScore(new ReadOnlySpan<float>(utilityScores)); }
         
-        public static float SumUtilityScore(this IConsiderationVariables variables, int considerationId)
+        public static float SumScore(this IConsiderationVariables variables, int considerationId)
         {
             var relatedUtilityKeys = variables.GetRelatedConsiderations(considerationId);
             var totalScore = 0.0f;
@@ -33,7 +34,7 @@ namespace EcsR3.Plugins.UtilityAI.Extensions
             return totalScore;
         }
 
-        public static float AverageUtilityScore(this IConsiderationVariables variables, int considerationId)
+        public static float AverageScore(this IConsiderationVariables variables, int considerationId)
         {
             var relatedUtilityKeys = variables.GetRelatedConsiderations(considerationId);
             var totalScore = 0.0f;
@@ -42,16 +43,30 @@ namespace EcsR3.Plugins.UtilityAI.Extensions
             return totalScore/relatedUtilityKeys.Length;
         }
         
-        public static float MaxUtilityScore(this IConsiderationVariables variables, int considerationId)
+        public static float MaxScore(this IConsiderationVariables variables, int considerationId)
         {
             var relatedUtilityKeys = variables.GetRelatedConsiderations(considerationId);
             var maxScore = 0.0f;
             for (var i = 0; i < relatedUtilityKeys.Length; i++)
             {
                 var newScore = relatedUtilityKeys[i].Score;
-                if(maxScore < newScore) { maxScore = newScore; }
+                if (newScore >= 1) { return 1;}
+                if(newScore > maxScore) { maxScore = newScore; }
             }
             return maxScore;
+        }
+        
+        public static float MinScore(this IConsiderationVariables variables, int considerationId)
+        {
+            var relatedUtilityKeys = variables.GetRelatedConsiderations(considerationId);
+            var minScore = 1.0f;
+            for (var i = 0; i < relatedUtilityKeys.Length; i++)
+            {
+                var newScore = relatedUtilityKeys[i].Score;
+                if (newScore == 0) { return 0;}
+                if(newScore < minScore) { minScore = newScore; }
+            }
+            return minScore;
         }
         
         public static float CalculateScore(this IConsiderationVariables variables, int considerationId)

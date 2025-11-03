@@ -74,10 +74,10 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
 
     public string GetConsiderationName(int considerationId)
     {
-        if(considerationId == ConsiderationTypes.Health) { return "Health"; }
+        if(considerationId == ConsiderationTypes.Health) { return "High Health"; }
         if(considerationId == ConsiderationTypes.LowHealth) { return "Low Health"; }
-        if(considerationId == ConsiderationTypes.Power) { return "Power"; }
-        if(considerationId == ConsiderationTypes.Healing) { return "Healing"; }
+        if(considerationId == ConsiderationTypes.Power) { return "Attack Power"; }
+        if(considerationId == ConsiderationTypes.Healing) { return "Healing Ability"; }
         return "Unknown";
     }
 
@@ -85,7 +85,7 @@ public class DisplayUISystem : IReactToGroupBatchedSystem
     {
         if(adviceId == AdviceTypes.ShouldAttack) { return "Should Attack"; }
         if(adviceId == AdviceTypes.ShouldFindHealer) { return "Should Find Healer"; }
-        if(adviceId == AdviceTypes.ShouldHeal) { return "Should Heal"; }
+        if(adviceId == AdviceTypes.ShouldHeal) { return "Should Heal Self"; }
         return "Unknown";
     }
 }

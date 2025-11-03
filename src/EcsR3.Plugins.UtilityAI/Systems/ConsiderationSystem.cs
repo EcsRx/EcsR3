@@ -29,6 +29,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -37,9 +43,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent)
@@ -77,6 +95,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity, T1 component)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -85,9 +109,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity, T1 component)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1)
@@ -112,6 +148,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected abstract ConsiderationKeyWithScore[] CalculateUtility(Entity entity, IConsiderationVariables considerationVariables, T1 component1);
     }
     
+    /// <summary>
+    /// Calculates the considerations utility from the processed input
+    /// </summary>
+    /// <param name="inputValue">The processed input value</param>
+    /// <param name="entity">The associated entity</param>
+    /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
     public abstract class ConsiderationSystem<T1, T2> : BatchedSystem<AgentComponent, T1, T2>, ISetupSystem
         where T1 : IComponent
         where T2 : IComponent
@@ -126,6 +168,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity, T1 component1, T2 component2)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -134,9 +182,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity, T1 component1, T2 component2)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2)
@@ -176,6 +236,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity, T1 component1, T2 component2, T3 component3)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -184,9 +250,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity, T1 component1, T2 component2, T3 component3)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3)
@@ -227,6 +305,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -235,9 +319,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4)
@@ -279,6 +375,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateUtilityScore(float inputValue, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -287,9 +389,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyUtilityScore(float score, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5)
@@ -332,6 +446,12 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
+        /// <summary>
+        /// Calculates the considerations utility from the processed input
+        /// </summary>
+        /// <param name="inputValue">The processed input value</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The calculated utility for this consideration scored normalized between 0-1</returns>
         protected virtual float CalculateScore(float inputValue, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6)
         {
             var clampedValue = Clamper.Clamp(inputValue);
@@ -340,9 +460,21 @@ namespace EcsR3.Plugins.UtilityAI.Systems
             return modifiedScore.SanitizeAndClamp();
         }
 
+        /// <summary>
+        /// Allows you to modify the score based on other data
+        /// </summary>
+        /// <param name="score">The utility value/score of this consideration</param>
+        /// <param name="entity">The associated entity</param>
+        /// <returns>The modified score</returns>
         protected virtual float ModifyScore(float score, Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6)
         { return score; }
         
+        /// <summary>
+        /// A predicate to decide if an entity should calculate/support this advice
+        /// </summary>
+        /// <param name="entity">The associated entity</param>
+        /// <param name="agentComponent">The associated agent</param>
+        /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
         protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6)

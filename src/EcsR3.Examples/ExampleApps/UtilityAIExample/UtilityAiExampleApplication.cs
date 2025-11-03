@@ -16,7 +16,6 @@ namespace EcsR3.Examples.ExampleApps.UtilityAIExample
         protected override void LoadModules()
         {
             base.LoadModules();
-            DependencyRegistry.LoadModule<UtilityAIModule>();
             DependencyRegistry.LoadModule<AIExampleModule>();
         }
 

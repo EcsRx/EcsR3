@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EcsR3.Components.Database;
+﻿using EcsR3.Components.Database;
 using EcsR3.Computeds.Components.Registries;
 using EcsR3.Entities;
 using EcsR3.Entities.Accessors;
@@ -13,7 +12,7 @@ using SystemsR3.Threading;
 
 namespace EcsR3.Examples.ExampleApps.UtilityAIExample.Systems.AI.Advice;
 
-public class ShouldHealAdvice : AdviceSystem
+public class ShouldHealSelfAdvice : AdviceSystem
 {
     public static readonly ConsiderationKey HealingConsiderationKey = new (ConsiderationTypes.Healing);
     
@@ -27,6 +26,6 @@ public class ShouldHealAdvice : AdviceSystem
 
     public override ConsiderationLookup[] ConsiderationLookups { get; } = [new (ConsiderationTypes.Healing), new(ConsiderationTypes.LowHealth)];
     
-    public ShouldHealAdvice(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
+    public ShouldHealSelfAdvice(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
     {}
 }

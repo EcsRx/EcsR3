@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsR3.Plugins.UtilityAI.Modules;
 using SystemsR3.Infrastructure.Dependencies;
+using SystemsR3.Infrastructure.Extensions;
 using SystemsR3.Infrastructure.Plugins;
 using SystemsR3.Systems;
 
@@ -13,7 +15,7 @@ namespace EcsR3.Plugins.UtilityAI
 
         public void SetupDependencies(IDependencyRegistry registry)
         {
-            // Nothing needs registering
+            registry.LoadModule<UtilityAIModule>();
         }
         
         public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver) => Array.Empty<ISystem>();
