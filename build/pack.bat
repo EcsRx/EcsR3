@@ -1,4 +1,4 @@
-set version=8.0.28
+set version=13.2.00
 dotnet pack ../src/SystemsR3 -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsR3.Infrastructure -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsR3.Plugins.Transforms -c Release -o ../../_dist /p:version=%version%
@@ -15,5 +15,6 @@ dotnet pack ../src/EcsR3.Plugins.GroupBinding -c Release -o ../../_dist /p:versi
 dotnet pack ../src/EcsR3.Plugins.Batching -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Plugins.Transforms -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Plugins.Persistence -c Release -o ../../_dist /p:version=%version%
+dotnet pack ../src/EcsR3.Plugins.UtilityAI -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Infrastructure -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsR3.Infrastructure.Ninject -c Release -o ../../_dist /p:version=%version%
