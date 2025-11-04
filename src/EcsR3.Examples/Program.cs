@@ -38,6 +38,7 @@ namespace EcsR3.Examples
                 new Example("Scenario: Entity Databases", () => new LoadingEntityDatabaseApplication().StartApplication()),
                 new Example("Scenario: Batched Groups", () => new BatchedGroupExampleApplication().StartApplication()),
                 new Example("Scenario: System Priorities", () => new SetupSystemPriorityApplication().StartApplication()),
+                new Example("Scenario: Simple Utility AI", () => new UtilityAiExampleApplication().StartApplication()),
                 
                 new Example("Performance: Systems", () => new SimpleSystemApplication().StartApplication()),
                 new Example("Performance: Default Group", () => new GroupPerformanceApplication().StartApplication()),
@@ -56,10 +57,10 @@ namespace EcsR3.Examples
                     .UseConverter(x => x.Name)
                     .AddChoices(availableExamples);
             
-//            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-//            exampleToRun.Executor();
+            var exampleToRun = AnsiConsole.Prompt(exampleSelector);
+            exampleToRun.Executor();
 
-            new UtilityAiExampleApplication().StartApplication();
+            
         }
     }
 }
