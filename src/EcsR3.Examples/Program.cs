@@ -1,7 +1,5 @@
 ﻿using System;
 using EcsR3.Examples.Custom.BatchTests;
-using EcsR3.Examples.Custom.ComputedComponents;
-using EcsR3.Examples.Custom.Specific;
 using EcsR3.Examples.Custom.SystemPriority;
 using EcsR3.Examples.ExampleApps.BatchedGroupExample;
 using EcsR3.Examples.ExampleApps.ComputedGroupExample;
@@ -10,6 +8,7 @@ using EcsR3.Examples.ExampleApps.HealthExample;
 using EcsR3.Examples.ExampleApps.HelloWorldExample;
 using EcsR3.Examples.ExampleApps.LoadingEntityDatabase;
 using EcsR3.Examples.ExampleApps.Performance;
+using EcsR3.Examples.ExampleApps.UtilityAIExample;
 using Spectre.Console;
 
 namespace EcsR3.Examples
@@ -39,6 +38,7 @@ namespace EcsR3.Examples
                 new Example("Scenario: Entity Databases", () => new LoadingEntityDatabaseApplication().StartApplication()),
                 new Example("Scenario: Batched Groups", () => new BatchedGroupExampleApplication().StartApplication()),
                 new Example("Scenario: System Priorities", () => new SetupSystemPriorityApplication().StartApplication()),
+                new Example("Scenario: Simple Utility AI", () => new UtilityAiExampleApplication().StartApplication()),
                 
                 new Example("Performance: Systems", () => new SimpleSystemApplication().StartApplication()),
                 new Example("Performance: Default Group", () => new GroupPerformanceApplication().StartApplication()),
@@ -59,6 +59,8 @@ namespace EcsR3.Examples
             
             var exampleToRun = AnsiConsole.Prompt(exampleSelector);
             exampleToRun.Executor();
+
+            
         }
     }
 }
