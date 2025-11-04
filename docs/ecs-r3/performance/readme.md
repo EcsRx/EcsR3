@@ -27,14 +27,18 @@ Then just ignore the components you do not need for processing you will end up w
 
 > This is not always doable as it may mean certain entities will be processed when you do not want them to be, but if you are able to it can help reduce background workloads.
 
-## 3. Use Multitheading Where Safe - *Low Effort* / *Medium Performance Gains*
+## 3. Use Jobs and Multiplexed systems if you have already done steps 1 & 2 - **Low Effort / Reduces Batch Switching**
+
+Since version 12.* *(I think)* support for `MultiplexedSystems` was added which let you schedule multiple `Jobs` to run at the same time, each job is basically the logic of a `BatchedSystem` without the scheduling, so this approach can reduce having to keep flitting between schedules and re-fetching component arrays when they are already built and ready to go.
+
+## 4. Use Multitheading Where Safe - *Low Effort* / *Medium Performance Gains*
 There is a `Multithreaded` attribute that you can put on most systems and it will tell the related executor for the system to process each entity in parallel rather than sequentially.
 
 This can improve processing speeds on higher volume systems (especially `BatchedSystems`) where you are processing lots of entities and doing lots of logic against them, the more logic being done the bigger the performance gain from spreading it out, if there is not much processing the performance gains may not be as much.
 
 > You may not always be able to do this, as depending you your platform/engine being used, you may be unable to do certain logic in another thread, i.e Unity will not let you update transforms/GOs etc unless you are on the main thread
 
-## 4. Use `Computeds` For Non Entity State - *Medium Effort* / *Varying Performance Gains*
+## 5. Use `Computeds` For Non Entity State - *Medium Effort* / *Varying Performance Gains*
 The mileage for this one varies based on your scenarios, but let's make up a whimsical scenario where you have multiple systems which need to know how far an entity is from the player.
 
 Assuming a single player, you could just recalculate the distance (i.e `Vector3.Distance(playerPos, entityPos)`) every time you need it, but its adding extra processing to a system.
@@ -82,13 +86,13 @@ Then all we need to do is inject this in and call `computedDistanceFromPlayer.Co
 
 > This sort of approach can be used in so many ways, and also gives you the benefit of being able to alter how often its updated to reduce background processing, i.e in some instances you may only need to update the distances every second or so if your entities dont move quickly or it's used for simple AI lookups etc.
 
-## 5. Avoid Using `IReactToEntitySystem` where possible - *Varying Effort / *High Performance Gain*
+## 6. Avoid Using `IReactToEntitySystem` where possible - *Varying Effort / *High Performance Gain*
 
 This isn't to say "NEVER USE THIS TYPE OF SYSTEM" but its mainly only meant to be used for more complex entity predicate execution scenarios, which in most cases can often be expressed in a `BatchedSystem` where the first line of execution checks the predicate and `returns` straight away if not met, this will often be far faster than the react to entity system, but you have less control over the reactivity triggers of it.
 
 > If used well you can actually gain performance from these system types if you are doing throttled inputs or some other scenario which reduces computation to entities only when needed, but in reality this is rarely the case.
 
-## 6. Explicitly setup your Component Type Ids and use the ids instead of types - *Varying Effort* / *Low Performance Gain*
+## 7. Explicitly setup your Component Type Ids and use the ids instead of types - *Varying Effort* / *Low Performance Gain*
 
 Out the box most of your component interactions will be done via generics like `entity.GetComponent<SomeComponent>();` and this is fine for most cases.
 
