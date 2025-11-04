@@ -38,7 +38,7 @@ namespace EcsR3.Plugins.UtilityAI.Utility
         /// </summary>
         public float YPosition { get; }
         
-        private float _scaledWidth, _scaledHeight;
+        public float CellWidth, CellHeight;
         
         /// <summary>
         /// Internal scaled heatmap which actually tracks scores etc
@@ -69,19 +69,25 @@ namespace EcsR3.Plugins.UtilityAI.Utility
             XPosition = xPosition;
             YPosition = yPosition;
             
-            _scaledWidth = width * Scaling;
-            _scaledHeight = height * Scaling;
-            
-            var internalWidth = (int)MathF.Round(_scaledWidth);
-            var internalHeight = (int)MathF.Round(_scaledHeight);
+            var internalWidth = (int)MathF.Round(width * Scaling);
+            var internalHeight = (int)MathF.Round(height * Scaling);
             Heatmap = new Heatmap(internalWidth, internalHeight);
+
+            CellWidth = Width / Heatmap.Width;
+            CellHeight = Height / Heatmap.Height;
         }
         
         public int XPositionToIndex(float x)
         { return (int)MathF.Round((x - XPosition) * Scaling); }
+
+        public float XIndexToPosition(int x)
+        { return (x / Scaling) + XPosition; }
         
         public int YPositionToIndex(float y)
         { return (int)MathF.Round((y - YPosition) * Scaling); }
+        
+        public float YIndexToPosition(int y)
+        { return (y / Scaling) + YPosition; }
         
         public float GetScore(float x, float y)
         {
