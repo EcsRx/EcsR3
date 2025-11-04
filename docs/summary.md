@@ -39,6 +39,7 @@
   * [Overview](ecs-r3/plugins/readme.md)
   * [View Plugin](ecs-r3/plugins/view-plugin.md)
   * [Group Binding Plugin](ecs-r3/plugins/group-binding-plugin.md)
+  * [Utility AI Plugin](ecs-r3/plugins/utility-ai-plugin.md)
 * Performance
   * [Performance Checklist](ecs-r3/performance/readme.md)
   
