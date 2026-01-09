@@ -134,7 +134,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
     
 #endregion
 
-    [Params(1000)]
+    [Params(10000)]
     public int EntityCount;
 
     [Params(false, true)]
