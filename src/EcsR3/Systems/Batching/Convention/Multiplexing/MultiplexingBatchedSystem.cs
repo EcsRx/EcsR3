@@ -59,20 +59,21 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = closureBatches.Span[i];
+                var c1 = componentPools[batch.Component1Allocation];
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, componentPools[batch.Component1Allocation]); }
+                { job.Process(batch.Entity, c1); }
             });
         }
         
         protected void ProcessJobs(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
         {
             var batchesSpan = componentBatches.Span;
-
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = componentPools[batch.Component1Allocation];
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, componentPools[batch.Component1Allocation]); }
+                { job.Process(batch.Entity, c1); }
             }
         }
     }
@@ -126,11 +127,10 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = closureBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2); }
             });
         }
         
@@ -142,11 +142,10 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2); }
             }
         }
     }
@@ -200,11 +199,11 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3); }
             });
         }
         
@@ -216,11 +215,11 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3); }
             }
         }
     }
@@ -273,12 +272,12 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4); }
             });
         }
         
@@ -290,12 +289,13 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4); }
             }
         }
     }    
@@ -348,12 +348,14 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5); }
             });
         }
         
@@ -365,12 +367,14 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5); }
             }
         }
     }
@@ -423,13 +427,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                var c6 = components6[batch.Component6Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation],
-                        components6[batch.Component6Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6); }
             });
         }
         
@@ -441,13 +447,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                var c6 = components6[batch.Component6Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation],
-                        components6[batch.Component6Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6); }
             }
         }
     }
@@ -500,13 +508,16 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                var c6 = components6[batch.Component6Allocation];
+                var c7 = components7[batch.Component7Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation],
-                        components6[batch.Component6Allocation], components7[batch.Component7Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6, c7); }
             });
         }
         
@@ -518,13 +529,16 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
+                var c1 = components1[batch.Component1Allocation];
+                var c2 = components2[batch.Component2Allocation];
+                var c3 = components3[batch.Component3Allocation];
+                var c4 = components4[batch.Component4Allocation];
+                var c5 = components5[batch.Component5Allocation];
+                var c6 = components6[batch.Component6Allocation];
+                var c7 = components7[batch.Component7Allocation];
+                
                 foreach (var job in Jobs)
-                {
-                    job.Process(batch.Entity, components1[batch.Component1Allocation],
-                        components2[batch.Component2Allocation], components3[batch.Component3Allocation],
-                        components4[batch.Component4Allocation], components5[batch.Component5Allocation],
-                        components6[batch.Component6Allocation], components7[batch.Component7Allocation]);
-                }
+                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6, c7); }
             }
         }
     }
