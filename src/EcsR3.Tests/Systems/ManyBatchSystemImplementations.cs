@@ -35,6 +35,6 @@ public class ManyBatchSystemImplementations : BatchedSystem<TestComponentOne, Te
     public void StopSystem()
     { }
 
-    protected override void Process(Entity entity, TestComponentOne component1, TestComponentTwo component2)
+    protected override void Process(Entity entity, ref TestComponentOne component1, ref TestComponentTwo component2)
     { }
 }

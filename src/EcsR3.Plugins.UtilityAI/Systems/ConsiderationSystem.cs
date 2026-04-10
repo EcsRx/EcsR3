@@ -60,7 +60,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -126,7 +126,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -199,7 +199,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -267,7 +267,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -336,7 +336,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -406,7 +406,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             
@@ -477,7 +477,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6)
         {
             if(!agentComponent.ActiveConsiderations.Contains(ConsiderationId)){ return; }
             

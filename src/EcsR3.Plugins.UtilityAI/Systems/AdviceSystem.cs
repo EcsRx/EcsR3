@@ -57,7 +57,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         /// <returns>True if the agent supports this advice, False if it does not</returns>
         protected virtual bool ShouldApplyTo(Entity entity, AgentComponent agentComponent) => true;
         
-        protected override void Process(Entity entity, AgentComponent agentComponent)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent)
         {
             if(!agentComponent.ActiveAdvice.Contains(AdviceId)) { return; }
             

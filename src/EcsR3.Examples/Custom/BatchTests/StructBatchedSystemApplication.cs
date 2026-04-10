@@ -20,7 +20,7 @@ namespace EcsR3.Examples.Custom.BatchTests
     {
         public IThreadHandler ThreadHandler { get; private set; }
         
-        public class StructBatchSystem : BatchedRefSystem<StructComponent, StructComponent2>
+        public class StructBatchSystem : BatchedSystem<StructComponent, StructComponent2>
         {
             public StructBatchSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
             {

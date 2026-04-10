@@ -33,7 +33,7 @@ public class BatchedProcessTestSystem : BatchedSystem<TestComponentOne, TestComp
 
     protected override Observable<Unit> ReactWhen() => Observable.Never<Unit>();
 
-    protected override void Process(Entity entity, TestComponentOne component1, TestComponentTwo component2)
+    protected override void Process(Entity entity, ref TestComponentOne component1, ref TestComponentTwo component2)
     {
         Interlocked.Add(ref TimesCalled, 1);
     }

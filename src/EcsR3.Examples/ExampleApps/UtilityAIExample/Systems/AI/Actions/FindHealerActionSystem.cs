@@ -17,7 +17,7 @@ public class FindHealerActionSystem : AdviceActionSystem<CharacterDataComponent,
     public FindHealerActionSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
     {}
 
-    protected override void ActionAdvice(Entity entity, AgentComponent agentComponent, CharacterDataComponent characterDataComponent, CharacterActionComponent characterActionComponent)
+    protected override void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref CharacterDataComponent characterDataComponent, ref CharacterActionComponent characterActionComponent)
     {
         characterActionComponent.CurrentAction = "[yellow]Urgently looks around for healing[/]";
     }

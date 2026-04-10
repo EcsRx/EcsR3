@@ -21,15 +21,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent);
+            ActionAdvice(entity, ref agentComponent);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent);
     }
     
     public abstract class AdviceActionSystem<T1> : BatchedSystem<AgentComponent, T1> 
@@ -43,15 +43,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1);
+            ActionAdvice(entity, ref agentComponent, ref component1);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component);
     }
         
     public abstract class AdviceActionSystem<T1, T2> : BatchedSystem<AgentComponent, T1, T2> 
@@ -65,15 +65,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1, component2);
+            ActionAdvice(entity, ref agentComponent, ref component1, ref component2);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component, T2 component2);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component, ref T2 component2);
     }
     
     public abstract class AdviceActionSystem<T1, T2, T3> : BatchedSystem<AgentComponent, T1, T2, T3> 
@@ -87,15 +87,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1, component2, component3);
+            ActionAdvice(entity, ref agentComponent, ref component1, ref component2, ref component3);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component, T2 component2, T3 component3);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component, ref T2 component2, ref T3 component3);
     }
         
     public abstract class AdviceActionSystem<T1, T2, T3, T4> : BatchedSystem<AgentComponent, T1, T2, T3, T4> 
@@ -109,15 +109,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1, component2, component3, component4);
+            ActionAdvice(entity, ref agentComponent, ref component1, ref component2, ref component3, ref component4);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component, T2 component2, T3 component3, T4 component4);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component, ref T2 component2, ref T3 component3, ref T4 component4);
     }
         
     public abstract class AdviceActionSystem<T1, T2, T3, T4, T5> : BatchedSystem<AgentComponent, T1, T2, T3, T4, T5> 
@@ -131,15 +131,15 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1, component2, component3, component4, component5);
+            ActionAdvice(entity, ref agentComponent, ref component1, ref component2, ref component3, ref component4, ref component5);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component, T2 component2, T3 component3, T4 component4, T5 component5);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
     }
         
     public abstract class AdviceActionSystem<T1, T2, T3, T4, T5, T6> : BatchedSystem<AgentComponent, T1, T2, T3, T4, T5, T6> 
@@ -153,14 +153,14 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6)
         {
             var bestAdviceId = agentComponent.GetBestAdviceId();
             if(bestAdviceId != AdviceId) { return; }
             
-            ActionAdvice(entity, agentComponent, component1, component2, component3, component4, component5, component6);
+            ActionAdvice(entity, ref agentComponent, ref component1, ref component2, ref component3, ref component4, ref component5, ref component6);
         }
         
-        protected abstract void ActionAdvice(Entity entity, AgentComponent agentComponent, T1 component, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
+        protected abstract void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref T1 component, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
     }
 }
