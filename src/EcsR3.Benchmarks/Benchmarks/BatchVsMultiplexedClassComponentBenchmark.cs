@@ -139,7 +139,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
     [Params(false, true)]
     public bool UseMultithreading;
     
-    [Params(1000)]
+    [Params(10000)]
     public int Invocations;
     
     public ClassBatchSystem1 BatchingSystem1 { get; private set; }
