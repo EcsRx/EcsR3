@@ -2,7 +2,7 @@ name: Build And Test
 on: [push]
 
 env:
-  BuildVersion: '13.2.${{github.run_number}}'
+  BuildVersion: '14.0.${{github.run_number}}'
   SolutionFile: 'src/EcsR3.sln'
 
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup .NET 9.0
+      - name: Setup .NET 10.0
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
       - name: .Net Restore
         run: dotnet restore ${{ env.SolutionFile }}
       - name: .Net Build
