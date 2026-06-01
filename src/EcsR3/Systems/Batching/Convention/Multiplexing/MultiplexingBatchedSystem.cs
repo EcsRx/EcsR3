@@ -29,13 +29,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
@@ -97,13 +99,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
@@ -171,13 +175,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
@@ -247,13 +253,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
@@ -324,13 +332,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
@@ -403,13 +413,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
@@ -484,13 +496,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
