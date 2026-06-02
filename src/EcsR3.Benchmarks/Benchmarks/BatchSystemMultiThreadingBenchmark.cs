@@ -37,7 +37,7 @@ public class BatchSystemMultiThreadingBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
             
-        protected override void Process(Entity entity, ClassComponent component1, ClassComponent2 component2)
+        protected override void Process(Entity entity, ref ClassComponent component1, ref ClassComponent2 component2)
         {
             component1.Position += Vector3.One;
             component1.Something += 10;

@@ -11,7 +11,7 @@ using R3;
 
 namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
 {
-    public class BatchedMovementSystem : BatchedMixedSystem<PositionComponent, MovementSpeedComponent>
+    public class BatchedMovementSystem : BatchedSystem<PositionComponent, MovementSpeedComponent>
     {
         public BatchedMovementSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         {
@@ -20,7 +20,7 @@ namespace EcsR3.Examples.ExampleApps.BatchedGroupExample.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.Interval(TimeSpan.FromSeconds(0.5f)).Select(x => Unit.Default); }
 
-        protected override void Process(Entity entity, ref PositionComponent positionComponent, MovementSpeedComponent movementSpeedComponent)
+        protected override void Process(Entity entity, ref PositionComponent positionComponent, ref MovementSpeedComponent movementSpeedComponent)
         {
             positionComponent.Position += Vector3.One * movementSpeedComponent.Speed;
         }

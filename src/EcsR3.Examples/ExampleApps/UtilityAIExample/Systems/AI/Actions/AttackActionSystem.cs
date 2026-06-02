@@ -17,7 +17,7 @@ public class AttackActionSystem : AdviceActionSystem<CharacterDataComponent, Cha
     public AttackActionSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
     {}
 
-    protected override void ActionAdvice(Entity entity, AgentComponent agentComponent, CharacterDataComponent characterDataComponent, CharacterActionComponent characterActionComponent)
+    protected override void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref CharacterDataComponent characterDataComponent, ref CharacterActionComponent characterActionComponent)
     {
         characterActionComponent.CurrentAction = $"[red]Attacks the darkness doing {characterDataComponent.DamagePower} points of damage[/]";
     }

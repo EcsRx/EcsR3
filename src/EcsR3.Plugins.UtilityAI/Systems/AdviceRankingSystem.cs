@@ -17,7 +17,7 @@ namespace EcsR3.Plugins.UtilityAI.Systems
         protected override Observable<Unit> ReactWhen()
         { return Observable.EveryUpdate(); }
 
-        protected override void Process(Entity entity, AgentComponent agentComponent)
+        protected override void Process(Entity entity, ref AgentComponent agentComponent)
         { agentComponent.AdviceVariables.RefreshAdviceRanking(); }
     }
 }

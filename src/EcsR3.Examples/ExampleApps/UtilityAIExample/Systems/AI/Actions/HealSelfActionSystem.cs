@@ -17,7 +17,7 @@ public class HealSelfActionSystem : AdviceActionSystem<CharacterDataComponent, C
     public HealSelfActionSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
     {}
 
-    protected override void ActionAdvice(Entity entity, AgentComponent agentComponent, CharacterDataComponent characterDataComponent, CharacterActionComponent characterActionComponent)
+    protected override void ActionAdvice(Entity entity, ref AgentComponent agentComponent, ref CharacterDataComponent characterDataComponent, ref CharacterActionComponent characterActionComponent)
     {
         characterActionComponent.CurrentAction = $"[green]Heals themselves for {characterDataComponent.HealPower} points of health[/]";
     }

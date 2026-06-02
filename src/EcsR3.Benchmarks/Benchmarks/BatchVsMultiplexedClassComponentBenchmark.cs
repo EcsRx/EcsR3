@@ -38,7 +38,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
             
-        protected override void Process(Entity entity, ClassComponent component2, ClassComponent2 component3)
+        protected override void Process(Entity entity, ref ClassComponent component2, ref ClassComponent2 component3)
         {
             component2.Position += Vector3.One;
             component2.Something += 10;
@@ -56,7 +56,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
             
-        protected override void Process(Entity entity, ClassComponent component2, ClassComponent3 component3)
+        protected override void Process(Entity entity, ref ClassComponent component2, ref ClassComponent3 component3)
         {
             component2.Position += Vector3.One;
             component2.Something += 10;
@@ -74,7 +74,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
             
-        protected override void Process(Entity entity, ClassComponent2 component2, ClassComponent3 component3)
+        protected override void Process(Entity entity, ref ClassComponent2 component2, ref ClassComponent3 component3)
         {
             component2.IsTrue = true;
             component2.Value += 10;
@@ -87,7 +87,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
 #region Multiplex Systems
     public class Job1 : IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>
     {
-        public void Process(Entity entity, ClassComponent component1, ClassComponent2 component2, ClassComponent3 component3)
+        public void Process(Entity entity, ref ClassComponent component1, ref ClassComponent2 component2, ref ClassComponent3 component3)
         {
             component1.Position += Vector3.One;
             component1.Something += 10;
@@ -98,7 +98,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
     
     public class Job2 : IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>
     {
-        public void Process(Entity entity, ClassComponent component1, ClassComponent2 component2, ClassComponent3 component3)
+        public void Process(Entity entity, ref ClassComponent component1, ref ClassComponent2 component2, ref ClassComponent3 component3)
         {
             component1.Position += Vector3.One;
             component1.Something += 10;
@@ -109,7 +109,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
     
     public class Job3 : IMultiplexedJob<ClassComponent, ClassComponent2, ClassComponent3>
     {
-        public void Process(Entity entity, ClassComponent component1, ClassComponent2 component2, ClassComponent3 component3)
+        public void Process(Entity entity, ref ClassComponent component1, ref ClassComponent2 component2, ref ClassComponent3 component3)
         {
             component2.IsTrue = true;
             component2.Value += 10;
@@ -139,7 +139,7 @@ public class BatchVsMultiplexedClassComponentBenchmark : EcsR3Benchmark
     [Params(false, true)]
     public bool UseMultithreading;
     
-    [Params(1000)]
+    [Params(10000)]
     public int Invocations;
     
     public ClassBatchSystem1 BatchingSystem1 { get; private set; }

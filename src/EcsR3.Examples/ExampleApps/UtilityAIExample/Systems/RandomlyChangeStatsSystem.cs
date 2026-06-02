@@ -23,7 +23,7 @@ public class RandomlyChangeStatsSystem : BatchedSystem<CharacterDataComponent>
     protected override Observable<Unit> ReactWhen()
     { return Observable.Interval(TimeSpan.FromSeconds(3)); }
 
-    protected override void Process(Entity entity, CharacterDataComponent characterDataComponent)
+    protected override void Process(Entity entity, ref CharacterDataComponent characterDataComponent)
     {
         characterDataComponent.Health = Randomizer.Random(0, characterDataComponent.MaxHealth);
     }

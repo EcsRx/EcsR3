@@ -30,7 +30,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
     }
     
 #region Batch Systems
-    public class ClassBatchSystem1 : BatchedRefSystem<StructComponent1Multiplexed, StructComponent2Multiplexed>
+    public class ClassBatchSystem1 : BatchedSystem<StructComponent1Multiplexed, StructComponent2Multiplexed>
     {
         public ClassBatchSystem1(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         {}
@@ -48,7 +48,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         }
     }
     
-    public class ClassBatchSystem2 : BatchedRefSystem<StructComponent1Multiplexed, StructComponent3Multiplexed>
+    public class ClassBatchSystem2 : BatchedSystem<StructComponent1Multiplexed, StructComponent3Multiplexed>
     {
         public ClassBatchSystem2(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         {}
@@ -66,7 +66,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         }
     }
     
-    public class ClassBatchSystem3 : BatchedRefSystem<StructComponent2Multiplexed, StructComponent3Multiplexed>
+    public class ClassBatchSystem3 : BatchedSystem<StructComponent2Multiplexed, StructComponent3Multiplexed>
     {
         public ClassBatchSystem3(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         {}
@@ -86,7 +86,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
 #endregion
 
 #region Multiplex Systems
-    public class Job1 : IMultiplexedRefJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
+    public class Job1 : IMultiplexedJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
     {
         public void Process(Entity entity, ref StructComponent1Multiplexed component1, ref StructComponent2Multiplexed component2, ref StructComponent3Multiplexed component3)
         {
@@ -97,7 +97,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         }
     }
     
-    public class Job2 : IMultiplexedRefJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
+    public class Job2 : IMultiplexedJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
     {
         public void Process(Entity entity, ref StructComponent1Multiplexed component1, ref StructComponent2Multiplexed component2, ref StructComponent3Multiplexed component3)
         {
@@ -108,7 +108,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         }
     }
     
-    public class Job3 : IMultiplexedRefJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
+    public class Job3 : IMultiplexedJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
     {
         public void Process(Entity entity, ref StructComponent1Multiplexed component1, ref StructComponent2Multiplexed component2, ref StructComponent3Multiplexed component3)
         {
@@ -119,7 +119,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         }
     }
 
-    public class ExampleMultiplexedSystem : MultiplexingBatchedRefSystem<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
+    public class ExampleMultiplexedSystem : MultiplexingBatchedSystem<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>
     {
         public ExampleMultiplexedSystem(IComponentDatabase componentDatabase, IEntityComponentAccessor entityComponentAccessor, IComputedComponentGroupRegistry computedComponentGroupRegistry, IThreadHandler threadHandler) : base(componentDatabase, entityComponentAccessor, computedComponentGroupRegistry, threadHandler)
         {}
@@ -128,7 +128,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
         public void ForceRun() => ProcessBatch();
         public bool UseMultithreading(bool should) => ShouldMultithread = should;
         
-        protected override IEnumerable<IMultiplexedRefJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>> ResolveJobs()
+        protected override IEnumerable<IMultiplexedJob<StructComponent1Multiplexed, StructComponent2Multiplexed, StructComponent3Multiplexed>> ResolveJobs()
         { return [new Job1(), new Job2(), new Job3()]; }
     }
     
@@ -140,7 +140,7 @@ public class BatchVsMultiplexedStructComponentBenchmark : EcsR3Benchmark
     [Params(false, true)]
     public bool UseMultithreading;
     
-    [Params(1000)]
+    [Params(10000)]
     public int Invocations;
     
     public ClassBatchSystem1 BatchingSystem1 { get; private set; }

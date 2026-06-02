@@ -3,44 +3,44 @@ using EcsR3.Entities;
 
 namespace EcsR3.Systems.Batching.Convention.Multiplexing.Handlers
 {
-    public interface IMultiplexedJob<in T> where T : IComponent
+    public interface IMultiplexedJob<T> where T : IComponent
     {
-        void Process(Entity entity, T component);
+        void Process(Entity entity, ref T component);
     }
     
-    public interface IMultiplexedJob<in T1, in T2> 
+    public interface IMultiplexedJob<T1, T2> 
         where T1 : IComponent where T2 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2);
+        void Process(Entity entity, ref T1 component1, ref T2 component2);
     }
     
-    public interface IMultiplexedJob<in T1, in T2, in T3> 
+    public interface IMultiplexedJob<T1, T2, T3> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2, T3 component3);
+        void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3);
     }
     
-    public interface IMultiplexedJob<in T1, in T2, in T3, in T4> 
+    public interface IMultiplexedJob<T1, T2, T3, T4> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4);
+        void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
     }
         
-    public interface IMultiplexedJob<in T1, in T2, in T3, in T4, in T5> 
+    public interface IMultiplexedJob<T1, T2, T3, T4, T5> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
+        void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
     }
             
-    public interface IMultiplexedJob<in T1, in T2, in T3, in T4, in T5, in T6> 
+    public interface IMultiplexedJob<T1, T2, T3, T4, T5, T6> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
+        void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
     }
                 
-    public interface IMultiplexedJob<in T1, in T2, in T3, in T4, in T5, in T6, in T7> 
+    public interface IMultiplexedJob<T1, T2, T3, T4, T5, T6, T7> 
         where T1 : IComponent where T2 : IComponent where T3 : IComponent where T4 : IComponent where T5 : IComponent where T6 : IComponent where T7 : IComponent
     {
-        void Process(Entity entity, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6, T7 component7);
+        void Process(Entity entity, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6, ref T7 component7);
     }
 }

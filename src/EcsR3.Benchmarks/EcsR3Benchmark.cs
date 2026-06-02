@@ -19,7 +19,7 @@ using SystemsR3.Infrastructure.Ninject;
 
 namespace EcsR3.Benchmarks
 {
-    [SimpleJob(RuntimeMoniker.Net90, warmupCount: 1, invocationCount: 1, iterationCount: 1)]
+    [SimpleJob(RuntimeMoniker.Net10_0, warmupCount: 1, invocationCount: 1, iterationCount: 1)]
     [MemoryDiagnoser]
     [MarkdownExporter]
     public abstract class EcsR3Benchmark

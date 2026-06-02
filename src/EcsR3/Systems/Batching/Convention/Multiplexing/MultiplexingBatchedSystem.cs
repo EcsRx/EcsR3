@@ -29,13 +29,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T>> componentBatches, T[] componentPools)
@@ -44,7 +46,7 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             { PreProcessorJobs[i].BeforeProcessing(); }
 
             if (ShouldMultithread)
-            { ProcessJobsMultithreaded( componentBatches, componentPools); }
+            { ProcessJobsMultithreaded(componentBatches, componentPools); }
             else
             { ProcessJobs(componentBatches, componentPools); }
             
@@ -59,9 +61,10 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = closureBatches.Span[i];
-                var c1 = componentPools[batch.Component1Allocation];
+                ref var c1 = ref componentPools[batch.Component1Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1); }
+                { job.Process(batch.Entity, ref c1); }
             });
         }
         
@@ -71,9 +74,10 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = componentPools[batch.Component1Allocation];
+                ref var c1 = ref componentPools[batch.Component1Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1); }
+                { job.Process(batch.Entity, ref c1); }
             }
         }
     }
@@ -95,13 +99,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2>> componentBatches, (T1[], T2[]) componentPools)
@@ -127,10 +133,11 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = closureBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2); }
+                { job.Process(batch.Entity, ref c1, ref c2); }
             });
         }
         
@@ -142,10 +149,11 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2); }
+                { job.Process(batch.Entity, ref c1, ref c2); }
             }
         }
     }
@@ -167,13 +175,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3>> componentBatches, (T1[], T2[], T3[]) componentPools)
@@ -198,12 +208,13 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
 
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
-                var batch = scopedComponentBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
+                var batch = scopedComponentBatches.Span[i];    
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3); }
             });
         }
         
@@ -212,14 +223,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             var (components1, components2, components3) = componentPools;
             var batchesSpan = componentBatches.Span;
 
-            for(var i=0;i<batchesSpan.Length;i++)
+            for (var i = 0; i < batchesSpan.Length; i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3); }
             }
         }
     }
@@ -241,13 +253,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4>> componentBatches, (T1[], T2[], T3[], T4[]) componentPools)
@@ -272,12 +286,13 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4); }
             });
         }
         
@@ -289,13 +304,13 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4); }
             }
         }
     }    
@@ -317,13 +332,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5>> componentBatches, (T1[], T2[], T3[], T4[], T5[]) componentPools)
@@ -348,14 +365,14 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5); }
             });
         }
         
@@ -367,14 +384,14 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5); }
             }
         }
     }
@@ -396,13 +413,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[]) componentPools)
@@ -427,15 +446,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
-                var c6 = components6[batch.Component6Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
+                ref var c6 = ref components6[batch.Component6Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6); }
             });
         }
         
@@ -447,15 +466,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
-                var c6 = components6[batch.Component6Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
+                ref var c6 = ref components6[batch.Component6Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6); }
             }
         }
     }
@@ -477,13 +496,15 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             base.StartSystem();
             Jobs = ResolveJobs().ToArray();
             
-            PreProcessorJobs = Jobs.Where(x => x is ISystemPreProcessor)
-                .Cast<ISystemPreProcessor>()
-                .ToArray();
-            
-            PostProcessorJobs = Jobs.Where(x => x is ISystemPostProcessor)
-                .Cast<ISystemPostProcessor>()
-                .ToArray();
+            var preProcessors = new List<ISystemPreProcessor>();
+            var postProcessors = new List<ISystemPostProcessor>();
+            foreach (var job in Jobs)
+            {
+                if (job is ISystemPreProcessor pre) preProcessors.Add(pre);
+                if (job is ISystemPostProcessor post) postProcessors.Add(post);
+            }
+            PreProcessorJobs = preProcessors.ToArray();
+            PostProcessorJobs = postProcessors.ToArray();
         }
 
         protected override void ProcessGroup(ReadOnlyMemory<ComponentBatch<T1, T2, T3, T4, T5, T6, T7>> componentBatches, (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) componentPools)
@@ -508,16 +529,16 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             ThreadHandler.For(0, componentBatches.Length, i =>
             {
                 var batch = scopedComponentBatches.Span[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
-                var c6 = components6[batch.Component6Allocation];
-                var c7 = components7[batch.Component7Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
+                ref var c6 = ref components6[batch.Component6Allocation];
+                ref var c7 = ref components7[batch.Component7Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6, c7); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, ref c7); }
             });
         }
         
@@ -529,16 +550,16 @@ namespace EcsR3.Systems.Batching.Convention.Multiplexing
             for(var i=0;i<batchesSpan.Length;i++)
             {
                 var batch = batchesSpan[i];
-                var c1 = components1[batch.Component1Allocation];
-                var c2 = components2[batch.Component2Allocation];
-                var c3 = components3[batch.Component3Allocation];
-                var c4 = components4[batch.Component4Allocation];
-                var c5 = components5[batch.Component5Allocation];
-                var c6 = components6[batch.Component6Allocation];
-                var c7 = components7[batch.Component7Allocation];
+                ref var c1 = ref components1[batch.Component1Allocation];
+                ref var c2 = ref components2[batch.Component2Allocation];
+                ref var c3 = ref components3[batch.Component3Allocation];
+                ref var c4 = ref components4[batch.Component4Allocation];
+                ref var c5 = ref components5[batch.Component5Allocation];
+                ref var c6 = ref components6[batch.Component6Allocation];
+                ref var c7 = ref components7[batch.Component7Allocation];
                 
                 foreach (var job in Jobs)
-                { job.Process(batch.Entity, c1, c2, c3, c4, c5, c6, c7); }
+                { job.Process(batch.Entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, ref c7); }
             }
         }
     }
